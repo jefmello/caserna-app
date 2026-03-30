@@ -12,7 +12,6 @@ import {
   Search,
   Crown,
   Gauge,
-  AlertTriangle,
   ArrowLeft,
   User,
   ChevronRight,
@@ -44,6 +43,7 @@ type RankingItem = {
   pos: number;
   pilotoId: string;
   piloto: string;
+  nomeGuerra: string;
   pontos: number;
   adv: number;
   participacoes: number;
@@ -177,8 +177,19 @@ function getPilotNameParts(name?: string) {
   };
 }
 
+function getPilotFirstAndLastName(name?: string) {
+  const { firstName, lastName } = getPilotNameParts(name);
+  return lastName ? `${firstName} ${lastName}` : firstName;
+}
+
 function getPilotDisplayName(name?: string) {
   return normalizePilotName(name);
+}
+
+function getPilotWarName(pilot?: RankingItem | null) {
+  const nomeGuerra = normalizePilotName(pilot?.nomeGuerra);
+  if (!nomeGuerra || nomeGuerra === "-") return "";
+  return nomeGuerra;
 }
 
 function getPilotHighlightName(name?: string) {
@@ -686,60 +697,73 @@ export default function CasernaKartAppModerno() {
                       </thead>
 
                       <tbody>
-                        {filteredRanking.map((item, index) => (
-                          <tr
-                            key={`${category}-${competition}-table-${item.pos}-${item.piloto}`}
-                            className={`transition hover:bg-zinc-50 ${
-                              index % 2 === 0 ? "bg-white" : "bg-zinc-50/50"
-                            }`}
-                          >
-                            <td className="px-1 py-3 text-center align-middle">
-                              <button
-                                type="button"
-                                onClick={() => handleSelectPilot(item)}
-                                className="mx-auto flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold"
-                              >
-                                <span
-                                  className={`flex h-8 w-8 items-center justify-center rounded-xl ${
-                                    item.pos === 1
-                                      ? "bg-yellow-400 text-black"
-                                      : "bg-zinc-100 text-zinc-800"
-                                  }`}
+                        {filteredRanking.map((item, index) => {
+                          const nomeLinha1 = getPilotFirstAndLastName(item.piloto);
+                          const nomeLinha2 = getPilotWarName(item);
+
+                          return (
+                            <tr
+                              key={`${category}-${competition}-table-${item.pos}-${item.piloto}`}
+                              className={`transition hover:bg-zinc-50 ${
+                                index % 2 === 0 ? "bg-white" : "bg-zinc-50/50"
+                              }`}
+                            >
+                              <td className="px-1 py-3 text-center align-middle">
+                                <button
+                                  type="button"
+                                  onClick={() => handleSelectPilot(item)}
+                                  className="mx-auto flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold"
                                 >
-                                  {item.pos}
-                                </span>
-                              </button>
-                            </td>
+                                  <span
+                                    className={`flex h-8 w-8 items-center justify-center rounded-xl ${
+                                      item.pos === 1
+                                        ? "bg-yellow-400 text-black"
+                                        : "bg-zinc-100 text-zinc-800"
+                                    }`}
+                                  >
+                                    {item.pos}
+                                  </span>
+                                </button>
+                              </td>
 
-                            <td className="min-w-0 px-2 py-3 align-middle">
-                              <button
-                                type="button"
-                                onClick={() => handleSelectPilot(item)}
-                                className="block w-full text-left"
-                              >
-                                <span className="block text-[12px] font-bold tracking-tight text-zinc-950">
-                                  {getPilotDisplayName(item.piloto)}
-                                </span>
-                              </button>
-                            </td>
+                              <td className="min-w-0 px-2 py-3 align-middle">
+                                <button
+                                  type="button"
+                                  onClick={() => handleSelectPilot(item)}
+                                  className="block w-full text-left"
+                                >
+                                  <span className="block leading-tight text-zinc-950">
+                                    <span className="block text-[12px] font-bold tracking-tight">
+                                      {nomeLinha1}
+                                    </span>
 
-                            <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
-                              {item.pontos}
-                            </td>
-                            <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
-                              {item.vitorias}
-                            </td>
-                            <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
-                              {item.poles}
-                            </td>
-                            <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
-                              {item.mv}
-                            </td>
-                            <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
-                              {item.podios}
-                            </td>
-                          </tr>
-                        ))}
+                                    {nomeLinha2 ? (
+                                      <span className="mt-1 block text-[11px] font-medium text-zinc-500">
+                                        {nomeLinha2}
+                                      </span>
+                                    ) : null}
+                                  </span>
+                                </button>
+                              </td>
+
+                              <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
+                                {item.pontos}
+                              </td>
+                              <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
+                                {item.vitorias}
+                              </td>
+                              <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
+                                {item.poles}
+                              </td>
+                              <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
+                                {item.mv}
+                              </td>
+                              <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
+                                {item.podios}
+                              </td>
+                            </tr>
+                          );
+                        })}
 
                         {filteredRanking.length === 0 && (
                           <tr>
@@ -811,6 +835,11 @@ export default function CasernaKartAppModerno() {
                           <p className="truncate text-xl font-bold tracking-tight text-zinc-950">
                             {getPilotDisplayName(selectedPilot.piloto)}
                           </p>
+                          {getPilotWarName(selectedPilot) ? (
+                            <p className="mt-1 text-sm text-zinc-500">
+                              {getPilotWarName(selectedPilot)}
+                            </p>
+                          ) : null}
                           <p className="mt-1 text-sm text-zinc-500">
                             {competitionLabels[competition] || competition}
                           </p>
@@ -877,7 +906,7 @@ export default function CasernaKartAppModerno() {
                     title="ADV"
                     value={selectedPilot.adv}
                     subtitle="advertências"
-                    icon={AlertTriangle}
+                    icon={Gauge}
                   />
                   <CompactStatCard
                     title="Descarte"
