@@ -155,128 +155,11 @@ function sortRanking(list: RankingItem[]) {
   });
 }
 
-function isPilotId(value: string) {
-  return /^P\d+$/i.test((value || "").trim());
-}
-
-function looksLikePersonName(value: string) {
-  const v = normalizeText(value);
-  if (!v) return false;
-  if (isPilotId(v)) return false;
-  if (v.length < 5) return false;
-  if (!/[a-z]/.test(v)) return false;
-
-  const parts = v.split(/\s+/).filter(Boolean);
-  return parts.length >= 2;
-}
-
-function findPilotosHeaderRow(lines: string[], separator: string) {
-  const parsedRows = lines.map((line) => parseDelimitedLine(line, separator));
-
-  // 1) Melhor caso: coluna I contém "nome de guerra"
-  for (let i = 0; i < parsedRows.length; i++) {
-    const colI = normalizeText(parsedRows[i][8] || "");
-    if (colI === "nome de guerra") {
-      return i;
-    }
-  }
-
-  // 2) Procura "nome de guerra" em qualquer coluna
-  for (let i = 0; i < parsedRows.length; i++) {
-    const row = parsedRows[i].map((c) => normalizeText(c));
-    if (row.includes("nome de guerra")) {
-      return i;
-    }
-  }
-
-  // 3) Procura cabeçalho clássico com "piloto id"
-  for (let i = 0; i < parsedRows.length; i++) {
-    const row = parsedRows[i].map((c) => normalizeText(c));
-    if (row.includes("piloto id")) {
-      return i;
-    }
-  }
-
-  return -1;
-}
-
-function detectPilotoIdColumn(
-  rows: string[][],
-  startRow: number,
-  preferredIndex: number
-) {
-  if (preferredIndex >= 0) return preferredIndex;
-
-  const maxCols = Math.max(...rows.map((r) => r.length), 0);
-  let bestIndex = -1;
-  let bestScore = -1;
-
-  for (let col = 0; col < maxCols; col++) {
-    let score = 0;
-    let inspected = 0;
-
-    for (let row = startRow + 1; row < rows.length && inspected < 80; row++) {
-      const value = (rows[row][col] || "").trim();
-      if (!value) continue;
-      inspected++;
-
-      if (isPilotId(value)) {
-        score++;
-      }
-    }
-
-    if (score > bestScore) {
-      bestScore = score;
-      bestIndex = col;
-    }
-  }
-
-  return bestScore > 0 ? bestIndex : -1;
-}
-
-function detectPilotoNomeColumn(
-  rows: string[][],
-  startRow: number,
-  preferredIndex: number,
-  idxPilotoId: number,
-  idxNomeGuerra: number
-) {
-  if (preferredIndex >= 0) return preferredIndex;
-
-  const maxCols = Math.max(...rows.map((r) => r.length), 0);
-  let bestIndex = -1;
-  let bestScore = -1;
-
-  for (let col = 0; col < maxCols; col++) {
-    if (col === idxPilotoId || col === idxNomeGuerra) continue;
-
-    let score = 0;
-    let inspected = 0;
-
-    for (let row = startRow + 1; row < rows.length && inspected < 80; row++) {
-      const value = (rows[row][col] || "").trim();
-      if (!value) continue;
-      inspected++;
-
-      if (looksLikePersonName(value)) {
-        score++;
-      }
-    }
-
-    if (score > bestScore) {
-      bestScore = score;
-      bestIndex = col;
-    }
-  }
-
-  return bestScore > 0 ? bestIndex : -1;
-}
-
 function parsePilotosCsv(text: string) {
-  const rawLines = text.split(/\r?\n/).map((line) => line.trim());
-  const nonEmptyLines = rawLines.filter(Boolean);
+  const rawLines = text.split(/\r?\n/).map((line) => line.trimEnd());
+  const nonEmptyLines = rawLines.filter((line) => line.trim().length > 0);
 
-  if (nonEmptyLines.length < 2) {
+  if (nonEmptyLines.length < 4) {
     return {
       maps: { byId: {}, byFullName: {}, byFirstLast: {} } as PilotosMaps,
       debug: {
@@ -289,24 +172,13 @@ function parsePilotosCsv(text: string) {
   const separator = detectSeparator(nonEmptyLines[0]);
   const parsedRows = nonEmptyLines.map((line) => parseDelimitedLine(line, separator));
 
-  const headerRowIndex = findPilotosHeaderRow(nonEmptyLines, separator);
+  // Cabeçalho fixo informado por você:
+  // linha 3 da planilha = índice 2 do array
+  const headerRowIndex = 2;
+  const headers = (parsedRows[headerRowIndex] || []).map((h) => normalizeText(h));
 
-  if (headerRowIndex === -1) {
-    return {
-      maps: { byId: {}, byFullName: {}, byFirstLast: {} } as PilotosMaps,
-      debug: {
-        reason: "Não foi possível localizar a linha real de cabeçalho da aba PILOTOS.",
-        separator,
-        firstLines: nonEmptyLines.slice(0, 15),
-      },
-    };
-  }
-
-  const headers = parsedRows[headerRowIndex].map((h) => normalizeText(h));
-
-  let idxPilotoId = findHeaderIndex(headers, ["piloto id", "id piloto", "id"]);
-  const idxNomeGuerra = 8;
-  let idxPilotoNome = findHeaderIndex(headers, [
+  const idxPilotoId = findHeaderIndex(headers, ["piloto id", "id piloto", "id"]);
+  const idxPilotoNome = findHeaderIndex(headers, [
     "piloto",
     "nome",
     "nome piloto",
@@ -314,14 +186,8 @@ function parsePilotosCsv(text: string) {
     "nome completo",
   ]);
 
-  idxPilotoId = detectPilotoIdColumn(parsedRows, headerRowIndex, idxPilotoId);
-  idxPilotoNome = detectPilotoNomeColumn(
-    parsedRows,
-    headerRowIndex,
-    idxPilotoNome,
-    idxPilotoId,
-    idxNomeGuerra
-  );
+  // Coluna I = índice 8
+  const idxNomeGuerra = 8;
 
   const byId: Record<string, string> = {};
   const byFullName: Record<string, string> = {};
@@ -329,7 +195,7 @@ function parsePilotosCsv(text: string) {
 
   for (let i = headerRowIndex + 1; i < parsedRows.length; i++) {
     const cols = parsedRows[i];
-    if (cols.every((col) => !col.trim())) continue;
+    if (!cols || cols.every((col) => !(col || "").trim())) continue;
 
     const pilotoId = idxPilotoId >= 0 ? (cols[idxPilotoId] || "").trim() : "";
     const pilotoNomeRaw = idxPilotoNome >= 0 ? cols[idxPilotoNome] || "" : "";
@@ -372,8 +238,8 @@ function parsePilotosCsv(text: string) {
 }
 
 function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
-  const rawLines = text.split(/\r?\n/).map((line) => line.trim());
-  const nonEmptyLines = rawLines.filter(Boolean);
+  const rawLines = text.split(/\r?\n/).map((line) => line.trimEnd());
+  const nonEmptyLines = rawLines.filter((line) => line.trim().length > 0);
 
   if (nonEmptyLines.length < 2) {
     return {
