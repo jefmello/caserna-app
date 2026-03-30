@@ -26,6 +26,11 @@ type RankingItem = {
 
 type RankingData = Record<string, RankingItem[]>;
 
+type PilotosMaps = {
+  byId: Record<string, string>;
+  byName: Record<string, string>;
+};
+
 function normalizeText(value: string) {
   return (value || "")
     .trim()
@@ -128,9 +133,7 @@ function findHeaderRowIndex(
       cols.includes(normalizeText(name))
     );
 
-    if (hasAll) {
-      return i;
-    }
+    if (hasAll) return i;
   }
 
   return -1;
@@ -167,7 +170,7 @@ function parsePilotosCsv(text: string) {
 
   if (nonEmptyLines.length < 2) {
     return {
-      pilotosMap: {} as Record<string, string>,
+      maps: { byId: {}, byName: {} } as PilotosMaps,
       debug: {
         reason: "Poucas linhas no CSV de pilotos.",
         firstLines: nonEmptyLines.slice(0, 10),
@@ -182,7 +185,7 @@ function parsePilotosCsv(text: string) {
 
   if (headerRowIndex === -1) {
     return {
-      pilotosMap: {} as Record<string, string>,
+      maps: { byId: {}, byName: {} } as PilotosMaps,
       debug: {
         reason: "Cabeçalho da aba PILOTOS não encontrado.",
         separator,
@@ -196,39 +199,58 @@ function parsePilotosCsv(text: string) {
   );
 
   const idxPilotoId = findHeaderIndex(headers, ["piloto id", "id piloto", "id"]);
+  const idxPilotoNome = findHeaderIndex(headers, [
+    "piloto",
+    "nome",
+    "nome piloto",
+    "piloto nome",
+  ]);
 
   // Coluna I fixa = índice 8
   const idxNomeGuerra = 8;
 
-  const pilotosMap: Record<string, string> = {};
+  const byId: Record<string, string> = {};
+  const byName: Record<string, string> = {};
 
   for (let i = headerRowIndex + 1; i < nonEmptyLines.length; i++) {
     const cols = parseDelimitedLine(nonEmptyLines[i], separator);
 
     const pilotoId = idxPilotoId >= 0 ? (cols[idxPilotoId] || "").trim() : "";
+    const pilotoNome =
+      idxPilotoNome >= 0 ? normalizeName(cols[idxPilotoNome] || "") : "";
+    const pilotoNomeKey =
+      idxPilotoNome >= 0 ? normalizeText(cols[idxPilotoNome] || "") : "";
+
     const nomeGuerra =
       idxNomeGuerra >= 0 ? normalizeName(cols[idxNomeGuerra] || "") : "";
 
-    if (pilotoId) {
-      pilotosMap[pilotoId] = nomeGuerra;
+    if (pilotoId && nomeGuerra) {
+      byId[pilotoId] = nomeGuerra;
+    }
+
+    if (pilotoNome && pilotoNomeKey && nomeGuerra) {
+      byName[pilotoNomeKey] = nomeGuerra;
     }
   }
 
   return {
-    pilotosMap,
+    maps: { byId, byName },
     debug: {
       separator,
       headerRowIndex,
       headers,
       idxPilotoId,
+      idxPilotoNome,
       idxNomeGuerra,
-      totalPilotosMapeados: Object.keys(pilotosMap).length,
-      samplePilotos: Object.entries(pilotosMap).slice(0, 10),
+      totalPorId: Object.keys(byId).length,
+      totalPorNome: Object.keys(byName).length,
+      sampleById: Object.entries(byId).slice(0, 10),
+      sampleByName: Object.entries(byName).slice(0, 10),
     },
   };
 }
 
-function parseRankingCsv(text: string, pilotosMap: Record<string, string>) {
+function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
   const rawLines = text.split(/\r?\n/).map((line) => line.trim());
   const nonEmptyLines = rawLines.filter(Boolean);
 
@@ -301,6 +323,9 @@ function parseRankingCsv(text: string, pilotosMap: Record<string, string>) {
   let totalRows = 0;
   let acceptedRows = 0;
   let ignoredEmptyPilot = 0;
+  let matchedById = 0;
+  let matchedByName = 0;
+  let withoutNomeGuerra = 0;
 
   for (let i = headerRowIndex + 1; i < nonEmptyLines.length; i++) {
     const cols = parseDelimitedLine(nonEmptyLines[i], separator);
@@ -308,6 +333,7 @@ function parseRankingCsv(text: string, pilotosMap: Record<string, string>) {
 
     const pilotoOriginal = idxPiloto >= 0 ? (cols[idxPiloto] || "").trim() : "";
     const piloto = normalizeName(pilotoOriginal);
+    const pilotoKey = normalizeText(pilotoOriginal);
 
     if (!piloto) {
       ignoredEmptyPilot++;
@@ -325,11 +351,22 @@ function parseRankingCsv(text: string, pilotosMap: Record<string, string>) {
     const categoria = normalizeCategory(categoriaOriginal);
     const competicao = normalizeCompetition(competicaoOriginal);
 
+    let nomeGuerra = "";
+    if (pilotoId && pilotosMaps.byId[pilotoId]) {
+      nomeGuerra = pilotosMaps.byId[pilotoId];
+      matchedById++;
+    } else if (pilotoKey && pilotosMaps.byName[pilotoKey]) {
+      nomeGuerra = pilotosMaps.byName[pilotoKey];
+      matchedByName++;
+    } else {
+      withoutNomeGuerra++;
+    }
+
     const item: RankingItem = {
       pos: idxPosicao >= 0 ? toNumber(cols[idxPosicao]) : 0,
       pilotoId,
       piloto,
-      nomeGuerra: pilotosMap[pilotoId] || "",
+      nomeGuerra,
       pontos: idxPontos >= 0 ? toNumber(cols[idxPontos]) : 0,
       adv: idxAdv >= 0 ? toNumber(cols[idxAdv]) : 0,
       participacoes:
@@ -362,6 +399,9 @@ function parseRankingCsv(text: string, pilotosMap: Record<string, string>) {
       totalRows,
       acceptedRows,
       ignoredEmptyPilot,
+      matchedById,
+      matchedByName,
+      withoutNomeGuerra,
       categoriesFound: Object.keys(grouped),
       competitionsByCategory: Object.fromEntries(
         Object.entries(grouped).map(([category, items]) => [
@@ -369,9 +409,6 @@ function parseRankingCsv(text: string, pilotosMap: Record<string, string>) {
           [...new Set(items.map((item) => item.competicao))],
         ])
       ),
-      totalComNomeGuerra: Object.values(grouped)
-        .flat()
-        .filter((item) => !!item.nomeGuerra).length,
       sampleNomeGuerra: Object.values(grouped)
         .flat()
         .filter((item) => !!item.nomeGuerra)
@@ -426,14 +463,14 @@ export async function GET() {
     ]);
 
     const pilotosParsed = parsePilotosCsv(pilotosText);
-    const rankingParsed = parseRankingCsv(rankingText, pilotosParsed.pilotosMap);
+    const rankingParsed = parseRankingCsv(rankingText, pilotosParsed.maps);
 
     return NextResponse.json({
       categories: Object.keys(rankingParsed.grouped),
       data: rankingParsed.grouped,
       debug: {
-        ranking: rankingParsed.debug,
         pilotos: pilotosParsed.debug,
+        ranking: rankingParsed.debug,
       },
     });
   } catch (error) {
