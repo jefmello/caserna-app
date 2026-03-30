@@ -7,6 +7,7 @@ type RankingItem = {
   pos: number;
   pilotoId: string;
   piloto: string;
+  nomeGuerra: string;
   pontos: number;
   adv: number;
   participacoes: number;
@@ -191,6 +192,12 @@ function parseCsv(text: string) {
   const idxPosicao = findHeaderIndex(headers, ["posicao", "posição", "pos"]);
   const idxPilotoId = findHeaderIndex(headers, ["piloto id", "id piloto"]);
   const idxPiloto = findHeaderIndex(headers, ["piloto"]);
+  const idxNomeGuerra = findHeaderIndex(headers, [
+    "nome de guerra",
+    "nome guerra",
+    "apelido",
+    "nickname",
+  ]);
   const idxPontos = findHeaderIndex(headers, ["pontos", "pts"]);
   const idxAdv = findHeaderIndex(headers, ["adv", "advertencias", "advertências"]);
   const idxParticipacoes = findHeaderIndex(headers, [
@@ -236,6 +243,10 @@ function parseCsv(text: string) {
       continue;
     }
 
+    const nomeGuerraOriginal =
+      idxNomeGuerra >= 0 ? (cols[idxNomeGuerra] || "").trim() : "";
+    const nomeGuerra = normalizePilotName(nomeGuerraOriginal);
+
     const categoriaOriginal = idxCategoria >= 0 ? cols[idxCategoria] || "" : "";
     const competicaoOriginal =
       idxCompeticao >= 0 ? cols[idxCompeticao] || "" : "";
@@ -251,6 +262,7 @@ function parseCsv(text: string) {
       pos: idxPosicao >= 0 ? toNumber(cols[idxPosicao]) : 0,
       pilotoId: idxPilotoId >= 0 ? (cols[idxPilotoId] || "").trim() : "",
       piloto,
+      nomeGuerra,
       pontos: idxPontos >= 0 ? toNumber(cols[idxPontos]) : 0,
       adv: idxAdv >= 0 ? toNumber(cols[idxAdv]) : 0,
       participacoes:
@@ -286,6 +298,7 @@ function parseCsv(text: string) {
         idxPosicao,
         idxPilotoId,
         idxPiloto,
+        idxNomeGuerra,
         idxPontos,
         idxAdv,
         idxParticipacoes,
