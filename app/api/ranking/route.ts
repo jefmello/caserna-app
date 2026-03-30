@@ -46,6 +46,28 @@ function normalizeName(value: string) {
     .join(" ");
 }
 
+function normalizeCategory(value: string) {
+  const v = normalizeText(value);
+
+  if (v === "base") return "Base";
+  if (v === "graduados") return "Graduados";
+  if (v === "elite") return "Elite";
+
+  return value?.trim() || "Base";
+}
+
+function normalizeCompetition(value: string) {
+  const raw = (value || "").trim().toUpperCase();
+  const v = normalizeText(value).toUpperCase();
+
+  if (v === "T1") return "T1";
+  if (v === "T2") return "T2";
+  if (v === "T3") return "T3";
+  if (v === "GERAL") return "GERAL";
+
+  return raw;
+}
+
 function toNumber(value: string) {
   if (!value) return 0;
 
@@ -92,14 +114,23 @@ function parseDelimitedLine(line: string, separator: string) {
   return result;
 }
 
-function findHeaderRowIndex(lines: string[], separator: string, required: string[]) {
+function findHeaderRowIndex(
+  lines: string[],
+  separator: string,
+  requiredColumns: string[]
+) {
   for (let i = 0; i < lines.length; i++) {
     const cols = parseDelimitedLine(lines[i], separator).map((c) =>
       normalizeText(c)
     );
 
-    const hasAll = required.every((name) => cols.includes(normalizeText(name)));
-    if (hasAll) return i;
+    const hasAll = requiredColumns.every((name) =>
+      cols.includes(normalizeText(name))
+    );
+
+    if (hasAll) {
+      return i;
+    }
   }
 
   return -1;
@@ -137,34 +168,37 @@ function parsePilotosCsv(text: string) {
   if (nonEmptyLines.length < 2) {
     return {
       pilotosMap: {} as Record<string, string>,
-      debug: { reason: "Poucas linhas no CSV de pilotos." },
+      debug: {
+        reason: "Poucas linhas no CSV de pilotos.",
+        firstLines: nonEmptyLines.slice(0, 10),
+      },
     };
   }
 
   const separator = detectSeparator(nonEmptyLines[0]);
-  const headerRowIndex = findHeaderRowIndex(nonEmptyLines, separator, ["piloto id"]);
+  const headerRowIndex = findHeaderRowIndex(nonEmptyLines, separator, [
+    "piloto id",
+  ]);
 
   if (headerRowIndex === -1) {
     return {
       pilotosMap: {} as Record<string, string>,
       debug: {
         reason: "Cabeçalho da aba PILOTOS não encontrado.",
-        firstLines: nonEmptyLines.slice(0, 10),
+        separator,
+        firstLines: nonEmptyLines.slice(0, 15),
       },
     };
   }
 
-  const headers = parseDelimitedLine(nonEmptyLines[headerRowIndex], separator).map((h) =>
-    normalizeText(h)
+  const headers = parseDelimitedLine(nonEmptyLines[headerRowIndex], separator).map(
+    (h) => normalizeText(h)
   );
 
   const idxPilotoId = findHeaderIndex(headers, ["piloto id", "id piloto", "id"]);
-  const idxNomeGuerra = findHeaderIndex(headers, [
-    "nome de guerra",
-    "nome guerra",
-    "apelido",
-    "nickname",
-  ]);
+
+  // Coluna I fixa = índice 8
+  const idxNomeGuerra = 8;
 
   const pilotosMap: Record<string, string> = {};
 
@@ -186,9 +220,10 @@ function parsePilotosCsv(text: string) {
       separator,
       headerRowIndex,
       headers,
-      totalPilotos: Object.keys(pilotosMap).length,
       idxPilotoId,
       idxNomeGuerra,
+      totalPilotosMapeados: Object.keys(pilotosMap).length,
+      samplePilotos: Object.entries(pilotosMap).slice(0, 10),
     },
   };
 }
@@ -219,13 +254,14 @@ function parseRankingCsv(text: string, pilotosMap: Record<string, string>) {
       grouped: {} as RankingData,
       debug: {
         reason: "Cabeçalho do ranking não encontrado.",
+        separator,
         firstLines: nonEmptyLines.slice(0, 15),
       },
     };
   }
 
-  const headers = parseDelimitedLine(nonEmptyLines[headerRowIndex], separator).map((h) =>
-    normalizeText(h)
+  const headers = parseDelimitedLine(nonEmptyLines[headerRowIndex], separator).map(
+    (h) => normalizeText(h)
   );
 
   const idxCategoria = findHeaderIndex(headers, ["categoria"]);
@@ -262,23 +298,32 @@ function parseRankingCsv(text: string, pilotosMap: Record<string, string>) {
   ]);
 
   const grouped: RankingData = {};
+  let totalRows = 0;
+  let acceptedRows = 0;
+  let ignoredEmptyPilot = 0;
 
   for (let i = headerRowIndex + 1; i < nonEmptyLines.length; i++) {
     const cols = parseDelimitedLine(nonEmptyLines[i], separator);
+    totalRows++;
 
     const pilotoOriginal = idxPiloto >= 0 ? (cols[idxPiloto] || "").trim() : "";
     const piloto = normalizeName(pilotoOriginal);
 
-    if (!piloto) continue;
+    if (!piloto) {
+      ignoredEmptyPilot++;
+      continue;
+    }
 
     const pilotoId = idxPilotoId >= 0 ? (cols[idxPilotoId] || "").trim() : "";
     const categoriaOriginal = idxCategoria >= 0 ? cols[idxCategoria] || "" : "";
-    const competicaoOriginal =
-      idxCompeticao >= 0 ? (cols[idxCompeticao] || "").trim().toUpperCase() : "";
+    const competicaoOriginal = idxCompeticao >= 0 ? cols[idxCompeticao] || "" : "";
     const categoriaAtualOriginal =
       idxCategoriaAtual >= 0
         ? cols[idxCategoriaAtual] || categoriaOriginal
         : categoriaOriginal;
+
+    const categoria = normalizeCategory(categoriaOriginal);
+    const competicao = normalizeCompetition(competicaoOriginal);
 
     const item: RankingItem = {
       pos: idxPosicao >= 0 ? toNumber(cols[idxPosicao]) : 0,
@@ -294,13 +339,14 @@ function parseRankingCsv(text: string, pilotosMap: Record<string, string>) {
       mv: idxMv >= 0 ? toNumber(cols[idxMv]) : 0,
       podios: idxPodios >= 0 ? toNumber(cols[idxPodios]) : 0,
       descarte: idxDescarte >= 0 ? toNumber(cols[idxDescarte]) : 0,
-      categoriaAtual: categoriaAtualOriginal?.trim() || categoriaOriginal?.trim() || "",
-      competicao: competicaoOriginal,
-      categoria: categoriaOriginal?.trim() || "",
+      categoriaAtual: normalizeCategory(categoriaAtualOriginal),
+      competicao,
+      categoria,
     };
 
-    if (!grouped[item.categoria]) grouped[item.categoria] = [];
-    grouped[item.categoria].push(item);
+    if (!grouped[categoria]) grouped[categoria] = [];
+    grouped[categoria].push(item);
+    acceptedRows++;
   }
 
   Object.keys(grouped).forEach((category) => {
@@ -313,7 +359,28 @@ function parseRankingCsv(text: string, pilotosMap: Record<string, string>) {
       separator,
       headerRowIndex,
       headers,
+      totalRows,
+      acceptedRows,
+      ignoredEmptyPilot,
       categoriesFound: Object.keys(grouped),
+      competitionsByCategory: Object.fromEntries(
+        Object.entries(grouped).map(([category, items]) => [
+          category,
+          [...new Set(items.map((item) => item.competicao))],
+        ])
+      ),
+      totalComNomeGuerra: Object.values(grouped)
+        .flat()
+        .filter((item) => !!item.nomeGuerra).length,
+      sampleNomeGuerra: Object.values(grouped)
+        .flat()
+        .filter((item) => !!item.nomeGuerra)
+        .slice(0, 10)
+        .map((item) => ({
+          pilotoId: item.pilotoId,
+          piloto: item.piloto,
+          nomeGuerra: item.nomeGuerra,
+        })),
     },
   };
 }
