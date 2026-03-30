@@ -130,26 +130,6 @@ function parseDelimitedLine(line: string, separator: string) {
   return result;
 }
 
-function findHeaderRowIndex(
-  lines: string[],
-  separator: string,
-  requiredColumns: string[]
-) {
-  for (let i = 0; i < lines.length; i++) {
-    const cols = parseDelimitedLine(lines[i], separator).map((c) =>
-      normalizeText(c)
-    );
-
-    const hasAll = requiredColumns.every((name) =>
-      cols.some((col) => col === normalizeText(name))
-    );
-
-    if (hasAll) return i;
-  }
-
-  return -1;
-}
-
 function findHeaderIndex(headers: string[], possibleNames: string[]) {
   for (const name of possibleNames) {
     const normalized = normalizeText(name);
@@ -158,14 +138,6 @@ function findHeaderIndex(headers: string[], possibleNames: string[]) {
   }
 
   return -1;
-}
-
-function findHeaderIndexContains(headers: string[], fragments: string[]) {
-  const normalizedFragments = fragments.map(normalizeText);
-
-  return headers.findIndex((header) =>
-    normalizedFragments.every((fragment) => header.includes(fragment))
-  );
 }
 
 function sortRanking(list: RankingItem[]) {
@@ -183,6 +155,123 @@ function sortRanking(list: RankingItem[]) {
   });
 }
 
+function isPilotId(value: string) {
+  return /^P\d+$/i.test((value || "").trim());
+}
+
+function looksLikePersonName(value: string) {
+  const v = normalizeText(value);
+  if (!v) return false;
+  if (isPilotId(v)) return false;
+  if (v.length < 5) return false;
+  if (!/[a-z]/.test(v)) return false;
+
+  const parts = v.split(/\s+/).filter(Boolean);
+  return parts.length >= 2;
+}
+
+function findPilotosHeaderRow(lines: string[], separator: string) {
+  const parsedRows = lines.map((line) => parseDelimitedLine(line, separator));
+
+  // 1) Melhor caso: coluna I contém "nome de guerra"
+  for (let i = 0; i < parsedRows.length; i++) {
+    const colI = normalizeText(parsedRows[i][8] || "");
+    if (colI === "nome de guerra") {
+      return i;
+    }
+  }
+
+  // 2) Procura "nome de guerra" em qualquer coluna
+  for (let i = 0; i < parsedRows.length; i++) {
+    const row = parsedRows[i].map((c) => normalizeText(c));
+    if (row.includes("nome de guerra")) {
+      return i;
+    }
+  }
+
+  // 3) Procura cabeçalho clássico com "piloto id"
+  for (let i = 0; i < parsedRows.length; i++) {
+    const row = parsedRows[i].map((c) => normalizeText(c));
+    if (row.includes("piloto id")) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+function detectPilotoIdColumn(
+  rows: string[][],
+  startRow: number,
+  preferredIndex: number
+) {
+  if (preferredIndex >= 0) return preferredIndex;
+
+  const maxCols = Math.max(...rows.map((r) => r.length), 0);
+  let bestIndex = -1;
+  let bestScore = -1;
+
+  for (let col = 0; col < maxCols; col++) {
+    let score = 0;
+    let inspected = 0;
+
+    for (let row = startRow + 1; row < rows.length && inspected < 80; row++) {
+      const value = (rows[row][col] || "").trim();
+      if (!value) continue;
+      inspected++;
+
+      if (isPilotId(value)) {
+        score++;
+      }
+    }
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestIndex = col;
+    }
+  }
+
+  return bestScore > 0 ? bestIndex : -1;
+}
+
+function detectPilotoNomeColumn(
+  rows: string[][],
+  startRow: number,
+  preferredIndex: number,
+  idxPilotoId: number,
+  idxNomeGuerra: number
+) {
+  if (preferredIndex >= 0) return preferredIndex;
+
+  const maxCols = Math.max(...rows.map((r) => r.length), 0);
+  let bestIndex = -1;
+  let bestScore = -1;
+
+  for (let col = 0; col < maxCols; col++) {
+    if (col === idxPilotoId || col === idxNomeGuerra) continue;
+
+    let score = 0;
+    let inspected = 0;
+
+    for (let row = startRow + 1; row < rows.length && inspected < 80; row++) {
+      const value = (rows[row][col] || "").trim();
+      if (!value) continue;
+      inspected++;
+
+      if (looksLikePersonName(value)) {
+        score++;
+      }
+    }
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestIndex = col;
+    }
+  }
+
+  return bestScore > 0 ? bestIndex : -1;
+}
+
 function parsePilotosCsv(text: string) {
   const rawLines = text.split(/\r?\n/).map((line) => line.trim());
   const nonEmptyLines = rawLines.filter(Boolean);
@@ -198,36 +287,25 @@ function parsePilotosCsv(text: string) {
   }
 
   const separator = detectSeparator(nonEmptyLines[0]);
+  const parsedRows = nonEmptyLines.map((line) => parseDelimitedLine(line, separator));
 
-  let headerRowIndex = findHeaderRowIndex(nonEmptyLines, separator, ["piloto id"]);
-
-  if (headerRowIndex === -1) {
-    headerRowIndex = nonEmptyLines.findIndex((line) => {
-      const cols = parseDelimitedLine(line, separator).map((c) => normalizeText(c));
-      return cols.length >= 9;
-    });
-  }
+  const headerRowIndex = findPilotosHeaderRow(nonEmptyLines, separator);
 
   if (headerRowIndex === -1) {
     return {
       maps: { byId: {}, byFullName: {}, byFirstLast: {} } as PilotosMaps,
       debug: {
-        reason: "Não foi possível localizar a linha de cabeçalho da aba PILOTOS.",
+        reason: "Não foi possível localizar a linha real de cabeçalho da aba PILOTOS.",
         separator,
         firstLines: nonEmptyLines.slice(0, 15),
       },
     };
   }
 
-  const headers = parseDelimitedLine(nonEmptyLines[headerRowIndex], separator).map(
-    (h) => normalizeText(h)
-  );
+  const headers = parsedRows[headerRowIndex].map((h) => normalizeText(h));
 
   let idxPilotoId = findHeaderIndex(headers, ["piloto id", "id piloto", "id"]);
-  if (idxPilotoId === -1) {
-    idxPilotoId = findHeaderIndexContains(headers, ["id"]);
-  }
-
+  const idxNomeGuerra = 8;
   let idxPilotoNome = findHeaderIndex(headers, [
     "piloto",
     "nome",
@@ -236,24 +314,25 @@ function parsePilotosCsv(text: string) {
     "nome completo",
   ]);
 
-  if (idxPilotoNome === -1) {
-    idxPilotoNome = findHeaderIndexContains(headers, ["nome"]);
-  }
-
-  const idxNomeGuerra = 8;
+  idxPilotoId = detectPilotoIdColumn(parsedRows, headerRowIndex, idxPilotoId);
+  idxPilotoNome = detectPilotoNomeColumn(
+    parsedRows,
+    headerRowIndex,
+    idxPilotoNome,
+    idxPilotoId,
+    idxNomeGuerra
+  );
 
   const byId: Record<string, string> = {};
   const byFullName: Record<string, string> = {};
   const byFirstLast: Record<string, string> = {};
 
-  for (let i = headerRowIndex + 1; i < nonEmptyLines.length; i++) {
-    const cols = parseDelimitedLine(nonEmptyLines[i], separator);
-
+  for (let i = headerRowIndex + 1; i < parsedRows.length; i++) {
+    const cols = parsedRows[i];
     if (cols.every((col) => !col.trim())) continue;
 
     const pilotoId = idxPilotoId >= 0 ? (cols[idxPilotoId] || "").trim() : "";
     const pilotoNomeRaw = idxPilotoNome >= 0 ? cols[idxPilotoNome] || "" : "";
-    const pilotoNome = normalizeName(pilotoNomeRaw);
     const pilotoNomeKey = normalizeText(pilotoNomeRaw);
     const pilotoFirstLastKey = normalizeText(getFirstLastName(pilotoNomeRaw));
     const nomeGuerra = normalizeName(cols[idxNomeGuerra] || "");
@@ -264,7 +343,7 @@ function parsePilotosCsv(text: string) {
       byId[pilotoId] = nomeGuerra;
     }
 
-    if (pilotoNome && pilotoNomeKey) {
+    if (pilotoNomeKey) {
       byFullName[pilotoNomeKey] = nomeGuerra;
     }
 
@@ -307,11 +386,16 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
   }
 
   const separator = detectSeparator(nonEmptyLines[0]);
-  const headerRowIndex = findHeaderRowIndex(nonEmptyLines, separator, [
-    "categoria",
-    "piloto",
-    "pontos",
-  ]);
+  const parsedRows = nonEmptyLines.map((line) => parseDelimitedLine(line, separator));
+
+  let headerRowIndex = -1;
+  for (let i = 0; i < parsedRows.length; i++) {
+    const row = parsedRows[i].map((c) => normalizeText(c));
+    if (row.includes("categoria") && row.includes("piloto") && row.includes("pontos")) {
+      headerRowIndex = i;
+      break;
+    }
+  }
 
   if (headerRowIndex === -1) {
     return {
@@ -324,9 +408,7 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
     };
   }
 
-  const headers = parseDelimitedLine(nonEmptyLines[headerRowIndex], separator).map(
-    (h) => normalizeText(h)
-  );
+  const headers = parsedRows[headerRowIndex].map((h) => normalizeText(h));
 
   const idxCategoria = findHeaderIndex(headers, ["categoria"]);
   const idxCompeticao = findHeaderIndex(headers, ["competicao", "competição"]);
@@ -370,8 +452,8 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
   let matchedByFirstLast = 0;
   let withoutNomeGuerra = 0;
 
-  for (let i = headerRowIndex + 1; i < nonEmptyLines.length; i++) {
-    const cols = parseDelimitedLine(nonEmptyLines[i], separator);
+  for (let i = headerRowIndex + 1; i < parsedRows.length; i++) {
+    const cols = parsedRows[i];
     totalRows++;
 
     const pilotoOriginal = idxPiloto >= 0 ? (cols[idxPiloto] || "").trim() : "";
