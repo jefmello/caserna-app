@@ -177,11 +177,6 @@ function getPilotNameParts(name?: string) {
   };
 }
 
-function getPilotShortName(name?: string) {
-  const { firstName, lastName } = getPilotNameParts(name);
-  return lastName ? `${firstName} ${lastName}` : firstName;
-}
-
 function getPilotDisplayName(name?: string) {
   return normalizePilotName(name);
 }
@@ -554,7 +549,7 @@ export default function CasernaKartAppModerno() {
 
           <div className="grid grid-cols-2 gap-3">
             <HighlightCard title="Líder" icon={Crown} accent>
-              <div className="flex h-full flex-col items-center justify-center text-center pt-0">
+              <div className="flex h-full flex-col items-center justify-center pt-0 text-center">
                 <div>
                   <p className="text-[28px] font-bold leading-none tracking-tight text-zinc-950">
                     {leaderName.firstName.toUpperCase()}
@@ -571,7 +566,7 @@ export default function CasernaKartAppModerno() {
             </HighlightCard>
 
             <HighlightCard title="Vitórias" icon={Medal}>
-              <div className="flex h-full flex-col items-center justify-center text-center pt-0">
+              <div className="flex h-full flex-col items-center justify-center pt-0 text-center">
                 <p className="text-[42px] font-bold leading-none tracking-tight text-zinc-950">
                   {leader?.vitorias || 0}
                 </p>
@@ -590,24 +585,20 @@ export default function CasernaKartAppModerno() {
               </CardContent>
             </Card>
 
-            <HighlightCard title="Advertências" icon={AlertTriangle}>
-              <div className="flex h-full flex-col items-center justify-center text-center pt-0">
+            <HighlightCard title="Pódios" icon={Medal}>
+              <div className="flex h-full flex-col items-center justify-center pt-0 text-center">
                 <p className="text-[42px] font-bold leading-none tracking-tight text-zinc-950">
-                  {leader?.adv || 0}
+                  {leader?.podios || 0}
                 </p>
                 <p className="mt-3 text-sm text-zinc-500">
-                  advertências nesta classificação
+                  pódios nesta classificação
                 </p>
               </div>
             </HighlightCard>
           </div>
         </section>
 
-        <Tabs
-          value={activeTab}
-          onValueChange={setActiveTab}
-          className="mt-5"
-        >
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-5">
           <TabsList className="grid w-full grid-cols-3 rounded-2xl border border-black/5 bg-white p-1 shadow-sm">
             <TabsTrigger
               value="classificacao"
@@ -656,42 +647,44 @@ export default function CasernaKartAppModerno() {
 
               <Card className="overflow-hidden rounded-[22px] border-black/5 bg-white shadow-sm">
                 <CardContent className="p-0">
-                  <div className="border-b border-black/5 bg-zinc-50/80 px-3 py-3">
-                    <table className="w-full table-auto">
+                  <div className="max-h-[520px] overflow-y-auto">
+                    <table className="w-full table-fixed">
                       <colgroup>
-                        <col style={{ width: 52 }} />
+                        <col className="w-[52px]" />
                         <col />
-                        <col style={{ width: 42 }} />
-                        <col style={{ width: 42 }} />
-                        <col style={{ width: 42 }} />
-                        <col style={{ width: 46 }} />
-                        <col style={{ width: 54 }} />
+                        <col className="w-[44px]" />
+                        <col className="w-[44px]" />
+                        <col className="w-[44px]" />
+                        <col className="w-[48px]" />
+                        <col className="w-[64px]" />
                       </colgroup>
-                      <thead>
-                        <tr className="text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-500">
-                          <th className="px-1 text-center whitespace-nowrap">Pos.</th>
-                          <th className="px-1 text-left whitespace-nowrap">Piloto</th>
-                          <th className="px-1 text-center whitespace-nowrap">Pts</th>
-                          <th className="px-1 text-center whitespace-nowrap">Vit</th>
-                          <th className="px-1 text-center whitespace-nowrap">Pol</th>
-                          <th className="px-1 text-center whitespace-nowrap">VMR</th>
-                          <th className="px-1 text-center whitespace-nowrap">Pódios</th>
+
+                      <thead className="sticky top-0 z-10">
+                        <tr className="border-b border-black/5 bg-zinc-50/95 text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-500 backdrop-blur">
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                            Pos.
+                          </th>
+                          <th className="px-2 py-3 text-left whitespace-nowrap">
+                            Piloto
+                          </th>
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                            Pts
+                          </th>
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                            Vit
+                          </th>
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                            Pol
+                          </th>
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                            VMR
+                          </th>
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                            Pódios
+                          </th>
                         </tr>
                       </thead>
-                    </table>
-                  </div>
 
-                  <div className="max-h-[520px] overflow-y-auto">
-                    <table className="w-full table-auto">
-                      <colgroup>
-                        <col style={{ width: 52 }} />
-                        <col />
-                        <col style={{ width: 42 }} />
-                        <col style={{ width: 42 }} />
-                        <col style={{ width: 42 }} />
-                        <col style={{ width: 46 }} />
-                        <col style={{ width: 54 }} />
-                      </colgroup>
                       <tbody>
                         {filteredRanking.map((item, index) => (
                           <tr
@@ -700,7 +693,7 @@ export default function CasernaKartAppModerno() {
                               index % 2 === 0 ? "bg-white" : "bg-zinc-50/50"
                             }`}
                           >
-                            <td className="px-1 py-3 text-center">
+                            <td className="px-1 py-3 text-center align-middle">
                               <button
                                 type="button"
                                 onClick={() => handleSelectPilot(item)}
@@ -718,31 +711,31 @@ export default function CasernaKartAppModerno() {
                               </button>
                             </td>
 
-                            <td className="px-1 py-3">
+                            <td className="min-w-0 px-2 py-3 align-middle">
                               <button
                                 type="button"
                                 onClick={() => handleSelectPilot(item)}
                                 className="block w-full text-left"
                               >
-                                <span className="block whitespace-nowrap text-[12px] font-bold tracking-tight text-zinc-950">
-                                  {getPilotShortName(item.piloto)}
+                                <span className="block text-[12px] font-bold tracking-tight text-zinc-950">
+                                  {getPilotDisplayName(item.piloto)}
                                 </span>
                               </button>
                             </td>
 
-                            <td className="px-1 py-3 text-center text-[12px] font-semibold text-zinc-950">
+                            <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
                               {item.pontos}
                             </td>
-                            <td className="px-1 py-3 text-center text-[12px] font-semibold text-zinc-950">
+                            <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
                               {item.vitorias}
                             </td>
-                            <td className="px-1 py-3 text-center text-[12px] font-semibold text-zinc-950">
+                            <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
                               {item.poles}
                             </td>
-                            <td className="px-1 py-3 text-center text-[12px] font-semibold text-zinc-950">
+                            <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
                               {item.mv}
                             </td>
-                            <td className="px-1 py-3 text-center text-[12px] font-semibold text-zinc-950">
+                            <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
                               {item.podios}
                             </td>
                           </tr>
