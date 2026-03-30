@@ -177,11 +177,6 @@ function getPilotNameParts(name?: string) {
   };
 }
 
-function getPilotShortName(name?: string) {
-  const { firstName, lastName } = getPilotNameParts(name);
-  return lastName ? `${firstName} ${lastName}` : firstName;
-}
-
 function getPilotDisplayName(name?: string) {
   return normalizePilotName(name);
 }
@@ -590,13 +585,13 @@ export default function CasernaKartAppModerno() {
               </CardContent>
             </Card>
 
-            <HighlightCard title="Advertências" icon={AlertTriangle}>
+            <HighlightCard title="Pódios" icon={Medal}>
               <div className="flex h-full flex-col items-center justify-center pt-0 text-center">
                 <p className="text-[42px] font-bold leading-none tracking-tight text-zinc-950">
-                  {leader?.adv || 0}
+                  {leader?.podios || 0}
                 </p>
                 <p className="mt-3 text-sm text-zinc-500">
-                  advertências nesta classificação
+                  pódios nesta classificação
                 </p>
               </div>
             </HighlightCard>
@@ -722,8 +717,8 @@ export default function CasernaKartAppModerno() {
                                 onClick={() => handleSelectPilot(item)}
                                 className="block w-full text-left"
                               >
-                                <span className="block truncate text-[12px] font-bold tracking-tight text-zinc-950">
-                                  {getPilotShortName(item.piloto)}
+                                <span className="block text-[12px] font-bold tracking-tight text-zinc-950">
+                                  {getPilotDisplayName(item.piloto)}
                                 </span>
                               </button>
                             </td>
