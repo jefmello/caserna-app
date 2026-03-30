@@ -661,36 +661,36 @@ export default function CasernaKartAppModerno() {
                   <div className="max-h-[520px] overflow-y-auto">
                     <table className="w-full table-fixed">
                       <colgroup>
-                        <col className="w-[52px]" />
+                        <col className="w-[46px]" />
                         <col />
-                        <col className="w-[44px]" />
-                        <col className="w-[44px]" />
-                        <col className="w-[44px]" />
-                        <col className="w-[48px]" />
-                        <col className="w-[64px]" />
+                        <col className="w-[34px]" />
+                        <col className="w-[34px]" />
+                        <col className="w-[34px]" />
+                        <col className="w-[38px]" />
+                        <col className="w-[46px]" />
                       </colgroup>
 
                       <thead className="sticky top-0 z-10">
-                        <tr className="border-b border-black/5 bg-zinc-50/95 text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-500 backdrop-blur">
-                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                        <tr className="border-b border-black/5 bg-zinc-50/95 text-[10px] font-semibold uppercase tracking-[0.10em] text-zinc-500 backdrop-blur">
+                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
                             Pos.
                           </th>
                           <th className="px-2 py-3 text-left whitespace-nowrap">
                             Piloto
                           </th>
-                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
                             Pts
                           </th>
-                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
                             Vit
                           </th>
-                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
                             Pol
                           </th>
-                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
                             VMR
                           </th>
-                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
                             Pódios
                           </th>
                         </tr>
@@ -708,7 +708,7 @@ export default function CasernaKartAppModerno() {
                                 index % 2 === 0 ? "bg-white" : "bg-zinc-50/50"
                               }`}
                             >
-                              <td className="px-1 py-3 text-center align-middle">
+                              <td className="px-0.5 py-3 text-center align-middle">
                                 <button
                                   type="button"
                                   onClick={() => handleSelectPilot(item)}
@@ -738,7 +738,7 @@ export default function CasernaKartAppModerno() {
                                     </span>
 
                                     {nomeLinha2 ? (
-                                      <span className="mt-1 block text-[11px] font-medium text-zinc-500">
+                                      <span className="mt-1 block text-[10px] font-medium text-zinc-500">
                                         {nomeLinha2}
                                       </span>
                                     ) : null}
@@ -746,19 +746,19 @@ export default function CasernaKartAppModerno() {
                                 </button>
                               </td>
 
-                              <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
+                              <td className="px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
                                 {item.pontos}
                               </td>
-                              <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
+                              <td className="px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
                                 {item.vitorias}
                               </td>
-                              <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
+                              <td className="px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
                                 {item.poles}
                               </td>
-                              <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
+                              <td className="px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
                                 {item.mv}
                               </td>
-                              <td className="px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
+                              <td className="px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
                                 {item.podios}
                               </td>
                             </tr>
