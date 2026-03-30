@@ -15,7 +15,6 @@ import {
   ArrowLeft,
   User,
   ChevronRight,
-  ShieldCheck,
   Camera,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -479,37 +478,18 @@ export default function CasernaKartAppModerno() {
   return (
     <div className="min-h-screen bg-[#f3f4f6] font-sans text-zinc-950 antialiased">
       <div className="mx-auto max-w-md px-4 pb-20 pt-4">
-        <header className="sticky top-0 z-20 mb-4 rounded-[24px] border border-black/5 bg-white/95 px-4 py-4 shadow-sm backdrop-blur-xl">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex min-w-0 items-start gap-3">
-              <div className="relative h-9 w-28 shrink-0 overflow-hidden">
-                <Image
-                  src="/kartLogo.png"
-                  alt="Kart Racing"
-                  fill
-                  className="object-contain object-left"
-                  priority
-                />
-              </div>
-
-              <div className="min-w-0 pt-0.5">
-                <div className="flex flex-col items-center">
-                  <h1 className="text-[19px] font-black uppercase italic leading-none tracking-tight text-zinc-950">
-                    CLASSIFICAÇÃO
-                  </h1>
-                  <h2 className="mt-1 text-[19px] font-black uppercase italic leading-none tracking-tight text-zinc-950">
-                    OFICIAL
-                  </h2>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-yellow-50">
-              <ShieldCheck className="h-4 w-4 text-yellow-700" />
-            </div>
+        <header className="sticky top-0 z-20 mb-4 overflow-hidden rounded-[24px] border border-black/5 bg-white shadow-sm">
+          <div className="relative h-[80px] w-full">
+            <Image
+              src="/banner-topo.png"
+              alt="Classificação Oficial"
+              fill
+              className="object-cover"
+              priority
+            />
           </div>
 
-          <div className="mt-4 space-y-2">
+          <div className="space-y-2 px-3 pb-3 pt-2">
             <div className="overflow-x-auto">
               <div className="flex gap-2 pb-1">
                 {categories.map((cat) => (
