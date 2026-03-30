@@ -192,6 +192,11 @@ function getPilotWarName(pilot?: RankingItem | null) {
   return nomeGuerra;
 }
 
+function getPilotWarNameDisplay(pilot?: RankingItem | null) {
+  const nomeGuerra = getPilotWarName(pilot);
+  return nomeGuerra ? `"${nomeGuerra}"` : "";
+}
+
 function getPilotHighlightName(name?: string) {
   const normalized = normalizePilotName(name);
   return normalized === "-" ? "-" : normalized.toUpperCase();
@@ -699,7 +704,7 @@ export default function CasernaKartAppModerno() {
                       <tbody>
                         {filteredRanking.map((item, index) => {
                           const nomeLinha1 = getPilotFirstAndLastName(item.piloto);
-                          const nomeLinha2 = getPilotWarName(item);
+                          const nomeLinha2 = getPilotWarNameDisplay(item);
 
                           return (
                             <tr
@@ -738,7 +743,7 @@ export default function CasernaKartAppModerno() {
                                     </span>
 
                                     {nomeLinha2 ? (
-                                      <span className="mt-1 block text-[10px] font-medium text-zinc-500">
+                                      <span className="mt-1 inline-flex max-w-full rounded-full border border-yellow-200 bg-yellow-50 px-2 py-0.5 text-[10px] font-semibold italic tracking-[0.02em] text-yellow-800">
                                         {nomeLinha2}
                                       </span>
                                     ) : null}
@@ -835,12 +840,16 @@ export default function CasernaKartAppModerno() {
                           <p className="truncate text-xl font-bold tracking-tight text-zinc-950">
                             {getPilotDisplayName(selectedPilot.piloto)}
                           </p>
-                          {getPilotWarName(selectedPilot) ? (
-                            <p className="mt-1 text-sm text-zinc-500">
-                              {getPilotWarName(selectedPilot)}
-                            </p>
+
+                          {getPilotWarNameDisplay(selectedPilot) ? (
+                            <div className="mt-2">
+                              <span className="inline-flex rounded-full border border-yellow-200 bg-yellow-50 px-2.5 py-1 text-[11px] font-semibold italic text-yellow-800">
+                                {getPilotWarNameDisplay(selectedPilot)}
+                              </span>
+                            </div>
                           ) : null}
-                          <p className="mt-1 text-sm text-zinc-500">
+
+                          <p className="mt-2 text-sm text-zinc-500">
                             {competitionLabels[competition] || competition}
                           </p>
                         </div>
