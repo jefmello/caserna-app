@@ -28,7 +28,8 @@ type RankingData = Record<string, RankingItem[]>;
 
 type PilotosMaps = {
   byId: Record<string, string>;
-  byName: Record<string, string>;
+  byFullName: Record<string, string>;
+  byFirstLast: Record<string, string>;
 };
 
 function normalizeText(value: string) {
@@ -49,6 +50,16 @@ function normalizeName(value: string) {
     .filter(Boolean)
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
+}
+
+function getFirstLastName(value: string) {
+  const normalized = normalizeName(value);
+  if (!normalized) return "";
+
+  const parts = normalized.split(/\s+/).filter(Boolean);
+  if (parts.length === 1) return parts[0];
+
+  return `${parts[0]} ${parts[parts.length - 1]}`;
 }
 
 function normalizeCategory(value: string) {
@@ -130,7 +141,7 @@ function findHeaderRowIndex(
     );
 
     const hasAll = requiredColumns.every((name) =>
-      cols.includes(normalizeText(name))
+      cols.some((col) => col === normalizeText(name))
     );
 
     if (hasAll) return i;
@@ -142,11 +153,19 @@ function findHeaderRowIndex(
 function findHeaderIndex(headers: string[], possibleNames: string[]) {
   for (const name of possibleNames) {
     const normalized = normalizeText(name);
-    const index = headers.indexOf(normalized);
+    const index = headers.findIndex((header) => header === normalized);
     if (index !== -1) return index;
   }
 
   return -1;
+}
+
+function findHeaderIndexContains(headers: string[], fragments: string[]) {
+  const normalizedFragments = fragments.map(normalizeText);
+
+  return headers.findIndex((header) =>
+    normalizedFragments.every((fragment) => header.includes(fragment))
+  );
 }
 
 function sortRanking(list: RankingItem[]) {
@@ -170,7 +189,7 @@ function parsePilotosCsv(text: string) {
 
   if (nonEmptyLines.length < 2) {
     return {
-      maps: { byId: {}, byName: {} } as PilotosMaps,
+      maps: { byId: {}, byFullName: {}, byFirstLast: {} } as PilotosMaps,
       debug: {
         reason: "Poucas linhas no CSV de pilotos.",
         firstLines: nonEmptyLines.slice(0, 10),
@@ -179,15 +198,21 @@ function parsePilotosCsv(text: string) {
   }
 
   const separator = detectSeparator(nonEmptyLines[0]);
-  const headerRowIndex = findHeaderRowIndex(nonEmptyLines, separator, [
-    "piloto id",
-  ]);
+
+  let headerRowIndex = findHeaderRowIndex(nonEmptyLines, separator, ["piloto id"]);
+
+  if (headerRowIndex === -1) {
+    headerRowIndex = nonEmptyLines.findIndex((line) => {
+      const cols = parseDelimitedLine(line, separator).map((c) => normalizeText(c));
+      return cols.length >= 9;
+    });
+  }
 
   if (headerRowIndex === -1) {
     return {
-      maps: { byId: {}, byName: {} } as PilotosMaps,
+      maps: { byId: {}, byFullName: {}, byFirstLast: {} } as PilotosMaps,
       debug: {
-        reason: "Cabeçalho da aba PILOTOS não encontrado.",
+        reason: "Não foi possível localizar a linha de cabeçalho da aba PILOTOS.",
         separator,
         firstLines: nonEmptyLines.slice(0, 15),
       },
@@ -198,43 +223,58 @@ function parsePilotosCsv(text: string) {
     (h) => normalizeText(h)
   );
 
-  const idxPilotoId = findHeaderIndex(headers, ["piloto id", "id piloto", "id"]);
-  const idxPilotoNome = findHeaderIndex(headers, [
+  let idxPilotoId = findHeaderIndex(headers, ["piloto id", "id piloto", "id"]);
+  if (idxPilotoId === -1) {
+    idxPilotoId = findHeaderIndexContains(headers, ["id"]);
+  }
+
+  let idxPilotoNome = findHeaderIndex(headers, [
     "piloto",
     "nome",
     "nome piloto",
     "piloto nome",
+    "nome completo",
   ]);
 
-  // Coluna I fixa = índice 8
+  if (idxPilotoNome === -1) {
+    idxPilotoNome = findHeaderIndexContains(headers, ["nome"]);
+  }
+
   const idxNomeGuerra = 8;
 
   const byId: Record<string, string> = {};
-  const byName: Record<string, string> = {};
+  const byFullName: Record<string, string> = {};
+  const byFirstLast: Record<string, string> = {};
 
   for (let i = headerRowIndex + 1; i < nonEmptyLines.length; i++) {
     const cols = parseDelimitedLine(nonEmptyLines[i], separator);
 
+    if (cols.every((col) => !col.trim())) continue;
+
     const pilotoId = idxPilotoId >= 0 ? (cols[idxPilotoId] || "").trim() : "";
-    const pilotoNome =
-      idxPilotoNome >= 0 ? normalizeName(cols[idxPilotoNome] || "") : "";
-    const pilotoNomeKey =
-      idxPilotoNome >= 0 ? normalizeText(cols[idxPilotoNome] || "") : "";
+    const pilotoNomeRaw = idxPilotoNome >= 0 ? cols[idxPilotoNome] || "" : "";
+    const pilotoNome = normalizeName(pilotoNomeRaw);
+    const pilotoNomeKey = normalizeText(pilotoNomeRaw);
+    const pilotoFirstLastKey = normalizeText(getFirstLastName(pilotoNomeRaw));
+    const nomeGuerra = normalizeName(cols[idxNomeGuerra] || "");
 
-    const nomeGuerra =
-      idxNomeGuerra >= 0 ? normalizeName(cols[idxNomeGuerra] || "") : "";
+    if (!nomeGuerra) continue;
 
-    if (pilotoId && nomeGuerra) {
+    if (pilotoId) {
       byId[pilotoId] = nomeGuerra;
     }
 
-    if (pilotoNome && pilotoNomeKey && nomeGuerra) {
-      byName[pilotoNomeKey] = nomeGuerra;
+    if (pilotoNome && pilotoNomeKey) {
+      byFullName[pilotoNomeKey] = nomeGuerra;
+    }
+
+    if (pilotoFirstLastKey) {
+      byFirstLast[pilotoFirstLastKey] = nomeGuerra;
     }
   }
 
   return {
-    maps: { byId, byName },
+    maps: { byId, byFullName, byFirstLast },
     debug: {
       separator,
       headerRowIndex,
@@ -242,10 +282,12 @@ function parsePilotosCsv(text: string) {
       idxPilotoId,
       idxPilotoNome,
       idxNomeGuerra,
-      totalPorId: Object.keys(byId).length,
-      totalPorNome: Object.keys(byName).length,
+      totalById: Object.keys(byId).length,
+      totalByFullName: Object.keys(byFullName).length,
+      totalByFirstLast: Object.keys(byFirstLast).length,
       sampleById: Object.entries(byId).slice(0, 10),
-      sampleByName: Object.entries(byName).slice(0, 10),
+      sampleByFullName: Object.entries(byFullName).slice(0, 10),
+      sampleByFirstLast: Object.entries(byFirstLast).slice(0, 10),
     },
   };
 }
@@ -324,7 +366,8 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
   let acceptedRows = 0;
   let ignoredEmptyPilot = 0;
   let matchedById = 0;
-  let matchedByName = 0;
+  let matchedByFullName = 0;
+  let matchedByFirstLast = 0;
   let withoutNomeGuerra = 0;
 
   for (let i = headerRowIndex + 1; i < nonEmptyLines.length; i++) {
@@ -334,6 +377,7 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
     const pilotoOriginal = idxPiloto >= 0 ? (cols[idxPiloto] || "").trim() : "";
     const piloto = normalizeName(pilotoOriginal);
     const pilotoKey = normalizeText(pilotoOriginal);
+    const pilotoFirstLastKey = normalizeText(getFirstLastName(pilotoOriginal));
 
     if (!piloto) {
       ignoredEmptyPilot++;
@@ -352,12 +396,16 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
     const competicao = normalizeCompetition(competicaoOriginal);
 
     let nomeGuerra = "";
+
     if (pilotoId && pilotosMaps.byId[pilotoId]) {
       nomeGuerra = pilotosMaps.byId[pilotoId];
       matchedById++;
-    } else if (pilotoKey && pilotosMaps.byName[pilotoKey]) {
-      nomeGuerra = pilotosMaps.byName[pilotoKey];
-      matchedByName++;
+    } else if (pilotoKey && pilotosMaps.byFullName[pilotoKey]) {
+      nomeGuerra = pilotosMaps.byFullName[pilotoKey];
+      matchedByFullName++;
+    } else if (pilotoFirstLastKey && pilotosMaps.byFirstLast[pilotoFirstLastKey]) {
+      nomeGuerra = pilotosMaps.byFirstLast[pilotoFirstLastKey];
+      matchedByFirstLast++;
     } else {
       withoutNomeGuerra++;
     }
@@ -400,15 +448,10 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
       acceptedRows,
       ignoredEmptyPilot,
       matchedById,
-      matchedByName,
+      matchedByFullName,
+      matchedByFirstLast,
       withoutNomeGuerra,
       categoriesFound: Object.keys(grouped),
-      competitionsByCategory: Object.fromEntries(
-        Object.entries(grouped).map(([category, items]) => [
-          category,
-          [...new Set(items.map((item) => item.competicao))],
-        ])
-      ),
       sampleNomeGuerra: Object.values(grouped)
         .flat()
         .filter((item) => !!item.nomeGuerra)
