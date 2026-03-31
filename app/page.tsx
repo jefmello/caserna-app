@@ -17,6 +17,7 @@ import {
   Camera,
   Sparkles,
   Star,
+  TableProperties,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -803,18 +804,25 @@ export default function CasernaKartAppModerno() {
             </Card>
 
             <section className="space-y-3">
-              <div className="rounded-[20px] border border-black/5 bg-white px-4 py-3 shadow-sm">
+              <div className="rounded-[22px] border border-yellow-200/70 bg-gradient-to-b from-yellow-50 to-white px-4 py-4 shadow-sm">
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-zinc-700">
-                      Classificação geral
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-yellow-100 shadow-sm">
+                        <TableProperties className="h-4.5 w-4.5 text-yellow-700" />
+                      </div>
 
-                    <p className="mt-1 text-[14px] font-medium leading-tight text-zinc-600">
-                      Categoria e campeonato selecionados
-                    </p>
+                      <div className="min-w-0">
+                        <p className="text-[18px] font-extrabold uppercase tracking-[0.14em] text-zinc-950">
+                          Classificação geral
+                        </p>
+                        <p className="mt-0.5 text-[12px] font-semibold uppercase tracking-[0.10em] text-zinc-500">
+                          categoria e campeonato selecionados
+                        </p>
+                      </div>
+                    </div>
 
-                    <div className="mt-2 h-px w-16 bg-gradient-to-r from-yellow-400/70 to-transparent" />
+                    <div className="mt-3 h-px w-28 bg-gradient-to-r from-yellow-400/70 to-transparent" />
                   </div>
 
                   <div className="shrink-0 rounded-full border border-yellow-200 bg-gradient-to-r from-yellow-50 to-yellow-100 px-3 py-1.5 shadow-sm">
@@ -1138,6 +1146,7 @@ export default function CasernaKartAppModerno() {
                     value={selectedPilot.mv}
                     subtitle="voltas rápidas"
                     icon={Timer}
+                    accent
                   />
                   <CompactStatCard
                     title="Pódios"
