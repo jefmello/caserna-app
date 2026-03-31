@@ -864,15 +864,15 @@ export default function CasernaKartAppModerno() {
           <div
             className={`mb-3 rounded-[18px] border ${theme.heroBorder} bg-gradient-to-b ${theme.heroBg} px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]`}
           >
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex min-w-0 items-center gap-3">
+            <div className="flex items-center justify-center">
+              <div className="flex items-center gap-3.5">
                 <div
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${theme.primaryIconWrap} shadow-sm`}
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] ${theme.primaryIconWrap} shadow-sm`}
                 >
-                  <Trophy className={`h-5 w-5 ${theme.primaryIcon}`} />
+                  <Trophy className={`h-5.5 w-5.5 ${theme.primaryIcon}`} />
                 </div>
 
-                <div className="min-w-0">
+                <div className="flex flex-col justify-center">
                   <p className="text-[18px] font-extrabold uppercase tracking-[0.14em] leading-none text-zinc-950">
                     PILOTO DESTAQUE
                   </p>
@@ -881,10 +881,6 @@ export default function CasernaKartAppModerno() {
                   </p>
                 </div>
               </div>
-
-              <div
-                className={`hidden h-px w-16 bg-gradient-to-r from-transparent ${theme.heroLine} to-transparent sm:block`}
-              />
             </div>
           </div>
 
