@@ -58,9 +58,9 @@ type RankingItem = {
 type RankingData = Record<string, RankingItem[]>;
 
 const categoryColors: Record<string, string> = {
-  Base: "bg-sky-50 text-sky-700 border-sky-200",
-  Graduados: "bg-amber-50 text-amber-700 border-amber-200",
-  Elite: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200",
+  Base: "bg-orange-50 text-orange-700 border-orange-200",
+  Graduados: "bg-blue-50 text-blue-700 border-blue-200",
+  Elite: "bg-yellow-50 text-yellow-700 border-yellow-200",
 };
 
 const competitionLabels: Record<string, string> = {
@@ -247,6 +247,82 @@ function getTopPointsChartData(list: RankingItem[], limit = 5) {
   }));
 }
 
+function getCategoryTheme(category: string) {
+  const themes = {
+    Base: {
+      shellGlow: "from-orange-500/10 via-white to-orange-100/60",
+      primaryBorder: "border-orange-200/90",
+      primaryRing: "via-orange-400/80",
+      primarySoft: "from-orange-50 to-white",
+      primaryBadge: "bg-orange-100 text-orange-800 border-orange-200",
+      primaryIconWrap: "bg-orange-100",
+      primaryIcon: "text-orange-700",
+      heroBorder: "border-orange-200/80",
+      heroBg: "from-orange-50 via-white to-orange-50/70",
+      heroChip: "border-orange-200 bg-orange-100/80 text-orange-800",
+      heroLine: "via-orange-400/70",
+      titleBorder: "border-orange-200/90",
+      titleBg: "from-orange-50 via-white to-white",
+      titlePill:
+        "border-orange-200 bg-gradient-to-b from-orange-100 to-orange-200",
+      titlePillText: "text-orange-950",
+      titleIconWrap:
+        "border-orange-200 bg-gradient-to-b from-orange-100 to-orange-200",
+      titleIcon: "text-orange-700",
+      titleSub: "text-orange-500/80",
+      badgeOutline: "border-orange-200 text-orange-700 bg-orange-50",
+    },
+    Graduados: {
+      shellGlow: "from-blue-500/10 via-white to-blue-100/60",
+      primaryBorder: "border-blue-200/90",
+      primaryRing: "via-blue-400/80",
+      primarySoft: "from-blue-50 to-white",
+      primaryBadge: "bg-blue-100 text-blue-800 border-blue-200",
+      primaryIconWrap: "bg-blue-100",
+      primaryIcon: "text-blue-700",
+      heroBorder: "border-blue-200/80",
+      heroBg: "from-blue-50 via-white to-blue-50/70",
+      heroChip: "border-blue-200 bg-blue-100/80 text-blue-800",
+      heroLine: "via-blue-400/70",
+      titleBorder: "border-blue-200/90",
+      titleBg: "from-blue-50 via-white to-white",
+      titlePill:
+        "border-blue-200 bg-gradient-to-b from-blue-100 to-blue-200",
+      titlePillText: "text-blue-950",
+      titleIconWrap:
+        "border-blue-200 bg-gradient-to-b from-blue-100 to-blue-200",
+      titleIcon: "text-blue-700",
+      titleSub: "text-blue-500/80",
+      badgeOutline: "border-blue-200 text-blue-700 bg-blue-50",
+    },
+    Elite: {
+      shellGlow: "from-yellow-500/10 via-white to-yellow-100/60",
+      primaryBorder: "border-yellow-200/90",
+      primaryRing: "via-yellow-400/80",
+      primarySoft: "from-yellow-50 to-white",
+      primaryBadge: "bg-yellow-100 text-yellow-800 border-yellow-200",
+      primaryIconWrap: "bg-yellow-100",
+      primaryIcon: "text-yellow-700",
+      heroBorder: "border-yellow-200/80",
+      heroBg: "from-yellow-50 via-white to-yellow-50/70",
+      heroChip: "border-yellow-200 bg-yellow-100/80 text-yellow-800",
+      heroLine: "via-yellow-400/70",
+      titleBorder: "border-yellow-200/90",
+      titleBg: "from-yellow-50 via-white to-white",
+      titlePill:
+        "border-yellow-200 bg-gradient-to-b from-[#fff9d8] to-[#f8edb2]",
+      titlePillText: "text-zinc-950",
+      titleIconWrap:
+        "border-yellow-200 bg-gradient-to-b from-[#fff9d8] to-[#f8edb2]",
+      titleIcon: "text-yellow-700",
+      titleSub: "text-yellow-700/70",
+      badgeOutline: "border-yellow-200 text-yellow-700 bg-yellow-50",
+    },
+  };
+
+  return themes[category as keyof typeof themes] || themes.Elite;
+}
+
 function CompactStatCard({
   title,
   value,
@@ -301,17 +377,37 @@ function HighlightCard({
   icon: Icon,
   children,
   accent = false,
+  accentStyles,
 }: {
   title: string;
   icon: React.ElementType;
   children: React.ReactNode;
   accent?: boolean;
+  accentStyles?: {
+    border: string;
+    bg: string;
+    iconWrap: string;
+    icon: string;
+    text: string;
+    divider: string;
+  };
 }) {
+  const defaultAccent = {
+    border: "border-yellow-300",
+    bg: "bg-gradient-to-b from-yellow-50 to-white",
+    iconWrap: "bg-yellow-100",
+    icon: "text-yellow-700",
+    text: "text-yellow-800",
+    divider: "bg-yellow-200/80",
+  };
+
+  const appliedAccent = accentStyles || defaultAccent;
+
   return (
     <Card
       className={`h-[182px] rounded-[22px] border shadow-none ${
         accent
-          ? "border-yellow-300 bg-gradient-to-b from-yellow-50 to-white"
+          ? `${appliedAccent.border} ${appliedAccent.bg}`
           : "border-black/5 bg-white"
       }`}
     >
@@ -319,7 +415,7 @@ function HighlightCard({
         <div className="mb-1 flex items-start justify-between gap-2">
           <p
             className={`w-full text-center text-[11px] font-bold uppercase tracking-[0.18em] leading-none ${
-              accent ? "text-yellow-800" : "text-zinc-500"
+              accent ? appliedAccent.text : "text-zinc-500"
             }`}
           >
             {title}
@@ -327,12 +423,12 @@ function HighlightCard({
 
           <div
             className={`-mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-xl ${
-              accent ? "bg-yellow-100" : "bg-zinc-100"
+              accent ? appliedAccent.iconWrap : "bg-zinc-100"
             }`}
           >
             <Icon
               className={`h-3 w-3 ${
-                accent ? "text-yellow-700" : "text-zinc-600"
+                accent ? appliedAccent.icon : "text-zinc-600"
               }`}
             />
           </div>
@@ -340,7 +436,7 @@ function HighlightCard({
 
         <div
           className={`mb-1 h-px w-full ${
-            accent ? "bg-yellow-200/80" : "bg-zinc-100"
+            accent ? appliedAccent.divider : "bg-zinc-100"
           }`}
         />
 
@@ -560,6 +656,7 @@ export default function CasernaKartAppModerno() {
 
   const leader = filteredRanking[0];
   const leaderName = useMemo(() => getPilotNameParts(leader?.piloto), [leader]);
+  const theme = useMemo(() => getCategoryTheme(category), [category]);
 
   const topPointsChartData = useMemo(
     () => getTopPointsChartData(filteredRanking, 5),
@@ -629,11 +726,15 @@ export default function CasernaKartAppModerno() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] font-sans text-zinc-950 antialiased">
+    <div
+      className={`min-h-screen bg-[#f3f4f6] font-sans text-zinc-950 antialiased`}
+    >
       <div className="mx-auto max-w-md px-4 pb-20 pt-4">
         <header className="sticky top-0 z-20 mb-4 overflow-hidden rounded-[28px] border border-black/5 bg-gradient-to-b from-white to-[#fcfcfc] shadow-[0_12px_30px_rgba(15,23,42,0.08)]">
           <div className="relative">
-            <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent via-yellow-400/80 to-transparent" />
+            <div
+              className={`absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
+            />
 
             <div className="px-4 pb-3 pt-4">
               <div className="overflow-hidden rounded-[22px] border border-black/5 bg-white shadow-[0_6px_20px_rgba(15,23,42,0.06)]">
@@ -669,11 +770,9 @@ export default function CasernaKartAppModerno() {
                       Base: active
                         ? "border-orange-400 bg-gradient-to-b from-orange-100 to-orange-200 text-orange-900 shadow-[0_6px_14px_rgba(249,115,22,0.25)]"
                         : "border-orange-200 bg-white text-orange-700 shadow-sm hover:bg-orange-50",
-
                       Graduados: active
                         ? "border-blue-400 bg-gradient-to-b from-blue-100 to-blue-200 text-blue-900 shadow-[0_6px_14px_rgba(59,130,246,0.25)]"
                         : "border-blue-200 bg-white text-blue-700 shadow-sm hover:bg-blue-50",
-
                       Elite: active
                         ? "border-yellow-400 bg-gradient-to-b from-yellow-100 to-yellow-200 text-yellow-900 shadow-[0_6px_14px_rgba(234,179,8,0.25)]"
                         : "border-yellow-200 bg-white text-yellow-700 shadow-sm hover:bg-yellow-50",
@@ -725,11 +824,17 @@ export default function CasernaKartAppModerno() {
           </div>
         </header>
 
-        <section className="rounded-[24px] border border-black/5 bg-white px-4 py-4 shadow-sm">
-          <div className="mb-4 rounded-[20px] border border-yellow-200/70 bg-gradient-to-b from-yellow-50 to-white px-4 py-4">
+        <section
+          className={`overflow-hidden rounded-[24px] border ${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow} px-4 py-4 shadow-sm`}
+        >
+          <div
+            className={`mb-4 rounded-[20px] border ${theme.heroBorder} bg-gradient-to-b ${theme.heroBg} px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]`}
+          >
             <div className="flex flex-col items-center justify-center text-center">
-              <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-2xl bg-yellow-100 shadow-sm">
-                <Trophy className="h-5 w-5 text-yellow-700" />
+              <div
+                className={`mb-2 flex h-10 w-10 items-center justify-center rounded-2xl ${theme.primaryIconWrap} shadow-sm`}
+              >
+                <Trophy className={`h-5 w-5 ${theme.primaryIcon}`} />
               </div>
 
               <p className="text-[20px] font-extrabold uppercase tracking-[0.16em] text-zinc-950">
@@ -740,12 +845,36 @@ export default function CasernaKartAppModerno() {
                 líder da categoria e campeonato selecionado
               </p>
 
-              <div className="mt-3 h-px w-24 bg-gradient-to-r from-transparent via-yellow-400/70 to-transparent" />
+              <div
+                className={`mt-3 h-px w-24 bg-gradient-to-r from-transparent ${theme.heroLine} to-transparent`}
+              />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <HighlightCard title="Líder" icon={Crown} accent>
+            <HighlightCard
+              title="Líder"
+              icon={Crown}
+              accent
+              accentStyles={{
+                border: theme.heroBorder,
+                bg: `bg-gradient-to-b ${theme.heroBg}`,
+                iconWrap: theme.primaryIconWrap,
+                icon: theme.primaryIcon,
+                text:
+                  category === "Base"
+                    ? "text-orange-800"
+                    : category === "Graduados"
+                      ? "text-blue-800"
+                      : "text-yellow-800",
+                divider:
+                  category === "Base"
+                    ? "bg-orange-200/80"
+                    : category === "Graduados"
+                      ? "bg-blue-200/80"
+                      : "bg-yellow-200/80",
+              }}
+            >
               <div className="flex h-full flex-col items-center justify-center text-center">
                 <div className="flex min-h-[74px] flex-col items-center justify-center">
                   <p className="text-[30px] font-extrabold leading-none tracking-tight text-zinc-950">
@@ -756,8 +885,10 @@ export default function CasernaKartAppModerno() {
                   </p>
                 </div>
 
-                <div className="mt-3 inline-flex rounded-full border border-yellow-200 bg-yellow-100/70 px-3 py-1">
-                  <p className="text-[12px] font-bold text-yellow-800">
+                <div
+                  className={`mt-3 inline-flex rounded-full border px-3 py-1 ${theme.heroChip}`}
+                >
+                  <p className="text-[12px] font-bold">
                     {leader?.pontos || 0} pontos
                   </p>
                 </div>
@@ -845,27 +976,39 @@ export default function CasernaKartAppModerno() {
             </Card>
 
             <section className="space-y-3">
-              <div className="overflow-hidden rounded-[24px] border border-yellow-200/80 bg-gradient-to-br from-yellow-50 via-white to-white shadow-sm">
+              <div
+                className={`overflow-hidden rounded-[24px] border ${theme.titleBorder} bg-gradient-to-br ${theme.titleBg} shadow-sm`}
+              >
                 <div className="relative px-4 py-4">
-                  <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-yellow-400 to-transparent" />
+                  <div
+                    className={`absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
+                  />
 
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex flex-1 justify-center pr-1">
                       <div className="flex flex-col items-center">
-                        <div className="inline-flex max-w-full items-center justify-center rounded-[18px] border border-yellow-200 bg-gradient-to-b from-[#fff9d8] to-[#f8edb2] px-4 py-2 shadow-[0_4px_10px_rgba(0,0,0,0.08)]">
-                          <h2 className="truncate text-[17px] font-extrabold uppercase tracking-[0.05em] leading-none text-zinc-950">
+                        <div
+                          className={`inline-flex max-w-full items-center justify-center rounded-[18px] border px-4 py-2 shadow-[0_4px_10px_rgba(0,0,0,0.08)] ${theme.titlePill}`}
+                        >
+                          <h2
+                            className={`truncate text-[17px] font-extrabold uppercase tracking-[0.05em] leading-none ${theme.titlePillText}`}
+                          >
                             Classificação Geral
                           </h2>
                         </div>
 
-                        <p className="mt-3 w-[245px] max-w-full text-center text-[9px] font-semibold uppercase tracking-[0.12em] text-zinc-400">
+                        <p
+                          className={`mt-3 w-[245px] max-w-full text-center text-[9px] font-semibold uppercase tracking-[0.12em] ${theme.titleSub}`}
+                        >
                           categoria e campeonato selecionados
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-yellow-200 bg-gradient-to-b from-[#fff9d8] to-[#f8edb2] shadow-[0_4px_10px_rgba(0,0,0,0.08)]">
-                      <TableProperties className="h-5 w-5 text-yellow-700" />
+                    <div
+                      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border shadow-[0_4px_10px_rgba(0,0,0,0.08)] ${theme.titleIconWrap}`}
+                    >
+                      <TableProperties className={`h-5 w-5 ${theme.titleIcon}`} />
                     </div>
                   </div>
                 </div>
