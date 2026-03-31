@@ -14,7 +14,6 @@ import {
   Gauge,
   ArrowLeft,
   User,
-  ChevronRight,
   Camera,
   Sparkles,
   Star,
@@ -30,8 +29,6 @@ import {
 } from "@/components/ui/tabs";
 import {
   ResponsiveContainer,
-  LineChart,
-  Line,
   CartesianGrid,
   XAxis,
   YAxis,
@@ -100,54 +97,6 @@ function hasCompetitionData(list: RankingItem[]) {
       item.podios > 0 ||
       item.descarte > 0
   );
-}
-
-function buildPilotEvolution(leader: RankingItem | undefined) {
-  if (!leader) return [];
-  const p = leader.pontos;
-  return [
-    { etapa: "Início", pontos: Math.round(p * 0.35) },
-    { etapa: "Meio", pontos: Math.round(p * 0.7) },
-    { etapa: "Atual", pontos: p },
-  ];
-}
-
-function buildCategoryLeaderChart(data: RankingData) {
-  return Object.keys(data).map((category) => {
-    const categoryItems = data[category] || [];
-    const orderedCompetitions = ["T1", "T2", "T3", "GERAL"];
-
-    const availableCompetitions = orderedCompetitions.filter((competition) =>
-      hasCompetitionData(
-        categoryItems.filter((item) => item.competicao === competition)
-      )
-    );
-
-    const currentCompetition =
-      availableCompetitions[availableCompetitions.length - 1] || "T1";
-
-    const leader = sortRanking(
-      categoryItems.filter(
-        (item) => item.competicao === currentCompetition && item.pontos > 0
-      )
-    )[0];
-
-    return {
-      categoria: category,
-      pontos: leader?.pontos || 0,
-    };
-  });
-}
-
-function buildSelectedPilotEvolution(selectedPilot: RankingItem | null) {
-  if (!selectedPilot) return [];
-
-  const p = selectedPilot.pontos;
-  return [
-    { etapa: "Início", pontos: Math.round(p * 0.35) },
-    { etapa: "Meio", pontos: Math.round(p * 0.7) },
-    { etapa: "Atual", pontos: p },
-  ];
 }
 
 function normalizePilotName(name?: string) {
@@ -274,6 +223,28 @@ function getTop6RowStyles(position: number) {
         ring: "",
       };
   }
+}
+
+function getTopMetricRanking(
+  list: RankingItem[],
+  metric: keyof Pick<RankingItem, "vitorias" | "poles" | "mv" | "podios">,
+  limit = 5
+) {
+  return [...list]
+    .filter((item) => Number(item[metric]) > 0)
+    .sort((a, b) => {
+      const diff = Number(b[metric]) - Number(a[metric]);
+      if (diff !== 0) return diff;
+      return sortRanking([a, b])[0] === a ? -1 : 1;
+    })
+    .slice(0, limit);
+}
+
+function getTopPointsChartData(list: RankingItem[], limit = 5) {
+  return [...list].slice(0, limit).map((item) => ({
+    piloto: getPilotNameParts(item.piloto).firstName,
+    pontos: item.pontos,
+  }));
 }
 
 function CompactStatCard({
@@ -423,6 +394,91 @@ function PilotPhotoSlot({
   );
 }
 
+function StatRankingCard({
+  title,
+  icon: Icon,
+  items,
+  metricKey,
+  emptyLabel,
+}: {
+  title: string;
+  icon: React.ElementType;
+  items: RankingItem[];
+  metricKey: "vitorias" | "poles" | "mv" | "podios";
+  emptyLabel: string;
+}) {
+  return (
+    <Card className="rounded-[22px] border-black/5 bg-white shadow-sm">
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center gap-2 text-sm font-bold text-zinc-950">
+          <Icon className="h-4 w-4 text-yellow-700" />
+          {title}
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent className="pt-0">
+        {items.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-black/10 bg-zinc-50 px-4 py-6 text-center text-sm text-zinc-500">
+            {emptyLabel}
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {items.map((item, index) => {
+              const value = item[metricKey];
+              const isFirst = index === 0;
+
+              return (
+                <div
+                  key={`${title}-${item.pilotoId}-${index}`}
+                  className={`flex items-center justify-between gap-3 rounded-2xl border px-3 py-3 ${
+                    isFirst
+                      ? "border-yellow-200 bg-yellow-50"
+                      : "border-black/5 bg-zinc-50/70"
+                  }`}
+                >
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-xs font-extrabold ${
+                        isFirst
+                          ? "bg-yellow-400 text-black"
+                          : "bg-zinc-200 text-zinc-800"
+                      }`}
+                    >
+                      {index + 1}
+                    </div>
+
+                    <div className="min-w-0">
+                      <p className="truncate text-[13px] font-bold text-zinc-950">
+                        {getPilotFirstAndLastName(item.piloto)}
+                      </p>
+
+                      {getPilotWarNameDisplay(item) ? (
+                        <p className="mt-0.5 truncate text-[10px] italic text-zinc-500">
+                          {getPilotWarNameDisplay(item)}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  <div
+                    className={`shrink-0 rounded-xl px-3 py-1 text-sm font-extrabold ${
+                      isFirst
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-white text-zinc-800"
+                    }`}
+                  >
+                    {value}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function CasernaKartAppModerno() {
   const [rankingData, setRankingData] = useState<RankingData>({});
   const [loading, setLoading] = useState(true);
@@ -503,16 +559,32 @@ export default function CasernaKartAppModerno() {
   }, [rankingData, category, competition, search]);
 
   const leader = filteredRanking[0];
-  const leaderEvolution = useMemo(() => buildPilotEvolution(leader), [leader]);
-  const selectedPilotEvolution = useMemo(
-    () => buildSelectedPilotEvolution(selectedPilot),
-    [selectedPilot]
-  );
-  const chartData = useMemo(
-    () => buildCategoryLeaderChart(rankingData),
-    [rankingData]
-  );
   const leaderName = useMemo(() => getPilotNameParts(leader?.piloto), [leader]);
+
+  const topPointsChartData = useMemo(
+    () => getTopPointsChartData(filteredRanking, 5),
+    [filteredRanking]
+  );
+
+  const topVitorias = useMemo(
+    () => getTopMetricRanking(filteredRanking, "vitorias", 5),
+    [filteredRanking]
+  );
+
+  const topPoles = useMemo(
+    () => getTopMetricRanking(filteredRanking, "poles", 5),
+    [filteredRanking]
+  );
+
+  const topMv = useMemo(
+    () => getTopMetricRanking(filteredRanking, "mv", 5),
+    [filteredRanking]
+  );
+
+  const topPodios = useMemo(
+    () => getTopMetricRanking(filteredRanking, "podios", 5),
+    [filteredRanking]
+  );
 
   function handleSelectPilot(pilot: RankingItem) {
     setSelectedPilot(pilot);
@@ -1095,40 +1167,6 @@ export default function CasernaKartAppModerno() {
                     icon={Gauge}
                   />
                 </div>
-
-                <Card className="rounded-[22px] border-black/5 bg-white shadow-sm">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-semibold text-zinc-950">
-                      Evolução do piloto
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="h-56">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={selectedPilotEvolution}>
-                        <CartesianGrid
-                          stroke="rgba(15,23,42,0.08)"
-                          strokeDasharray="3 3"
-                        />
-                        <XAxis dataKey="etapa" stroke="#71717a" />
-                        <YAxis stroke="#71717a" />
-                        <Tooltip
-                          contentStyle={{
-                            background: "#ffffff",
-                            border: "1px solid rgba(15,23,42,0.08)",
-                            borderRadius: 16,
-                          }}
-                        />
-                        <Line
-                          type="monotone"
-                          dataKey="pontos"
-                          stroke="#d97706"
-                          strokeWidth={3}
-                          dot={{ r: 4, fill: "#d97706" }}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
               </div>
             )}
           </TabsContent>
@@ -1138,66 +1176,69 @@ export default function CasernaKartAppModerno() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-zinc-950">
                   <BarChart3 className="h-5 w-5 text-yellow-700" />
-                  Líder atual por categoria
+                  Top 5 em pontos
                 </CardTitle>
               </CardHeader>
 
               <CardContent className="h-72">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData}>
-                    <CartesianGrid
-                      stroke="rgba(15,23,42,0.08)"
-                      strokeDasharray="3 3"
-                    />
-                    <XAxis dataKey="categoria" stroke="#71717a" />
-                    <YAxis stroke="#71717a" />
-                    <Tooltip
-                      contentStyle={{
-                        background: "#ffffff",
-                        border: "1px solid rgba(15,23,42,0.08)",
-                        borderRadius: 16,
-                      }}
-                    />
-                    <Bar dataKey="pontos" fill="#facc15" radius={[8, 8, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+                {topPointsChartData.length === 0 ? (
+                  <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-black/10 bg-zinc-50 text-sm text-zinc-500">
+                    Nenhum dado disponível para este campeonato.
+                  </div>
+                ) : (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={topPointsChartData}>
+                      <CartesianGrid
+                        stroke="rgba(15,23,42,0.08)"
+                        strokeDasharray="3 3"
+                      />
+                      <XAxis dataKey="piloto" stroke="#71717a" />
+                      <YAxis stroke="#71717a" />
+                      <Tooltip
+                        contentStyle={{
+                          background: "#ffffff",
+                          border: "1px solid rgba(15,23,42,0.08)",
+                          borderRadius: 16,
+                        }}
+                      />
+                      <Bar dataKey="pontos" fill="#facc15" radius={[8, 8, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                )}
               </CardContent>
             </Card>
 
-            <Card className="rounded-[22px] border-black/5 bg-white shadow-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base text-zinc-950">
-                  <ChevronRight className="h-4 w-4 text-yellow-700" />
-                  Evolução do líder atual
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={leaderEvolution}>
-                    <CartesianGrid
-                      stroke="rgba(15,23,42,0.08)"
-                      strokeDasharray="3 3"
-                    />
-                    <XAxis dataKey="etapa" stroke="#71717a" />
-                    <YAxis stroke="#71717a" />
-                    <Tooltip
-                      contentStyle={{
-                        background: "#ffffff",
-                        border: "1px solid rgba(15,23,42,0.08)",
-                        borderRadius: 16,
-                      }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="pontos"
-                      stroke="#d97706"
-                      strokeWidth={3}
-                      dot={{ r: 4, fill: "#d97706" }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
+            <StatRankingCard
+              title="Mais vitórias"
+              icon={Trophy}
+              items={topVitorias}
+              metricKey="vitorias"
+              emptyLabel="Nenhuma vitória registrada nesta seleção."
+            />
+
+            <StatRankingCard
+              title="Mais poles"
+              icon={Flag}
+              items={topPoles}
+              metricKey="poles"
+              emptyLabel="Nenhuma pole registrada nesta seleção."
+            />
+
+            <StatRankingCard
+              title="Mais VMR"
+              icon={Timer}
+              items={topMv}
+              metricKey="mv"
+              emptyLabel="Nenhuma volta mais rápida registrada nesta seleção."
+            />
+
+            <StatRankingCard
+              title="Mais pódios"
+              icon={Medal}
+              items={topPodios}
+              metricKey="podios"
+              emptyLabel="Nenhum pódio registrado nesta seleção."
+            />
           </TabsContent>
         </Tabs>
       </div>
