@@ -16,7 +16,7 @@ import {
   User,
   Camera,
   Star,
-  ChevronRight,
+  TableProperties,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -810,23 +810,17 @@ export default function CasernaKartAppModerno() {
 
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <div className="mb-2 inline-flex items-center rounded-full border border-yellow-200 bg-yellow-100/80 px-2.5 py-1">
-                        <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-yellow-800">
-                          Painel oficial
-                        </span>
-                      </div>
-
-                      <h2 className="text-[20px] font-extrabold uppercase tracking-[0.16em] leading-none text-zinc-950">
+                      <h2 className="inline-flex rounded-full border border-yellow-200 bg-yellow-100/80 px-3 py-1.5 text-[20px] font-extrabold uppercase tracking-[0.16em] leading-none text-zinc-950 shadow-sm">
                         Classificação Geral
                       </h2>
 
-                      <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-500">
+                      <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-500">
                         categoria e campeonato selecionados
                       </p>
                     </div>
 
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-yellow-200 bg-gradient-to-br from-yellow-100 to-yellow-50 shadow-sm">
-                      <ChevronRight className="h-5 w-5 text-yellow-700" />
+                      <TableProperties className="h-5 w-5 text-yellow-700" />
                     </div>
                   </div>
                 </div>
