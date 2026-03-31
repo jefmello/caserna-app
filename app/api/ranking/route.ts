@@ -24,13 +24,17 @@ type RankingItem = {
   categoria: string;
 };
 
-type RankingData = Record<string, RankingItem[]>;
+type RankingByCompetition = Record<string, RankingItem[]>;
+type RankingData = Record<string, RankingByCompetition>;
 
 type PilotosMaps = {
   byId: Record<string, string>;
   byFullName: Record<string, string>;
   byFirstLast: Record<string, string>;
 };
+
+const ORDERED_CATEGORIES = ["Base", "Graduados", "Elite"];
+const ORDERED_COMPETITIONS = ["T1", "T2", "T3", "GERAL"];
 
 function normalizeText(value: string) {
   return (value || "")
@@ -155,6 +159,29 @@ function sortRanking(list: RankingItem[]) {
   });
 }
 
+function hasCompetitionData(list: RankingItem[]) {
+  return list.some(
+    (item) =>
+      item.pontos > 0 ||
+      item.adv > 0 ||
+      item.participacoes > 0 ||
+      item.vitorias > 0 ||
+      item.poles > 0 ||
+      item.mv > 0 ||
+      item.podios > 0 ||
+      item.descarte > 0
+  );
+}
+
+function createEmptyCompetitionMap(): RankingByCompetition {
+  return {
+    T1: [],
+    T2: [],
+    T3: [],
+    GERAL: [],
+  };
+}
+
 function parsePilotosCsv(text: string) {
   const rawLines = text.split(/\r?\n/).map((line) => line.trimEnd());
   const nonEmptyLines = rawLines.filter((line) => line.trim().length > 0);
@@ -172,8 +199,6 @@ function parsePilotosCsv(text: string) {
   const separator = detectSeparator(nonEmptyLines[0]);
   const parsedRows = nonEmptyLines.map((line) => parseDelimitedLine(line, separator));
 
-  // Cabeçalho fixo informado por você:
-  // linha 3 da planilha = índice 2 do array
   const headerRowIndex = 2;
   const headers = (parsedRows[headerRowIndex] || []).map((h) => normalizeText(h));
 
@@ -186,7 +211,6 @@ function parsePilotosCsv(text: string) {
     "nome completo",
   ]);
 
-  // Coluna I = índice 8
   const idxNomeGuerra = 8;
 
   const byId: Record<string, string> = {};
@@ -343,6 +367,9 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
     const categoria = normalizeCategory(categoriaOriginal);
     const competicao = normalizeCompetition(competicaoOriginal);
 
+    if (!ORDERED_CATEGORIES.includes(categoria)) continue;
+    if (!ORDERED_COMPETITIONS.includes(competicao)) continue;
+
     let nomeGuerra = "";
 
     if (pilotoId && pilotosMaps.byId[pilotoId]) {
@@ -377,17 +404,37 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
       categoria,
     };
 
-    if (!grouped[categoria]) grouped[categoria] = [];
-    grouped[categoria].push(item);
+    if (!grouped[categoria]) {
+      grouped[categoria] = createEmptyCompetitionMap();
+    }
+
+    grouped[categoria][competicao].push(item);
     acceptedRows++;
   }
 
-  Object.keys(grouped).forEach((category) => {
-    grouped[category] = sortRanking(grouped[category]);
-  });
+  const orderedGrouped: RankingData = {};
+
+  for (const category of ORDERED_CATEGORIES) {
+    const competitions = grouped[category];
+    if (!competitions) continue;
+
+    const orderedCompetitions: RankingByCompetition = {};
+
+    for (const competition of ORDERED_COMPETITIONS) {
+      const list = competitions[competition] || [];
+      const sorted = sortRanking(list);
+      if (hasCompetitionData(sorted)) {
+        orderedCompetitions[competition] = sorted;
+      }
+    }
+
+    if (Object.keys(orderedCompetitions).length > 0) {
+      orderedGrouped[category] = orderedCompetitions;
+    }
+  }
 
   return {
-    grouped,
+    grouped: orderedGrouped,
     debug: {
       separator,
       headerRowIndex,
@@ -399,8 +446,15 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
       matchedByFullName,
       matchedByFirstLast,
       withoutNomeGuerra,
-      categoriesFound: Object.keys(grouped),
-      sampleNomeGuerra: Object.values(grouped)
+      categoriesFound: Object.keys(orderedGrouped),
+      competitionsByCategory: Object.fromEntries(
+        Object.entries(orderedGrouped).map(([category, competitions]) => [
+          category,
+          Object.keys(competitions),
+        ])
+      ),
+      sampleNomeGuerra: Object.values(orderedGrouped)
+        .flatMap((competitions) => Object.values(competitions))
         .flat()
         .filter((item) => !!item.nomeGuerra)
         .slice(0, 10)
