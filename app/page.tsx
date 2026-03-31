@@ -658,20 +658,33 @@ export default function CasernaKartAppModerno() {
                   <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">
                     Categoria
                   </p>
-                  <div className="h-px flex-1 bg-gradient-to-r from-zinc-200/0 via-zinc-200 to-zinc-200/0 ml-3" />
+                  <div className="ml-3 h-px flex-1 bg-gradient-to-r from-zinc-200/0 via-zinc-200 to-zinc-200/0" />
                 </div>
 
                 <div className="flex flex-wrap gap-2">
                   {categories.map((cat) => {
                     const active = category === cat;
+
+                    const styles = {
+                      Base: active
+                        ? "border-orange-400 bg-gradient-to-b from-orange-100 to-orange-200 text-orange-900 shadow-[0_6px_14px_rgba(249,115,22,0.25)]"
+                        : "border-orange-200 bg-white text-orange-700 shadow-sm hover:bg-orange-50",
+
+                      Graduados: active
+                        ? "border-blue-400 bg-gradient-to-b from-blue-100 to-blue-200 text-blue-900 shadow-[0_6px_14px_rgba(59,130,246,0.25)]"
+                        : "border-blue-200 bg-white text-blue-700 shadow-sm hover:bg-blue-50",
+
+                      Elite: active
+                        ? "border-yellow-400 bg-gradient-to-b from-yellow-100 to-yellow-200 text-yellow-900 shadow-[0_6px_14px_rgba(234,179,8,0.25)]"
+                        : "border-yellow-200 bg-white text-yellow-700 shadow-sm hover:bg-yellow-50",
+                    };
+
                     return (
                       <button
                         key={cat}
                         onClick={() => setCategory(cat)}
                         className={`whitespace-nowrap rounded-full border px-4 py-2.5 text-[13px] font-semibold transition-all duration-200 ${
-                          active
-                            ? "border-yellow-400 bg-gradient-to-b from-[#fff8d2] to-[#f5e8a6] text-[#7a5600] shadow-[0_6px_14px_rgba(234,179,8,0.22)]"
-                            : "border-zinc-200 bg-white text-zinc-700 shadow-sm hover:border-yellow-200 hover:bg-yellow-50/40"
+                          styles[cat as keyof typeof styles]
                         }`}
                       >
                         {cat}
@@ -686,7 +699,7 @@ export default function CasernaKartAppModerno() {
                   <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">
                     Campeonato
                   </p>
-                  <div className="h-px flex-1 bg-gradient-to-r from-zinc-200/0 via-zinc-200 to-zinc-200/0 ml-3" />
+                  <div className="ml-3 h-px flex-1 bg-gradient-to-r from-zinc-200/0 via-zinc-200 to-zinc-200/0" />
                 </div>
 
                 <div className="flex flex-wrap gap-2">
