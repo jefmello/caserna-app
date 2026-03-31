@@ -285,6 +285,13 @@ function getCategoryTheme(category: string) {
       statAccentBg: "border-orange-200 bg-orange-50",
       statAccentValue: "text-orange-800",
       statAccentRank: "bg-orange-500 text-white",
+      highlightBorderStrong: "border-orange-300/90",
+      highlightGlow: "shadow-[0_10px_28px_rgba(249,115,22,0.18)]",
+      highlightPanel: "from-orange-50 via-white to-orange-100/50",
+      highlightMiniIconWrap: "bg-orange-100",
+      highlightMiniIcon: "text-orange-700",
+      highlightPhotoRing: "ring-orange-200/70",
+      highlightStatBadge: "bg-orange-100 text-orange-800 border-orange-200",
     },
     Graduados: {
       shellGlow: "from-blue-500/10 via-white to-blue-100/60",
@@ -322,6 +329,13 @@ function getCategoryTheme(category: string) {
       statAccentBg: "border-blue-200 bg-blue-50",
       statAccentValue: "text-blue-800",
       statAccentRank: "bg-blue-500 text-white",
+      highlightBorderStrong: "border-blue-300/90",
+      highlightGlow: "shadow-[0_10px_28px_rgba(59,130,246,0.18)]",
+      highlightPanel: "from-blue-50 via-white to-blue-100/50",
+      highlightMiniIconWrap: "bg-blue-100",
+      highlightMiniIcon: "text-blue-700",
+      highlightPhotoRing: "ring-blue-200/70",
+      highlightStatBadge: "bg-blue-100 text-blue-800 border-blue-200",
     },
     Elite: {
       shellGlow: "from-yellow-500/10 via-white to-yellow-100/60",
@@ -359,6 +373,13 @@ function getCategoryTheme(category: string) {
       statAccentBg: "border-yellow-200 bg-yellow-50",
       statAccentValue: "text-yellow-800",
       statAccentRank: "bg-yellow-400 text-black",
+      highlightBorderStrong: "border-yellow-300/90",
+      highlightGlow: "shadow-[0_10px_28px_rgba(234,179,8,0.2)]",
+      highlightPanel: "from-yellow-50 via-white to-yellow-100/50",
+      highlightMiniIconWrap: "bg-yellow-100",
+      highlightMiniIcon: "text-yellow-700",
+      highlightPhotoRing: "ring-yellow-200/70",
+      highlightStatBadge: "bg-yellow-100 text-yellow-800 border-yellow-200",
     },
   };
 
@@ -447,16 +468,16 @@ function HighlightCard({
 
   return (
     <Card
-      className={`h-[182px] rounded-[22px] border shadow-none ${
+      className={`h-[190px] rounded-[24px] border shadow-none ${
         accent
           ? `${appliedAccent.border} ${appliedAccent.bg}`
           : "border-black/5 bg-white"
       }`}
     >
-      <CardContent className="flex h-full flex-col px-4 pb-4 pt-2">
-        <div className="mb-1 flex items-start justify-between gap-2">
+      <CardContent className="flex h-full flex-col px-4 pb-4 pt-3">
+        <div className="mb-2 flex items-start justify-between gap-2">
           <p
-            className={`w-full text-center text-[11px] font-bold uppercase tracking-[0.18em] leading-none ${
+            className={`w-full text-center text-[10px] font-extrabold uppercase tracking-[0.2em] leading-none ${
               accent ? appliedAccent.text : "text-zinc-500"
             }`}
           >
@@ -464,12 +485,12 @@ function HighlightCard({
           </p>
 
           <div
-            className={`-mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-xl ${
+            className={`-mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-2xl ${
               accent ? appliedAccent.iconWrap : "bg-zinc-100"
             }`}
           >
             <Icon
-              className={`h-3 w-3 ${
+              className={`h-3.5 w-3.5 ${
                 accent ? appliedAccent.icon : "text-zinc-600"
               }`}
             />
@@ -477,12 +498,12 @@ function HighlightCard({
         </div>
 
         <div
-          className={`mb-1 h-px w-full ${
+          className={`mb-2 h-px w-full ${
             accent ? appliedAccent.divider : "bg-zinc-100"
           }`}
         />
 
-        <div className="flex-1 pt-0.5">{children}</div>
+        <div className="flex-1">{children}</div>
       </CardContent>
     </Card>
   );
@@ -890,14 +911,14 @@ export default function CasernaKartAppModerno() {
         </header>
 
         <section
-          className={`overflow-hidden rounded-[24px] border ${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow} px-4 py-4 shadow-sm`}
+          className={`overflow-hidden rounded-[26px] border ${theme.highlightBorderStrong} bg-gradient-to-br ${theme.highlightPanel} p-4 ${theme.highlightGlow}`}
         >
           <div
-            className={`mb-4 rounded-[20px] border ${theme.heroBorder} bg-gradient-to-b ${theme.heroBg} px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]`}
+            className={`mb-4 rounded-[22px] border ${theme.heroBorder} bg-gradient-to-b ${theme.heroBg} px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)]`}
           >
             <div className="flex flex-col items-center justify-center text-center">
               <div
-                className={`mb-2 flex h-10 w-10 items-center justify-center rounded-2xl ${theme.primaryIconWrap} shadow-sm`}
+                className={`mb-2.5 flex h-11 w-11 items-center justify-center rounded-2xl ${theme.primaryIconWrap} shadow-sm`}
               >
                 <Trophy className={`h-5 w-5 ${theme.primaryIcon}`} />
               </div>
@@ -924,8 +945,8 @@ export default function CasernaKartAppModerno() {
               accentStyles={{
                 border: theme.heroBorder,
                 bg: `bg-gradient-to-b ${theme.heroBg}`,
-                iconWrap: theme.primaryIconWrap,
-                icon: theme.primaryIcon,
+                iconWrap: theme.highlightMiniIconWrap,
+                icon: theme.highlightMiniIcon,
                 text:
                   category === "Base"
                     ? "text-orange-800"
@@ -941,14 +962,28 @@ export default function CasernaKartAppModerno() {
               }}
             >
               <div className="flex h-full flex-col items-center justify-center text-center">
-                <div className="flex min-h-[74px] flex-col items-center justify-center">
-                  <p className="text-[30px] font-extrabold leading-none tracking-tight text-zinc-950">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-white/80 shadow-sm">
+                  <Crown className={`h-5 w-5 ${theme.highlightMiniIcon}`} />
+                </div>
+
+                <div className="flex min-h-[62px] flex-col items-center justify-center">
+                  <p className="text-[28px] font-extrabold leading-none tracking-tight text-zinc-950">
                     {leaderName.firstName.toUpperCase()}
                   </p>
-                  <p className="mt-1 text-[20px] font-semibold leading-none tracking-tight text-zinc-800">
+                  <p className="mt-1 text-[18px] font-semibold leading-none tracking-tight text-zinc-800">
                     {leaderName.lastName ? leaderName.lastName.toUpperCase() : ""}
                   </p>
                 </div>
+
+                {getPilotWarNameDisplay(leader) ? (
+                  <div className="mt-2">
+                    <span
+                      className={`inline-flex rounded-full border px-2.5 py-0.5 text-[10px] font-semibold italic ${theme.highlightStatBadge}`}
+                    >
+                      {getPilotWarNameDisplay(leader)}
+                    </span>
+                  </div>
+                ) : null}
 
                 <div
                   className={`mt-3 inline-flex rounded-full border px-3 py-1 ${theme.heroChip}`}
@@ -962,16 +997,22 @@ export default function CasernaKartAppModerno() {
 
             <HighlightCard title="Vitórias" icon={Medal}>
               <div className="flex h-full flex-col items-center justify-center text-center">
-                <p className="text-[44px] font-extrabold leading-none tracking-tight text-zinc-950">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-zinc-100">
+                  <Medal className="h-5 w-5 text-zinc-700" />
+                </div>
+
+                <p className="text-[46px] font-extrabold leading-none tracking-tight text-zinc-950">
                   {leader?.vitorias || 0}
                 </p>
-                <p className="mt-3 max-w-[120px] text-[12px] leading-snug text-zinc-500">
+                <p className="mt-3 max-w-[120px] text-[11px] font-medium leading-snug text-zinc-500">
                   vitórias nesta classificação
                 </p>
               </div>
             </HighlightCard>
 
-            <Card className="h-[182px] overflow-hidden rounded-[22px] border border-black/5 shadow-none">
+            <Card
+              className={`h-[190px] overflow-hidden rounded-[24px] border border-black/5 shadow-none ring-1 ${theme.highlightPhotoRing}`}
+            >
               <CardContent className="h-full p-0">
                 <div className="relative h-full w-full overflow-hidden">
                   <PilotPhotoSlot
@@ -979,12 +1020,26 @@ export default function CasernaKartAppModerno() {
                     alt={getPilotHighlightName(leader?.piloto)}
                   />
 
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/35 to-transparent" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
 
-                  <div className="absolute inset-x-0 bottom-2 px-3 text-center">
-                    <p className="truncate text-[11px] font-bold uppercase tracking-[0.10em] text-white">
-                      {getPilotHighlightName(leader?.piloto)}
-                    </p>
+                  <div className="absolute left-3 top-3 flex items-center gap-2 rounded-full border border-white/20 bg-black/25 px-2.5 py-1 backdrop-blur-sm">
+                    <Camera className="h-3.5 w-3.5 text-white" />
+                    <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white">
+                      Destaque
+                    </span>
+                  </div>
+
+                  <div className="absolute inset-x-0 bottom-0 px-3 pb-3">
+                    <div className="rounded-[18px] border border-white/15 bg-black/25 px-3 py-2 backdrop-blur-sm">
+                      <p className="truncate text-[11px] font-bold uppercase tracking-[0.10em] text-white">
+                        {getPilotHighlightName(leader?.piloto)}
+                      </p>
+                      {getPilotWarNameDisplay(leader) ? (
+                        <p className="mt-1 truncate text-[10px] italic text-white/85">
+                          {getPilotWarNameDisplay(leader)}
+                        </p>
+                      ) : null}
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -992,10 +1047,14 @@ export default function CasernaKartAppModerno() {
 
             <HighlightCard title="Pódios" icon={Medal}>
               <div className="flex h-full flex-col items-center justify-center text-center">
-                <p className="text-[44px] font-extrabold leading-none tracking-tight text-zinc-950">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-zinc-100">
+                  <Trophy className="h-5 w-5 text-zinc-700" />
+                </div>
+
+                <p className="text-[46px] font-extrabold leading-none tracking-tight text-zinc-950">
                   {leader?.podios || 0}
                 </p>
-                <p className="mt-3 max-w-[120px] text-[12px] leading-snug text-zinc-500">
+                <p className="mt-3 max-w-[120px] text-[11px] font-medium leading-snug text-zinc-500">
                   pódios nesta classificação
                 </p>
               </div>
@@ -1461,6 +1520,7 @@ export default function CasernaKartAppModerno() {
                     value={selectedPilot.poles}
                     subtitle="qualify"
                     icon={Flag}
+                    accent
                   />
                   <CompactStatCard
                     title="VMR"
