@@ -529,18 +529,13 @@ export default function CasernaKartAppModerno() {
         </header>
 
         <section className="rounded-[24px] border border-black/5 bg-white px-4 py-4 shadow-sm">
-          <div className="mb-4 flex items-center justify-between">
-            <div className="text-sm text-zinc-700">
-              <span className="font-bold text-zinc-950">PILOTO DESTAQUE</span>
-              <span className="text-zinc-500">
-                {" "}
-                - líder da categoria e campeonato selecionado
-              </span>
-            </div>
-
-            <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-yellow-50">
-              <Trophy className="h-4 w-4 text-yellow-700" />
-            </div>
+          <div className="mb-4 flex flex-col items-center justify-center text-center">
+            <p className="text-[18px] font-extrabold uppercase tracking-[0.14em] text-zinc-950">
+              PILOTO DESTAQUE
+            </p>
+            <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.10em] text-zinc-500">
+              líder da categoria e campeonato selecionado
+            </p>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
