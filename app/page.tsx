@@ -55,7 +55,8 @@ type RankingItem = {
   categoria: string;
 };
 
-type RankingData = Record<string, RankingItem[]>;
+type RankingByCompetition = Record<string, RankingItem[]>;
+type RankingData = Record<string, RankingByCompetition>;
 
 const categoryColors: Record<string, string> = {
   Base: "bg-orange-50 text-orange-700 border-orange-200",
@@ -83,20 +84,6 @@ function sortRanking(list: RankingItem[]) {
     if (b.podios !== a.podios) return b.podios - a.podios;
     return a.pos - b.pos;
   });
-}
-
-function hasCompetitionData(list: RankingItem[]) {
-  return list.some(
-    (item) =>
-      item.pontos > 0 ||
-      item.adv > 0 ||
-      item.participacoes > 0 ||
-      item.vitorias > 0 ||
-      item.poles > 0 ||
-      item.mv > 0 ||
-      item.podios > 0 ||
-      item.descarte > 0
-  );
 }
 
 function normalizePilotName(name?: string) {
@@ -132,10 +119,6 @@ function getPilotFirstAndLastName(name?: string) {
   return lastName ? `${firstName} ${lastName}` : firstName;
 }
 
-function getPilotDisplayName(name?: string) {
-  return normalizePilotName(name);
-}
-
 function getPilotWarName(pilot?: RankingItem | null) {
   const nomeGuerra = normalizePilotName(pilot?.nomeGuerra);
   if (!nomeGuerra || nomeGuerra === "-") return "";
@@ -166,7 +149,6 @@ function getTop6RowStyles(position: number) {
         points: "text-yellow-700",
         name: "text-zinc-950",
         chip: "border-yellow-300 bg-yellow-100 text-yellow-800",
-        ring: "",
       };
     case 2:
       return {
@@ -175,7 +157,6 @@ function getTop6RowStyles(position: number) {
         points: "text-zinc-800",
         name: "text-zinc-950",
         chip: "border-zinc-300 bg-white text-zinc-700",
-        ring: "",
       };
     case 3:
       return {
@@ -184,7 +165,6 @@ function getTop6RowStyles(position: number) {
         points: "text-amber-800",
         name: "text-zinc-950",
         chip: "border-amber-200 bg-white text-amber-800",
-        ring: "",
       };
     case 4:
       return {
@@ -193,7 +173,6 @@ function getTop6RowStyles(position: number) {
         points: "text-sky-700",
         name: "text-zinc-950",
         chip: "border-sky-200 bg-white text-sky-800",
-        ring: "",
       };
     case 5:
       return {
@@ -202,7 +181,6 @@ function getTop6RowStyles(position: number) {
         points: "text-violet-700",
         name: "text-zinc-950",
         chip: "border-violet-200 bg-white text-violet-800",
-        ring: "",
       };
     case 6:
       return {
@@ -211,7 +189,6 @@ function getTop6RowStyles(position: number) {
         points: "text-emerald-700",
         name: "text-zinc-950",
         chip: "border-emerald-200 bg-white text-emerald-800",
-        ring: "",
       };
     default:
       return {
@@ -220,7 +197,6 @@ function getTop6RowStyles(position: number) {
         points: "text-zinc-950",
         name: "text-zinc-950",
         chip: "border-yellow-200 bg-yellow-50 text-yellow-800",
-        ring: "",
       };
   }
 }
@@ -253,7 +229,6 @@ function getCategoryTheme(category: string) {
       shellGlow: "from-orange-500/10 via-white to-orange-100/60",
       primaryBorder: "border-orange-200/90",
       primaryRing: "via-orange-400/80",
-      primarySoft: "from-orange-50 to-white",
       primaryBadge: "bg-orange-100 text-orange-800 border-orange-200",
       primaryIconWrap: "bg-orange-100",
       primaryIcon: "text-orange-700",
@@ -270,7 +245,6 @@ function getCategoryTheme(category: string) {
         "border-orange-200 bg-gradient-to-b from-orange-100 to-orange-200",
       titleIcon: "text-orange-700",
       titleSub: "text-orange-500/80",
-      badgeOutline: "border-orange-200 text-orange-700 bg-orange-50",
       searchBorder: "border-orange-200/80",
       searchGlow: "focus-within:ring-orange-200/70",
       searchIcon: "text-orange-500",
@@ -290,7 +264,6 @@ function getCategoryTheme(category: string) {
       shellGlow: "from-blue-500/10 via-white to-blue-100/60",
       primaryBorder: "border-blue-200/90",
       primaryRing: "via-blue-400/80",
-      primarySoft: "from-blue-50 to-white",
       primaryBadge: "bg-blue-100 text-blue-800 border-blue-200",
       primaryIconWrap: "bg-blue-100",
       primaryIcon: "text-blue-700",
@@ -307,7 +280,6 @@ function getCategoryTheme(category: string) {
         "border-blue-200 bg-gradient-to-b from-blue-100 to-blue-200",
       titleIcon: "text-blue-700",
       titleSub: "text-blue-500/80",
-      badgeOutline: "border-blue-200 text-blue-700 bg-blue-50",
       searchBorder: "border-blue-200/80",
       searchGlow: "focus-within:ring-blue-200/70",
       searchIcon: "text-blue-500",
@@ -327,7 +299,6 @@ function getCategoryTheme(category: string) {
       shellGlow: "from-yellow-500/10 via-white to-yellow-100/60",
       primaryBorder: "border-yellow-200/90",
       primaryRing: "via-yellow-400/80",
-      primarySoft: "from-yellow-50 to-white",
       primaryBadge: "bg-yellow-100 text-yellow-800 border-yellow-200",
       primaryIconWrap: "bg-yellow-100",
       primaryIcon: "text-yellow-700",
@@ -344,7 +315,6 @@ function getCategoryTheme(category: string) {
         "border-yellow-200 bg-gradient-to-b from-[#fff9d8] to-[#f8edb2]",
       titleIcon: "text-yellow-700",
       titleSub: "text-yellow-700/70",
-      badgeOutline: "border-yellow-200 text-yellow-700 bg-yellow-50",
       searchBorder: "border-yellow-200/80",
       searchGlow: "focus-within:ring-yellow-200/70",
       searchIcon: "text-yellow-600",
@@ -659,7 +629,7 @@ export default function CasernaKartAppModerno() {
 
         const cats = json.categories || [];
         if (cats.length > 0) {
-          setCategory((prev) => (cats.includes(prev) ? prev : cats[0]));
+          setCategory((prev: string) => (cats.includes(prev) ? prev : cats[0]));
         }
       } catch (err) {
         console.error(err);
@@ -675,14 +645,7 @@ export default function CasernaKartAppModerno() {
   const categories = useMemo(() => Object.keys(rankingData), [rankingData]);
 
   const availableCompetitions = useMemo(() => {
-    const categoryItems = rankingData[category] || [];
-    const orderedCompetitions = ["T1", "T2", "T3", "GERAL"];
-
-    return orderedCompetitions.filter((comp) =>
-      hasCompetitionData(
-        categoryItems.filter((item) => item.competicao === comp)
-      )
-    );
+    return Object.keys(rankingData[category] || {});
   }, [rankingData, category]);
 
   useEffect(() => {
@@ -697,19 +660,19 @@ export default function CasernaKartAppModerno() {
     setSelectedPilot(null);
   }, [category, competition]);
 
+  const currentCompetitionList = useMemo(() => {
+    return rankingData[category]?.[competition] || [];
+  }, [rankingData, category, competition]);
+
   const filteredRanking = useMemo(() => {
-    const list = (rankingData[category] || []).filter(
-      (item) => item.competicao === competition && item.pontos > 0
+    return currentCompetitionList.filter(
+      (item) =>
+        item.pontos > 0 &&
+        normalizePilotName(item.piloto)
+          .toLowerCase()
+          .includes(search.toLowerCase())
     );
-
-    const sorted = sortRanking(list);
-
-    return sorted.filter((item) =>
-      normalizePilotName(item.piloto)
-        .toLowerCase()
-        .includes(search.toLowerCase())
-    );
-  }, [rankingData, category, competition, search]);
+  }, [currentCompetitionList, search]);
 
   const leader = filteredRanking[0];
   const leaderName = useMemo(() => getPilotNameParts(leader?.piloto), [leader]);
@@ -800,9 +763,9 @@ export default function CasernaKartAppModerno() {
             className={`absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
           />
 
-          <div className="px-3 pt-3 pb-2 space-y-2">
+          <div className="space-y-2 px-3 pb-2 pt-3">
             <div className="overflow-hidden rounded-[16px] border border-black/5 bg-zinc-50">
-              <div className="relative w-full h-[80px] sm:h-[90px] md:h-[100px]">
+              <div className="relative h-[80px] w-full sm:h-[90px] md:h-[100px]">
                 <Image
                   src="/banner-topo.png"
                   alt="Classificação Oficial"
@@ -924,14 +887,14 @@ export default function CasernaKartAppModerno() {
                   category === "Base"
                     ? "text-orange-800"
                     : category === "Graduados"
-                      ? "text-blue-800"
-                      : "text-yellow-800",
+                    ? "text-blue-800"
+                    : "text-yellow-800",
                 divider:
                   category === "Base"
                     ? "bg-orange-200/80"
                     : category === "Graduados"
-                      ? "bg-blue-200/80"
-                      : "bg-yellow-200/80",
+                    ? "bg-blue-200/80"
+                    : "bg-yellow-200/80",
               }}
             >
               <div className="flex h-full flex-col items-center justify-center text-center">
@@ -1001,19 +964,19 @@ export default function CasernaKartAppModerno() {
           <TabsList className="grid w-full grid-cols-3 rounded-[22px] border border-black/5 bg-gradient-to-b from-white to-zinc-50 p-1.5 shadow-[0_8px_20px_rgba(15,23,42,0.05),inset_0_1px_0_rgba(255,255,255,0.9)]">
             <TabsTrigger
               value="classificacao"
-              className="rounded-[16px] px-2 py-2.5 text-[13px] font-semibold tracking-[0.01em] text-zinc-600 transition-all duration-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.08)] data-[state=active]:border data-[state=active]:border-black/5"
+              className="rounded-[16px] px-2 py-2.5 text-[13px] font-semibold tracking-[0.01em] text-zinc-600 transition-all duration-200 data-[state=active]:border data-[state=active]:border-black/5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.08)]"
             >
               Classificação
             </TabsTrigger>
             <TabsTrigger
               value="piloto"
-              className="rounded-[16px] px-2 py-2.5 text-[13px] font-semibold tracking-[0.01em] text-zinc-600 transition-all duration-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.08)] data-[state=active]:border data-[state=active]:border-black/5"
+              className="rounded-[16px] px-2 py-2.5 text-[13px] font-semibold tracking-[0.01em] text-zinc-600 transition-all duration-200 data-[state=active]:border data-[state=active]:border-black/5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.08)]"
             >
               Piloto
             </TabsTrigger>
             <TabsTrigger
               value="stats"
-              className="rounded-[16px] px-2 py-2.5 text-[13px] font-semibold tracking-[0.01em] text-zinc-600 transition-all duration-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.08)] data-[state=active]:border data-[state=active]:border-black/5"
+              className="rounded-[16px] px-2 py-2.5 text-[13px] font-semibold tracking-[0.01em] text-zinc-600 transition-all duration-200 data-[state=active]:border data-[state=active]:border-black/5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.08)]"
             >
               Stats
             </TabsTrigger>
@@ -1078,7 +1041,7 @@ export default function CasernaKartAppModerno() {
                           className={`inline-flex max-w-full items-center justify-center rounded-[18px] border px-4 py-2 shadow-[0_4px_10px_rgba(0,0,0,0.08)] ${theme.titlePill}`}
                         >
                           <h2
-                            className={`truncate text-[17px] font-extrabold uppercase tracking-[0.05em] leading-none ${theme.titlePillText}`}
+                            className={`truncate text-[17px] font-extrabold uppercase leading-none tracking-[0.05em] ${theme.titlePillText}`}
                           >
                             Classificação Geral
                           </h2>
@@ -1141,25 +1104,25 @@ export default function CasernaKartAppModerno() {
                         <tr
                           className={`border-b border-black/5 ${theme.tableHeadBg} text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500 backdrop-blur`}
                         >
-                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                          <th className="whitespace-nowrap px-1 py-3 text-center">
                             Pos
                           </th>
-                          <th className="px-2 py-3 text-left whitespace-nowrap">
+                          <th className="whitespace-nowrap px-2 py-3 text-left">
                             Piloto
                           </th>
-                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
+                          <th className="whitespace-nowrap px-0.5 py-3 text-center">
                             Pts
                           </th>
-                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
+                          <th className="whitespace-nowrap px-0.5 py-3 text-center">
                             Vit
                           </th>
-                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
+                          <th className="whitespace-nowrap px-0.5 py-3 text-center">
                             Pol
                           </th>
-                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
+                          <th className="whitespace-nowrap px-0.5 py-3 text-center">
                             VMR
                           </th>
-                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
+                          <th className="whitespace-nowrap px-0.5 py-3 text-center">
                             PDS
                           </th>
                         </tr>
@@ -1179,7 +1142,9 @@ export default function CasernaKartAppModerno() {
                               className={`group transition ${
                                 isTop6
                                   ? `${styles.row}`
-                                  : `${index % 2 === 0 ? "bg-white" : "bg-zinc-50/40"} hover:bg-zinc-50`
+                                  : `${
+                                      index % 2 === 0 ? "bg-white" : "bg-zinc-50/40"
+                                    } hover:bg-zinc-50`
                               }`}
                             >
                               <td className="px-1 py-3 text-center align-middle">
