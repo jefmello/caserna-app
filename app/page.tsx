@@ -235,7 +235,6 @@ function getCategoryTheme(category: string) {
       heroBorder: "border-orange-200/80",
       heroBg: "from-orange-50 via-white to-orange-50/70",
       heroChip: "border-orange-200 bg-orange-100/80 text-orange-800",
-      heroLine: "via-orange-400/70",
       titleBorder: "border-orange-200/90",
       titleBg: "from-orange-50 via-white to-white",
       titlePill:
@@ -248,6 +247,7 @@ function getCategoryTheme(category: string) {
       searchBorder: "border-orange-200/80",
       searchGlow: "focus-within:ring-orange-200/70",
       searchIcon: "text-orange-500",
+      searchBadge: "border-orange-200 bg-orange-50 text-orange-700",
       headerChip: "border-orange-200 bg-orange-50 text-orange-700",
       tableHeadBg: "bg-orange-50/80",
       statsSoft: "from-orange-50 via-white to-orange-50/60",
@@ -270,7 +270,6 @@ function getCategoryTheme(category: string) {
       heroBorder: "border-blue-200/80",
       heroBg: "from-blue-50 via-white to-blue-50/70",
       heroChip: "border-blue-200 bg-blue-100/80 text-blue-800",
-      heroLine: "via-blue-400/70",
       titleBorder: "border-blue-200/90",
       titleBg: "from-blue-50 via-white to-white",
       titlePill:
@@ -283,6 +282,7 @@ function getCategoryTheme(category: string) {
       searchBorder: "border-blue-200/80",
       searchGlow: "focus-within:ring-blue-200/70",
       searchIcon: "text-blue-500",
+      searchBadge: "border-blue-200 bg-blue-50 text-blue-700",
       headerChip: "border-blue-200 bg-blue-50 text-blue-700",
       tableHeadBg: "bg-blue-50/80",
       statsSoft: "from-blue-50 via-white to-blue-50/60",
@@ -305,7 +305,6 @@ function getCategoryTheme(category: string) {
       heroBorder: "border-yellow-200/80",
       heroBg: "from-yellow-50 via-white to-yellow-50/70",
       heroChip: "border-yellow-200 bg-yellow-100/80 text-yellow-800",
-      heroLine: "via-yellow-400/70",
       titleBorder: "border-yellow-200/90",
       titleBg: "from-yellow-50 via-white to-white",
       titlePill:
@@ -318,6 +317,7 @@ function getCategoryTheme(category: string) {
       searchBorder: "border-yellow-200/80",
       searchGlow: "focus-within:ring-yellow-200/70",
       searchIcon: "text-yellow-600",
+      searchBadge: "border-yellow-200 bg-yellow-50 text-yellow-700",
       headerChip: "border-yellow-200 bg-yellow-50 text-yellow-700",
       tableHeadBg: "bg-yellow-50/80",
       statsSoft: "from-yellow-50 via-white to-yellow-50/60",
@@ -333,283 +333,6 @@ function getCategoryTheme(category: string) {
   };
 
   return themes[category as keyof typeof themes] || themes.Elite;
-}
-
-function CompactStatCard({
-  title,
-  value,
-  subtitle,
-  icon: Icon,
-  accent = false,
-}: {
-  title: string;
-  value: string | number;
-  subtitle: string;
-  icon: React.ElementType;
-  accent?: boolean;
-}) {
-  return (
-    <Card
-      className={`rounded-[20px] border shadow-none ${
-        accent
-          ? "border-yellow-300/80 bg-yellow-50/70"
-          : "border-black/5 bg-white"
-      }`}
-    >
-      <CardContent className="p-3.5">
-        <div className="mb-2 flex items-center justify-between gap-2">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-500">
-            {title}
-          </p>
-          <div
-            className={`flex h-7 w-7 items-center justify-center rounded-2xl ${
-              accent ? "bg-yellow-100" : "bg-zinc-100"
-            }`}
-          >
-            <Icon
-              className={`h-3.5 w-3.5 ${
-                accent ? "text-yellow-700" : "text-zinc-600"
-              }`}
-            />
-          </div>
-        </div>
-
-        <p className="text-[22px] font-bold leading-none tracking-tight text-zinc-950">
-          {value}
-        </p>
-
-        <p className="mt-1.5 text-xs leading-snug text-zinc-500">{subtitle}</p>
-      </CardContent>
-    </Card>
-  );
-}
-
-function HighlightCard({
-  title,
-  icon: Icon,
-  children,
-  accent = false,
-  accentStyles,
-  compact = false,
-}: {
-  title: string;
-  icon: React.ElementType;
-  children: React.ReactNode;
-  accent?: boolean;
-  accentStyles?: {
-    border: string;
-    bg: string;
-    iconWrap: string;
-    icon: string;
-    text: string;
-    divider: string;
-  };
-  compact?: boolean;
-}) {
-  const defaultAccent = {
-    border: "border-yellow-300",
-    bg: "bg-gradient-to-b from-yellow-50 to-white",
-    iconWrap: "bg-yellow-100",
-    icon: "text-yellow-700",
-    text: "text-yellow-800",
-    divider: "bg-yellow-200/80",
-  };
-
-  const appliedAccent = accentStyles || defaultAccent;
-
-  return (
-    <Card
-      className={`rounded-[22px] border shadow-none ${
-        compact ? "h-[156px]" : "h-[182px]"
-      } ${
-        accent
-          ? `${appliedAccent.border} ${appliedAccent.bg}`
-          : "border-black/5 bg-white"
-      }`}
-    >
-      <CardContent
-        className={`flex h-full flex-col ${
-          compact ? "px-3 pb-3 pt-2" : "px-4 pb-4 pt-2"
-        }`}
-      >
-        <div className="mb-1 flex items-start justify-between gap-2">
-          <p
-            className={`w-full text-center font-bold uppercase leading-none ${
-              compact
-                ? "text-[10px] tracking-[0.16em]"
-                : "text-[11px] tracking-[0.18em]"
-            } ${accent ? appliedAccent.text : "text-zinc-500"}`}
-          >
-            {title}
-          </p>
-
-          <div
-            className={`-mt-1 flex shrink-0 items-center justify-center rounded-xl ${
-              compact ? "h-5 w-5" : "h-6 w-6"
-            } ${accent ? appliedAccent.iconWrap : "bg-zinc-100"}`}
-          >
-            <Icon
-              className={`${compact ? "h-2.5 w-2.5" : "h-3 w-3"} ${
-                accent ? appliedAccent.icon : "text-zinc-600"
-              }`}
-            />
-          </div>
-        </div>
-
-        <div
-          className={`mb-1 h-px w-full ${
-            accent ? appliedAccent.divider : "bg-zinc-100"
-          }`}
-        />
-
-        <div className="flex-1 pt-0.5">{children}</div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function PilotPhotoSlot({
-  pilot,
-  alt,
-}: {
-  pilot?: RankingItem | null;
-  alt: string;
-}) {
-  const src = getPilotPhotoPath(pilot);
-  const [hasError, setHasError] = useState(false);
-
-  useEffect(() => {
-    setHasError(false);
-  }, [src]);
-
-  const showImage = !!src && !hasError;
-
-  return (
-    <div className="h-full w-full bg-zinc-50">
-      {showImage ? (
-        <img
-          src={src}
-          alt={alt}
-          className="h-full w-full object-cover"
-          onError={() => setHasError(true)}
-        />
-      ) : (
-        <div className="flex h-full w-full items-center justify-center bg-gradient-to-b from-zinc-50 to-zinc-100">
-          <div className="text-center">
-            <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm">
-              <Camera className="h-5 w-5 text-zinc-500" />
-            </div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500">
-              Espaço foto
-            </p>
-            <p className="mt-1 text-[10px] font-medium text-zinc-500">
-              piloto 1:1
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function StatRankingCard({
-  title,
-  icon: Icon,
-  items,
-  metricKey,
-  emptyLabel,
-  theme,
-}: {
-  title: string;
-  icon: React.ElementType;
-  items: RankingItem[];
-  metricKey: "vitorias" | "poles" | "mv" | "podios";
-  emptyLabel: string;
-  theme: ReturnType<typeof getCategoryTheme>;
-}) {
-  return (
-    <Card className="overflow-hidden rounded-[24px] border-black/5 bg-white shadow-sm">
-      <CardHeader className="border-b border-black/5 bg-gradient-to-r from-white via-zinc-50/70 to-white pb-3">
-        <CardTitle className="flex items-center gap-2 text-sm font-bold text-zinc-950">
-          <div
-            className={`flex h-9 w-9 items-center justify-center rounded-2xl ${theme.statsIconWrap}`}
-          >
-            <Icon className={`h-4 w-4 ${theme.statsIcon}`} />
-          </div>
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">
-              Ranking estatístico
-            </p>
-            <p className="text-[15px] font-extrabold tracking-tight text-zinc-950">
-              {title}
-            </p>
-          </div>
-        </CardTitle>
-      </CardHeader>
-
-      <CardContent className="pt-4">
-        {items.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-black/10 bg-zinc-50 px-4 py-6 text-center text-sm text-zinc-500">
-            {emptyLabel}
-          </div>
-        ) : (
-          <div className="space-y-2.5">
-            {items.map((item, index) => {
-              const value = item[metricKey];
-              const isFirst = index === 0;
-
-              return (
-                <div
-                  key={`${title}-${item.pilotoId}-${index}`}
-                  className={`flex items-center justify-between gap-3 rounded-[20px] border px-3 py-3 ${
-                    isFirst
-                      ? `${theme.statAccentBg}`
-                      : "border-black/5 bg-zinc-50/70"
-                  }`}
-                >
-                  <div className="flex min-w-0 items-center gap-3">
-                    <div
-                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl text-xs font-extrabold ${
-                        isFirst
-                          ? theme.statAccentRank
-                          : "bg-zinc-200 text-zinc-800"
-                      }`}
-                    >
-                      {index + 1}
-                    </div>
-
-                    <div className="min-w-0">
-                      <p className="truncate text-[13px] font-extrabold tracking-tight text-zinc-950">
-                        {getPilotFirstAndLastName(item.piloto)}
-                      </p>
-
-                      {getPilotWarNameDisplay(item) ? (
-                        <p className="mt-0.5 truncate text-[10px] italic text-zinc-500">
-                          {getPilotWarNameDisplay(item)}
-                        </p>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  <div
-                    className={`shrink-0 rounded-2xl px-3 py-1.5 text-sm font-extrabold ${
-                      isFirst
-                        ? `${theme.primaryBadge}`
-                        : "bg-white text-zinc-800"
-                    }`}
-                  >
-                    <span className={isFirst ? theme.statAccentValue : ""}>
-                      {value}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
 }
 
 export default function CasernaKartAppModerno() {
@@ -1019,41 +742,43 @@ export default function CasernaKartAppModerno() {
 
           <TabsContent value="classificacao" className="mt-0 space-y-3 pt-0">
             <Card
-              className={`rounded-[22px] border ${theme.searchBorder} bg-gradient-to-br from-white to-zinc-50/70 shadow-sm`}
+              className={`rounded-[22px] border ${theme.searchBorder} bg-gradient-to-br from-white via-white to-zinc-50/70 shadow-sm`}
             >
-              <CardContent className="p-3.5">
-                <div className="mb-2.5 flex items-center gap-2">
+              <CardContent className="p-3">
+                <div className="mb-3 flex items-center gap-2.5">
                   <div
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${theme.primaryIconWrap}`}
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] ${theme.primaryIconWrap} shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]`}
                   >
                     <Search className={`h-4.5 w-4.5 ${theme.searchIcon}`} />
                   </div>
 
-                  <div className="min-w-0">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-400">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-zinc-400">
                       Busca rápida
                     </p>
-                    <p className="text-[12px] font-semibold leading-tight text-zinc-900">
+                    <p className="mt-0.5 text-[12px] font-semibold leading-tight text-zinc-900">
                       Encontre um piloto na classificação
                     </p>
                   </div>
 
                   <div
-                    className={`ml-auto hidden rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] sm:inline-flex ${theme.headerChip}`}
+                    className={`shrink-0 rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] ${theme.searchBadge}`}
                   >
                     {competitionLabels[competition] || competition}
                   </div>
                 </div>
 
                 <div
-                  className={`group flex items-center rounded-[18px] border border-black/5 bg-white px-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)] transition focus-within:ring-4 ${theme.searchGlow}`}
+                  className={`group flex items-center rounded-[18px] border border-black/5 bg-gradient-to-b from-white to-zinc-50 px-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.98)] transition focus-within:ring-4 ${theme.searchGlow}`}
                 >
-                  <Search className="h-4 w-4 shrink-0 text-zinc-400" />
+                  <div className="flex h-9 w-8 items-center justify-center">
+                    <Search className="h-4.5 w-4.5 shrink-0 text-zinc-400" />
+                  </div>
                   <Input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Buscar piloto"
-                    className="h-10 border-0 bg-transparent pl-3 pr-0 text-zinc-950 shadow-none outline-none ring-0 placeholder:text-zinc-400 focus-visible:ring-0"
+                    className="h-11 border-0 bg-transparent pl-1 pr-0 text-[15px] text-zinc-950 shadow-none outline-none ring-0 placeholder:text-zinc-400 focus-visible:ring-0"
                   />
                 </div>
               </CardContent>
@@ -1111,13 +836,15 @@ export default function CasernaKartAppModerno() {
                             Ranking oficial
                           </p>
                           <p className="text-[13px] font-semibold text-zinc-900">
-                            {category} · {competitionLabels[competition] || competition}
+                            {category} ·{" "}
+                            {competitionLabels[competition] || competition}
                           </p>
                         </div>
                       </div>
 
                       <div className="rounded-full border border-black/5 bg-zinc-50 px-3 py-1 text-[11px] font-bold text-zinc-700">
-                        {filteredRanking.length} piloto{filteredRanking.length === 1 ? "" : "s"}
+                        {filteredRanking.length} piloto
+                        {filteredRanking.length === 1 ? "" : "s"}
                       </div>
                     </div>
                   </div>
@@ -1176,7 +903,9 @@ export default function CasernaKartAppModerno() {
                               className={`group transition ${
                                 isTop6
                                   ? `${styles.row}`
-                                  : `${index % 2 === 0 ? "bg-white" : "bg-zinc-50/40"} hover:bg-zinc-50`
+                                  : `${
+                                      index % 2 === 0 ? "bg-white" : "bg-zinc-50/40"
+                                    } hover:bg-zinc-50`
                               }`}
                             >
                               <td className="px-1 py-3 text-center align-middle">
