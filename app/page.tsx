@@ -423,219 +423,6 @@ function PilotPhotoSlot({
   );
 }
 
-function RankingTable({
-  items,
-  offset = 0,
-  onSelectPilot,
-  topBlock = false,
-}: {
-  items: RankingItem[];
-  offset?: number;
-  onSelectPilot: (pilot: RankingItem) => void;
-  topBlock?: boolean;
-}) {
-  return (
-    <table className="w-full table-fixed">
-      <colgroup>
-        <col className="w-[50px]" />
-        <col />
-        <col className="w-[40px]" />
-        <col className="w-[40px]" />
-        <col className="w-[40px]" />
-        <col className="w-[42px]" />
-        <col className="w-[42px]" />
-      </colgroup>
-
-      <thead className="sticky top-0 z-10">
-        <tr className="border-b border-black/5 bg-zinc-50/95 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500 backdrop-blur">
-          <th className="px-1 py-3 text-center whitespace-nowrap">Pos</th>
-          <th className="px-2 py-3 text-left whitespace-nowrap">Piloto</th>
-          <th className="px-1 py-3 text-center whitespace-nowrap">Pts</th>
-          <th className="px-1 py-3 text-center whitespace-nowrap">Vit</th>
-          <th className="px-1 py-3 text-center whitespace-nowrap">Pol</th>
-          <th className="px-1 py-3 text-center whitespace-nowrap">VMR</th>
-          <th className="px-1 py-3 text-center whitespace-nowrap">PDS</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {items.map((item, localIndex) => {
-          const globalIndex = offset + localIndex;
-          const position = globalIndex + 1;
-          const isTop6 = position <= 6;
-          const isLeader = position === 1;
-          const styles = getTop6RowStyles(position);
-          const nomeLinha1 = getPilotFirstAndLastName(item.piloto);
-          const nomeLinha2 = getPilotWarNameDisplay(item);
-
-          return (
-            <tr
-              key={`row-${item.pilotoId}-${item.competicao}-${position}`}
-              className={`group transition-transform duration-150 ${
-                isTop6
-                  ? styles.row
-                  : `${globalIndex % 2 === 0 ? "bg-white" : "bg-zinc-50/50"} hover:bg-zinc-50`
-              }`}
-            >
-              <td
-                className={`px-1 text-center align-middle ${
-                  isLeader ? "py-4" : "py-3"
-                } ${isTop6 ? styles.ring : ""}`}
-                onClick={() => onSelectPilot(item)}
-              >
-                <button
-                  type="button"
-                  className="mx-auto flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold transition active:scale-95"
-                >
-                  <span
-                    className={`relative flex h-8 w-8 items-center justify-center rounded-xl shadow-sm ${styles.badge}`}
-                  >
-                    {isLeader ? (
-                      <Star className="absolute -right-1 -top-1 h-3.5 w-3.5 fill-yellow-300 text-yellow-600" />
-                    ) : null}
-                    {position}
-                  </span>
-                </button>
-              </td>
-
-              <td
-                className={`min-w-0 px-2 align-middle ${
-                  isLeader ? "py-4" : "py-3"
-                } ${isTop6 ? styles.ring : ""}`}
-              >
-                <button
-                  type="button"
-                  onClick={() => onSelectPilot(item)}
-                  className="block w-full text-left transition active:scale-[0.99]"
-                >
-                  <div className="flex items-center gap-2">
-                    {isLeader ? (
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-yellow-100">
-                        <Trophy className="h-4 w-4 text-yellow-700" />
-                      </div>
-                    ) : isTop6 ? (
-                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/80 shadow-sm">
-                        <Sparkles className="h-3.5 w-3.5 text-zinc-500" />
-                      </div>
-                    ) : null}
-
-                    <div className="min-w-0 flex-1">
-                      <span
-                        className={`block truncate tracking-tight ${styles.name} ${
-                          isLeader ? "text-[14px] font-extrabold" : "text-[13px] font-bold"
-                        }`}
-                      >
-                        {nomeLinha1}
-                      </span>
-
-                      <div className="mt-1 flex items-center gap-1.5">
-                        {nomeLinha2 ? (
-                          <span
-                            className={`inline-flex max-w-full rounded-full border px-2 py-0.5 text-[10px] font-semibold italic tracking-[0.02em] ${styles.chip}`}
-                          >
-                            {nomeLinha2}
-                          </span>
-                        ) : null}
-
-                        {isLeader ? (
-                          <span className="inline-flex rounded-full border border-yellow-300 bg-yellow-200/70 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-[0.08em] text-yellow-900">
-                            Líder
-                          </span>
-                        ) : null}
-
-                        {topBlock && position === 6 ? (
-                          <span className="inline-flex rounded-full border border-emerald-300 bg-emerald-100 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-[0.08em] text-emerald-800">
-                            Top 6
-                          </span>
-                        ) : null}
-                      </div>
-                    </div>
-                  </div>
-                </button>
-              </td>
-
-              <td
-                className={`px-1 text-center align-middle text-[12px] font-extrabold ${
-                  isTop6 ? styles.points : "text-zinc-950"
-                } ${isLeader ? "py-4" : "py-3"} ${isTop6 ? styles.ring : ""}`}
-                onClick={() => onSelectPilot(item)}
-              >
-                <button
-                  type="button"
-                  onClick={() => onSelectPilot(item)}
-                  className="w-full transition active:scale-95"
-                >
-                  {item.pontos}
-                </button>
-              </td>
-
-              <td
-                className={`px-1 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
-                  isLeader ? "py-4" : "py-3"
-                } ${isTop6 ? styles.ring : ""}`}
-                onClick={() => onSelectPilot(item)}
-              >
-                <button
-                  type="button"
-                  onClick={() => onSelectPilot(item)}
-                  className="w-full transition active:scale-95"
-                >
-                  {item.vitorias}
-                </button>
-              </td>
-
-              <td
-                className={`px-1 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
-                  isLeader ? "py-4" : "py-3"
-                } ${isTop6 ? styles.ring : ""}`}
-                onClick={() => onSelectPilot(item)}
-              >
-                <button
-                  type="button"
-                  onClick={() => onSelectPilot(item)}
-                  className="w-full transition active:scale-95"
-                >
-                  {item.poles}
-                </button>
-              </td>
-
-              <td
-                className={`px-1 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
-                  isLeader ? "py-4" : "py-3"
-                } ${isTop6 ? styles.ring : ""}`}
-                onClick={() => onSelectPilot(item)}
-              >
-                <button
-                  type="button"
-                  onClick={() => onSelectPilot(item)}
-                  className="w-full transition active:scale-95"
-                >
-                  {item.mv}
-                </button>
-              </td>
-
-              <td
-                className={`px-1 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
-                  isLeader ? "py-4" : "py-3"
-                } ${isTop6 ? styles.ring : ""}`}
-                onClick={() => onSelectPilot(item)}
-              >
-                <button
-                  type="button"
-                  onClick={() => onSelectPilot(item)}
-                  className="w-full transition active:scale-95"
-                >
-                  {item.podios}
-                </button>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
-  );
-}
-
 export default function CasernaKartAppModerno() {
   const [rankingData, setRankingData] = useState<RankingData>({});
   const [loading, setLoading] = useState(true);
@@ -714,9 +501,6 @@ export default function CasernaKartAppModerno() {
         .includes(search.toLowerCase())
     );
   }, [rankingData, category, competition, search]);
-
-  const top6Ranking = filteredRanking.slice(0, 6);
-  const remainingRanking = filteredRanking.slice(6);
 
   const leader = filteredRanking[0];
   const leaderEvolution = useMemo(() => buildPilotEvolution(leader), [leader]);
@@ -965,51 +749,210 @@ export default function CasernaKartAppModerno() {
 
               <Card className="overflow-hidden rounded-[22px] border-black/5 bg-white shadow-sm">
                 <CardContent className="p-0">
-                  <div className="max-h-[620px] overflow-y-auto">
-                    {top6Ranking.length > 0 && (
-                      <div>
-                        <div className="sticky top-0 z-20 border-b border-yellow-200 bg-gradient-to-r from-yellow-50 via-white to-yellow-50 px-4 py-2">
-                          <div className="flex items-center justify-between">
-                            <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-yellow-800">
-                              Bloco Top 6
-                            </p>
-                            <div className="inline-flex items-center gap-1 rounded-full border border-yellow-200 bg-white px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em] text-yellow-700">
-                              <Trophy className="h-3 w-3" />
-                              Destaque oficial
-                            </div>
-                          </div>
-                        </div>
+                  <div className="max-h-[560px] overflow-y-auto">
+                    <table className="w-full table-fixed">
+                      <colgroup>
+                        <col className="w-[50px]" />
+                        <col />
+                        <col className="w-[40px]" />
+                        <col className="w-[40px]" />
+                        <col className="w-[40px]" />
+                        <col className="w-[42px]" />
+                        <col className="w-[42px]" />
+                      </colgroup>
 
-                        <RankingTable
-                          items={top6Ranking}
-                          offset={0}
-                          onSelectPilot={handleSelectPilot}
-                          topBlock
-                        />
-                      </div>
-                    )}
+                      <thead className="sticky top-0 z-10">
+                        <tr className="border-b border-black/5 bg-zinc-50/95 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500 backdrop-blur">
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                            Pos
+                          </th>
+                          <th className="px-2 py-3 text-left whitespace-nowrap">
+                            Piloto
+                          </th>
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                            Pts
+                          </th>
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                            Vit
+                          </th>
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                            Pol
+                          </th>
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                            VMR
+                          </th>
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                            PDS
+                          </th>
+                        </tr>
+                      </thead>
 
-                    {remainingRanking.length > 0 && (
-                      <div className="border-t-4 border-zinc-100">
-                        <div className="sticky top-[41px] z-10 border-b border-zinc-200 bg-zinc-50 px-4 py-2">
-                          <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-zinc-500">
-                            Demais pilotos
-                          </p>
-                        </div>
+                      <tbody>
+                        {filteredRanking.map((item, index) => {
+                          const nomeLinha1 = getPilotFirstAndLastName(item.piloto);
+                          const nomeLinha2 = getPilotWarNameDisplay(item);
+                          const isTop6 = index < 6;
+                          const isLeader = index === 0;
+                          const styles = getTop6RowStyles(index + 1);
 
-                        <RankingTable
-                          items={remainingRanking}
-                          offset={6}
-                          onSelectPilot={handleSelectPilot}
-                        />
-                      </div>
-                    )}
+                          return (
+                            <tr
+                              key={`${category}-${competition}-table-${item.pos}-${item.piloto}`}
+                              className={`group transition ${
+                                isTop6
+                                  ? `${styles.row}`
+                                  : `${index % 2 === 0 ? "bg-white" : "bg-zinc-50/50"} hover:bg-zinc-50`
+                              }`}
+                            >
+                              <td
+                                className={`px-1 py-3 text-center align-middle ${isTop6 ? styles.ring : ""}`}
+                                onClick={() => handleSelectPilot(item)}
+                              >
+                                <button
+                                  type="button"
+                                  className="mx-auto flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold transition active:scale-95"
+                                >
+                                  <span
+                                    className={`relative flex h-8 w-8 items-center justify-center rounded-xl shadow-sm ${styles.badge}`}
+                                  >
+                                    {isLeader ? (
+                                      <Star className="absolute -right-1 -top-1 h-3.5 w-3.5 fill-yellow-300 text-yellow-600" />
+                                    ) : null}
+                                    {index + 1}
+                                  </span>
+                                </button>
+                              </td>
 
-                    {filteredRanking.length === 0 && (
-                      <div className="px-4 py-8 text-center text-sm text-zinc-500">
-                        Nenhum piloto com pontos encontrado.
-                      </div>
-                    )}
+                              <td
+                                className={`min-w-0 px-2 py-3 align-middle ${isTop6 ? styles.ring : ""}`}
+                              >
+                                <button
+                                  type="button"
+                                  onClick={() => handleSelectPilot(item)}
+                                  className="block w-full text-left transition active:scale-[0.99]"
+                                >
+                                  <div className="flex items-center gap-2">
+                                    {isLeader ? (
+                                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-yellow-100">
+                                        <Trophy className="h-3.5 w-3.5 text-yellow-700" />
+                                      </div>
+                                    ) : isTop6 ? (
+                                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/80 shadow-sm">
+                                        <Sparkles className="h-3.5 w-3.5 text-zinc-500" />
+                                      </div>
+                                    ) : null}
+
+                                    <div className="min-w-0 flex-1">
+                                      <span
+                                        className={`block truncate text-[13px] font-bold tracking-tight ${styles.name}`}
+                                      >
+                                        {nomeLinha1}
+                                      </span>
+
+                                      <div className="mt-1 flex items-center gap-1.5">
+                                        {nomeLinha2 ? (
+                                          <span
+                                            className={`inline-flex max-w-full rounded-full border px-2 py-0.5 text-[10px] font-semibold italic tracking-[0.02em] ${styles.chip}`}
+                                          >
+                                            {nomeLinha2}
+                                          </span>
+                                        ) : null}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </button>
+                              </td>
+
+                              <td
+                                className={`px-1 py-3 text-center align-middle text-[12px] font-extrabold ${
+                                  isTop6 ? styles.points : "text-zinc-950"
+                                } ${isTop6 ? styles.ring : ""}`}
+                                onClick={() => handleSelectPilot(item)}
+                              >
+                                <button
+                                  type="button"
+                                  onClick={() => handleSelectPilot(item)}
+                                  className="w-full transition active:scale-95"
+                                >
+                                  {item.pontos}
+                                </button>
+                              </td>
+
+                              <td
+                                className={`px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
+                                  isTop6 ? styles.ring : ""
+                                }`}
+                                onClick={() => handleSelectPilot(item)}
+                              >
+                                <button
+                                  type="button"
+                                  onClick={() => handleSelectPilot(item)}
+                                  className="w-full transition active:scale-95"
+                                >
+                                  {item.vitorias}
+                                </button>
+                              </td>
+
+                              <td
+                                className={`px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
+                                  isTop6 ? styles.ring : ""
+                                }`}
+                                onClick={() => handleSelectPilot(item)}
+                              >
+                                <button
+                                  type="button"
+                                  onClick={() => handleSelectPilot(item)}
+                                  className="w-full transition active:scale-95"
+                                >
+                                  {item.poles}
+                                </button>
+                              </td>
+
+                              <td
+                                className={`px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
+                                  isTop6 ? styles.ring : ""
+                                }`}
+                                onClick={() => handleSelectPilot(item)}
+                              >
+                                <button
+                                  type="button"
+                                  onClick={() => handleSelectPilot(item)}
+                                  className="w-full transition active:scale-95"
+                                >
+                                  {item.mv}
+                                </button>
+                              </td>
+
+                              <td
+                                className={`px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
+                                  isTop6 ? styles.ring : ""
+                                }`}
+                                onClick={() => handleSelectPilot(item)}
+                              >
+                                <button
+                                  type="button"
+                                  onClick={() => handleSelectPilot(item)}
+                                  className="w-full transition active:scale-95"
+                                >
+                                  {item.podios}
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+
+                        {filteredRanking.length === 0 && (
+                          <tr>
+                            <td
+                              colSpan={7}
+                              className="px-4 py-6 text-center text-sm text-zinc-500"
+                            >
+                              Nenhum piloto com pontos encontrado.
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
                   </div>
                 </CardContent>
               </Card>
