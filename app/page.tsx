@@ -335,6 +335,283 @@ function getCategoryTheme(category: string) {
   return themes[category as keyof typeof themes] || themes.Elite;
 }
 
+function CompactStatCard({
+  title,
+  value,
+  subtitle,
+  icon: Icon,
+  accent = false,
+}: {
+  title: string;
+  value: string | number;
+  subtitle: string;
+  icon: React.ElementType;
+  accent?: boolean;
+}) {
+  return (
+    <Card
+      className={`rounded-[20px] border shadow-none ${
+        accent
+          ? "border-yellow-300/80 bg-yellow-50/70"
+          : "border-black/5 bg-white"
+      }`}
+    >
+      <CardContent className="p-3.5">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-500">
+            {title}
+          </p>
+          <div
+            className={`flex h-7 w-7 items-center justify-center rounded-2xl ${
+              accent ? "bg-yellow-100" : "bg-zinc-100"
+            }`}
+          >
+            <Icon
+              className={`h-3.5 w-3.5 ${
+                accent ? "text-yellow-700" : "text-zinc-600"
+              }`}
+            />
+          </div>
+        </div>
+
+        <p className="text-[22px] font-bold leading-none tracking-tight text-zinc-950">
+          {value}
+        </p>
+
+        <p className="mt-1.5 text-xs leading-snug text-zinc-500">{subtitle}</p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function HighlightCard({
+  title,
+  icon: Icon,
+  children,
+  accent = false,
+  accentStyles,
+  compact = false,
+}: {
+  title: string;
+  icon: React.ElementType;
+  children: React.ReactNode;
+  accent?: boolean;
+  accentStyles?: {
+    border: string;
+    bg: string;
+    iconWrap: string;
+    icon: string;
+    text: string;
+    divider: string;
+  };
+  compact?: boolean;
+}) {
+  const defaultAccent = {
+    border: "border-yellow-300",
+    bg: "bg-gradient-to-b from-yellow-50 to-white",
+    iconWrap: "bg-yellow-100",
+    icon: "text-yellow-700",
+    text: "text-yellow-800",
+    divider: "bg-yellow-200/80",
+  };
+
+  const appliedAccent = accentStyles || defaultAccent;
+
+  return (
+    <Card
+      className={`rounded-[22px] border shadow-none ${
+        compact ? "h-[156px]" : "h-[182px]"
+      } ${
+        accent
+          ? `${appliedAccent.border} ${appliedAccent.bg}`
+          : "border-black/5 bg-white"
+      }`}
+    >
+      <CardContent
+        className={`flex h-full flex-col ${
+          compact ? "px-3 pb-3 pt-2" : "px-4 pb-4 pt-2"
+        }`}
+      >
+        <div className="mb-1 flex items-start justify-between gap-2">
+          <p
+            className={`w-full text-center font-bold uppercase leading-none ${
+              compact
+                ? "text-[10px] tracking-[0.16em]"
+                : "text-[11px] tracking-[0.18em]"
+            } ${accent ? appliedAccent.text : "text-zinc-500"}`}
+          >
+            {title}
+          </p>
+
+          <div
+            className={`-mt-1 flex shrink-0 items-center justify-center rounded-xl ${
+              compact ? "h-5 w-5" : "h-6 w-6"
+            } ${accent ? appliedAccent.iconWrap : "bg-zinc-100"}`}
+          >
+            <Icon
+              className={`${compact ? "h-2.5 w-2.5" : "h-3 w-3"} ${
+                accent ? appliedAccent.icon : "text-zinc-600"
+              }`}
+            />
+          </div>
+        </div>
+
+        <div
+          className={`mb-1 h-px w-full ${
+            accent ? appliedAccent.divider : "bg-zinc-100"
+          }`}
+        />
+
+        <div className="flex-1 pt-0.5">{children}</div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function PilotPhotoSlot({
+  pilot,
+  alt,
+}: {
+  pilot?: RankingItem | null;
+  alt: string;
+}) {
+  const src = getPilotPhotoPath(pilot);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setHasError(false);
+  }, [src]);
+
+  const showImage = !!src && !hasError;
+
+  return (
+    <div className="h-full w-full bg-zinc-50">
+      {showImage ? (
+        <img
+          src={src}
+          alt={alt}
+          className="h-full w-full object-cover"
+          onError={() => setHasError(true)}
+        />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center bg-gradient-to-b from-zinc-50 to-zinc-100">
+          <div className="text-center">
+            <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm">
+              <Camera className="h-5 w-5 text-zinc-500" />
+            </div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500">
+              Espaço foto
+            </p>
+            <p className="mt-1 text-[10px] font-medium text-zinc-500">
+              piloto 1:1
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function StatRankingCard({
+  title,
+  icon: Icon,
+  items,
+  metricKey,
+  emptyLabel,
+  theme,
+}: {
+  title: string;
+  icon: React.ElementType;
+  items: RankingItem[];
+  metricKey: "vitorias" | "poles" | "mv" | "podios";
+  emptyLabel: string;
+  theme: ReturnType<typeof getCategoryTheme>;
+}) {
+  return (
+    <Card className="overflow-hidden rounded-[24px] border-black/5 bg-white shadow-sm">
+      <CardHeader className="border-b border-black/5 bg-gradient-to-r from-white via-zinc-50/70 to-white pb-3">
+        <CardTitle className="flex items-center gap-2 text-sm font-bold text-zinc-950">
+          <div
+            className={`flex h-9 w-9 items-center justify-center rounded-2xl ${theme.statsIconWrap}`}
+          >
+            <Icon className={`h-4 w-4 ${theme.statsIcon}`} />
+          </div>
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">
+              Ranking estatístico
+            </p>
+            <p className="text-[15px] font-extrabold tracking-tight text-zinc-950">
+              {title}
+            </p>
+          </div>
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent className="pt-4">
+        {items.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-black/10 bg-zinc-50 px-4 py-6 text-center text-sm text-zinc-500">
+            {emptyLabel}
+          </div>
+        ) : (
+          <div className="space-y-2.5">
+            {items.map((item, index) => {
+              const value = item[metricKey];
+              const isFirst = index === 0;
+
+              return (
+                <div
+                  key={`${title}-${item.pilotoId}-${index}`}
+                  className={`flex items-center justify-between gap-3 rounded-[20px] border px-3 py-3 ${
+                    isFirst
+                      ? `${theme.statAccentBg}`
+                      : "border-black/5 bg-zinc-50/70"
+                  }`}
+                >
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl text-xs font-extrabold ${
+                        isFirst
+                          ? theme.statAccentRank
+                          : "bg-zinc-200 text-zinc-800"
+                      }`}
+                    >
+                      {index + 1}
+                    </div>
+
+                    <div className="min-w-0">
+                      <p className="truncate text-[13px] font-extrabold tracking-tight text-zinc-950">
+                        {getPilotFirstAndLastName(item.piloto)}
+                      </p>
+
+                      {getPilotWarNameDisplay(item) ? (
+                        <p className="mt-0.5 truncate text-[10px] italic text-zinc-500">
+                          {getPilotWarNameDisplay(item)}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  <div
+                    className={`shrink-0 rounded-2xl px-3 py-1.5 text-sm font-extrabold ${
+                      isFirst
+                        ? `${theme.primaryBadge}`
+                        : "bg-white text-zinc-800"
+                    }`}
+                  >
+                    <span className={isFirst ? theme.statAccentValue : ""}>
+                      {value}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function CasernaKartAppModerno() {
   const [rankingData, setRankingData] = useState<RankingData>({});
   const [loading, setLoading] = useState(true);
@@ -696,14 +973,14 @@ export default function CasernaKartAppModerno() {
         </section>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
-          <TabsList className="mb-4 grid h-[72px] w-full grid-cols-3 gap-2 rounded-[20px] border border-black/5 bg-gradient-to-r from-[#f6f2e7] via-[#efe8da] to-[#f6f2e7] p-2 shadow-[0_6px_14px_rgba(15,23,42,0.04),inset_0_1px_0_rgba(255,255,255,0.95)]">
+          <TabsList className="mb-5 grid h-auto w-full grid-cols-3 gap-2 bg-transparent p-0 shadow-none">
             <TabsTrigger
               value="classificacao"
-              className="h-full rounded-[14px] border border-transparent bg-transparent px-2 py-0 text-zinc-500 transition-all duration-200 data-[state=active]:border-yellow-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-none"
+              className="h-[78px] rounded-[18px] border border-zinc-200 bg-white px-2 py-0 text-zinc-500 shadow-sm transition-all duration-200 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_16px_rgba(15,23,42,0.07)]"
             >
               <div className="flex h-full flex-col items-center justify-center gap-1">
-                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-white/70 text-zinc-500 transition-all duration-200 data-[state=active]:bg-yellow-50 data-[state=active]:text-yellow-700">
-                  <TableProperties className="h-3.5 w-3.5" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-50 text-zinc-500 data-[state=active]:bg-yellow-50 data-[state=active]:text-yellow-700">
+                  <TableProperties className="h-4 w-4" />
                 </div>
                 <span className="text-[10px] font-bold uppercase tracking-[0.12em]">
                   Classificação
@@ -713,11 +990,11 @@ export default function CasernaKartAppModerno() {
 
             <TabsTrigger
               value="piloto"
-              className="h-full rounded-[14px] border border-transparent bg-transparent px-2 py-0 text-zinc-500 transition-all duration-200 data-[state=active]:border-yellow-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-none"
+              className="h-[78px] rounded-[18px] border border-zinc-200 bg-white px-2 py-0 text-zinc-500 shadow-sm transition-all duration-200 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_16px_rgba(15,23,42,0.07)]"
             >
               <div className="flex h-full flex-col items-center justify-center gap-1">
-                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-white/70 text-zinc-500 transition-all duration-200 data-[state=active]:bg-yellow-50 data-[state=active]:text-yellow-700">
-                  <User className="h-3.5 w-3.5" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-50 text-zinc-500 data-[state=active]:bg-yellow-50 data-[state=active]:text-yellow-700">
+                  <User className="h-4 w-4" />
                 </div>
                 <span className="text-[10px] font-bold uppercase tracking-[0.12em]">
                   Piloto
@@ -727,11 +1004,11 @@ export default function CasernaKartAppModerno() {
 
             <TabsTrigger
               value="stats"
-              className="h-full rounded-[14px] border border-transparent bg-transparent px-2 py-0 text-zinc-500 transition-all duration-200 data-[state=active]:border-yellow-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-none"
+              className="h-[78px] rounded-[18px] border border-zinc-200 bg-white px-2 py-0 text-zinc-500 shadow-sm transition-all duration-200 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_16px_rgba(15,23,42,0.07)]"
             >
               <div className="flex h-full flex-col items-center justify-center gap-1">
-                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-white/70 text-zinc-500 transition-all duration-200 data-[state=active]:bg-yellow-50 data-[state=active]:text-yellow-700">
-                  <BarChart3 className="h-3.5 w-3.5" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-50 text-zinc-500 data-[state=active]:bg-yellow-50 data-[state=active]:text-yellow-700">
+                  <BarChart3 className="h-4 w-4" />
                 </div>
                 <span className="text-[10px] font-bold uppercase tracking-[0.12em]">
                   Stats
