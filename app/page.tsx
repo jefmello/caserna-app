@@ -632,14 +632,16 @@ export default function CasernaKartAppModerno() {
     <div className="min-h-screen bg-[#f3f4f6] font-sans text-zinc-950 antialiased">
       <div className="mx-auto max-w-md px-4 pb-20 pt-4">
         <header className="sticky top-0 z-20 mb-4 overflow-hidden rounded-[24px] border border-black/5 bg-white shadow-sm">
-          <div className="relative h-[80px] w-full">
-            <Image
-              src="/banner-topo.png"
-              alt="Classificação Oficial"
-              fill
-              className="object-cover"
-              priority
-            />
+          <div className="relative flex w-full items-center justify-center bg-white px-3 py-2">
+            <div className="relative w-full max-w-full aspect-[3.2/1] min-h-[90px]">
+              <Image
+                src="/banner-topo.png"
+                alt="Classificação Oficial"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
           </div>
 
           <div className="space-y-2 px-3 pb-3 pt-2">
@@ -804,17 +806,24 @@ export default function CasernaKartAppModerno() {
               <div className="rounded-[20px] border border-black/5 bg-white px-4 py-3 shadow-sm">
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-zinc-500">
+                    <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-zinc-700">
                       Classificação geral
                     </p>
-                    <p className="mt-1 text-sm font-medium text-zinc-800">
+
+                    <p className="mt-1 text-[14px] font-medium leading-tight text-zinc-600">
                       Categoria e campeonato selecionados
                     </p>
+
+                    <div className="mt-2 h-px w-16 bg-gradient-to-r from-yellow-400/70 to-transparent" />
                   </div>
 
-                  <div className="flex items-center gap-2 rounded-full border border-yellow-200 bg-gradient-to-r from-yellow-50 to-yellow-100 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-yellow-800 shadow-sm">
-                    <Sparkles className="h-3.5 w-3.5" />
-                    Top 6 oficial
+                  <div className="shrink-0 rounded-full border border-yellow-200 bg-gradient-to-r from-yellow-50 to-yellow-100 px-3 py-1.5 shadow-sm">
+                    <div className="flex items-center gap-1.5">
+                      <Sparkles className="h-3.5 w-3.5 text-yellow-700" />
+                      <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-yellow-800">
+                        Top 6 oficial
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -824,13 +833,13 @@ export default function CasernaKartAppModerno() {
                   <div className="max-h-[560px] overflow-y-auto">
                     <table className="w-full table-fixed">
                       <colgroup>
-                        <col className="w-[50px]" />
+                        <col className="w-[44px]" />
                         <col />
-                        <col className="w-[40px]" />
-                        <col className="w-[40px]" />
-                        <col className="w-[40px]" />
-                        <col className="w-[42px]" />
-                        <col className="w-[42px]" />
+                        <col className="w-[32px]" />
+                        <col className="w-[32px]" />
+                        <col className="w-[32px]" />
+                        <col className="w-[36px]" />
+                        <col className="w-[36px]" />
                       </colgroup>
 
                       <thead className="sticky top-0 z-10">
@@ -903,33 +912,21 @@ export default function CasernaKartAppModerno() {
                                   onClick={() => handleSelectPilot(item)}
                                   className="block w-full text-left transition active:scale-[0.99]"
                                 >
-                                  <div className="flex items-center gap-2">
-                                    {isLeader ? (
-                                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-yellow-100">
-                                        <Trophy className="h-3.5 w-3.5 text-yellow-700" />
-                                      </div>
-                                    ) : isTop6 ? (
-                                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/80 shadow-sm">
-                                        <Sparkles className="h-3.5 w-3.5 text-zinc-500" />
-                                      </div>
-                                    ) : null}
+                                  <div className="min-w-0">
+                                    <span
+                                      className={`block whitespace-normal break-words text-[13px] font-bold leading-tight tracking-tight ${styles.name}`}
+                                    >
+                                      {nomeLinha1}
+                                    </span>
 
-                                    <div className="min-w-0 flex-1">
-                                      <span
-                                        className={`block truncate text-[13px] font-bold tracking-tight ${styles.name}`}
-                                      >
-                                        {nomeLinha1}
-                                      </span>
-
-                                      <div className="mt-1 flex items-center gap-1.5">
-                                        {nomeLinha2 ? (
-                                          <span
-                                            className={`inline-flex max-w-full rounded-full border px-2 py-0.5 text-[10px] font-semibold italic tracking-[0.02em] ${styles.chip}`}
-                                          >
-                                            {nomeLinha2}
-                                          </span>
-                                        ) : null}
-                                      </div>
+                                    <div className="mt-1 flex items-center gap-1.5">
+                                      {nomeLinha2 ? (
+                                        <span
+                                          className={`inline-flex max-w-full whitespace-normal break-words rounded-full border px-2 py-0.5 text-[10px] font-semibold italic tracking-[0.02em] ${styles.chip}`}
+                                        >
+                                          {nomeLinha2}
+                                        </span>
+                                      ) : null}
                                     </div>
                                   </div>
                                 </button>
