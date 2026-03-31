@@ -809,12 +809,17 @@ export default function CasernaKartAppModerno() {
                   <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-yellow-400 to-transparent" />
 
                   <div className="flex items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <h2 className="inline-flex rounded-full border border-yellow-200 bg-yellow-100/80 px-3 py-1.5 text-[20px] font-extrabold uppercase tracking-[0.16em] leading-none text-zinc-950 shadow-sm">
-                        Classificação Geral
-                      </h2>
+                    <div className="min-w-0 flex-1 text-center">
+                      <div className="inline-flex flex-col items-center rounded-[18px] border border-yellow-200 bg-yellow-100/80 px-4 py-2 shadow-sm">
+                        <h2 className="text-[18px] font-extrabold uppercase tracking-[0.20em] leading-none text-zinc-950">
+                          Classificação
+                        </h2>
+                        <h3 className="mt-1 text-[22px] font-extrabold uppercase tracking-[0.24em] leading-none text-zinc-950">
+                          Geral
+                        </h3>
+                      </div>
 
-                      <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-500">
+                      <p className="mt-3 text-[9px] font-medium uppercase tracking-[0.14em] text-zinc-400">
                         categoria e campeonato selecionados
                       </p>
                     </div>
