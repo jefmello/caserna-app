@@ -973,16 +973,16 @@ export default function CasernaKartAppModerno() {
         </section>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
-          <TabsList className="grid w-full grid-cols-3 gap-1.5 rounded-[24px] border border-black/5 bg-gradient-to-b from-[#fbfaf7] via-[#f4f1ea] to-[#ece7dd] p-1.5 shadow-[0_10px_24px_rgba(15,23,42,0.06),inset_0_1px_0_rgba(255,255,255,0.95)]">
+          <TabsList className="grid w-full grid-cols-3 gap-1 rounded-[22px] border border-black/5 bg-gradient-to-b from-[#fbfaf7] via-[#f4f1ea] to-[#ece7dd] p-1 shadow-[0_8px_18px_rgba(15,23,42,0.05),inset_0_1px_0_rgba(255,255,255,0.95)]">
             <TabsTrigger
               value="classificacao"
-              className="group rounded-[18px] border border-transparent bg-transparent px-2 py-2.5 text-zinc-500 transition-all duration-200 data-[state=active]:border-black/5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_8px_18px_rgba(15,23,42,0.10)]"
+              className="group rounded-[16px] border border-transparent bg-transparent px-1.5 py-1.5 text-zinc-500 transition-all duration-200 data-[state=active]:border-black/5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.08)]"
             >
-              <div className="flex flex-col items-center justify-center gap-1">
-                <div className="flex h-8 w-8 items-center justify-center rounded-2xl bg-white/70 text-zinc-500 transition-all duration-200 group-data-[state=active]:bg-yellow-50 group-data-[state=active]:text-yellow-700">
-                  <TableProperties className="h-4 w-4" />
+              <div className="flex flex-col items-center justify-center gap-0.5">
+                <div className="flex h-7 w-7 items-center justify-center rounded-2xl bg-white/70 text-zinc-500 transition-all duration-200 group-data-[state=active]:bg-yellow-50 group-data-[state=active]:text-yellow-700">
+                  <TableProperties className="h-3.5 w-3.5" />
                 </div>
-                <span className="text-[12px] font-bold uppercase tracking-[0.08em]">
+                <span className="text-[10px] font-bold uppercase tracking-[0.08em]">
                   Classificação
                 </span>
               </div>
@@ -990,13 +990,13 @@ export default function CasernaKartAppModerno() {
 
             <TabsTrigger
               value="piloto"
-              className="group rounded-[18px] border border-transparent bg-transparent px-2 py-2.5 text-zinc-500 transition-all duration-200 data-[state=active]:border-black/5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_8px_18px_rgba(15,23,42,0.10)]"
+              className="group rounded-[16px] border border-transparent bg-transparent px-1.5 py-1.5 text-zinc-500 transition-all duration-200 data-[state=active]:border-black/5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.08)]"
             >
-              <div className="flex flex-col items-center justify-center gap-1">
-                <div className="flex h-8 w-8 items-center justify-center rounded-2xl bg-white/70 text-zinc-500 transition-all duration-200 group-data-[state=active]:bg-yellow-50 group-data-[state=active]:text-yellow-700">
-                  <User className="h-4 w-4" />
+              <div className="flex flex-col items-center justify-center gap-0.5">
+                <div className="flex h-7 w-7 items-center justify-center rounded-2xl bg-white/70 text-zinc-500 transition-all duration-200 group-data-[state=active]:bg-yellow-50 group-data-[state=active]:text-yellow-700">
+                  <User className="h-3.5 w-3.5" />
                 </div>
-                <span className="text-[12px] font-bold uppercase tracking-[0.08em]">
+                <span className="text-[10px] font-bold uppercase tracking-[0.08em]">
                   Piloto
                 </span>
               </div>
@@ -1004,57 +1004,56 @@ export default function CasernaKartAppModerno() {
 
             <TabsTrigger
               value="stats"
-              className="group rounded-[18px] border border-transparent bg-transparent px-2 py-2.5 text-zinc-500 transition-all duration-200 data-[state=active]:border-black/5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_8px_18px_rgba(15,23,42,0.10)]"
+              className="group rounded-[16px] border border-transparent bg-transparent px-1.5 py-1.5 text-zinc-500 transition-all duration-200 data-[state=active]:border-black/5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.08)]"
             >
-              <div className="flex flex-col items-center justify-center gap-1">
-                <div className="flex h-8 w-8 items-center justify-center rounded-2xl bg-white/70 text-zinc-500 transition-all duration-200 group-data-[state=active]:bg-yellow-50 group-data-[state=active]:text-yellow-700">
-                  <BarChart3 className="h-4 w-4" />
+              <div className="flex flex-col items-center justify-center gap-0.5">
+                <div className="flex h-7 w-7 items-center justify-center rounded-2xl bg-white/70 text-zinc-500 transition-all duration-200 group-data-[state=active]:bg-yellow-50 group-data-[state=active]:text-yellow-700">
+                  <BarChart3 className="h-3.5 w-3.5" />
                 </div>
-                <span className="text-[12px] font-bold uppercase tracking-[0.08em]">
+                <span className="text-[10px] font-bold uppercase tracking-[0.08em]">
                   Stats
                 </span>
               </div>
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="classificacao" className="space-y-4 pt-4">
+          <TabsContent value="classificacao" className="space-y-3 pt-3">
             <Card
-              className={`rounded-[24px] border ${theme.searchBorder} bg-gradient-to-br from-white to-zinc-50/70 shadow-sm`}
+              className={`rounded-[22px] border ${theme.searchBorder} bg-gradient-to-br from-white to-zinc-50/70 shadow-sm`}
             >
-              <CardContent className="p-4">
-                <div className="mb-3 flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className={`flex h-9 w-9 items-center justify-center rounded-2xl ${theme.primaryIconWrap}`}
-                    >
-                      <Search className={`h-4 w-4 ${theme.searchIcon}`} />
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-zinc-400">
-                        Busca rápida
-                      </p>
-                      <p className="text-[13px] font-semibold text-zinc-900">
-                        Encontre um piloto na classificação
-                      </p>
-                    </div>
+              <CardContent className="p-3.5">
+                <div className="mb-2.5 flex items-center gap-2">
+                  <div
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${theme.primaryIconWrap}`}
+                  >
+                    <Search className={`h-4.5 w-4.5 ${theme.searchIcon}`} />
+                  </div>
+
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-400">
+                      Busca rápida
+                    </p>
+                    <p className="text-[12px] font-semibold leading-tight text-zinc-900">
+                      Encontre um piloto na classificação
+                    </p>
                   </div>
 
                   <div
-                    className={`hidden rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] sm:inline-flex ${theme.headerChip}`}
+                    className={`ml-auto hidden rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] sm:inline-flex ${theme.headerChip}`}
                   >
                     {competitionLabels[competition] || competition}
                   </div>
                 </div>
 
                 <div
-                  className={`group flex items-center rounded-[20px] border border-black/5 bg-white px-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)] transition focus-within:ring-4 ${theme.searchGlow}`}
+                  className={`group flex items-center rounded-[18px] border border-black/5 bg-white px-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)] transition focus-within:ring-4 ${theme.searchGlow}`}
                 >
                   <Search className="h-4 w-4 shrink-0 text-zinc-400" />
                   <Input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Buscar piloto"
-                    className="h-11 border-0 bg-transparent pl-3 pr-0 text-zinc-950 shadow-none outline-none ring-0 placeholder:text-zinc-400 focus-visible:ring-0"
+                    className="h-10 border-0 bg-transparent pl-3 pr-0 text-zinc-950 shadow-none outline-none ring-0 placeholder:text-zinc-400 focus-visible:ring-0"
                   />
                 </div>
               </CardContent>
@@ -1298,7 +1297,7 @@ export default function CasernaKartAppModerno() {
             </section>
           </TabsContent>
 
-          <TabsContent value="piloto" className="space-y-4 pt-4">
+          <TabsContent value="piloto" className="space-y-4 pt-3">
             {!selectedPilot ? (
               <Card className="rounded-[22px] border-black/5 bg-white shadow-sm">
                 <CardContent className="p-8 text-center">
@@ -1453,6 +1452,7 @@ export default function CasernaKartAppModerno() {
                     value={selectedPilot.poles}
                     subtitle="qualify"
                     icon={Flag}
+                    accent={false}
                   />
                   <CompactStatCard
                     title="VMR"
@@ -1490,7 +1490,7 @@ export default function CasernaKartAppModerno() {
             )}
           </TabsContent>
 
-          <TabsContent value="stats" className="space-y-4 pt-4">
+          <TabsContent value="stats" className="space-y-4 pt-3">
             <div
               className={`overflow-hidden rounded-[24px] border ${theme.titleBorder} bg-gradient-to-br ${theme.statsSoft} shadow-sm`}
             >
