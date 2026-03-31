@@ -811,7 +811,7 @@ export default function CasernaKartAppModerno() {
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
                       <div className="inline-flex max-w-full items-center rounded-[18px] border border-yellow-200 bg-yellow-100/80 px-4 py-2 shadow-sm">
-                        <h2 className="truncate text-[18px] font-extrabold uppercase tracking-[0.14em] leading-none text-zinc-950">
+                        <h2 className="truncate text-[18px] font-extrabold uppercase tracking-[0.08em] leading-none text-zinc-950">
                           Classificação Geral
                         </h2>
                       </div>
