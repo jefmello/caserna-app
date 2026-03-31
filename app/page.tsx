@@ -631,54 +631,82 @@ export default function CasernaKartAppModerno() {
   return (
     <div className="min-h-screen bg-[#f3f4f6] font-sans text-zinc-950 antialiased">
       <div className="mx-auto max-w-md px-4 pb-20 pt-4">
-        <header className="sticky top-0 z-20 mb-4 overflow-hidden rounded-[24px] border border-black/5 bg-white shadow-sm">
-          <div className="relative flex w-full items-center justify-center bg-white px-3 py-2">
-            <div className="relative h-[76px] w-full sm:h-[88px] md:h-[96px]">
-              <Image
-                src="/banner-topo.png"
-                alt="Classificação Oficial"
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, 448px"
-                className="object-contain object-center"
-              />
-            </div>
-          </div>
+        <header className="sticky top-0 z-20 mb-4 overflow-hidden rounded-[28px] border border-black/5 bg-gradient-to-b from-white to-[#fcfcfc] shadow-[0_12px_30px_rgba(15,23,42,0.08)]">
+          <div className="relative">
+            <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent via-yellow-400/80 to-transparent" />
 
-          <div className="space-y-2 px-3 pb-3 pt-2">
-            <div className="overflow-x-auto">
-              <div className="flex gap-2 pb-1">
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setCategory(cat)}
-                    className={`whitespace-nowrap rounded-2xl border px-3 py-2 text-xs font-semibold transition ${
-                      category === cat
-                        ? "border-yellow-300 bg-yellow-50 text-yellow-800"
-                        : "border-black/5 bg-zinc-50 text-zinc-700"
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
+            <div className="px-4 pb-3 pt-4">
+              <div className="overflow-hidden rounded-[22px] border border-black/5 bg-white shadow-[0_6px_20px_rgba(15,23,42,0.06)]">
+                <div className="relative flex w-full items-center justify-center bg-gradient-to-b from-white to-zinc-50/50 px-3 py-3">
+                  <div className="relative h-[84px] w-full sm:h-[92px] md:h-[96px]">
+                    <Image
+                      src="/banner-topo.png"
+                      alt="Classificação Oficial"
+                      fill
+                      priority
+                      sizes="(max-width: 768px) 100vw, 448px"
+                      className="object-contain object-center"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="overflow-x-auto">
-              <div className="flex gap-2 pb-1">
-                {availableCompetitions.map((comp) => (
-                  <button
-                    key={comp}
-                    onClick={() => setCompetition(comp)}
-                    className={`whitespace-nowrap rounded-2xl border px-3 py-2 text-xs font-semibold transition ${
-                      competition === comp
-                        ? "border-yellow-300 bg-yellow-50 text-yellow-800"
-                        : "border-black/5 bg-zinc-50 text-zinc-700"
-                    }`}
-                  >
-                    {competitionLabels[comp] || comp}
-                  </button>
-                ))}
+            <div className="space-y-3 px-4 pb-4">
+              <div className="rounded-[22px] border border-black/5 bg-gradient-to-b from-zinc-50 to-white px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
+                <div className="mb-2 flex items-center justify-between">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">
+                    Categoria
+                  </p>
+                  <div className="h-px flex-1 bg-gradient-to-r from-zinc-200/0 via-zinc-200 to-zinc-200/0 ml-3" />
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {categories.map((cat) => {
+                    const active = category === cat;
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => setCategory(cat)}
+                        className={`whitespace-nowrap rounded-full border px-4 py-2.5 text-[13px] font-semibold transition-all duration-200 ${
+                          active
+                            ? "border-yellow-400 bg-gradient-to-b from-[#fff8d2] to-[#f5e8a6] text-[#7a5600] shadow-[0_6px_14px_rgba(234,179,8,0.22)]"
+                            : "border-zinc-200 bg-white text-zinc-700 shadow-sm hover:border-yellow-200 hover:bg-yellow-50/40"
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="rounded-[22px] border border-black/5 bg-gradient-to-b from-zinc-50 to-white px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
+                <div className="mb-2 flex items-center justify-between">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">
+                    Campeonato
+                  </p>
+                  <div className="h-px flex-1 bg-gradient-to-r from-zinc-200/0 via-zinc-200 to-zinc-200/0 ml-3" />
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {availableCompetitions.map((comp) => {
+                    const active = competition === comp;
+                    return (
+                      <button
+                        key={comp}
+                        onClick={() => setCompetition(comp)}
+                        className={`whitespace-nowrap rounded-full border px-4 py-2.5 text-[13px] font-semibold transition-all duration-200 ${
+                          active
+                            ? "border-yellow-400 bg-gradient-to-b from-[#fff8d2] to-[#f5e8a6] text-[#7a5600] shadow-[0_6px_14px_rgba(234,179,8,0.22)]"
+                            : "border-zinc-200 bg-white text-zinc-700 shadow-sm hover:border-yellow-200 hover:bg-yellow-50/40"
+                        }`}
+                      >
+                        {competitionLabels[comp] || comp}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
