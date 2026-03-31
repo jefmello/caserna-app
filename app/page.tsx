@@ -390,6 +390,7 @@ function HighlightCard({
   children,
   accent = false,
   accentStyles,
+  compact = false,
 }: {
   title: string;
   icon: React.ElementType;
@@ -403,6 +404,7 @@ function HighlightCard({
     text: string;
     divider: string;
   };
+  compact?: boolean;
 }) {
   const defaultAccent = {
     border: "border-yellow-300",
@@ -417,29 +419,37 @@ function HighlightCard({
 
   return (
     <Card
-      className={`h-[182px] rounded-[22px] border shadow-none ${
+      className={`rounded-[22px] border shadow-none ${
+        compact ? "h-[156px]" : "h-[182px]"
+      } ${
         accent
           ? `${appliedAccent.border} ${appliedAccent.bg}`
           : "border-black/5 bg-white"
       }`}
     >
-      <CardContent className="flex h-full flex-col px-4 pb-4 pt-2">
+      <CardContent
+        className={`flex h-full flex-col ${
+          compact ? "px-3 pb-3 pt-2" : "px-4 pb-4 pt-2"
+        }`}
+      >
         <div className="mb-1 flex items-start justify-between gap-2">
           <p
-            className={`w-full text-center text-[11px] font-bold uppercase tracking-[0.18em] leading-none ${
-              accent ? appliedAccent.text : "text-zinc-500"
-            }`}
+            className={`w-full text-center font-bold uppercase leading-none ${
+              compact
+                ? "text-[10px] tracking-[0.16em]"
+                : "text-[11px] tracking-[0.18em]"
+            } ${accent ? appliedAccent.text : "text-zinc-500"}`}
           >
             {title}
           </p>
 
           <div
-            className={`-mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-xl ${
-              accent ? appliedAccent.iconWrap : "bg-zinc-100"
-            }`}
+            className={`-mt-1 flex shrink-0 items-center justify-center rounded-xl ${
+              compact ? "h-5 w-5" : "h-6 w-6"
+            } ${accent ? appliedAccent.iconWrap : "bg-zinc-100"}`}
           >
             <Icon
-              className={`h-3 w-3 ${
+              className={`${compact ? "h-2.5 w-2.5" : "h-3 w-3"} ${
                 accent ? appliedAccent.icon : "text-zinc-600"
               }`}
             />
@@ -757,15 +767,15 @@ export default function CasernaKartAppModerno() {
 
   return (
     <div className="min-h-screen bg-[#f3f4f6] font-sans text-zinc-950 antialiased">
-      <div className="mx-auto max-w-md px-4 pb-20 pt-3">
-        <header className="sticky top-0 z-20 mb-3 overflow-hidden rounded-[22px] border border-black/5 bg-white shadow-[0_10px_25px_rgba(15,23,42,0.06)]">
+      <div className="mx-auto max-w-md px-3 pb-20 pt-2">
+        <header className="sticky top-0 z-20 mb-2 overflow-hidden rounded-[22px] border border-black/5 bg-white shadow-[0_10px_25px_rgba(15,23,42,0.06)]">
           <div
             className={`absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
           />
 
-          <div className="space-y-2 px-3 pb-2 pt-3">
-            <div className="overflow-hidden rounded-[16px] border border-black/5 bg-zinc-50">
-              <div className="relative h-[80px] w-full sm:h-[90px] md:h-[100px]">
+          <div className="space-y-1.5 px-2.5 pb-2 pt-2.5">
+            <div className="overflow-hidden rounded-[15px] border border-black/5 bg-zinc-50">
+              <div className="relative h-[68px] w-full sm:h-[76px] md:h-[84px]">
                 <Image
                   src="/banner-topo.png"
                   alt="Classificação Oficial"
@@ -777,107 +787,113 @@ export default function CasernaKartAppModerno() {
               </div>
             </div>
 
-            <div className="rounded-[16px] border border-black/5 bg-gradient-to-b from-zinc-50 to-white px-2.5 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
-              <div className="mb-1.5 flex items-center justify-between">
-                <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-zinc-400">
-                  Categoria
-                </p>
-                <div className="ml-2 h-px flex-1 bg-gradient-to-r from-zinc-200/0 via-zinc-200 to-zinc-200/0" />
+            <div className="grid grid-cols-1 gap-1.5">
+              <div className="rounded-[15px] border border-black/5 bg-gradient-to-b from-zinc-50 to-white px-2 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
+                <div className="mb-1 flex items-center justify-between">
+                  <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-zinc-400">
+                    Categoria
+                  </p>
+                  <div className="ml-2 h-px flex-1 bg-gradient-to-r from-zinc-200/0 via-zinc-200 to-zinc-200/0" />
+                </div>
+
+                <div className="flex flex-wrap gap-1.5">
+                  {categories.map((cat) => {
+                    const active = category === cat;
+
+                    const styles = {
+                      Base: active
+                        ? "border-orange-400 bg-gradient-to-b from-orange-100 to-orange-200 text-orange-900 shadow-[0_4px_10px_rgba(249,115,22,0.22)]"
+                        : "border-orange-200 bg-white text-orange-700 shadow-sm hover:bg-orange-50",
+                      Graduados: active
+                        ? "border-blue-400 bg-gradient-to-b from-blue-100 to-blue-200 text-blue-900 shadow-[0_4px_10px_rgba(59,130,246,0.22)]"
+                        : "border-blue-200 bg-white text-blue-700 shadow-sm hover:bg-blue-50",
+                      Elite: active
+                        ? "border-yellow-400 bg-gradient-to-b from-yellow-100 to-yellow-200 text-yellow-900 shadow-[0_4px_10px_rgba(234,179,8,0.22)]"
+                        : "border-yellow-200 bg-white text-yellow-700 shadow-sm hover:bg-yellow-50",
+                    };
+
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => setCategory(cat)}
+                        className={`whitespace-nowrap rounded-full border px-3 py-1 text-[11px] font-semibold transition-all duration-200 ${
+                          styles[cat as keyof typeof styles]
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
-              <div className="flex flex-wrap gap-2">
-                {categories.map((cat) => {
-                  const active = category === cat;
+              <div className="rounded-[15px] border border-black/5 bg-gradient-to-b from-zinc-50 to-white px-2 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
+                <div className="mb-1 flex items-center justify-between">
+                  <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-zinc-400">
+                    Campeonato
+                  </p>
+                  <div className="ml-2 h-px flex-1 bg-gradient-to-r from-zinc-200/0 via-zinc-200 to-zinc-200/0" />
+                </div>
 
-                  const styles = {
-                    Base: active
-                      ? "border-orange-400 bg-gradient-to-b from-orange-100 to-orange-200 text-orange-900 shadow-[0_4px_10px_rgba(249,115,22,0.22)]"
-                      : "border-orange-200 bg-white text-orange-700 shadow-sm hover:bg-orange-50",
-                    Graduados: active
-                      ? "border-blue-400 bg-gradient-to-b from-blue-100 to-blue-200 text-blue-900 shadow-[0_4px_10px_rgba(59,130,246,0.22)]"
-                      : "border-blue-200 bg-white text-blue-700 shadow-sm hover:bg-blue-50",
-                    Elite: active
-                      ? "border-yellow-400 bg-gradient-to-b from-yellow-100 to-yellow-200 text-yellow-900 shadow-[0_4px_10px_rgba(234,179,8,0.22)]"
-                      : "border-yellow-200 bg-white text-yellow-700 shadow-sm hover:bg-yellow-50",
-                  };
-
-                  return (
-                    <button
-                      key={cat}
-                      onClick={() => setCategory(cat)}
-                      className={`whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[12px] font-semibold transition-all duration-200 ${
-                        styles[cat as keyof typeof styles]
-                      }`}
-                    >
-                      {cat}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="rounded-[16px] border border-black/5 bg-gradient-to-b from-zinc-50 to-white px-2.5 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
-              <div className="mb-1.5 flex items-center justify-between">
-                <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-zinc-400">
-                  Campeonato
-                </p>
-                <div className="ml-2 h-px flex-1 bg-gradient-to-r from-zinc-200/0 via-zinc-200 to-zinc-200/0" />
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                {availableCompetitions.map((comp) => {
-                  const active = competition === comp;
-                  return (
-                    <button
-                      key={comp}
-                      onClick={() => setCompetition(comp)}
-                      className={`whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[12px] font-semibold transition-all duration-200 ${
-                        active
-                          ? "border-yellow-400 bg-gradient-to-b from-[#fff8d2] to-[#f5e8a6] text-[#7a5600] shadow-[0_4px_10px_rgba(234,179,8,0.22)]"
-                          : "border-zinc-200 bg-white text-zinc-700 shadow-sm hover:border-yellow-200 hover:bg-yellow-50/40"
-                      }`}
-                    >
-                      {competitionLabels[comp] || comp}
-                    </button>
-                  );
-                })}
+                <div className="flex flex-wrap gap-1.5">
+                  {availableCompetitions.map((comp) => {
+                    const active = competition === comp;
+                    return (
+                      <button
+                        key={comp}
+                        onClick={() => setCompetition(comp)}
+                        className={`whitespace-nowrap rounded-full border px-3 py-1 text-[11px] font-semibold transition-all duration-200 ${
+                          active
+                            ? "border-yellow-400 bg-gradient-to-b from-[#fff8d2] to-[#f5e8a6] text-[#7a5600] shadow-[0_4px_10px_rgba(234,179,8,0.22)]"
+                            : "border-zinc-200 bg-white text-zinc-700 shadow-sm hover:border-yellow-200 hover:bg-yellow-50/40"
+                        }`}
+                      >
+                        {competitionLabels[comp] || comp}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
         </header>
 
         <section
-          className={`overflow-hidden rounded-[24px] border ${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow} px-4 py-4 shadow-sm`}
+          className={`overflow-hidden rounded-[24px] border ${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow} px-3 py-3 shadow-sm`}
         >
           <div
-            className={`mb-4 rounded-[20px] border ${theme.heroBorder} bg-gradient-to-b ${theme.heroBg} px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]`}
+            className={`mb-3 rounded-[18px] border ${theme.heroBorder} bg-gradient-to-b ${theme.heroBg} px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]`}
           >
-            <div className="flex flex-col items-center justify-center text-center">
-              <div
-                className={`mb-2 flex h-10 w-10 items-center justify-center rounded-2xl ${theme.primaryIconWrap} shadow-sm`}
-              >
-                <Trophy className={`h-5 w-5 ${theme.primaryIcon}`} />
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-3">
+                <div
+                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl ${theme.primaryIconWrap} shadow-sm`}
+                >
+                  <Trophy className={`h-4.5 w-4.5 ${theme.primaryIcon}`} />
+                </div>
+
+                <div className="min-w-0">
+                  <p className="text-[16px] font-extrabold uppercase tracking-[0.12em] leading-none text-zinc-950">
+                    PILOTO DESTAQUE
+                  </p>
+                  <p className="mt-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-zinc-500">
+                    líder da categoria e campeonato selecionado
+                  </p>
+                </div>
               </div>
 
-              <p className="text-[20px] font-extrabold uppercase tracking-[0.16em] text-zinc-950">
-                PILOTO DESTAQUE
-              </p>
-
-              <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-zinc-500">
-                líder da categoria e campeonato selecionado
-              </p>
-
               <div
-                className={`mt-3 h-px w-24 bg-gradient-to-r from-transparent ${theme.heroLine} to-transparent`}
+                className={`hidden h-px w-16 bg-gradient-to-r from-transparent ${theme.heroLine} to-transparent sm:block`}
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2.5">
             <HighlightCard
               title="Líder"
               icon={Crown}
               accent
+              compact
               accentStyles={{
                 border: theme.heroBorder,
                 bg: `bg-gradient-to-b ${theme.heroBg}`,
@@ -887,48 +903,48 @@ export default function CasernaKartAppModerno() {
                   category === "Base"
                     ? "text-orange-800"
                     : category === "Graduados"
-                    ? "text-blue-800"
-                    : "text-yellow-800",
+                      ? "text-blue-800"
+                      : "text-yellow-800",
                 divider:
                   category === "Base"
                     ? "bg-orange-200/80"
                     : category === "Graduados"
-                    ? "bg-blue-200/80"
-                    : "bg-yellow-200/80",
+                      ? "bg-blue-200/80"
+                      : "bg-yellow-200/80",
               }}
             >
               <div className="flex h-full flex-col items-center justify-center text-center">
-                <div className="flex min-h-[74px] flex-col items-center justify-center">
-                  <p className="text-[30px] font-extrabold leading-none tracking-tight text-zinc-950">
+                <div className="flex min-h-[62px] flex-col items-center justify-center">
+                  <p className="text-[24px] font-extrabold leading-none tracking-tight text-zinc-950">
                     {leaderName.firstName.toUpperCase()}
                   </p>
-                  <p className="mt-1 text-[20px] font-semibold leading-none tracking-tight text-zinc-800">
+                  <p className="mt-1 text-[16px] font-semibold leading-none tracking-tight text-zinc-800">
                     {leaderName.lastName ? leaderName.lastName.toUpperCase() : ""}
                   </p>
                 </div>
 
                 <div
-                  className={`mt-3 inline-flex rounded-full border px-3 py-1 ${theme.heroChip}`}
+                  className={`mt-2 inline-flex rounded-full border px-2.5 py-1 ${theme.heroChip}`}
                 >
-                  <p className="text-[12px] font-bold">
+                  <p className="text-[11px] font-bold">
                     {leader?.pontos || 0} pontos
                   </p>
                 </div>
               </div>
             </HighlightCard>
 
-            <HighlightCard title="Vitórias" icon={Medal}>
+            <HighlightCard title="Vitórias" icon={Medal} compact>
               <div className="flex h-full flex-col items-center justify-center text-center">
-                <p className="text-[44px] font-extrabold leading-none tracking-tight text-zinc-950">
+                <p className="text-[36px] font-extrabold leading-none tracking-tight text-zinc-950">
                   {leader?.vitorias || 0}
                 </p>
-                <p className="mt-3 max-w-[120px] text-[12px] leading-snug text-zinc-500">
+                <p className="mt-2 max-w-[110px] text-[11px] leading-snug text-zinc-500">
                   vitórias nesta classificação
                 </p>
               </div>
             </HighlightCard>
 
-            <Card className="h-[182px] overflow-hidden rounded-[22px] border border-black/5 shadow-none">
+            <Card className="h-[156px] overflow-hidden rounded-[22px] border border-black/5 shadow-none">
               <CardContent className="h-full p-0">
                 <div className="relative h-full w-full overflow-hidden">
                   <PilotPhotoSlot
@@ -936,10 +952,10 @@ export default function CasernaKartAppModerno() {
                     alt={getPilotHighlightName(leader?.piloto)}
                   />
 
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/35 to-transparent" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/35 to-transparent" />
 
                   <div className="absolute inset-x-0 bottom-2 px-3 text-center">
-                    <p className="truncate text-[11px] font-bold uppercase tracking-[0.10em] text-white">
+                    <p className="truncate text-[10px] font-bold uppercase tracking-[0.10em] text-white">
                       {getPilotHighlightName(leader?.piloto)}
                     </p>
                   </div>
@@ -947,12 +963,12 @@ export default function CasernaKartAppModerno() {
               </CardContent>
             </Card>
 
-            <HighlightCard title="Pódios" icon={Medal}>
+            <HighlightCard title="Pódios" icon={Medal} compact>
               <div className="flex h-full flex-col items-center justify-center text-center">
-                <p className="text-[44px] font-extrabold leading-none tracking-tight text-zinc-950">
+                <p className="text-[36px] font-extrabold leading-none tracking-tight text-zinc-950">
                   {leader?.podios || 0}
                 </p>
-                <p className="mt-3 max-w-[120px] text-[12px] leading-snug text-zinc-500">
+                <p className="mt-2 max-w-[110px] text-[11px] leading-snug text-zinc-500">
                   pódios nesta classificação
                 </p>
               </div>
@@ -960,7 +976,7 @@ export default function CasernaKartAppModerno() {
           </div>
         </section>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-5">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
           <TabsList className="grid w-full grid-cols-3 rounded-[22px] border border-black/5 bg-gradient-to-b from-white to-zinc-50 p-1.5 shadow-[0_8px_20px_rgba(15,23,42,0.05),inset_0_1px_0_rgba(255,255,255,0.9)]">
             <TabsTrigger
               value="classificacao"
