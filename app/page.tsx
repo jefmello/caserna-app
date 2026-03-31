@@ -867,17 +867,17 @@ export default function CasernaKartAppModerno() {
             <div className="flex items-center justify-between gap-3">
               <div className="flex min-w-0 items-center gap-3">
                 <div
-                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl ${theme.primaryIconWrap} shadow-sm`}
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${theme.primaryIconWrap} shadow-sm`}
                 >
-                  <Trophy className={`h-4.5 w-4.5 ${theme.primaryIcon}`} />
+                  <Trophy className={`h-5 w-5 ${theme.primaryIcon}`} />
                 </div>
 
                 <div className="min-w-0">
-                  <p className="text-[16px] font-extrabold uppercase tracking-[0.12em] leading-none text-zinc-950">
+                  <p className="text-[18px] font-extrabold uppercase tracking-[0.14em] leading-none text-zinc-950">
                     PILOTO DESTAQUE
                   </p>
-                  <p className="mt-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-zinc-500">
-                    líder da categoria e campeonato selecionado
+                  <p className="mt-1 whitespace-nowrap text-[8.5px] font-semibold uppercase tracking-[0.08em] text-zinc-500 sm:text-[9px]">
+                    LÍDER DA CATEGORIA E CAMPEONATO SELECIONADO
                   </p>
                 </div>
               </div>
