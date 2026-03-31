@@ -794,96 +794,90 @@ export default function CasernaKartAppModerno() {
 
   return (
     <div className="min-h-screen bg-[#f3f4f6] font-sans text-zinc-950 antialiased">
-      <div className="mx-auto max-w-md px-4 pb-20 pt-4">
-        <header className="sticky top-0 z-20 mb-4 overflow-hidden rounded-[28px] border border-black/5 bg-gradient-to-b from-white to-[#fcfcfc] shadow-[0_12px_30px_rgba(15,23,42,0.08)]">
-          <div className="relative">
-            <div
-              className={`absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
-            />
+      <div className="mx-auto max-w-md px-4 pb-20 pt-3">
+        <header className="sticky top-0 z-20 mb-3 overflow-hidden rounded-[22px] border border-black/5 bg-white shadow-[0_10px_25px_rgba(15,23,42,0.06)]">
+          <div
+            className={`absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
+          />
 
-            <div className="px-4 pb-3 pt-4">
-              <div className="overflow-hidden rounded-[22px] border border-black/5 bg-white shadow-[0_6px_20px_rgba(15,23,42,0.06)]">
-                <div className="relative flex w-full items-center justify-center bg-gradient-to-b from-white to-zinc-50/50 px-3 py-3">
-                  <div className="relative h-[84px] w-full sm:h-[92px] md:h-[96px]">
-                    <Image
-                      src="/banner-topo.png"
-                      alt="Classificação Oficial"
-                      fill
-                      priority
-                      sizes="(max-width: 768px) 100vw, 448px"
-                      className="object-contain object-center"
-                    />
-                  </div>
-                </div>
+          <div className="px-3 pt-3 pb-2 space-y-2">
+            <div className="overflow-hidden rounded-[16px] border border-black/5 bg-zinc-50">
+              <div className="relative w-full h-[80px] sm:h-[90px] md:h-[100px]">
+                <Image
+                  src="/banner-topo.png"
+                  alt="Classificação Oficial"
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, 448px"
+                  className="object-contain object-center"
+                />
               </div>
             </div>
 
-            <div className="space-y-3 px-4 pb-4">
-              <div className="rounded-[22px] border border-black/5 bg-gradient-to-b from-zinc-50 to-white px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
-                <div className="mb-2 flex items-center justify-between">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">
-                    Categoria
-                  </p>
-                  <div className="ml-3 h-px flex-1 bg-gradient-to-r from-zinc-200/0 via-zinc-200 to-zinc-200/0" />
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {categories.map((cat) => {
-                    const active = category === cat;
-
-                    const styles = {
-                      Base: active
-                        ? "border-orange-400 bg-gradient-to-b from-orange-100 to-orange-200 text-orange-900 shadow-[0_6px_14px_rgba(249,115,22,0.25)]"
-                        : "border-orange-200 bg-white text-orange-700 shadow-sm hover:bg-orange-50",
-                      Graduados: active
-                        ? "border-blue-400 bg-gradient-to-b from-blue-100 to-blue-200 text-blue-900 shadow-[0_6px_14px_rgba(59,130,246,0.25)]"
-                        : "border-blue-200 bg-white text-blue-700 shadow-sm hover:bg-blue-50",
-                      Elite: active
-                        ? "border-yellow-400 bg-gradient-to-b from-yellow-100 to-yellow-200 text-yellow-900 shadow-[0_6px_14px_rgba(234,179,8,0.25)]"
-                        : "border-yellow-200 bg-white text-yellow-700 shadow-sm hover:bg-yellow-50",
-                    };
-
-                    return (
-                      <button
-                        key={cat}
-                        onClick={() => setCategory(cat)}
-                        className={`whitespace-nowrap rounded-full border px-4 py-2.5 text-[13px] font-semibold transition-all duration-200 ${
-                          styles[cat as keyof typeof styles]
-                        }`}
-                      >
-                        {cat}
-                      </button>
-                    );
-                  })}
-                </div>
+            <div className="rounded-[16px] border border-black/5 bg-gradient-to-b from-zinc-50 to-white px-2.5 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
+              <div className="mb-1.5 flex items-center justify-between">
+                <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-zinc-400">
+                  Categoria
+                </p>
+                <div className="ml-2 h-px flex-1 bg-gradient-to-r from-zinc-200/0 via-zinc-200 to-zinc-200/0" />
               </div>
 
-              <div className="rounded-[22px] border border-black/5 bg-gradient-to-b from-zinc-50 to-white px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
-                <div className="mb-2 flex items-center justify-between">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">
-                    Campeonato
-                  </p>
-                  <div className="ml-3 h-px flex-1 bg-gradient-to-r from-zinc-200/0 via-zinc-200 to-zinc-200/0" />
-                </div>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((cat) => {
+                  const active = category === cat;
 
-                <div className="flex flex-wrap gap-2">
-                  {availableCompetitions.map((comp) => {
-                    const active = competition === comp;
-                    return (
-                      <button
-                        key={comp}
-                        onClick={() => setCompetition(comp)}
-                        className={`whitespace-nowrap rounded-full border px-4 py-2.5 text-[13px] font-semibold transition-all duration-200 ${
-                          active
-                            ? "border-yellow-400 bg-gradient-to-b from-[#fff8d2] to-[#f5e8a6] text-[#7a5600] shadow-[0_6px_14px_rgba(234,179,8,0.22)]"
-                            : "border-zinc-200 bg-white text-zinc-700 shadow-sm hover:border-yellow-200 hover:bg-yellow-50/40"
-                        }`}
-                      >
-                        {competitionLabels[comp] || comp}
-                      </button>
-                    );
-                  })}
-                </div>
+                  const styles = {
+                    Base: active
+                      ? "border-orange-400 bg-gradient-to-b from-orange-100 to-orange-200 text-orange-900 shadow-[0_4px_10px_rgba(249,115,22,0.22)]"
+                      : "border-orange-200 bg-white text-orange-700 shadow-sm hover:bg-orange-50",
+                    Graduados: active
+                      ? "border-blue-400 bg-gradient-to-b from-blue-100 to-blue-200 text-blue-900 shadow-[0_4px_10px_rgba(59,130,246,0.22)]"
+                      : "border-blue-200 bg-white text-blue-700 shadow-sm hover:bg-blue-50",
+                    Elite: active
+                      ? "border-yellow-400 bg-gradient-to-b from-yellow-100 to-yellow-200 text-yellow-900 shadow-[0_4px_10px_rgba(234,179,8,0.22)]"
+                      : "border-yellow-200 bg-white text-yellow-700 shadow-sm hover:bg-yellow-50",
+                  };
+
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => setCategory(cat)}
+                      className={`whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[12px] font-semibold transition-all duration-200 ${
+                        styles[cat as keyof typeof styles]
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="rounded-[16px] border border-black/5 bg-gradient-to-b from-zinc-50 to-white px-2.5 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
+              <div className="mb-1.5 flex items-center justify-between">
+                <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-zinc-400">
+                  Campeonato
+                </p>
+                <div className="ml-2 h-px flex-1 bg-gradient-to-r from-zinc-200/0 via-zinc-200 to-zinc-200/0" />
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {availableCompetitions.map((comp) => {
+                  const active = competition === comp;
+                  return (
+                    <button
+                      key={comp}
+                      onClick={() => setCompetition(comp)}
+                      className={`whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[12px] font-semibold transition-all duration-200 ${
+                        active
+                          ? "border-yellow-400 bg-gradient-to-b from-[#fff8d2] to-[#f5e8a6] text-[#7a5600] shadow-[0_4px_10px_rgba(234,179,8,0.22)]"
+                          : "border-zinc-200 bg-white text-zinc-700 shadow-sm hover:border-yellow-200 hover:bg-yellow-50/40"
+                      }`}
+                    >
+                      {competitionLabels[comp] || comp}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
