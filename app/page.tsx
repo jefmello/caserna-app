@@ -17,6 +17,7 @@ import {
   Camera,
   Sparkles,
   Star,
+  ChevronRight,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -633,13 +634,14 @@ export default function CasernaKartAppModerno() {
       <div className="mx-auto max-w-md px-4 pb-20 pt-4">
         <header className="sticky top-0 z-20 mb-4 overflow-hidden rounded-[24px] border border-black/5 bg-white shadow-sm">
           <div className="relative flex w-full items-center justify-center bg-white px-3 py-2">
-            <div className="relative w-full max-w-full aspect-[3.2/1] min-h-[90px]">
+            <div className="relative h-[76px] w-full sm:h-[88px] md:h-[96px]">
               <Image
                 src="/banner-topo.png"
                 alt="Classificação Oficial"
                 fill
-                className="object-contain"
                 priority
+                sizes="(max-width: 768px) 100vw, 448px"
+                className="object-contain object-center"
               />
             </div>
           </div>
@@ -803,20 +805,31 @@ export default function CasernaKartAppModerno() {
             </Card>
 
             <section className="space-y-3">
-              <div className="rounded-[22px] border border-yellow-200/70 bg-gradient-to-b from-yellow-50 to-white px-4 py-4 shadow-sm">
-                <div className="flex flex-col items-center justify-center text-center">
-                  <p className="text-[19px] font-extrabold uppercase tracking-[0.18em] text-zinc-950">
-                    CLASSIFICAÇÃO
-                  </p>
-                  <p className="-mt-1 text-[19px] font-extrabold uppercase tracking-[0.18em] text-zinc-950">
-                    GERAL
-                  </p>
+              <div className="overflow-hidden rounded-[24px] border border-yellow-200/80 bg-gradient-to-br from-yellow-50 via-white to-white shadow-sm">
+                <div className="relative px-4 py-4">
+                  <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-yellow-400 to-transparent" />
 
-                  <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.10em] text-zinc-500">
-                    categoria e campeonato selecionados
-                  </p>
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="mb-2 inline-flex items-center rounded-full border border-yellow-200 bg-yellow-100/80 px-2.5 py-1">
+                        <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-yellow-800">
+                          Painel oficial
+                        </span>
+                      </div>
 
-                  <div className="mt-3 h-px w-24 bg-gradient-to-r from-transparent via-yellow-400/70 to-transparent" />
+                      <h2 className="text-[20px] font-extrabold uppercase tracking-[0.16em] leading-none text-zinc-950">
+                        Classificação Geral
+                      </h2>
+
+                      <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-500">
+                        categoria e campeonato selecionados
+                      </p>
+                    </div>
+
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-yellow-200 bg-gradient-to-br from-yellow-100 to-yellow-50 shadow-sm">
+                      <ChevronRight className="h-5 w-5 text-yellow-700" />
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -825,13 +838,13 @@ export default function CasernaKartAppModerno() {
                   <div className="max-h-[560px] overflow-y-auto">
                     <table className="w-full table-fixed">
                       <colgroup>
-                        <col className="w-[44px]" />
+                        <col className="w-[42px]" />
                         <col />
-                        <col className="w-[32px]" />
-                        <col className="w-[32px]" />
-                        <col className="w-[32px]" />
-                        <col className="w-[36px]" />
-                        <col className="w-[36px]" />
+                        <col className="w-[30px]" />
+                        <col className="w-[30px]" />
+                        <col className="w-[30px]" />
+                        <col className="w-[34px]" />
+                        <col className="w-[34px]" />
                       </colgroup>
 
                       <thead className="sticky top-0 z-10">
@@ -842,19 +855,19 @@ export default function CasernaKartAppModerno() {
                           <th className="px-2 py-3 text-left whitespace-nowrap">
                             Piloto
                           </th>
-                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
                             Pts
                           </th>
-                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
                             Vit
                           </th>
-                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
                             Pol
                           </th>
-                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
                             VMR
                           </th>
-                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
                             PDS
                           </th>
                         </tr>
@@ -862,8 +875,7 @@ export default function CasernaKartAppModerno() {
 
                       <tbody>
                         {filteredRanking.map((item, index) => {
-                          const nomeLinha1 = getPilotFirstAndLastName(item.piloto);
-                          const nomeLinha2 = getPilotWarNameDisplay(item);
+                          const nomeCompleto = getPilotDisplayName(item.piloto);
                           const isTop6 = index < 6;
                           const isLeader = index === 0;
                           const styles = getTop6RowStyles(index + 1);
@@ -879,10 +891,10 @@ export default function CasernaKartAppModerno() {
                             >
                               <td
                                 className={`px-1 py-3 text-center align-middle ${isTop6 ? styles.ring : ""}`}
-                                onClick={() => handleSelectPilot(item)}
                               >
                                 <button
                                   type="button"
+                                  onClick={() => handleSelectPilot(item)}
                                   className="mx-auto flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold transition active:scale-95"
                                 >
                                   <span
@@ -906,29 +918,18 @@ export default function CasernaKartAppModerno() {
                                 >
                                   <div className="min-w-0">
                                     <span
-                                      className={`block whitespace-normal break-words text-[13px] font-bold leading-tight tracking-tight ${styles.name}`}
+                                      className={`block break-words text-[12.5px] font-bold leading-[1.2] tracking-tight ${styles.name}`}
                                     >
-                                      {nomeLinha1}
+                                      {nomeCompleto}
                                     </span>
-
-                                    <div className="mt-1 flex items-center gap-1.5">
-                                      {nomeLinha2 ? (
-                                        <span
-                                          className={`inline-flex max-w-full whitespace-normal break-words rounded-full border px-2 py-0.5 text-[10px] font-semibold italic tracking-[0.02em] ${styles.chip}`}
-                                        >
-                                          {nomeLinha2}
-                                        </span>
-                                      ) : null}
-                                    </div>
                                   </div>
                                 </button>
                               </td>
 
                               <td
-                                className={`px-1 py-3 text-center align-middle text-[12px] font-extrabold ${
+                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-extrabold ${
                                   isTop6 ? styles.points : "text-zinc-950"
                                 } ${isTop6 ? styles.ring : ""}`}
-                                onClick={() => handleSelectPilot(item)}
                               >
                                 <button
                                   type="button"
@@ -940,10 +941,9 @@ export default function CasernaKartAppModerno() {
                               </td>
 
                               <td
-                                className={`px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
+                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
                                   isTop6 ? styles.ring : ""
                                 }`}
-                                onClick={() => handleSelectPilot(item)}
                               >
                                 <button
                                   type="button"
@@ -955,10 +955,9 @@ export default function CasernaKartAppModerno() {
                               </td>
 
                               <td
-                                className={`px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
+                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
                                   isTop6 ? styles.ring : ""
                                 }`}
-                                onClick={() => handleSelectPilot(item)}
                               >
                                 <button
                                   type="button"
@@ -970,10 +969,9 @@ export default function CasernaKartAppModerno() {
                               </td>
 
                               <td
-                                className={`px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
+                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
                                   isTop6 ? styles.ring : ""
                                 }`}
-                                onClick={() => handleSelectPilot(item)}
                               >
                                 <button
                                   type="button"
@@ -985,10 +983,9 @@ export default function CasernaKartAppModerno() {
                               </td>
 
                               <td
-                                className={`px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
+                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
                                   isTop6 ? styles.ring : ""
                                 }`}
-                                onClick={() => handleSelectPilot(item)}
                               >
                                 <button
                                   type="button"
