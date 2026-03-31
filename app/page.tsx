@@ -206,6 +206,60 @@ function getPilotPhotoPath(pilot?: RankingItem | null) {
   return `/pilotos/${pilot.pilotoId}.jpg`;
 }
 
+function getTop6RowStyles(position: number) {
+  switch (position) {
+    case 1:
+      return {
+        row: "border-l-[4px] border-l-yellow-500 bg-gradient-to-r from-yellow-50 via-yellow-50/80 to-white",
+        badge: "bg-yellow-400 text-black",
+        points: "text-yellow-700",
+        name: "text-zinc-950",
+      };
+    case 2:
+      return {
+        row: "border-l-[4px] border-l-zinc-400 bg-gradient-to-r from-zinc-100 via-zinc-50 to-white",
+        badge: "bg-zinc-300 text-zinc-900",
+        points: "text-zinc-800",
+        name: "text-zinc-950",
+      };
+    case 3:
+      return {
+        row: "border-l-[4px] border-l-amber-700 bg-gradient-to-r from-amber-50 via-amber-50/80 to-white",
+        badge: "bg-amber-600 text-white",
+        points: "text-amber-800",
+        name: "text-zinc-950",
+      };
+    case 4:
+      return {
+        row: "border-l-[4px] border-l-sky-500 bg-gradient-to-r from-sky-50 via-sky-50/70 to-white",
+        badge: "bg-sky-500 text-white",
+        points: "text-sky-700",
+        name: "text-zinc-950",
+      };
+    case 5:
+      return {
+        row: "border-l-[4px] border-l-violet-500 bg-gradient-to-r from-violet-50 via-violet-50/70 to-white",
+        badge: "bg-violet-500 text-white",
+        points: "text-violet-700",
+        name: "text-zinc-950",
+      };
+    case 6:
+      return {
+        row: "border-l-[4px] border-l-emerald-500 bg-gradient-to-r from-emerald-50 via-emerald-50/70 to-white",
+        badge: "bg-emerald-500 text-white",
+        points: "text-emerald-700",
+        name: "text-zinc-950",
+      };
+    default:
+      return {
+        row: "",
+        badge: "bg-zinc-100 text-zinc-800",
+        points: "text-zinc-950",
+        name: "text-zinc-950",
+      };
+  }
+}
+
 function CompactStatCard({
   title,
   value,
@@ -659,51 +713,57 @@ export default function CasernaKartAppModerno() {
             </Card>
 
             <section className="space-y-3">
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-500">
-                  Classificação geral
-                </p>
-                <p className="mt-1 text-sm text-zinc-500">
-                  Categoria e campeonato selecionados
-                </p>
+              <div className="flex items-end justify-between gap-3">
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-500">
+                    Classificação geral
+                  </p>
+                  <p className="mt-1 text-sm text-zinc-500">
+                    Categoria e campeonato selecionados
+                  </p>
+                </div>
+
+                <div className="rounded-full border border-yellow-200 bg-yellow-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-yellow-800">
+                  Top 6 em destaque
+                </div>
               </div>
 
               <Card className="overflow-hidden rounded-[22px] border-black/5 bg-white shadow-sm">
                 <CardContent className="p-0">
-                  <div className="max-h-[520px] overflow-y-auto">
+                  <div className="max-h-[560px] overflow-y-auto">
                     <table className="w-full table-fixed">
                       <colgroup>
-                        <col className="w-[46px]" />
+                        <col className="w-[48px]" />
                         <col />
-                        <col className="w-[34px]" />
-                        <col className="w-[34px]" />
-                        <col className="w-[34px]" />
-                        <col className="w-[38px]" />
-                        <col className="w-[46px]" />
+                        <col className="w-[40px]" />
+                        <col className="w-[40px]" />
+                        <col className="w-[40px]" />
+                        <col className="w-[42px]" />
+                        <col className="w-[42px]" />
                       </colgroup>
 
                       <thead className="sticky top-0 z-10">
-                        <tr className="border-b border-black/5 bg-zinc-50/95 text-[10px] font-semibold uppercase tracking-[0.10em] text-zinc-500 backdrop-blur">
-                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
-                            Pos.
+                        <tr className="border-b border-black/5 bg-zinc-50/95 text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-500 backdrop-blur">
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                            Pos
                           </th>
                           <th className="px-2 py-3 text-left whitespace-nowrap">
                             Piloto
                           </th>
-                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
                             Pts
                           </th>
-                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
                             Vit
                           </th>
-                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
                             Pol
                           </th>
-                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
                             VMR
                           </th>
-                          <th className="px-0.5 py-3 text-center whitespace-nowrap">
-                            Pódios
+                          <th className="px-1 py-3 text-center whitespace-nowrap">
+                            PDS
                           </th>
                         </tr>
                       </thead>
@@ -712,45 +772,55 @@ export default function CasernaKartAppModerno() {
                         {filteredRanking.map((item, index) => {
                           const nomeLinha1 = getPilotFirstAndLastName(item.piloto);
                           const nomeLinha2 = getPilotWarNameDisplay(item);
+                          const isTop6 = index < 6;
+                          const styles = getTop6RowStyles(index + 1);
 
                           return (
                             <tr
                               key={`${category}-${competition}-table-${item.pos}-${item.piloto}`}
-                              className={`transition hover:bg-zinc-50 ${
-                                index % 2 === 0 ? "bg-white" : "bg-zinc-50/50"
+                              className={`transition ${
+                                isTop6
+                                  ? `${styles.row} hover:brightness-[0.99]`
+                                  : `${index % 2 === 0 ? "bg-white" : "bg-zinc-50/50"} hover:bg-zinc-50`
                               }`}
                             >
-                              <td className="px-0.5 py-3 text-center align-middle">
+                              <td
+                                className="px-1 py-2.5 text-center align-middle"
+                                onClick={() => handleSelectPilot(item)}
+                              >
                                 <button
                                   type="button"
-                                  onClick={() => handleSelectPilot(item)}
                                   className="mx-auto flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold"
                                 >
                                   <span
-                                    className={`flex h-8 w-8 items-center justify-center rounded-xl ${
-                                      item.pos === 1
-                                        ? "bg-yellow-400 text-black"
-                                        : "bg-zinc-100 text-zinc-800"
-                                    }`}
+                                    className={`flex h-8 w-8 items-center justify-center rounded-xl shadow-sm ${styles.badge}`}
                                   >
-                                    {item.pos}
+                                    {index + 1}
                                   </span>
                                 </button>
                               </td>
 
-                              <td className="min-w-0 px-2 py-3 align-middle">
+                              <td className="min-w-0 px-2 py-2.5 align-middle">
                                 <button
                                   type="button"
                                   onClick={() => handleSelectPilot(item)}
                                   className="block w-full text-left"
                                 >
-                                  <span className="block leading-tight text-zinc-950">
-                                    <span className="block text-[12px] font-bold tracking-tight">
+                                  <span className="block leading-tight">
+                                    <span
+                                      className={`block truncate text-[13px] font-bold tracking-tight ${styles.name}`}
+                                    >
                                       {nomeLinha1}
                                     </span>
 
                                     {nomeLinha2 ? (
-                                      <span className="mt-1 inline-flex max-w-full rounded-full border border-yellow-200 bg-yellow-50 px-2 py-0.5 text-[10px] font-semibold italic tracking-[0.02em] text-yellow-800">
+                                      <span
+                                        className={`mt-1 inline-flex max-w-full rounded-full px-2 py-0.5 text-[10px] font-semibold italic tracking-[0.02em] ${
+                                          isTop6
+                                            ? "border border-white/70 bg-white/80 text-zinc-700 shadow-sm"
+                                            : "border border-yellow-200 bg-yellow-50 text-yellow-800"
+                                        }`}
+                                      >
                                         {nomeLinha2}
                                       </span>
                                     ) : null}
@@ -758,19 +828,40 @@ export default function CasernaKartAppModerno() {
                                 </button>
                               </td>
 
-                              <td className="px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
+                              <td
+                                className={`px-1 py-2.5 text-center align-middle text-[12px] font-extrabold ${
+                                  isTop6 ? styles.points : "text-zinc-950"
+                                }`}
+                                onClick={() => handleSelectPilot(item)}
+                              >
                                 {item.pontos}
                               </td>
-                              <td className="px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
+
+                              <td
+                                className="px-1 py-2.5 text-center align-middle text-[12px] font-semibold text-zinc-950"
+                                onClick={() => handleSelectPilot(item)}
+                              >
                                 {item.vitorias}
                               </td>
-                              <td className="px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
+
+                              <td
+                                className="px-1 py-2.5 text-center align-middle text-[12px] font-semibold text-zinc-950"
+                                onClick={() => handleSelectPilot(item)}
+                              >
                                 {item.poles}
                               </td>
-                              <td className="px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
+
+                              <td
+                                className="px-1 py-2.5 text-center align-middle text-[12px] font-semibold text-zinc-950"
+                                onClick={() => handleSelectPilot(item)}
+                              >
                                 {item.mv}
                               </td>
-                              <td className="px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
+
+                              <td
+                                className="px-1 py-2.5 text-center align-middle text-[12px] font-semibold text-zinc-950"
+                                onClick={() => handleSelectPilot(item)}
+                              >
                                 {item.podios}
                               </td>
                             </tr>
