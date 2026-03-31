@@ -161,16 +161,16 @@ function getTop6RowStyles(position: number) {
   switch (position) {
     case 1:
       return {
-        row: "border-l-[5px] border-l-yellow-500 bg-gradient-to-r from-yellow-100 via-yellow-50 to-white shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]",
+        row: "border-l-[4px] border-l-yellow-500 bg-gradient-to-r from-yellow-100 via-yellow-50 to-white shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]",
         badge: "bg-yellow-400 text-black",
         points: "text-yellow-700",
         name: "text-zinc-950",
         chip: "border-yellow-300 bg-yellow-100 text-yellow-800",
-        ring: "ring-1 ring-yellow-200/70",
+        ring: "",
       };
     case 2:
       return {
-        row: "border-l-[5px] border-l-zinc-400 bg-gradient-to-r from-zinc-100 via-zinc-50 to-white",
+        row: "border-l-[4px] border-l-zinc-400 bg-gradient-to-r from-zinc-100 via-zinc-50 to-white",
         badge: "bg-zinc-300 text-zinc-900",
         points: "text-zinc-800",
         name: "text-zinc-950",
@@ -179,7 +179,7 @@ function getTop6RowStyles(position: number) {
       };
     case 3:
       return {
-        row: "border-l-[5px] border-l-amber-700 bg-gradient-to-r from-amber-50 via-amber-50/80 to-white",
+        row: "border-l-[4px] border-l-amber-700 bg-gradient-to-r from-amber-50 via-amber-50/80 to-white",
         badge: "bg-amber-600 text-white",
         points: "text-amber-800",
         name: "text-zinc-950",
@@ -188,7 +188,7 @@ function getTop6RowStyles(position: number) {
       };
     case 4:
       return {
-        row: "border-l-[5px] border-l-sky-500 bg-gradient-to-r from-sky-50 via-sky-50/70 to-white",
+        row: "border-l-[4px] border-l-sky-500 bg-gradient-to-r from-sky-50 via-sky-50/70 to-white",
         badge: "bg-sky-500 text-white",
         points: "text-sky-700",
         name: "text-zinc-950",
@@ -197,7 +197,7 @@ function getTop6RowStyles(position: number) {
       };
     case 5:
       return {
-        row: "border-l-[5px] border-l-violet-500 bg-gradient-to-r from-violet-50 via-violet-50/70 to-white",
+        row: "border-l-[4px] border-l-violet-500 bg-gradient-to-r from-violet-50 via-violet-50/70 to-white",
         badge: "bg-violet-500 text-white",
         points: "text-violet-700",
         name: "text-zinc-950",
@@ -206,7 +206,7 @@ function getTop6RowStyles(position: number) {
       };
     case 6:
       return {
-        row: "border-l-[5px] border-l-emerald-500 bg-gradient-to-r from-emerald-50 via-emerald-50/70 to-white",
+        row: "border-l-[4px] border-l-emerald-500 bg-gradient-to-r from-emerald-50 via-emerald-50/70 to-white",
         badge: "bg-emerald-500 text-white",
         points: "text-emerald-700",
         name: "text-zinc-950",
@@ -271,6 +271,11 @@ function getCategoryTheme(category: string) {
       titleIcon: "text-orange-700",
       titleSub: "text-orange-500/80",
       badgeOutline: "border-orange-200 text-orange-700 bg-orange-50",
+      searchBorder: "border-orange-200/80",
+      searchGlow: "focus-within:ring-orange-200/70",
+      searchIcon: "text-orange-500",
+      headerChip: "border-orange-200 bg-orange-50 text-orange-700",
+      tableHeadBg: "bg-orange-50/80",
     },
     Graduados: {
       shellGlow: "from-blue-500/10 via-white to-blue-100/60",
@@ -294,6 +299,11 @@ function getCategoryTheme(category: string) {
       titleIcon: "text-blue-700",
       titleSub: "text-blue-500/80",
       badgeOutline: "border-blue-200 text-blue-700 bg-blue-50",
+      searchBorder: "border-blue-200/80",
+      searchGlow: "focus-within:ring-blue-200/70",
+      searchIcon: "text-blue-500",
+      headerChip: "border-blue-200 bg-blue-50 text-blue-700",
+      tableHeadBg: "bg-blue-50/80",
     },
     Elite: {
       shellGlow: "from-yellow-500/10 via-white to-yellow-100/60",
@@ -317,6 +327,11 @@ function getCategoryTheme(category: string) {
       titleIcon: "text-yellow-700",
       titleSub: "text-yellow-700/70",
       badgeOutline: "border-yellow-200 text-yellow-700 bg-yellow-50",
+      searchBorder: "border-yellow-200/80",
+      searchGlow: "focus-within:ring-yellow-200/70",
+      searchIcon: "text-yellow-600",
+      headerChip: "border-yellow-200 bg-yellow-50 text-yellow-700",
+      tableHeadBg: "bg-yellow-50/80",
     },
   };
 
@@ -969,15 +984,43 @@ export default function CasernaKartAppModerno() {
           </TabsList>
 
           <TabsContent value="classificacao" className="space-y-4 pt-4">
-            <Card className="rounded-[22px] border-black/5 bg-white shadow-sm">
+            <Card
+              className={`rounded-[24px] border ${theme.searchBorder} bg-gradient-to-br from-white to-zinc-50/70 shadow-sm`}
+            >
               <CardContent className="p-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className={`flex h-9 w-9 items-center justify-center rounded-2xl ${theme.primaryIconWrap}`}
+                    >
+                      <Search className={`h-4 w-4 ${theme.searchIcon}`} />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-zinc-400">
+                        Busca rápida
+                      </p>
+                      <p className="text-[13px] font-semibold text-zinc-900">
+                        Encontre um piloto na classificação
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    className={`hidden rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] sm:inline-flex ${theme.headerChip}`}
+                  >
+                    {competitionLabels[competition] || competition}
+                  </div>
+                </div>
+
+                <div
+                  className={`group flex items-center rounded-[20px] border border-black/5 bg-white px-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)] transition focus-within:ring-4 ${theme.searchGlow}`}
+                >
+                  <Search className="h-4 w-4 shrink-0 text-zinc-400" />
                   <Input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Buscar piloto"
-                    className="h-11 rounded-2xl border-black/5 bg-white pl-9 text-zinc-950 placeholder:text-zinc-400"
+                    className="h-11 border-0 bg-transparent pl-3 pr-0 text-zinc-950 shadow-none outline-none ring-0 placeholder:text-zinc-400 focus-visible:ring-0"
                   />
                 </div>
               </CardContent>
@@ -1006,7 +1049,7 @@ export default function CasernaKartAppModerno() {
                         </div>
 
                         <p
-                          className={`mt-3 w-[245px] max-w-full text-center text-[9px] font-semibold uppercase tracking-[0.12em] ${theme.titleSub}`}
+                          className={`mt-2.5 w-[245px] max-w-full text-center text-[9px] font-semibold uppercase tracking-[0.12em] ${theme.titleSub}`}
                         >
                           categoria e campeonato selecionados
                         </p>
@@ -1022,22 +1065,46 @@ export default function CasernaKartAppModerno() {
                 </div>
               </div>
 
-              <Card className="overflow-hidden rounded-[22px] border-black/5 bg-white shadow-sm">
+              <Card className="overflow-hidden rounded-[24px] border-black/5 bg-white shadow-sm">
                 <CardContent className="p-0">
+                  <div className="border-b border-black/5 bg-gradient-to-r from-white via-zinc-50/70 to-white px-3 py-2.5">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-100">
+                          <TableProperties className="h-4 w-4 text-zinc-600" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-400">
+                            Ranking oficial
+                          </p>
+                          <p className="text-[13px] font-semibold text-zinc-900">
+                            {category} · {competitionLabels[competition] || competition}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="rounded-full border border-black/5 bg-zinc-50 px-3 py-1 text-[11px] font-bold text-zinc-700">
+                        {filteredRanking.length} piloto{filteredRanking.length === 1 ? "" : "s"}
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="max-h-[560px] overflow-y-auto">
                     <table className="w-full table-fixed">
                       <colgroup>
                         <col className="w-[42px]" />
                         <col />
-                        <col className="w-[30px]" />
-                        <col className="w-[30px]" />
-                        <col className="w-[30px]" />
-                        <col className="w-[34px]" />
-                        <col className="w-[34px]" />
+                        <col className="w-[31px]" />
+                        <col className="w-[31px]" />
+                        <col className="w-[31px]" />
+                        <col className="w-[36px]" />
+                        <col className="w-[36px]" />
                       </colgroup>
 
                       <thead className="sticky top-0 z-10">
-                        <tr className="border-b border-black/5 bg-zinc-50/95 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500 backdrop-blur">
+                        <tr
+                          className={`border-b border-black/5 ${theme.tableHeadBg} text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500 backdrop-blur`}
+                        >
                           <th className="px-1 py-3 text-center whitespace-nowrap">
                             Pos
                           </th>
@@ -1076,12 +1143,10 @@ export default function CasernaKartAppModerno() {
                               className={`group transition ${
                                 isTop6
                                   ? `${styles.row}`
-                                  : `${index % 2 === 0 ? "bg-white" : "bg-zinc-50/50"} hover:bg-zinc-50`
+                                  : `${index % 2 === 0 ? "bg-white" : "bg-zinc-50/40"} hover:bg-zinc-50`
                               }`}
                             >
-                              <td
-                                className={`px-1 py-3 text-center align-middle ${isTop6 ? styles.ring : ""}`}
-                              >
+                              <td className="px-1 py-3 text-center align-middle">
                                 <button
                                   type="button"
                                   onClick={() => handleSelectPilot(item)}
@@ -1098,9 +1163,7 @@ export default function CasernaKartAppModerno() {
                                 </button>
                               </td>
 
-                              <td
-                                className={`min-w-0 px-2 py-3 align-middle ${isTop6 ? styles.ring : ""}`}
-                              >
+                              <td className="min-w-0 px-2 py-3 align-middle">
                                 <button
                                   type="button"
                                   onClick={() => handleSelectPilot(item)}
@@ -1108,7 +1171,7 @@ export default function CasernaKartAppModerno() {
                                 >
                                   <div className="min-w-0">
                                     <span
-                                      className={`block whitespace-normal break-words text-[12.5px] font-bold leading-[1.18] tracking-tight ${styles.name}`}
+                                      className={`block whitespace-normal break-words text-[12.8px] font-extrabold leading-[1.15] tracking-tight ${styles.name}`}
                                     >
                                       {nomeLinha1}
                                     </span>
@@ -1129,7 +1192,7 @@ export default function CasernaKartAppModerno() {
                               <td
                                 className={`px-0.5 py-3 text-center align-middle text-[12px] font-extrabold ${
                                   isTop6 ? styles.points : "text-zinc-950"
-                                } ${isTop6 ? styles.ring : ""}`}
+                                }`}
                               >
                                 <button
                                   type="button"
@@ -1140,11 +1203,7 @@ export default function CasernaKartAppModerno() {
                                 </button>
                               </td>
 
-                              <td
-                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
-                                  isTop6 ? styles.ring : ""
-                                }`}
-                              >
+                              <td className="px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
                                 <button
                                   type="button"
                                   onClick={() => handleSelectPilot(item)}
@@ -1154,11 +1213,7 @@ export default function CasernaKartAppModerno() {
                                 </button>
                               </td>
 
-                              <td
-                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
-                                  isTop6 ? styles.ring : ""
-                                }`}
-                              >
+                              <td className="px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
                                 <button
                                   type="button"
                                   onClick={() => handleSelectPilot(item)}
@@ -1168,11 +1223,7 @@ export default function CasernaKartAppModerno() {
                                 </button>
                               </td>
 
-                              <td
-                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
-                                  isTop6 ? styles.ring : ""
-                                }`}
-                              >
+                              <td className="px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
                                 <button
                                   type="button"
                                   onClick={() => handleSelectPilot(item)}
@@ -1182,11 +1233,7 @@ export default function CasernaKartAppModerno() {
                                 </button>
                               </td>
 
-                              <td
-                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
-                                  isTop6 ? styles.ring : ""
-                                }`}
-                              >
+                              <td className="px-0.5 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950">
                                 <button
                                   type="button"
                                   onClick={() => handleSelectPilot(item)}
@@ -1203,7 +1250,7 @@ export default function CasernaKartAppModerno() {
                           <tr>
                             <td
                               colSpan={7}
-                              className="px-4 py-6 text-center text-sm text-zinc-500"
+                              className="px-4 py-8 text-center text-sm text-zinc-500"
                             >
                               Nenhum piloto com pontos encontrado.
                             </td>
