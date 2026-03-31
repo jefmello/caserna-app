@@ -973,13 +973,13 @@ export default function CasernaKartAppModerno() {
         </section>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
-          <TabsList className="mb-4 grid w-full grid-cols-3 gap-2 rounded-[20px] border border-black/5 bg-gradient-to-r from-[#f6f2e7] via-[#efe8da] to-[#f6f2e7] p-2 shadow-[0_6px_14px_rgba(15,23,42,0.04),inset_0_1px_0_rgba(255,255,255,0.95)]">
+          <TabsList className="mb-4 grid h-[72px] w-full grid-cols-3 gap-2 rounded-[20px] border border-black/5 bg-gradient-to-r from-[#f6f2e7] via-[#efe8da] to-[#f6f2e7] p-2 shadow-[0_6px_14px_rgba(15,23,42,0.04),inset_0_1px_0_rgba(255,255,255,0.95)]">
             <TabsTrigger
               value="classificacao"
-              className="group rounded-[14px] border border-transparent bg-transparent px-2 py-2 text-zinc-500 transition-all duration-200 data-[state=active]:border-yellow-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-none"
+              className="h-full rounded-[14px] border border-transparent bg-transparent px-2 py-0 text-zinc-500 transition-all duration-200 data-[state=active]:border-yellow-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-none"
             >
-              <div className="flex flex-col items-center justify-center gap-1">
-                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-white/70 text-zinc-500 transition-all duration-200 group-data-[state=active]:bg-yellow-50 group-data-[state=active]:text-yellow-700">
+              <div className="flex h-full flex-col items-center justify-center gap-1">
+                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-white/70 text-zinc-500 transition-all duration-200 data-[state=active]:bg-yellow-50 data-[state=active]:text-yellow-700">
                   <TableProperties className="h-3.5 w-3.5" />
                 </div>
                 <span className="text-[10px] font-bold uppercase tracking-[0.12em]">
@@ -990,10 +990,10 @@ export default function CasernaKartAppModerno() {
 
             <TabsTrigger
               value="piloto"
-              className="group rounded-[14px] border border-transparent bg-transparent px-2 py-2 text-zinc-500 transition-all duration-200 data-[state=active]:border-yellow-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-none"
+              className="h-full rounded-[14px] border border-transparent bg-transparent px-2 py-0 text-zinc-500 transition-all duration-200 data-[state=active]:border-yellow-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-none"
             >
-              <div className="flex flex-col items-center justify-center gap-1">
-                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-white/70 text-zinc-500 transition-all duration-200 group-data-[state=active]:bg-yellow-50 group-data-[state=active]:text-yellow-700">
+              <div className="flex h-full flex-col items-center justify-center gap-1">
+                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-white/70 text-zinc-500 transition-all duration-200 data-[state=active]:bg-yellow-50 data-[state=active]:text-yellow-700">
                   <User className="h-3.5 w-3.5" />
                 </div>
                 <span className="text-[10px] font-bold uppercase tracking-[0.12em]">
@@ -1004,10 +1004,10 @@ export default function CasernaKartAppModerno() {
 
             <TabsTrigger
               value="stats"
-              className="group rounded-[14px] border border-transparent bg-transparent px-2 py-2 text-zinc-500 transition-all duration-200 data-[state=active]:border-yellow-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-none"
+              className="h-full rounded-[14px] border border-transparent bg-transparent px-2 py-0 text-zinc-500 transition-all duration-200 data-[state=active]:border-yellow-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-none"
             >
-              <div className="flex flex-col items-center justify-center gap-1">
-                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-white/70 text-zinc-500 transition-all duration-200 group-data-[state=active]:bg-yellow-50 group-data-[state=active]:text-yellow-700">
+              <div className="flex h-full flex-col items-center justify-center gap-1">
+                <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-white/70 text-zinc-500 transition-all duration-200 data-[state=active]:bg-yellow-50 data-[state=active]:text-yellow-700">
                   <BarChart3 className="h-3.5 w-3.5" />
                 </div>
                 <span className="text-[10px] font-bold uppercase tracking-[0.12em]">
