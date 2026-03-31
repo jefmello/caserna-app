@@ -17,7 +17,6 @@ import {
   Camera,
   Sparkles,
   Star,
-  TableProperties,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -805,34 +804,19 @@ export default function CasernaKartAppModerno() {
 
             <section className="space-y-3">
               <div className="rounded-[22px] border border-yellow-200/70 bg-gradient-to-b from-yellow-50 to-white px-4 py-4 shadow-sm">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-yellow-100 shadow-sm">
-                        <TableProperties className="h-4.5 w-4.5 text-yellow-700" />
-                      </div>
+                <div className="flex flex-col items-center justify-center text-center">
+                  <p className="text-[19px] font-extrabold uppercase tracking-[0.18em] text-zinc-950">
+                    CLASSIFICAÇÃO
+                  </p>
+                  <p className="-mt-1 text-[19px] font-extrabold uppercase tracking-[0.18em] text-zinc-950">
+                    GERAL
+                  </p>
 
-                      <div className="min-w-0">
-                        <p className="text-[18px] font-extrabold uppercase tracking-[0.14em] text-zinc-950">
-                          Classificação geral
-                        </p>
-                        <p className="mt-0.5 text-[12px] font-semibold uppercase tracking-[0.10em] text-zinc-500">
-                          categoria e campeonato selecionados
-                        </p>
-                      </div>
-                    </div>
+                  <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.10em] text-zinc-500">
+                    categoria e campeonato selecionados
+                  </p>
 
-                    <div className="mt-3 h-px w-28 bg-gradient-to-r from-yellow-400/70 to-transparent" />
-                  </div>
-
-                  <div className="shrink-0 rounded-full border border-yellow-200 bg-gradient-to-r from-yellow-50 to-yellow-100 px-3 py-1.5 shadow-sm">
-                    <div className="flex items-center gap-1.5">
-                      <Sparkles className="h-3.5 w-3.5 text-yellow-700" />
-                      <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-yellow-800">
-                        Top 6 oficial
-                      </span>
-                    </div>
-                  </div>
+                  <div className="mt-3 h-px w-24 bg-gradient-to-r from-transparent via-yellow-400/70 to-transparent" />
                 </div>
               </div>
 
