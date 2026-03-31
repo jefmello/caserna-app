@@ -16,6 +16,8 @@ import {
   User,
   ChevronRight,
   Camera,
+  Sparkles,
+  Star,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -210,45 +212,57 @@ function getTop6RowStyles(position: number) {
   switch (position) {
     case 1:
       return {
-        row: "border-l-[4px] border-l-yellow-500 bg-gradient-to-r from-yellow-50 via-yellow-50/80 to-white",
+        row: "border-l-[5px] border-l-yellow-500 bg-gradient-to-r from-yellow-100 via-yellow-50 to-white shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]",
         badge: "bg-yellow-400 text-black",
         points: "text-yellow-700",
         name: "text-zinc-950",
+        chip: "border-yellow-300 bg-yellow-100 text-yellow-800",
+        ring: "ring-1 ring-yellow-200/70",
       };
     case 2:
       return {
-        row: "border-l-[4px] border-l-zinc-400 bg-gradient-to-r from-zinc-100 via-zinc-50 to-white",
+        row: "border-l-[5px] border-l-zinc-400 bg-gradient-to-r from-zinc-100 via-zinc-50 to-white",
         badge: "bg-zinc-300 text-zinc-900",
         points: "text-zinc-800",
         name: "text-zinc-950",
+        chip: "border-zinc-300 bg-white text-zinc-700",
+        ring: "",
       };
     case 3:
       return {
-        row: "border-l-[4px] border-l-amber-700 bg-gradient-to-r from-amber-50 via-amber-50/80 to-white",
+        row: "border-l-[5px] border-l-amber-700 bg-gradient-to-r from-amber-50 via-amber-50/80 to-white",
         badge: "bg-amber-600 text-white",
         points: "text-amber-800",
         name: "text-zinc-950",
+        chip: "border-amber-200 bg-white text-amber-800",
+        ring: "",
       };
     case 4:
       return {
-        row: "border-l-[4px] border-l-sky-500 bg-gradient-to-r from-sky-50 via-sky-50/70 to-white",
+        row: "border-l-[5px] border-l-sky-500 bg-gradient-to-r from-sky-50 via-sky-50/70 to-white",
         badge: "bg-sky-500 text-white",
         points: "text-sky-700",
         name: "text-zinc-950",
+        chip: "border-sky-200 bg-white text-sky-800",
+        ring: "",
       };
     case 5:
       return {
-        row: "border-l-[4px] border-l-violet-500 bg-gradient-to-r from-violet-50 via-violet-50/70 to-white",
+        row: "border-l-[5px] border-l-violet-500 bg-gradient-to-r from-violet-50 via-violet-50/70 to-white",
         badge: "bg-violet-500 text-white",
         points: "text-violet-700",
         name: "text-zinc-950",
+        chip: "border-violet-200 bg-white text-violet-800",
+        ring: "",
       };
     case 6:
       return {
-        row: "border-l-[4px] border-l-emerald-500 bg-gradient-to-r from-emerald-50 via-emerald-50/70 to-white",
+        row: "border-l-[5px] border-l-emerald-500 bg-gradient-to-r from-emerald-50 via-emerald-50/70 to-white",
         badge: "bg-emerald-500 text-white",
         points: "text-emerald-700",
         name: "text-zinc-950",
+        chip: "border-emerald-200 bg-white text-emerald-800",
+        ring: "",
       };
     default:
       return {
@@ -256,6 +270,8 @@ function getTop6RowStyles(position: number) {
         badge: "bg-zinc-100 text-zinc-800",
         points: "text-zinc-950",
         name: "text-zinc-950",
+        chip: "border-yellow-200 bg-yellow-50 text-yellow-800",
+        ring: "",
       };
   }
 }
@@ -713,18 +729,21 @@ export default function CasernaKartAppModerno() {
             </Card>
 
             <section className="space-y-3">
-              <div className="flex items-end justify-between gap-3">
-                <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-500">
-                    Classificação geral
-                  </p>
-                  <p className="mt-1 text-sm text-zinc-500">
-                    Categoria e campeonato selecionados
-                  </p>
-                </div>
+              <div className="rounded-[20px] border border-black/5 bg-white px-4 py-3 shadow-sm">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-zinc-500">
+                      Classificação geral
+                    </p>
+                    <p className="mt-1 text-sm font-medium text-zinc-800">
+                      Categoria e campeonato selecionados
+                    </p>
+                  </div>
 
-                <div className="rounded-full border border-yellow-200 bg-yellow-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-yellow-800">
-                  Top 6 em destaque
+                  <div className="flex items-center gap-2 rounded-full border border-yellow-200 bg-gradient-to-r from-yellow-50 to-yellow-100 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-yellow-800 shadow-sm">
+                    <Sparkles className="h-3.5 w-3.5" />
+                    Top 6 oficial
+                  </div>
                 </div>
               </div>
 
@@ -733,7 +752,7 @@ export default function CasernaKartAppModerno() {
                   <div className="max-h-[560px] overflow-y-auto">
                     <table className="w-full table-fixed">
                       <colgroup>
-                        <col className="w-[48px]" />
+                        <col className="w-[50px]" />
                         <col />
                         <col className="w-[40px]" />
                         <col className="w-[40px]" />
@@ -743,7 +762,7 @@ export default function CasernaKartAppModerno() {
                       </colgroup>
 
                       <thead className="sticky top-0 z-10">
-                        <tr className="border-b border-black/5 bg-zinc-50/95 text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-500 backdrop-blur">
+                        <tr className="border-b border-black/5 bg-zinc-50/95 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500 backdrop-blur">
                           <th className="px-1 py-3 text-center whitespace-nowrap">
                             Pos
                           </th>
@@ -773,19 +792,20 @@ export default function CasernaKartAppModerno() {
                           const nomeLinha1 = getPilotFirstAndLastName(item.piloto);
                           const nomeLinha2 = getPilotWarNameDisplay(item);
                           const isTop6 = index < 6;
+                          const isLeader = index === 0;
                           const styles = getTop6RowStyles(index + 1);
 
                           return (
                             <tr
                               key={`${category}-${competition}-table-${item.pos}-${item.piloto}`}
-                              className={`transition ${
+                              className={`group transition ${
                                 isTop6
-                                  ? `${styles.row} hover:brightness-[0.99]`
+                                  ? `${styles.row}`
                                   : `${index % 2 === 0 ? "bg-white" : "bg-zinc-50/50"} hover:bg-zinc-50`
                               }`}
                             >
                               <td
-                                className="px-1 py-2.5 text-center align-middle"
+                                className={`px-1 py-3 text-center align-middle ${isTop6 ? styles.ring : ""}`}
                                 onClick={() => handleSelectPilot(item)}
                               >
                                 <button
@@ -793,73 +813,102 @@ export default function CasernaKartAppModerno() {
                                   className="mx-auto flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold"
                                 >
                                   <span
-                                    className={`flex h-8 w-8 items-center justify-center rounded-xl shadow-sm ${styles.badge}`}
+                                    className={`relative flex h-8 w-8 items-center justify-center rounded-xl shadow-sm ${styles.badge}`}
                                   >
+                                    {isLeader ? (
+                                      <Star className="absolute -right-1 -top-1 h-3.5 w-3.5 fill-yellow-300 text-yellow-600" />
+                                    ) : null}
                                     {index + 1}
                                   </span>
                                 </button>
                               </td>
 
-                              <td className="min-w-0 px-2 py-2.5 align-middle">
+                              <td
+                                className={`min-w-0 px-2 py-3 align-middle ${isTop6 ? styles.ring : ""}`}
+                              >
                                 <button
                                   type="button"
                                   onClick={() => handleSelectPilot(item)}
                                   className="block w-full text-left"
                                 >
-                                  <span className="block leading-tight">
-                                    <span
-                                      className={`block truncate text-[13px] font-bold tracking-tight ${styles.name}`}
-                                    >
-                                      {nomeLinha1}
-                                    </span>
-
-                                    {nomeLinha2 ? (
-                                      <span
-                                        className={`mt-1 inline-flex max-w-full rounded-full px-2 py-0.5 text-[10px] font-semibold italic tracking-[0.02em] ${
-                                          isTop6
-                                            ? "border border-white/70 bg-white/80 text-zinc-700 shadow-sm"
-                                            : "border border-yellow-200 bg-yellow-50 text-yellow-800"
-                                        }`}
-                                      >
-                                        {nomeLinha2}
-                                      </span>
+                                  <div className="flex items-center gap-2">
+                                    {isLeader ? (
+                                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-yellow-100">
+                                        <Trophy className="h-3.5 w-3.5 text-yellow-700" />
+                                      </div>
+                                    ) : isTop6 ? (
+                                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/80 shadow-sm">
+                                        <Sparkles className="h-3.5 w-3.5 text-zinc-500" />
+                                      </div>
                                     ) : null}
-                                  </span>
+
+                                    <div className="min-w-0 flex-1">
+                                      <span
+                                        className={`block truncate text-[13px] font-bold tracking-tight ${styles.name}`}
+                                      >
+                                        {nomeLinha1}
+                                      </span>
+
+                                      <div className="mt-1 flex items-center gap-1.5">
+                                        {nomeLinha2 ? (
+                                          <span
+                                            className={`inline-flex max-w-full rounded-full border px-2 py-0.5 text-[10px] font-semibold italic tracking-[0.02em] ${styles.chip}`}
+                                          >
+                                            {nomeLinha2}
+                                          </span>
+                                        ) : null}
+
+                                        {isLeader ? (
+                                          <span className="inline-flex rounded-full border border-yellow-300 bg-yellow-200/70 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-[0.08em] text-yellow-900">
+                                            Líder
+                                          </span>
+                                        ) : null}
+                                      </div>
+                                    </div>
+                                  </div>
                                 </button>
                               </td>
 
                               <td
-                                className={`px-1 py-2.5 text-center align-middle text-[12px] font-extrabold ${
+                                className={`px-1 py-3 text-center align-middle text-[12px] font-extrabold ${
                                   isTop6 ? styles.points : "text-zinc-950"
-                                }`}
+                                } ${isTop6 ? styles.ring : ""}`}
                                 onClick={() => handleSelectPilot(item)}
                               >
                                 {item.pontos}
                               </td>
 
                               <td
-                                className="px-1 py-2.5 text-center align-middle text-[12px] font-semibold text-zinc-950"
+                                className={`px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
+                                  isTop6 ? styles.ring : ""
+                                }`}
                                 onClick={() => handleSelectPilot(item)}
                               >
                                 {item.vitorias}
                               </td>
 
                               <td
-                                className="px-1 py-2.5 text-center align-middle text-[12px] font-semibold text-zinc-950"
+                                className={`px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
+                                  isTop6 ? styles.ring : ""
+                                }`}
                                 onClick={() => handleSelectPilot(item)}
                               >
                                 {item.poles}
                               </td>
 
                               <td
-                                className="px-1 py-2.5 text-center align-middle text-[12px] font-semibold text-zinc-950"
+                                className={`px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
+                                  isTop6 ? styles.ring : ""
+                                }`}
                                 onClick={() => handleSelectPilot(item)}
                               >
                                 {item.mv}
                               </td>
 
                               <td
-                                className="px-1 py-2.5 text-center align-middle text-[12px] font-semibold text-zinc-950"
+                                className={`px-1 py-3 text-center align-middle text-[12px] font-semibold text-zinc-950 ${
+                                  isTop6 ? styles.ring : ""
+                                }`}
                                 onClick={() => handleSelectPilot(item)}
                               >
                                 {item.podios}
