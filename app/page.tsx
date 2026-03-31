@@ -973,10 +973,10 @@ export default function CasernaKartAppModerno() {
         </section>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
-          <TabsList className="grid w-full grid-cols-3 gap-1 rounded-[22px] border border-black/5 bg-gradient-to-b from-[#fbfaf7] via-[#f4f1ea] to-[#ece7dd] p-1 shadow-[0_8px_18px_rgba(15,23,42,0.05),inset_0_1px_0_rgba(255,255,255,0.95)]">
+          <TabsList className="mb-4 grid w-full grid-cols-3 gap-1 rounded-[22px] border border-black/5 bg-gradient-to-b from-[#fbfaf7] via-[#f4f1ea] to-[#ece7dd] p-1 shadow-[0_8px_18px_rgba(15,23,42,0.05),inset_0_1px_0_rgba(255,255,255,0.95)]">
             <TabsTrigger
               value="classificacao"
-              className="group rounded-[16px] border border-transparent bg-transparent px-1.5 py-1.5 text-zinc-500 transition-all duration-200 data-[state=active]:border-black/5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.08)]"
+              className="group rounded-[16px] border border-transparent bg-transparent px-1.5 py-1.5 text-zinc-500 transition-all duration-200 data-[state=active]:border-black/5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_4px_10px_rgba(15,23,42,0.06)]"
             >
               <div className="flex flex-col items-center justify-center gap-0.5">
                 <div className="flex h-7 w-7 items-center justify-center rounded-2xl bg-white/70 text-zinc-500 transition-all duration-200 group-data-[state=active]:bg-yellow-50 group-data-[state=active]:text-yellow-700">
@@ -990,7 +990,7 @@ export default function CasernaKartAppModerno() {
 
             <TabsTrigger
               value="piloto"
-              className="group rounded-[16px] border border-transparent bg-transparent px-1.5 py-1.5 text-zinc-500 transition-all duration-200 data-[state=active]:border-black/5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.08)]"
+              className="group rounded-[16px] border border-transparent bg-transparent px-1.5 py-1.5 text-zinc-500 transition-all duration-200 data-[state=active]:border-black/5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_4px_10px_rgba(15,23,42,0.06)]"
             >
               <div className="flex flex-col items-center justify-center gap-0.5">
                 <div className="flex h-7 w-7 items-center justify-center rounded-2xl bg-white/70 text-zinc-500 transition-all duration-200 group-data-[state=active]:bg-yellow-50 group-data-[state=active]:text-yellow-700">
@@ -1004,7 +1004,7 @@ export default function CasernaKartAppModerno() {
 
             <TabsTrigger
               value="stats"
-              className="group rounded-[16px] border border-transparent bg-transparent px-1.5 py-1.5 text-zinc-500 transition-all duration-200 data-[state=active]:border-black/5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.08)]"
+              className="group rounded-[16px] border border-transparent bg-transparent px-1.5 py-1.5 text-zinc-500 transition-all duration-200 data-[state=active]:border-black/5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_4px_10px_rgba(15,23,42,0.06)]"
             >
               <div className="flex flex-col items-center justify-center gap-0.5">
                 <div className="flex h-7 w-7 items-center justify-center rounded-2xl bg-white/70 text-zinc-500 transition-all duration-200 group-data-[state=active]:bg-yellow-50 group-data-[state=active]:text-yellow-700">
@@ -1017,7 +1017,7 @@ export default function CasernaKartAppModerno() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="classificacao" className="space-y-3 pt-3">
+          <TabsContent value="classificacao" className="space-y-3 pt-0 mt-0">
             <Card
               className={`rounded-[22px] border ${theme.searchBorder} bg-gradient-to-br from-white to-zinc-50/70 shadow-sm`}
             >
@@ -1297,7 +1297,7 @@ export default function CasernaKartAppModerno() {
             </section>
           </TabsContent>
 
-          <TabsContent value="piloto" className="space-y-4 pt-3">
+          <TabsContent value="piloto" className="space-y-4 pt-0 mt-0">
             {!selectedPilot ? (
               <Card className="rounded-[22px] border-black/5 bg-white shadow-sm">
                 <CardContent className="p-8 text-center">
@@ -1452,7 +1452,6 @@ export default function CasernaKartAppModerno() {
                     value={selectedPilot.poles}
                     subtitle="qualify"
                     icon={Flag}
-                    accent={false}
                   />
                   <CompactStatCard
                     title="VMR"
@@ -1490,7 +1489,7 @@ export default function CasernaKartAppModerno() {
             )}
           </TabsContent>
 
-          <TabsContent value="stats" className="space-y-4 pt-3">
+          <TabsContent value="stats" className="space-y-4 pt-0 mt-0">
             <div
               className={`overflow-hidden rounded-[24px] border ${theme.titleBorder} bg-gradient-to-br ${theme.statsSoft} shadow-sm`}
             >
