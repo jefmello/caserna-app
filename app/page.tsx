@@ -15,7 +15,6 @@ import {
   ArrowLeft,
   User,
   Camera,
-  Sparkles,
   Star,
   ChevronRight,
 } from "lucide-react";
@@ -875,7 +874,8 @@ export default function CasernaKartAppModerno() {
 
                       <tbody>
                         {filteredRanking.map((item, index) => {
-                          const nomeCompleto = getPilotDisplayName(item.piloto);
+                          const nomeLinha1 = getPilotFirstAndLastName(item.piloto);
+                          const nomeLinha2 = getPilotWarNameDisplay(item);
                           const isTop6 = index < 6;
                           const isLeader = index === 0;
                           const styles = getTop6RowStyles(index + 1);
@@ -918,10 +918,20 @@ export default function CasernaKartAppModerno() {
                                 >
                                   <div className="min-w-0">
                                     <span
-                                      className={`block break-words text-[12.5px] font-bold leading-[1.2] tracking-tight ${styles.name}`}
+                                      className={`block whitespace-normal break-words text-[12.5px] font-bold leading-[1.18] tracking-tight ${styles.name}`}
                                     >
-                                      {nomeCompleto}
+                                      {nomeLinha1}
                                     </span>
+
+                                    {nomeLinha2 ? (
+                                      <div className="mt-1 flex items-center gap-1.5">
+                                        <span
+                                          className={`inline-flex max-w-full whitespace-normal break-words rounded-full border px-2 py-0.5 text-[10px] font-semibold italic tracking-[0.02em] ${styles.chip}`}
+                                        >
+                                          {nomeLinha2}
+                                        </span>
+                                      </div>
+                                    ) : null}
                                   </div>
                                 </button>
                               </td>
