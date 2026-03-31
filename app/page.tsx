@@ -276,6 +276,15 @@ function getCategoryTheme(category: string) {
       searchIcon: "text-orange-500",
       headerChip: "border-orange-200 bg-orange-50 text-orange-700",
       tableHeadBg: "bg-orange-50/80",
+      statsSoft: "from-orange-50 via-white to-orange-50/60",
+      statsIconWrap: "bg-orange-100",
+      statsIcon: "text-orange-700",
+      chartBar: "#f97316",
+      chartGrid: "rgba(249,115,22,0.12)",
+      chartAxis: "#9a3412",
+      statAccentBg: "border-orange-200 bg-orange-50",
+      statAccentValue: "text-orange-800",
+      statAccentRank: "bg-orange-500 text-white",
     },
     Graduados: {
       shellGlow: "from-blue-500/10 via-white to-blue-100/60",
@@ -304,6 +313,15 @@ function getCategoryTheme(category: string) {
       searchIcon: "text-blue-500",
       headerChip: "border-blue-200 bg-blue-50 text-blue-700",
       tableHeadBg: "bg-blue-50/80",
+      statsSoft: "from-blue-50 via-white to-blue-50/60",
+      statsIconWrap: "bg-blue-100",
+      statsIcon: "text-blue-700",
+      chartBar: "#3b82f6",
+      chartGrid: "rgba(59,130,246,0.12)",
+      chartAxis: "#1d4ed8",
+      statAccentBg: "border-blue-200 bg-blue-50",
+      statAccentValue: "text-blue-800",
+      statAccentRank: "bg-blue-500 text-white",
     },
     Elite: {
       shellGlow: "from-yellow-500/10 via-white to-yellow-100/60",
@@ -332,6 +350,15 @@ function getCategoryTheme(category: string) {
       searchIcon: "text-yellow-600",
       headerChip: "border-yellow-200 bg-yellow-50 text-yellow-700",
       tableHeadBg: "bg-yellow-50/80",
+      statsSoft: "from-yellow-50 via-white to-yellow-50/60",
+      statsIconWrap: "bg-yellow-100",
+      statsIcon: "text-yellow-700",
+      chartBar: "#facc15",
+      chartGrid: "rgba(250,204,21,0.18)",
+      chartAxis: "#a16207",
+      statAccentBg: "border-yellow-200 bg-yellow-50",
+      statAccentValue: "text-yellow-800",
+      statAccentRank: "bg-yellow-400 text-black",
     },
   };
 
@@ -511,29 +538,42 @@ function StatRankingCard({
   items,
   metricKey,
   emptyLabel,
+  theme,
 }: {
   title: string;
   icon: React.ElementType;
   items: RankingItem[];
   metricKey: "vitorias" | "poles" | "mv" | "podios";
   emptyLabel: string;
+  theme: ReturnType<typeof getCategoryTheme>;
 }) {
   return (
-    <Card className="rounded-[22px] border-black/5 bg-white shadow-sm">
-      <CardHeader className="pb-2">
+    <Card className="overflow-hidden rounded-[24px] border-black/5 bg-white shadow-sm">
+      <CardHeader className="border-b border-black/5 bg-gradient-to-r from-white via-zinc-50/70 to-white pb-3">
         <CardTitle className="flex items-center gap-2 text-sm font-bold text-zinc-950">
-          <Icon className="h-4 w-4 text-yellow-700" />
-          {title}
+          <div
+            className={`flex h-9 w-9 items-center justify-center rounded-2xl ${theme.statsIconWrap}`}
+          >
+            <Icon className={`h-4 w-4 ${theme.statsIcon}`} />
+          </div>
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">
+              Ranking estatístico
+            </p>
+            <p className="text-[15px] font-extrabold tracking-tight text-zinc-950">
+              {title}
+            </p>
+          </div>
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="pt-0">
+      <CardContent className="pt-4">
         {items.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-black/10 bg-zinc-50 px-4 py-6 text-center text-sm text-zinc-500">
             {emptyLabel}
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             {items.map((item, index) => {
               const value = item[metricKey];
               const isFirst = index === 0;
@@ -541,17 +581,17 @@ function StatRankingCard({
               return (
                 <div
                   key={`${title}-${item.pilotoId}-${index}`}
-                  className={`flex items-center justify-between gap-3 rounded-2xl border px-3 py-3 ${
+                  className={`flex items-center justify-between gap-3 rounded-[20px] border px-3 py-3 ${
                     isFirst
-                      ? "border-yellow-200 bg-yellow-50"
+                      ? `${theme.statAccentBg}`
                       : "border-black/5 bg-zinc-50/70"
                   }`}
                 >
                   <div className="flex min-w-0 items-center gap-3">
                     <div
-                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-xs font-extrabold ${
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl text-xs font-extrabold ${
                         isFirst
-                          ? "bg-yellow-400 text-black"
+                          ? theme.statAccentRank
                           : "bg-zinc-200 text-zinc-800"
                       }`}
                     >
@@ -559,7 +599,7 @@ function StatRankingCard({
                     </div>
 
                     <div className="min-w-0">
-                      <p className="truncate text-[13px] font-bold text-zinc-950">
+                      <p className="truncate text-[13px] font-extrabold tracking-tight text-zinc-950">
                         {getPilotFirstAndLastName(item.piloto)}
                       </p>
 
@@ -572,13 +612,15 @@ function StatRankingCard({
                   </div>
 
                   <div
-                    className={`shrink-0 rounded-xl px-3 py-1 text-sm font-extrabold ${
+                    className={`shrink-0 rounded-2xl px-3 py-1.5 text-sm font-extrabold ${
                       isFirst
-                        ? "bg-yellow-100 text-yellow-800"
+                        ? `${theme.primaryBadge}`
                         : "bg-white text-zinc-800"
                     }`}
                   >
-                    {value}
+                    <span className={isFirst ? theme.statAccentValue : ""}>
+                      {value}
+                    </span>
                   </div>
                 </div>
               );
@@ -1457,15 +1499,64 @@ export default function CasernaKartAppModerno() {
           </TabsContent>
 
           <TabsContent value="stats" className="space-y-4 pt-4">
-            <Card className="rounded-[22px] border-black/5 bg-white shadow-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-zinc-950">
-                  <BarChart3 className="h-5 w-5 text-yellow-700" />
-                  Top 5 em pontos
+            <div
+              className={`overflow-hidden rounded-[24px] border ${theme.titleBorder} bg-gradient-to-br ${theme.statsSoft} shadow-sm`}
+            >
+              <div className="relative px-4 py-4">
+                <div
+                  className={`absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
+                />
+
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div
+                      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${theme.statsIconWrap}`}
+                    >
+                      <BarChart3 className={`h-5 w-5 ${theme.statsIcon}`} />
+                    </div>
+
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-400">
+                        Central de estatísticas
+                      </p>
+                      <h2 className="text-[17px] font-extrabold tracking-tight text-zinc-950">
+                        Stats da classificação
+                      </h2>
+                      <p className="text-[11px] font-semibold text-zinc-500">
+                        {category} · {competitionLabels[competition] || competition}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${theme.headerChip}`}
+                  >
+                    Top 5
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <Card className="overflow-hidden rounded-[24px] border-black/5 bg-white shadow-sm">
+              <CardHeader className="border-b border-black/5 bg-gradient-to-r from-white via-zinc-50/70 to-white">
+                <CardTitle className="flex items-center gap-3 text-zinc-950">
+                  <div
+                    className={`flex h-10 w-10 items-center justify-center rounded-2xl ${theme.statsIconWrap}`}
+                  >
+                    <BarChart3 className={`h-5 w-5 ${theme.statsIcon}`} />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400">
+                      Desempenho oficial
+                    </p>
+                    <p className="text-[16px] font-extrabold tracking-tight text-zinc-950">
+                      Top 5 em pontos
+                    </p>
+                  </div>
                 </CardTitle>
               </CardHeader>
 
-              <CardContent className="h-72">
+              <CardContent className="h-72 pt-4">
                 {topPointsChartData.length === 0 ? (
                   <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-black/10 bg-zinc-50 text-sm text-zinc-500">
                     Nenhum dado disponível para este campeonato.
@@ -1474,11 +1565,11 @@ export default function CasernaKartAppModerno() {
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={topPointsChartData}>
                       <CartesianGrid
-                        stroke="rgba(15,23,42,0.08)"
+                        stroke={theme.chartGrid}
                         strokeDasharray="3 3"
                       />
-                      <XAxis dataKey="piloto" stroke="#71717a" />
-                      <YAxis stroke="#71717a" />
+                      <XAxis dataKey="piloto" stroke={theme.chartAxis} />
+                      <YAxis stroke={theme.chartAxis} />
                       <Tooltip
                         contentStyle={{
                           background: "#ffffff",
@@ -1486,7 +1577,11 @@ export default function CasernaKartAppModerno() {
                           borderRadius: 16,
                         }}
                       />
-                      <Bar dataKey="pontos" fill="#facc15" radius={[8, 8, 0, 0]} />
+                      <Bar
+                        dataKey="pontos"
+                        fill={theme.chartBar}
+                        radius={[10, 10, 0, 0]}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 )}
@@ -1499,6 +1594,7 @@ export default function CasernaKartAppModerno() {
               items={topVitorias}
               metricKey="vitorias"
               emptyLabel="Nenhuma vitória registrada nesta seleção."
+              theme={theme}
             />
 
             <StatRankingCard
@@ -1507,6 +1603,7 @@ export default function CasernaKartAppModerno() {
               items={topPoles}
               metricKey="poles"
               emptyLabel="Nenhuma pole registrada nesta seleção."
+              theme={theme}
             />
 
             <StatRankingCard
@@ -1515,6 +1612,7 @@ export default function CasernaKartAppModerno() {
               items={topMv}
               metricKey="mv"
               emptyLabel="Nenhuma volta mais rápida registrada nesta seleção."
+              theme={theme}
             />
 
             <StatRankingCard
@@ -1523,6 +1621,7 @@ export default function CasernaKartAppModerno() {
               items={topPodios}
               metricKey="podios"
               emptyLabel="Nenhum pódio registrado nesta seleção."
+              theme={theme}
             />
           </TabsContent>
         </Tabs>
