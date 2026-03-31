@@ -268,19 +268,24 @@ function HighlightCard({
 }) {
   return (
     <Card
-      className={`h-[178px] rounded-[22px] border shadow-none ${
+      className={`h-[182px] rounded-[22px] border shadow-none ${
         accent
-          ? "border-yellow-300 bg-yellow-50/75"
+          ? "border-yellow-300 bg-gradient-to-b from-yellow-50 to-white"
           : "border-black/5 bg-white"
       }`}
     >
-      <CardContent className="flex h-full flex-col px-4 pb-4 pt-1">
-        <div className="mb-0 flex items-start justify-between gap-2">
-          <p className="w-full text-center text-[12px] font-semibold uppercase tracking-[0.18em] leading-none text-zinc-500">
+      <CardContent className="flex h-full flex-col px-4 pb-4 pt-2">
+        <div className="mb-1 flex items-start justify-between gap-2">
+          <p
+            className={`w-full text-center text-[11px] font-bold uppercase tracking-[0.18em] leading-none ${
+              accent ? "text-yellow-800" : "text-zinc-500"
+            }`}
+          >
             {title}
           </p>
+
           <div
-            className={`-mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-xl ${
+            className={`-mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-xl ${
               accent ? "bg-yellow-100" : "bg-zinc-100"
             }`}
           >
@@ -291,6 +296,12 @@ function HighlightCard({
             />
           </div>
         </div>
+
+        <div
+          className={`mb-1 h-px w-full ${
+            accent ? "bg-yellow-200/80" : "bg-zinc-100"
+          }`}
+        />
 
         <div className="flex-1 pt-0.5">{children}</div>
       </CardContent>
@@ -324,16 +335,16 @@ function PilotPhotoSlot({
           onError={() => setHasError(true)}
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center">
+        <div className="flex h-full w-full items-center justify-center bg-gradient-to-b from-zinc-50 to-zinc-100">
           <div className="text-center">
-            <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100">
+            <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm">
               <Camera className="h-5 w-5 text-zinc-500" />
             </div>
-            <p className="text-[11px] font-medium text-zinc-500">
-              Espaço reservado
+            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500">
+              Espaço foto
             </p>
-            <p className="mt-1 text-[11px] font-medium text-zinc-500">
-              para foto 1:1
+            <p className="mt-1 text-[10px] font-medium text-zinc-500">
+              piloto 1:1
             </p>
           </div>
         </div>
@@ -549,9 +560,9 @@ export default function CasernaKartAppModerno() {
 
           <div className="grid grid-cols-2 gap-3">
             <HighlightCard title="Líder" icon={Crown} accent>
-              <div className="flex h-full flex-col items-center justify-center pt-0 text-center">
-                <div>
-                  <p className="text-[28px] font-bold leading-none tracking-tight text-zinc-950">
+              <div className="flex h-full flex-col items-center justify-center text-center">
+                <div className="flex min-h-[74px] flex-col items-center justify-center">
+                  <p className="text-[30px] font-extrabold leading-none tracking-tight text-zinc-950">
                     {leaderName.firstName.toUpperCase()}
                   </p>
                   <p className="mt-1 text-[20px] font-semibold leading-none tracking-tight text-zinc-800">
@@ -559,38 +570,50 @@ export default function CasernaKartAppModerno() {
                   </p>
                 </div>
 
-                <p className="mt-5 text-sm text-zinc-500">
-                  {leader?.pontos || 0} pontos
-                </p>
+                <div className="mt-3 inline-flex rounded-full border border-yellow-200 bg-yellow-100/70 px-3 py-1">
+                  <p className="text-[12px] font-bold text-yellow-800">
+                    {leader?.pontos || 0} pontos
+                  </p>
+                </div>
               </div>
             </HighlightCard>
 
             <HighlightCard title="Vitórias" icon={Medal}>
-              <div className="flex h-full flex-col items-center justify-center pt-0 text-center">
-                <p className="text-[42px] font-bold leading-none tracking-tight text-zinc-950">
+              <div className="flex h-full flex-col items-center justify-center text-center">
+                <p className="text-[44px] font-extrabold leading-none tracking-tight text-zinc-950">
                   {leader?.vitorias || 0}
                 </p>
-                <p className="mt-3 text-sm text-zinc-500">
+                <p className="mt-3 max-w-[120px] text-[12px] leading-snug text-zinc-500">
                   vitórias nesta classificação
                 </p>
               </div>
             </HighlightCard>
 
-            <Card className="h-[176px] overflow-hidden rounded-[22px] border border-black/5 shadow-none">
+            <Card className="h-[182px] overflow-hidden rounded-[22px] border border-black/5 shadow-none">
               <CardContent className="h-full p-0">
-                <PilotPhotoSlot
-                  pilot={leader}
-                  alt={getPilotHighlightName(leader?.piloto)}
-                />
+                <div className="relative h-full w-full overflow-hidden">
+                  <PilotPhotoSlot
+                    pilot={leader}
+                    alt={getPilotHighlightName(leader?.piloto)}
+                  />
+
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/35 to-transparent" />
+
+                  <div className="absolute inset-x-0 bottom-2 px-3 text-center">
+                    <p className="truncate text-[11px] font-bold uppercase tracking-[0.10em] text-white">
+                      {getPilotHighlightName(leader?.piloto)}
+                    </p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
             <HighlightCard title="Pódios" icon={Medal}>
-              <div className="flex h-full flex-col items-center justify-center pt-0 text-center">
-                <p className="text-[42px] font-bold leading-none tracking-tight text-zinc-950">
+              <div className="flex h-full flex-col items-center justify-center text-center">
+                <p className="text-[44px] font-extrabold leading-none tracking-tight text-zinc-950">
                   {leader?.podios || 0}
                 </p>
-                <p className="mt-3 text-sm text-zinc-500">
+                <p className="mt-3 max-w-[120px] text-[12px] leading-snug text-zinc-500">
                   pódios nesta classificação
                 </p>
               </div>
