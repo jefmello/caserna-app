@@ -809,19 +809,21 @@ export default function CasernaKartAppModerno() {
                   <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-yellow-400 to-transparent" />
 
                   <div className="flex items-center justify-between gap-3">
-                    <div className="min-w-0 flex-1">
-                      <div className="inline-flex max-w-full items-center rounded-[18px] border border-yellow-200 bg-yellow-100/80 px-4 py-2 shadow-sm">
-                        <h2 className="truncate text-[18px] font-extrabold uppercase tracking-[0.08em] leading-none text-zinc-950">
-                          Classificação Geral
-                        </h2>
-                      </div>
+                    <div className="flex flex-1 justify-center pr-1">
+                      <div className="flex flex-col items-center">
+                        <div className="inline-flex max-w-full items-center justify-center rounded-[18px] border border-yellow-200 bg-gradient-to-b from-[#fff9d8] to-[#f8edb2] px-4 py-2 shadow-[0_4px_10px_rgba(0,0,0,0.08)]">
+                          <h2 className="truncate text-[17px] font-extrabold uppercase tracking-[0.05em] leading-none text-zinc-950">
+                            Classificação Geral
+                          </h2>
+                        </div>
 
-                      <p className="mt-3 text-[9px] font-medium uppercase tracking-[0.14em] text-zinc-400">
-                        categoria e campeonato selecionados
-                      </p>
+                        <p className="mt-3 w-[245px] max-w-full text-center text-[9px] font-semibold uppercase tracking-[0.12em] text-zinc-400">
+                          categoria e campeonato selecionados
+                        </p>
+                      </div>
                     </div>
 
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-yellow-200 bg-gradient-to-br from-yellow-100 to-yellow-50 shadow-sm">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-yellow-200 bg-gradient-to-b from-[#fff9d8] to-[#f8edb2] shadow-[0_4px_10px_rgba(0,0,0,0.08)]">
                       <TableProperties className="h-5 w-5 text-yellow-700" />
                     </div>
                   </div>
