@@ -998,22 +998,22 @@ export default function CasernaKartAppModerno() {
         </section>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-5">
-          <TabsList className="grid w-full grid-cols-3 rounded-2xl border border-black/5 bg-white p-1 shadow-sm">
+          <TabsList className="grid w-full grid-cols-3 rounded-[22px] border border-black/5 bg-gradient-to-b from-white to-zinc-50 p-1.5 shadow-[0_8px_20px_rgba(15,23,42,0.05),inset_0_1px_0_rgba(255,255,255,0.9)]">
             <TabsTrigger
               value="classificacao"
-              className="rounded-xl text-zinc-700 data-[state=active]:bg-zinc-100 data-[state=active]:text-zinc-950"
+              className="rounded-[16px] px-2 py-2.5 text-[13px] font-semibold tracking-[0.01em] text-zinc-600 transition-all duration-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.08)] data-[state=active]:border data-[state=active]:border-black/5"
             >
               Classificação
             </TabsTrigger>
             <TabsTrigger
               value="piloto"
-              className="rounded-xl text-zinc-700 data-[state=active]:bg-zinc-100 data-[state=active]:text-zinc-950"
+              className="rounded-[16px] px-2 py-2.5 text-[13px] font-semibold tracking-[0.01em] text-zinc-600 transition-all duration-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.08)] data-[state=active]:border data-[state=active]:border-black/5"
             >
               Piloto
             </TabsTrigger>
             <TabsTrigger
               value="stats"
-              className="rounded-xl text-zinc-700 data-[state=active]:bg-zinc-100 data-[state=active]:text-zinc-950"
+              className="rounded-[16px] px-2 py-2.5 text-[13px] font-semibold tracking-[0.01em] text-zinc-600 transition-all duration-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.08)] data-[state=active]:border data-[state=active]:border-black/5"
             >
               Stats
             </TabsTrigger>
