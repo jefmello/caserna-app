@@ -266,6 +266,21 @@ function getCategoryTheme(category: string) {
       lineTrack: "from-orange-200 via-orange-300 to-orange-200",
       lineGlow: "bg-orange-300/50",
       leaderGlow: "shadow-[0_10px_22px_rgba(249,115,22,0.18)]",
+      darkAccentBorder: "border-orange-500/30",
+      darkAccentBg: "bg-orange-500/10",
+      darkAccentBgSoft: "bg-orange-500/12",
+      darkAccentText: "text-orange-300",
+      darkAccentIconWrap: "bg-orange-500/15",
+      darkAccentDivider: "bg-orange-500/20",
+      darkAccentCard: "from-[#1a1a14] via-[#151922] to-[#111827]",
+      darkLeaderRow:
+        "bg-gradient-to-r from-orange-500/12 via-[#161e2b] to-[#111827] border-l-[4px] border-l-orange-400",
+      darkSecondRow:
+        "bg-gradient-to-r from-white/5 via-[#111827] to-[#111827] border-l-[4px] border-l-zinc-400",
+      darkThirdRow:
+        "bg-gradient-to-r from-amber-500/10 via-[#111827] to-[#111827] border-l-[4px] border-l-amber-500",
+      darkTopBadge: "bg-orange-400 text-black",
+      darkChartBar: "#fb923c",
     },
     Graduados: {
       shellGlow: "from-blue-500/10 via-white to-blue-100/60",
@@ -304,6 +319,21 @@ function getCategoryTheme(category: string) {
       lineTrack: "from-blue-200 via-blue-300 to-blue-200",
       lineGlow: "bg-blue-300/50",
       leaderGlow: "shadow-[0_10px_22px_rgba(59,130,246,0.18)]",
+      darkAccentBorder: "border-blue-500/30",
+      darkAccentBg: "bg-blue-500/10",
+      darkAccentBgSoft: "bg-blue-500/12",
+      darkAccentText: "text-blue-300",
+      darkAccentIconWrap: "bg-blue-500/15",
+      darkAccentDivider: "bg-blue-500/20",
+      darkAccentCard: "from-[#121b2a] via-[#111827] to-[#0f172a]",
+      darkLeaderRow:
+        "bg-gradient-to-r from-blue-500/12 via-[#161e2b] to-[#111827] border-l-[4px] border-l-blue-400",
+      darkSecondRow:
+        "bg-gradient-to-r from-white/5 via-[#111827] to-[#111827] border-l-[4px] border-l-zinc-400",
+      darkThirdRow:
+        "bg-gradient-to-r from-amber-500/10 via-[#111827] to-[#111827] border-l-[4px] border-l-amber-500",
+      darkTopBadge: "bg-blue-400 text-black",
+      darkChartBar: "#60a5fa",
     },
     Elite: {
       shellGlow: "from-yellow-500/10 via-white to-yellow-100/60",
@@ -342,55 +372,25 @@ function getCategoryTheme(category: string) {
       lineTrack: "from-yellow-200 via-yellow-300 to-yellow-200",
       lineGlow: "bg-yellow-300/50",
       leaderGlow: "shadow-[0_10px_22px_rgba(234,179,8,0.18)]",
+      darkAccentBorder: "border-yellow-500/30",
+      darkAccentBg: "bg-yellow-500/10",
+      darkAccentBgSoft: "bg-yellow-500/12",
+      darkAccentText: "text-yellow-300",
+      darkAccentIconWrap: "bg-yellow-500/15",
+      darkAccentDivider: "bg-yellow-500/20",
+      darkAccentCard: "from-[#1f1b10] via-[#151922] to-[#111827]",
+      darkLeaderRow:
+        "bg-gradient-to-r from-yellow-500/12 via-[#161e2b] to-[#111827] border-l-[4px] border-l-yellow-400",
+      darkSecondRow:
+        "bg-gradient-to-r from-white/5 via-[#111827] to-[#111827] border-l-[4px] border-l-zinc-400",
+      darkThirdRow:
+        "bg-gradient-to-r from-amber-500/10 via-[#111827] to-[#111827] border-l-[4px] border-l-amber-500",
+      darkTopBadge: "bg-yellow-400 text-black",
+      darkChartBar: "#facc15",
     },
   };
 
   return themes[category as keyof typeof themes] || themes.Elite;
-}
-
-function getGapToLeader(leaderPoints: number, pilotPoints: number) {
-  const diff = leaderPoints - pilotPoints;
-  if (diff <= 0) return "líder";
-  return `-${diff} pts do líder`;
-}
-
-function getTitleFightStatus(top3: RankingItem[]) {
-  if (top3.length < 2) {
-    return {
-      label: "definição inicial",
-      tone: "border-zinc-200 bg-zinc-50 text-zinc-700",
-    };
-  }
-
-  const first = top3[0];
-  const second = top3[1];
-  const diff = first.pontos - second.pontos;
-
-  if (diff === 0) {
-    return {
-      label: "empate técnico",
-      tone: "border-red-200 bg-red-50 text-red-700",
-    };
-  }
-
-  if (diff <= 3) {
-    return {
-      label: "briga acirrada",
-      tone: "border-emerald-200 bg-emerald-50 text-emerald-700",
-    };
-  }
-
-  if (diff <= 8) {
-    return {
-      label: "disputa aberta",
-      tone: "border-yellow-200 bg-yellow-50 text-yellow-700",
-    };
-  }
-
-  return {
-    label: "líder com vantagem",
-    tone: "border-zinc-200 bg-zinc-50 text-zinc-700",
-  };
 }
 
 function CompactStatCard({
@@ -400,6 +400,7 @@ function CompactStatCard({
   icon: Icon,
   accent = false,
   isDark = false,
+  categoryTheme,
 }: {
   title: string;
   value: string | number;
@@ -407,13 +408,14 @@ function CompactStatCard({
   icon: React.ElementType;
   accent?: boolean;
   isDark?: boolean;
+  categoryTheme: ReturnType<typeof getCategoryTheme>;
 }) {
   return (
     <Card
       className={`rounded-[20px] border shadow-none ${
         isDark
           ? accent
-            ? "border-yellow-500/30 bg-[#161e2b]"
+            ? `${categoryTheme.darkAccentBorder} ${categoryTheme.darkAccentBgSoft}`
             : "border-white/10 bg-[#111827]"
           : accent
             ? "border-yellow-300/80 bg-yellow-50/70"
@@ -433,7 +435,7 @@ function CompactStatCard({
             className={`flex h-7 w-7 items-center justify-center rounded-2xl ${
               isDark
                 ? accent
-                  ? "bg-yellow-500/15"
+                  ? categoryTheme.darkAccentIconWrap
                   : "bg-white/5"
                 : accent
                   ? "bg-yellow-100"
@@ -444,7 +446,7 @@ function CompactStatCard({
               className={`h-3.5 w-3.5 ${
                 isDark
                   ? accent
-                    ? "text-yellow-300"
+                    ? categoryTheme.darkAccentText
                     : "text-zinc-300"
                   : accent
                     ? "text-yellow-700"
@@ -482,6 +484,7 @@ function HighlightCard({
   accentStyles,
   compact = false,
   isDark = false,
+  categoryTheme,
 }: {
   title: string;
   icon: React.ElementType;
@@ -497,6 +500,7 @@ function HighlightCard({
   };
   compact?: boolean;
   isDark?: boolean;
+  categoryTheme: ReturnType<typeof getCategoryTheme>;
 }) {
   const defaultAccent = {
     border: "border-yellow-300",
@@ -516,7 +520,7 @@ function HighlightCard({
       } ${
         isDark
           ? accent
-            ? "border-yellow-500/25 bg-gradient-to-b from-[#1a2230] to-[#111827]"
+            ? `${categoryTheme.darkAccentBorder} bg-gradient-to-b ${categoryTheme.darkAccentCard}`
             : "border-white/10 bg-[#111827]"
           : accent
             ? `${appliedAccent.border} ${appliedAccent.bg}`
@@ -537,7 +541,7 @@ function HighlightCard({
             } ${
               isDark
                 ? accent
-                  ? "text-yellow-300"
+                  ? categoryTheme.darkAccentText
                   : "text-zinc-400"
                 : accent
                   ? appliedAccent.text
@@ -553,7 +557,7 @@ function HighlightCard({
             } ${
               isDark
                 ? accent
-                  ? "bg-yellow-500/15"
+                  ? categoryTheme.darkAccentIconWrap
                   : "bg-white/5"
                 : accent
                   ? appliedAccent.iconWrap
@@ -564,7 +568,7 @@ function HighlightCard({
               className={`${compact ? "h-2.5 w-2.5" : "h-3 w-3"} ${
                 isDark
                   ? accent
-                    ? "text-yellow-300"
+                    ? categoryTheme.darkAccentText
                     : "text-zinc-300"
                   : accent
                     ? appliedAccent.icon
@@ -578,7 +582,7 @@ function HighlightCard({
           className={`mb-1 h-px w-full ${
             isDark
               ? accent
-                ? "bg-yellow-500/20"
+                ? categoryTheme.darkAccentDivider
                 : "bg-white/10"
               : accent
                 ? appliedAccent.divider
@@ -642,11 +646,7 @@ function PilotPhotoSlot({
             >
               Espaço foto
             </p>
-            <p
-              className={`mt-1 text-[10px] font-medium ${
-                isDark ? "text-zinc-500" : "text-zinc-500"
-              }`}
-            >
+            <p className={`mt-1 text-[10px] font-medium ${isDark ? "text-zinc-500" : "text-zinc-500"}`}>
               piloto 1:1
             </p>
           </div>
@@ -682,7 +682,7 @@ function StatRankingCard({
       <CardHeader
         className={`pb-3 ${
           isDark
-            ? "border-b border-white/10 bg-gradient-to-r from-[#111827] via-[#161e2b] to-[#111827]"
+            ? `border-b border-white/10 bg-gradient-to-r from-[#111827] via-[#161e2b] to-[#111827]`
             : "border-b border-black/5 bg-gradient-to-r from-white via-zinc-50/70 to-white"
         }`}
       >
@@ -693,10 +693,10 @@ function StatRankingCard({
         >
           <div
             className={`flex h-9 w-9 items-center justify-center rounded-2xl ${
-              isDark ? "bg-white/5" : theme.statsIconWrap
+              isDark ? theme.darkAccentIconWrap : theme.statsIconWrap
             }`}
           >
-            <Icon className={`h-4 w-4 ${isDark ? "text-zinc-300" : theme.statsIcon}`} />
+            <Icon className={`h-4 w-4 ${isDark ? theme.darkAccentText : theme.statsIcon}`} />
           </div>
           <div>
             <p
@@ -740,7 +740,7 @@ function StatRankingCard({
                   className={`flex items-center justify-between gap-3 rounded-[20px] border px-3 py-3 ${
                     isDark
                       ? isFirst
-                        ? "border-yellow-500/20 bg-[#161e2b]"
+                        ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft}`
                         : "border-white/10 bg-[#0f172a]"
                       : isFirst
                         ? `${theme.statAccentBg}`
@@ -752,7 +752,7 @@ function StatRankingCard({
                       className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl text-xs font-extrabold ${
                         isDark
                           ? isFirst
-                            ? "bg-yellow-400 text-black"
+                            ? theme.darkTopBadge
                             : "bg-white/10 text-zinc-200"
                           : isFirst
                             ? theme.statAccentRank
@@ -787,7 +787,7 @@ function StatRankingCard({
                     className={`shrink-0 rounded-2xl px-3 py-1.5 text-sm font-extrabold ${
                       isDark
                         ? isFirst
-                          ? "bg-yellow-500/15 text-yellow-300"
+                          ? `${theme.darkAccentBg} ${theme.darkAccentText}`
                           : "bg-white/5 text-zinc-200"
                         : isFirst
                           ? `${theme.primaryBadge}`
@@ -1043,11 +1043,7 @@ export default function CasernaKartAppModerno() {
                 }`}
               >
                 <div className="mb-1 flex items-center justify-between">
-                  <p
-                    className={`text-[8px] font-bold uppercase tracking-[0.16em] ${
-                      isDarkMode ? "text-zinc-400" : "text-zinc-400"
-                    }`}
-                  >
+                  <p className={`text-[8px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-400" : "text-zinc-400"}`}>
                     Categoria
                   </p>
                   <div
@@ -1101,7 +1097,7 @@ export default function CasernaKartAppModerno() {
                     onClick={toggleDarkMode}
                     className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition-all duration-200 ${
                       isDarkMode
-                        ? "border-yellow-500/30 bg-[#0f172a] text-yellow-300 hover:bg-yellow-500/10"
+                        ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText} hover:opacity-90`
                         : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50"
                     }`}
                     aria-label={isDarkMode ? "Ativar modo diurno" : "Ativar modo noturno"}
@@ -1160,14 +1156,14 @@ export default function CasernaKartAppModerno() {
         <section
           className={`overflow-hidden rounded-[24px] border px-3 py-3 shadow-sm ${
             isDarkMode
-              ? "border-white/10 bg-gradient-to-br from-[#111827] via-[#111827] to-[#0f172a]"
+              ? `border-white/10 bg-gradient-to-br ${theme.darkAccentCard}`
               : `${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow}`
           }`}
         >
           <div
             className={`mb-3 rounded-[18px] border px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] ${
               isDarkMode
-                ? "border-white/10 bg-gradient-to-b from-[#111827] to-[#161e2b]"
+                ? `${theme.darkAccentBorder} bg-gradient-to-b from-[#111827] to-[#161e2b]`
                 : `${theme.heroBorder} bg-gradient-to-b ${theme.heroBg}`
             }`}
           >
@@ -1175,10 +1171,10 @@ export default function CasernaKartAppModerno() {
               <div className="flex items-center gap-3.5">
                 <div
                   className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] shadow-sm ${
-                    isDarkMode ? "bg-yellow-500/15" : theme.primaryIconWrap
+                    isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                   }`}
                 >
-                  <Trophy className={`h-5.5 w-5.5 ${isDarkMode ? "text-yellow-300" : theme.primaryIcon}`} />
+                  <Trophy className={`h-5.5 w-5.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
                 </div>
 
                 <div className="flex flex-col justify-center">
@@ -1202,6 +1198,7 @@ export default function CasernaKartAppModerno() {
               accent
               compact
               isDark={isDarkMode}
+              categoryTheme={theme}
               accentStyles={{
                 border: theme.heroBorder,
                 bg: `bg-gradient-to-b ${theme.heroBg}`,
@@ -1234,7 +1231,7 @@ export default function CasernaKartAppModerno() {
                 <div
                   className={`mt-2 inline-flex rounded-full border px-2.5 py-1 ${
                     isDarkMode
-                      ? "border-yellow-500/25 bg-yellow-500/10 text-yellow-300"
+                      ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                       : theme.heroChip
                   }`}
                 >
@@ -1243,7 +1240,13 @@ export default function CasernaKartAppModerno() {
               </div>
             </HighlightCard>
 
-            <HighlightCard title="Vitórias" icon={Medal} compact isDark={isDarkMode}>
+            <HighlightCard
+              title="Vitórias"
+              icon={Medal}
+              compact
+              isDark={isDarkMode}
+              categoryTheme={theme}
+            >
               <div className="flex h-full flex-col items-center justify-center text-center">
                 <p className={`text-[36px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
                   {leader?.vitorias || 0}
@@ -1278,7 +1281,13 @@ export default function CasernaKartAppModerno() {
               </CardContent>
             </Card>
 
-            <HighlightCard title="Pódios" icon={Medal} compact isDark={isDarkMode}>
+            <HighlightCard
+              title="Pódios"
+              icon={Medal}
+              compact
+              isDark={isDarkMode}
+              categoryTheme={theme}
+            >
               <div className="flex h-full flex-col items-center justify-center text-center">
                 <p className={`text-[36px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
                   {leader?.podios || 0}
@@ -1297,7 +1306,7 @@ export default function CasernaKartAppModerno() {
               value="classificacao"
               className={`h-[62px] rounded-[18px] px-2 py-0 shadow-sm transition-all duration-200 ${
                 isDarkMode
-                  ? "border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:border-yellow-500/30 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]"
+                  ? `border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:${theme.darkAccentBorder} data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]`
                   : "border border-zinc-200 bg-white text-zinc-500 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.06)]"
               }`}
             >
@@ -1319,7 +1328,7 @@ export default function CasernaKartAppModerno() {
               value="piloto"
               className={`h-[62px] rounded-[18px] px-2 py-0 shadow-sm transition-all duration-200 ${
                 isDarkMode
-                  ? "border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:border-yellow-500/30 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]"
+                  ? `border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:${theme.darkAccentBorder} data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]`
                   : "border border-zinc-200 bg-white text-zinc-500 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.06)]"
               }`}
             >
@@ -1341,7 +1350,7 @@ export default function CasernaKartAppModerno() {
               value="stats"
               className={`h-[62px] rounded-[18px] px-2 py-0 shadow-sm transition-all duration-200 ${
                 isDarkMode
-                  ? "border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:border-yellow-500/30 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]"
+                  ? `border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:${theme.darkAccentBorder} data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]`
                   : "border border-zinc-200 bg-white text-zinc-500 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.06)]"
               }`}
             >
@@ -1364,7 +1373,7 @@ export default function CasernaKartAppModerno() {
             <Card
               className={`rounded-[22px] shadow-sm ${
                 isDarkMode
-                  ? "border border-white/10 bg-[#111827]"
+                  ? `border ${theme.darkAccentBorder} bg-[#111827]`
                   : `border ${theme.searchBorder} bg-gradient-to-br from-white via-white to-zinc-50/70`
               }`}
             >
@@ -1372,10 +1381,10 @@ export default function CasernaKartAppModerno() {
                 <div className="mb-3 flex items-center gap-2.5">
                   <div
                     className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
-                      isDarkMode ? "bg-white/5" : theme.primaryIconWrap
+                      isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                     }`}
                   >
-                    <Search className={`h-4.5 w-4.5 ${isDarkMode ? "text-zinc-300" : theme.searchIcon}`} />
+                    <Search className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.searchIcon}`} />
                   </div>
 
                   <div className="min-w-0 flex-1">
@@ -1390,7 +1399,7 @@ export default function CasernaKartAppModerno() {
                   <div
                     className={`shrink-0 rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] ${
                       isDarkMode
-                        ? "border-yellow-500/25 bg-yellow-500/10 text-yellow-300"
+                        ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                         : theme.searchBadge
                     }`}
                   >
@@ -1401,7 +1410,7 @@ export default function CasernaKartAppModerno() {
                 <div
                   className={`group flex items-center rounded-[18px] border px-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.98)] transition ${
                     isDarkMode
-                      ? "border-white/10 bg-[#0f172a]"
+                      ? `${theme.darkAccentBorder} bg-[#0f172a]`
                       : `border-black/5 bg-gradient-to-b from-white to-zinc-50 focus-within:ring-4 ${theme.searchGlow}`
                   }`}
                 >
@@ -1425,7 +1434,7 @@ export default function CasernaKartAppModerno() {
             <Card
               className={`overflow-hidden rounded-[24px] shadow-sm ${
                 isDarkMode
-                  ? "border border-white/10 bg-[#111827]"
+                  ? `border ${theme.darkAccentBorder} bg-[#111827]`
                   : `border ${theme.titleBorder} bg-gradient-to-br ${theme.titleBg}`
               }`}
             >
@@ -1439,10 +1448,10 @@ export default function CasernaKartAppModerno() {
                     <div className="flex min-w-0 items-center gap-3">
                       <div
                         className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
-                          isDarkMode ? "bg-white/5 border border-white/10" : theme.titleIconWrap
+                          isDarkMode ? `${theme.darkAccentIconWrap} border ${theme.darkAccentBorder}` : theme.titleIconWrap
                         }`}
                       >
-                        <Swords className={`h-5 w-5 ${isDarkMode ? "text-zinc-300" : theme.titleIcon}`} />
+                        <Swords className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.titleIcon}`} />
                       </div>
 
                       <div className="min-w-0">
@@ -1478,13 +1487,13 @@ export default function CasernaKartAppModerno() {
                         <div
                           className={`absolute inset-0 rounded-full ${
                             isDarkMode
-                              ? "bg-gradient-to-b from-white/20 via-white/25 to-white/20"
+                              ? `${theme.darkAccentDivider}`
                               : `bg-gradient-to-b ${theme.lineTrack}`
                           }`}
                         />
                         <div
                           className={`absolute left-1/2 top-0 h-full w-[10px] -translate-x-1/2 rounded-full blur-md ${
-                            isDarkMode ? "bg-white/10" : theme.lineGlow
+                            isDarkMode ? theme.darkAccentBg : theme.lineGlow
                           }`}
                         />
                       </div>
@@ -1502,7 +1511,7 @@ export default function CasernaKartAppModerno() {
                           const positionBadgeStyles =
                             index === 0
                               ? isDarkMode
-                                ? "bg-yellow-400 text-black"
+                                ? theme.darkTopBadge
                                 : `${theme.primaryBadge}`
                               : index === 1
                                 ? isDarkMode
@@ -1535,7 +1544,7 @@ export default function CasernaKartAppModerno() {
                                     isDarkMode ? "bg-[#111827]" : "bg-white"
                                   } ${
                                     isLeader
-                                      ? "border-yellow-400"
+                                      ? theme.darkAccentBorder
                                       : index === 1
                                         ? isDarkMode
                                           ? "border-zinc-500"
@@ -1546,11 +1555,15 @@ export default function CasernaKartAppModerno() {
                                   <div
                                     className={`h-2.5 w-2.5 rounded-full ${
                                       isLeader
-                                        ? "bg-yellow-400"
+                                        ? isDarkMode
+                                          ? theme.darkAccentBg.replace("bg-", "bg-").includes("orange")
+                                            ? "bg-orange-400"
+                                            : theme.darkAccentBg.includes("blue")
+                                              ? "bg-blue-400"
+                                              : "bg-yellow-400"
+                                          : "bg-yellow-400"
                                         : index === 1
-                                          ? isDarkMode
-                                            ? "bg-zinc-400"
-                                            : "bg-zinc-400"
+                                          ? "bg-zinc-400"
                                           : "bg-amber-500"
                                     }`}
                                   />
@@ -1563,8 +1576,10 @@ export default function CasernaKartAppModerno() {
                                 className={`w-full border px-3 ${cardPadding} ${cardRadius} text-left transition hover:scale-[0.995] active:scale-[0.99] ${
                                   isDarkMode
                                     ? isLeader
-                                      ? "border-yellow-500/25 bg-gradient-to-r from-[#161e2b] to-[#111827] shadow-[0_10px_22px_rgba(0,0,0,0.35)]"
-                                      : "border-white/10 bg-[#111827] hover:bg-[#161e2b]"
+                                      ? `${theme.darkAccentBorder} ${theme.darkLeaderRow} shadow-[0_10px_22px_rgba(0,0,0,0.35)]`
+                                      : index === 1
+                                        ? "border-white/10 bg-[#111827] hover:bg-[#161e2b]"
+                                        : "border-white/10 bg-[#111827] hover:bg-[#161e2b]"
                                     : isLeader
                                       ? `${theme.heroBorder} ${theme.leaderGlow} bg-gradient-to-r ${theme.heroBg}`
                                       : "border-black/5 bg-white hover:bg-zinc-50/80"
@@ -1591,7 +1606,7 @@ export default function CasernaKartAppModerno() {
                                         <span
                                           className={`inline-flex rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] ${
                                             isDarkMode
-                                              ? "border-yellow-500/25 bg-yellow-500/10 text-yellow-300"
+                                              ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                                               : theme.heroChip
                                           }`}
                                         >
@@ -1611,7 +1626,7 @@ export default function CasernaKartAppModerno() {
                                         <span
                                           className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold ${
                                             isDarkMode
-                                              ? "border-white/10 bg-white/5 text-zinc-300"
+                                              ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                                               : "border-zinc-200 bg-white text-zinc-600"
                                           }`}
                                         >
@@ -1641,10 +1656,10 @@ export default function CasernaKartAppModerno() {
 
                                     <div
                                       className={`flex items-center justify-center ${arrowSize} ${
-                                        isDarkMode ? "bg-white/5" : "bg-zinc-100"
+                                        isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
                                       }`}
                                     >
-                                      <ChevronRight className={`h-4 w-4 ${isDarkMode ? "text-zinc-300" : "text-zinc-500"}`} />
+                                      <ChevronRight className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : "text-zinc-500"}`} />
                                     </div>
                                   </div>
                                 </div>
@@ -1663,7 +1678,7 @@ export default function CasernaKartAppModerno() {
               <div
                 className={`overflow-hidden rounded-[24px] shadow-sm ${
                   isDarkMode
-                    ? "border border-white/10 bg-[#111827]"
+                    ? `border ${theme.darkAccentBorder} bg-[#111827]`
                     : `border ${theme.titleBorder} bg-gradient-to-br ${theme.titleBg}`
                 }`}
               >
@@ -1678,7 +1693,7 @@ export default function CasernaKartAppModerno() {
                         <div
                           className={`inline-flex max-w-full items-center justify-center rounded-[18px] border px-4 py-2 shadow-[0_4px_10px_rgba(0,0,0,0.08)] ${
                             isDarkMode
-                              ? "border-white/10 bg-[#161e2b]"
+                              ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft}`
                               : theme.titlePill
                           }`}
                         >
@@ -1704,11 +1719,11 @@ export default function CasernaKartAppModerno() {
                     <div
                       className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border shadow-[0_4px_10px_rgba(0,0,0,0.08)] ${
                         isDarkMode
-                          ? "border-white/10 bg-[#161e2b]"
+                          ? `${theme.darkAccentBorder} ${theme.darkAccentIconWrap}`
                           : theme.titleIconWrap
                       }`}
                     >
-                      <TableProperties className={`h-5 w-5 ${isDarkMode ? "text-zinc-300" : theme.titleIcon}`} />
+                      <TableProperties className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.titleIcon}`} />
                     </div>
                   </div>
                 </div>
@@ -1731,10 +1746,10 @@ export default function CasernaKartAppModerno() {
                       <div className="flex items-center gap-2">
                         <div
                           className={`flex h-8 w-8 items-center justify-center rounded-xl ${
-                            isDarkMode ? "bg-white/5" : "bg-zinc-100"
+                            isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
                           }`}
                         >
-                          <TableProperties className={`h-4 w-4 ${isDarkMode ? "text-zinc-300" : "text-zinc-600"}`} />
+                          <TableProperties className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : "text-zinc-600"}`} />
                         </div>
                         <div>
                           <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
@@ -1749,7 +1764,7 @@ export default function CasernaKartAppModerno() {
                       <div
                         className={`rounded-full border px-3 py-1 text-[11px] font-bold ${
                           isDarkMode
-                            ? "border-white/10 bg-white/5 text-zinc-200"
+                            ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                             : "border-black/5 bg-zinc-50 text-zinc-700"
                         }`}
                       >
@@ -1775,7 +1790,7 @@ export default function CasernaKartAppModerno() {
                         <tr
                           className={`text-[10px] font-bold uppercase tracking-[0.14em] backdrop-blur ${
                             isDarkMode
-                              ? "border-b border-white/10 bg-[#161e2b] text-zinc-400"
+                              ? `border-b border-white/10 bg-[#161e2b] ${theme.darkAccentText}`
                               : `border-b border-black/5 ${theme.tableHeadBg} text-zinc-500`
                           }`}
                         >
@@ -1799,11 +1814,11 @@ export default function CasernaKartAppModerno() {
 
                           const darkRow = isTop6
                             ? index === 0
-                              ? "bg-gradient-to-r from-yellow-500/10 via-[#161e2b] to-[#111827] border-l-[4px] border-l-yellow-400"
+                              ? theme.darkLeaderRow
                               : index === 1
-                                ? "bg-gradient-to-r from-white/5 via-[#111827] to-[#111827] border-l-[4px] border-l-zinc-400"
+                                ? theme.darkSecondRow
                                 : index === 2
-                                  ? "bg-gradient-to-r from-amber-500/10 via-[#111827] to-[#111827] border-l-[4px] border-l-amber-500"
+                                  ? theme.darkThirdRow
                                   : "bg-[#111827]"
                             : `${index % 2 === 0 ? "bg-[#111827]" : "bg-[#0f172a]"} hover:bg-[#161e2b]`;
 
@@ -1828,7 +1843,7 @@ export default function CasernaKartAppModerno() {
                                     className={`relative flex h-8 w-8 items-center justify-center rounded-xl shadow-sm ${
                                       isDarkMode
                                         ? index === 0
-                                          ? "bg-yellow-400 text-black"
+                                          ? theme.darkTopBadge
                                           : index === 1
                                             ? "bg-white/10 text-white"
                                             : index === 2
@@ -1865,7 +1880,7 @@ export default function CasernaKartAppModerno() {
                                         <span
                                           className={`inline-flex max-w-full whitespace-normal break-words rounded-full border px-2 py-0.5 text-[10px] font-semibold italic tracking-[0.02em] ${
                                             isDarkMode
-                                              ? "border-white/10 bg-white/5 text-zinc-300"
+                                              ? `${theme.darkAccentBorder} ${theme.darkAccentBg} text-zinc-200`
                                               : styles.chip
                                           }`}
                                         >
@@ -1881,7 +1896,7 @@ export default function CasernaKartAppModerno() {
                                 className={`px-0.5 py-3 text-center align-middle text-[12px] font-extrabold ${
                                   isDarkMode
                                     ? index === 0
-                                      ? "text-yellow-300"
+                                      ? theme.darkAccentText
                                       : "text-white"
                                     : isTop6
                                       ? styles.points
@@ -1968,8 +1983,8 @@ export default function CasernaKartAppModerno() {
                 }`}
               >
                 <CardContent className="p-8 text-center">
-                  <div className={`mx-auto flex h-14 w-14 items-center justify-center rounded-3xl ${isDarkMode ? "bg-white/5" : "bg-zinc-100"}`}>
-                    <User className={`h-7 w-7 ${isDarkMode ? "text-zinc-300" : "text-zinc-500"}`} />
+                  <div className={`mx-auto flex h-14 w-14 items-center justify-center rounded-3xl ${isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"}`}>
+                    <User className={`h-7 w-7 ${isDarkMode ? theme.darkAccentText : "text-zinc-500"}`} />
                   </div>
                   <p className={`mt-4 text-base font-semibold ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
                     Nenhum piloto selecionado
@@ -1984,7 +1999,7 @@ export default function CasernaKartAppModerno() {
                 <Card
                   className={`overflow-hidden rounded-[24px] shadow-sm ${
                     isDarkMode
-                      ? "border border-white/10 bg-[#111827]"
+                      ? `border ${theme.darkAccentBorder} bg-gradient-to-br ${theme.darkAccentCard}`
                       : `${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow}`
                   }`}
                 >
@@ -2017,7 +2032,7 @@ export default function CasernaKartAppModerno() {
                                 onClick={handleBackToRanking}
                                 className={`inline-flex items-center gap-2 rounded-2xl px-3 py-2 text-sm font-medium transition ${
                                   isDarkMode
-                                    ? "border border-white/10 bg-white/5 text-zinc-100 hover:bg-white/10"
+                                    ? `border ${theme.darkAccentBorder} ${theme.darkAccentBg} text-zinc-100 hover:opacity-90`
                                     : "border border-black/5 bg-zinc-50 text-zinc-800 hover:bg-zinc-100"
                                 }`}
                               >
@@ -2030,7 +2045,7 @@ export default function CasernaKartAppModerno() {
                                   variant="outline"
                                   className={
                                     isDarkMode
-                                      ? "border-white/10 bg-white/5 text-zinc-200"
+                                      ? `${theme.darkAccentBorder} ${theme.darkAccentBg} text-zinc-200`
                                       : categoryColors[category] || "border-black/10 text-zinc-700"
                                   }
                                 >
@@ -2064,7 +2079,7 @@ export default function CasernaKartAppModerno() {
                                   <span
                                     className={`inline-flex max-w-full break-words rounded-full border px-3 py-1.5 text-[11px] font-semibold italic ${
                                       isDarkMode
-                                        ? "border-white/10 bg-white/5 text-zinc-300"
+                                        ? `${theme.darkAccentBorder} ${theme.darkAccentBg} text-zinc-300`
                                         : theme.heroChip
                                     }`}
                                   >
@@ -2081,7 +2096,7 @@ export default function CasernaKartAppModerno() {
                                       : "border border-black/5 bg-zinc-50"
                                   }`}
                                 >
-                                  <Crown className={`h-3.5 w-3.5 ${isDarkMode ? "text-zinc-300" : "text-zinc-600"}`} />
+                                  <Crown className={`h-3.5 w-3.5 ${isDarkMode ? theme.darkAccentText : "text-zinc-600"}`} />
                                   <span className={`text-[11px] font-semibold ${isDarkMode ? "text-zinc-200" : "text-zinc-700"}`}>
                                     {selectedPilot.pos}º colocado
                                   </span>
@@ -2090,7 +2105,7 @@ export default function CasernaKartAppModerno() {
                                 <div
                                   className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 ${
                                     isDarkMode
-                                      ? "border-yellow-500/25 bg-yellow-500/10 text-yellow-300"
+                                      ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                                       : theme.primaryBadge
                                   }`}
                                 >
@@ -2105,7 +2120,7 @@ export default function CasernaKartAppModerno() {
                             <div
                               className={`mt-4 rounded-[20px] border p-3 ${
                                 isDarkMode
-                                  ? "border-white/10 bg-gradient-to-r from-[#111827] to-[#161e2b]"
+                                  ? `${theme.darkAccentBorder} bg-gradient-to-r from-[#111827] to-[#161e2b]`
                                   : `${theme.heroBorder} bg-gradient-to-r ${theme.heroBg}`
                               }`}
                             >
@@ -2124,10 +2139,10 @@ export default function CasernaKartAppModerno() {
 
                                 <div
                                   className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${
-                                    isDarkMode ? "bg-yellow-500/15" : theme.primaryIconWrap
+                                    isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                                   }`}
                                 >
-                                  <Trophy className={`h-5 w-5 ${isDarkMode ? "text-yellow-300" : theme.primaryIcon}`} />
+                                  <Trophy className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
                                 </div>
                               </div>
                             </div>
@@ -2146,6 +2161,7 @@ export default function CasernaKartAppModerno() {
                     icon={Crown}
                     accent
                     isDark={isDarkMode}
+                    categoryTheme={theme}
                   />
                   <CompactStatCard
                     title="Vitórias"
@@ -2153,6 +2169,7 @@ export default function CasernaKartAppModerno() {
                     subtitle="até agora"
                     icon={Medal}
                     isDark={isDarkMode}
+                    categoryTheme={theme}
                   />
                   <CompactStatCard
                     title="Poles"
@@ -2160,6 +2177,7 @@ export default function CasernaKartAppModerno() {
                     subtitle="qualify"
                     icon={Flag}
                     isDark={isDarkMode}
+                    categoryTheme={theme}
                   />
                   <CompactStatCard
                     title="VMR"
@@ -2168,6 +2186,7 @@ export default function CasernaKartAppModerno() {
                     icon={Timer}
                     accent
                     isDark={isDarkMode}
+                    categoryTheme={theme}
                   />
                   <CompactStatCard
                     title="Pódios"
@@ -2175,6 +2194,7 @@ export default function CasernaKartAppModerno() {
                     subtitle="na classificação"
                     icon={Medal}
                     isDark={isDarkMode}
+                    categoryTheme={theme}
                   />
                   <CompactStatCard
                     title="Participações"
@@ -2182,6 +2202,7 @@ export default function CasernaKartAppModerno() {
                     subtitle="corridas válidas"
                     icon={Users}
                     isDark={isDarkMode}
+                    categoryTheme={theme}
                   />
                   <CompactStatCard
                     title="ADV"
@@ -2190,6 +2211,7 @@ export default function CasernaKartAppModerno() {
                     icon={Gauge}
                     accent
                     isDark={isDarkMode}
+                    categoryTheme={theme}
                   />
                   <CompactStatCard
                     title="Descarte"
@@ -2197,6 +2219,7 @@ export default function CasernaKartAppModerno() {
                     subtitle="campeonato"
                     icon={Gauge}
                     isDark={isDarkMode}
+                    categoryTheme={theme}
                   />
                 </div>
               </div>
@@ -2207,7 +2230,7 @@ export default function CasernaKartAppModerno() {
             <div
               className={`overflow-hidden rounded-[24px] shadow-sm ${
                 isDarkMode
-                  ? "border border-white/10 bg-[#111827]"
+                  ? `border ${theme.darkAccentBorder} bg-[#111827]`
                   : `border ${theme.titleBorder} bg-gradient-to-br ${theme.statsSoft}`
               }`}
             >
@@ -2220,10 +2243,10 @@ export default function CasernaKartAppModerno() {
                   <div className="flex min-w-0 items-center gap-3">
                     <div
                       className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${
-                        isDarkMode ? "bg-white/5" : theme.statsIconWrap
+                        isDarkMode ? theme.darkAccentIconWrap : theme.statsIconWrap
                       }`}
                     >
-                      <BarChart3 className={`h-5 w-5 ${isDarkMode ? "text-zinc-300" : theme.statsIcon}`} />
+                      <BarChart3 className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.statsIcon}`} />
                     </div>
 
                     <div className="min-w-0">
@@ -2242,7 +2265,7 @@ export default function CasernaKartAppModerno() {
                   <div
                     className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
                       isDarkMode
-                        ? "border-white/10 bg-white/5 text-zinc-200"
+                        ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                         : theme.headerChip
                     }`}
                   >
@@ -2267,10 +2290,10 @@ export default function CasernaKartAppModerno() {
                 <CardTitle className={`flex items-center gap-3 ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
                   <div
                     className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
-                      isDarkMode ? "bg-white/5" : theme.statsIconWrap
+                      isDarkMode ? theme.darkAccentIconWrap : theme.statsIconWrap
                     }`}
                   >
-                    <BarChart3 className={`h-5 w-5 ${isDarkMode ? "text-zinc-300" : theme.statsIcon}`} />
+                    <BarChart3 className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.statsIcon}`} />
                   </div>
                   <div>
                     <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
@@ -2320,7 +2343,7 @@ export default function CasernaKartAppModerno() {
                       />
                       <Bar
                         dataKey="pontos"
-                        fill={isDarkMode ? "#facc15" : theme.chartBar}
+                        fill={isDarkMode ? theme.darkChartBar : theme.chartBar}
                         radius={[10, 10, 0, 0]}
                       />
                     </BarChart>
