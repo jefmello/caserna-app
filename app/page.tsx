@@ -390,51 +390,6 @@ function getCategoryTheme(category: string) {
   return themes[category as keyof typeof themes] || themes.Elite;
 }
 
-function getGapToLeader(leaderPoints: number, pilotPoints: number) {
-  const diff = leaderPoints - pilotPoints;
-  if (diff <= 0) return "líder";
-  return `-${diff} pts do líder`;
-}
-
-function getTitleFightStatus(top3: RankingItem[]) {
-  if (top3.length < 2) {
-    return {
-      label: "definição inicial",
-      tone: "border-zinc-200 bg-zinc-50 text-zinc-700",
-    };
-  }
-
-  const first = top3[0];
-  const second = top3[1];
-  const diff = first.pontos - second.pontos;
-
-  if (diff === 0) {
-    return {
-      label: "empate técnico",
-      tone: "border-red-200 bg-red-50 text-red-700",
-    };
-  }
-
-  if (diff <= 3) {
-    return {
-      label: "briga acirrada",
-      tone: "border-emerald-200 bg-emerald-50 text-emerald-700",
-    };
-  }
-
-  if (diff <= 8) {
-    return {
-      label: "disputa aberta",
-      tone: "border-yellow-200 bg-yellow-50 text-yellow-700",
-    };
-  }
-
-  return {
-    label: "líder com vantagem",
-    tone: "border-zinc-200 bg-zinc-50 text-zinc-700",
-  };
-}
-
 function CompactStatCard({
   title,
   value,
@@ -1568,7 +1523,7 @@ export default function CasernaKartAppModerno() {
                           const positionSize = isLeader
                             ? "h-14 w-14 text-[18px]"
                             : "h-11 w-11 text-sm";
-                          const nameSize = isLeader ? "text-[14px]" : "text-[13px]";
+                          const nameSize = isLeader ? "text-[13px]" : "text-[13px]";
                           const pointsValueSize = isLeader ? "text-[28px]" : "text-[20px]";
                           const pointsLabelSize = isLeader ? "text-[11px]" : "text-[10px]";
 
@@ -1635,7 +1590,7 @@ export default function CasernaKartAppModerno() {
                                   <div className="min-w-0 flex-1">
                                     <div className="flex items-center gap-2">
                                       <p
-                                        className={`min-w-0 whitespace-nowrap font-extrabold leading-none tracking-tight ${
+                                        className={`min-w-0 flex-1 whitespace-nowrap font-extrabold leading-none tracking-tight ${
                                           isDarkMode ? "text-white" : "text-zinc-950"
                                         } ${nameSize}`}
                                       >
@@ -1664,7 +1619,7 @@ export default function CasernaKartAppModerno() {
 
                                       {!isLeader ? (
                                         <span
-                                          className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold ${
+                                          className={`inline-flex whitespace-nowrap rounded-full border px-2.5 py-1 text-[10px] font-semibold ${
                                             isDarkMode
                                               ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                                               : "border-zinc-200 bg-white text-zinc-600"
