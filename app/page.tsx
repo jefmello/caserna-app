@@ -2399,7 +2399,7 @@ export default function CasernaKartAppModerno() {
                                 isDarkMode ? "border border-white/10" : "border border-black/5"
                               }`}
                             >
-                              <div className="relative h-[208px] w-full md:h-full">
+                              <div className="relative w-full aspect-square">
                                 <PilotPhotoSlot
                                   pilot={selectedPilot}
                                   alt={selectedPilotShortName}
