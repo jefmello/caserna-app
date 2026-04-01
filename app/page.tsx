@@ -261,6 +261,7 @@ function getCategoryTheme(category: string) {
       chartGrid: "rgba(249,115,22,0.12)",
       chartAxis: "#9a3412",
       statAccentBg: "border-orange-200 bg-orange-50",
+      statAccentValue: "text-orange-800",
       statAccentRank: "bg-orange-500 text-white",
       lineTrack: "from-orange-200 via-orange-300 to-orange-200",
       lineGlow: "bg-orange-300/50",
@@ -313,6 +314,7 @@ function getCategoryTheme(category: string) {
       chartGrid: "rgba(59,130,246,0.12)",
       chartAxis: "#1d4ed8",
       statAccentBg: "border-blue-200 bg-blue-50",
+      statAccentValue: "text-blue-800",
       statAccentRank: "bg-blue-500 text-white",
       lineTrack: "from-blue-200 via-blue-300 to-blue-200",
       lineGlow: "bg-blue-300/50",
@@ -365,6 +367,7 @@ function getCategoryTheme(category: string) {
       chartGrid: "rgba(250,204,21,0.18)",
       chartAxis: "#a16207",
       statAccentBg: "border-yellow-200 bg-yellow-50",
+      statAccentValue: "text-yellow-800",
       statAccentRank: "bg-yellow-400 text-black",
       lineTrack: "from-yellow-200 via-yellow-300 to-yellow-200",
       lineGlow: "bg-yellow-300/50",
@@ -388,6 +391,44 @@ function getCategoryTheme(category: string) {
   };
 
   return themes[category as keyof typeof themes] || themes.Elite;
+}
+
+function getGapToLeader(leaderPoints: number, pilotPoints: number) {
+  const diff = leaderPoints - pilotPoints;
+  if (diff <= 0) return "líder";
+  return `-${diff} pts do líder`;
+}
+
+function getTitleFightStatus(top3: RankingItem[]) {
+  if (!top3 || top3.length < 2) {
+    return {
+      label: "SEM DISPUTA",
+      tone: "border-zinc-200 bg-zinc-100 text-zinc-600",
+    };
+  }
+
+  const leader = top3[0];
+  const second = top3[1];
+  const diff = leader.pontos - second.pontos;
+
+  if (diff <= 3) {
+    return {
+      label: "BRIGA ACIRRADA",
+      tone: "border-emerald-300 bg-emerald-100 text-emerald-800",
+    };
+  }
+
+  if (diff <= 8) {
+    return {
+      label: "DISPUTA CONTROLADA",
+      tone: "border-yellow-300 bg-yellow-100 text-yellow-800",
+    };
+  }
+
+  return {
+    label: "LIDERANÇA ISOLADA",
+    tone: "border-zinc-300 bg-zinc-100 text-zinc-700",
+  };
 }
 
 function CompactStatCard({
@@ -634,7 +675,9 @@ function PilotPhotoSlot({
                 isDark ? "bg-white/5" : "bg-white"
               }`}
             >
-              <Camera className={`h-5 w-5 ${isDark ? "text-zinc-400" : "text-zinc-500"}`} />
+              <Camera
+                className={`h-5 w-5 ${isDark ? "text-zinc-400" : "text-zinc-500"}`}
+              />
             </div>
             <p
               className={`text-[11px] font-semibold uppercase tracking-[0.08em] ${
@@ -643,7 +686,11 @@ function PilotPhotoSlot({
             >
               Espaço foto
             </p>
-            <p className={`mt-1 text-[10px] font-medium ${isDark ? "text-zinc-500" : "text-zinc-500"}`}>
+            <p
+              className={`mt-1 text-[10px] font-medium ${
+                isDark ? "text-zinc-500" : "text-zinc-500"
+              }`}
+            >
               piloto 1:1
             </p>
           </div>
@@ -693,7 +740,9 @@ function StatRankingCard({
               isDark ? theme.darkAccentIconWrap : theme.statsIconWrap
             }`}
           >
-            <Icon className={`h-4 w-4 ${isDark ? theme.darkAccentText : theme.statsIcon}`} />
+            <Icon
+              className={`h-4 w-4 ${isDark ? theme.darkAccentText : theme.statsIcon}`}
+            />
           </div>
           <div>
             <p
@@ -958,7 +1007,11 @@ export default function CasernaKartAppModerno() {
             <p className="text-xl font-semibold tracking-tight">
               Carregando campeonato...
             </p>
-            <p className={`mt-2 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+            <p
+              className={`mt-2 text-sm ${
+                isDarkMode ? "text-zinc-400" : "text-zinc-500"
+              }`}
+            >
               Preparando classificação oficial
             </p>
           </div>
@@ -983,10 +1036,16 @@ export default function CasernaKartAppModerno() {
             }`}
           >
             <p className="text-2xl font-semibold tracking-tight">Erro</p>
-            <p className={`mt-2 ${isDarkMode ? "text-zinc-300" : "text-zinc-600"}`}>
+            <p
+              className={`mt-2 ${isDarkMode ? "text-zinc-300" : "text-zinc-600"}`}
+            >
               {error}
             </p>
-            <p className={`mt-4 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+            <p
+              className={`mt-4 text-sm ${
+                isDarkMode ? "text-zinc-400" : "text-zinc-500"
+              }`}
+            >
               Abra <strong>/api/ranking</strong> no navegador para testar.
             </p>
           </div>
@@ -1016,7 +1075,9 @@ export default function CasernaKartAppModerno() {
           <div className="space-y-1.5 px-2.5 pb-2 pt-2.5">
             <div
               className={`overflow-hidden rounded-[15px] ${
-                isDarkMode ? "border border-white/10 bg-[#0f172a]" : "border border-black/5 bg-zinc-50"
+                isDarkMode
+                  ? "border border-white/10 bg-[#0f172a]"
+                  : "border border-black/5 bg-zinc-50"
               }`}
             >
               <div className="relative h-[68px] w-full sm:h-[76px] md:h-[84px]">
@@ -1040,7 +1101,11 @@ export default function CasernaKartAppModerno() {
                 }`}
               >
                 <div className="mb-1 flex items-center justify-between">
-                  <p className={`text-[8px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-400" : "text-zinc-400"}`}>
+                  <p
+                    className={`text-[8px] font-bold uppercase tracking-[0.16em] ${
+                      isDarkMode ? "text-zinc-400" : "text-zinc-400"
+                    }`}
+                  >
                     Categoria
                   </p>
                   <div
@@ -1097,10 +1162,18 @@ export default function CasernaKartAppModerno() {
                         ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText} hover:opacity-90`
                         : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50"
                     }`}
-                    aria-label={isDarkMode ? "Ativar modo diurno" : "Ativar modo noturno"}
-                    title={isDarkMode ? "Ativar modo diurno" : "Ativar modo noturno"}
+                    aria-label={
+                      isDarkMode ? "Ativar modo diurno" : "Ativar modo noturno"
+                    }
+                    title={
+                      isDarkMode ? "Ativar modo diurno" : "Ativar modo noturno"
+                    }
                   >
-                    {isDarkMode ? <Sun className="h-4.5 w-4.5" /> : <Moon className="h-4.5 w-4.5" />}
+                    {isDarkMode ? (
+                      <Sun className="h-4.5 w-4.5" />
+                    ) : (
+                      <Moon className="h-4.5 w-4.5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -1113,7 +1186,11 @@ export default function CasernaKartAppModerno() {
                 }`}
               >
                 <div className="mb-1 flex items-center justify-between">
-                  <p className={`text-[8px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-400" : "text-zinc-400"}`}>
+                  <p
+                    className={`text-[8px] font-bold uppercase tracking-[0.16em] ${
+                      isDarkMode ? "text-zinc-400" : "text-zinc-400"
+                    }`}
+                  >
                     Campeonato
                   </p>
                   <div
@@ -1171,16 +1248,26 @@ export default function CasernaKartAppModerno() {
                     isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                   }`}
                 >
-                  <Trophy className={`h-5.5 w-5.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                  <Trophy
+                    className={`h-5.5 w-5.5 ${
+                      isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                    }`}
+                  />
                 </div>
 
                 <div className="flex flex-col justify-center">
-                  <p className={`text-[18px] font-extrabold uppercase tracking-[0.14em] leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                  <p
+                    className={`text-[18px] font-extrabold uppercase tracking-[0.14em] leading-none ${
+                      isDarkMode ? "text-white" : "text-zinc-950"
+                    }`}
+                  >
                     PILOTO DESTAQUE
                   </p>
-                  <p className={`mt-1 whitespace-nowrap text-[8.5px] font-semibold uppercase tracking-[0.08em] sm:text-[9px] ${
-                    isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                  }`}>
+                  <p
+                    className={`mt-1 whitespace-nowrap text-[8.5px] font-semibold uppercase tracking-[0.08em] sm:text-[9px] ${
+                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                    }`}
+                  >
                     LÍDER DA CATEGORIA E CAMPEONATO SELECIONADO
                   </p>
                 </div>
@@ -1217,10 +1304,18 @@ export default function CasernaKartAppModerno() {
             >
               <div className="flex h-full flex-col items-center justify-center text-center">
                 <div className="flex min-h-[62px] flex-col items-center justify-center">
-                  <p className={`text-[24px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                  <p
+                    className={`text-[24px] font-extrabold leading-none tracking-tight ${
+                      isDarkMode ? "text-white" : "text-zinc-950"
+                    }`}
+                  >
                     {leaderName.firstName.toUpperCase()}
                   </p>
-                  <p className={`mt-1 text-[16px] font-semibold leading-none tracking-tight ${isDarkMode ? "text-zinc-200" : "text-zinc-800"}`}>
+                  <p
+                    className={`mt-1 text-[16px] font-semibold leading-none tracking-tight ${
+                      isDarkMode ? "text-zinc-200" : "text-zinc-800"
+                    }`}
+                  >
                     {leaderName.lastName ? leaderName.lastName.toUpperCase() : ""}
                   </p>
                 </div>
@@ -1232,7 +1327,9 @@ export default function CasernaKartAppModerno() {
                       : theme.heroChip
                   }`}
                 >
-                  <p className="text-[11px] font-bold">{leader?.pontos || 0} pontos</p>
+                  <p className="text-[11px] font-bold">
+                    {leader?.pontos || 0} pontos
+                  </p>
                 </div>
               </div>
             </HighlightCard>
@@ -1245,10 +1342,18 @@ export default function CasernaKartAppModerno() {
               categoryTheme={theme}
             >
               <div className="flex h-full flex-col items-center justify-center text-center">
-                <p className={`text-[36px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                <p
+                  className={`text-[36px] font-extrabold leading-none tracking-tight ${
+                    isDarkMode ? "text-white" : "text-zinc-950"
+                  }`}
+                >
                   {leader?.vitorias || 0}
                 </p>
-                <p className={`mt-2 max-w-[110px] text-[11px] leading-snug ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                <p
+                  className={`mt-2 max-w-[110px] text-[11px] leading-snug ${
+                    isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                  }`}
+                >
                   vitórias nesta classificação
                 </p>
               </div>
@@ -1286,10 +1391,18 @@ export default function CasernaKartAppModerno() {
               categoryTheme={theme}
             >
               <div className="flex h-full flex-col items-center justify-center text-center">
-                <p className={`text-[36px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                <p
+                  className={`text-[36px] font-extrabold leading-none tracking-tight ${
+                    isDarkMode ? "text-white" : "text-zinc-950"
+                  }`}
+                >
                   {leader?.podios || 0}
                 </p>
-                <p className={`mt-2 max-w-[110px] text-[11px] leading-snug ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                <p
+                  className={`mt-2 max-w-[110px] text-[11px] leading-snug ${
+                    isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                  }`}
+                >
                   pódios nesta classificação
                 </p>
               </div>
@@ -1303,7 +1416,7 @@ export default function CasernaKartAppModerno() {
               value="classificacao"
               className={`h-[62px] rounded-[18px] px-2 py-0 shadow-sm transition-all duration-200 ${
                 isDarkMode
-                  ? `border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]`
+                  ? "border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]"
                   : "border border-zinc-200 bg-white text-zinc-500 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.06)]"
               }`}
             >
@@ -1325,7 +1438,7 @@ export default function CasernaKartAppModerno() {
               value="piloto"
               className={`h-[62px] rounded-[18px] px-2 py-0 shadow-sm transition-all duration-200 ${
                 isDarkMode
-                  ? `border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]`
+                  ? "border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]"
                   : "border border-zinc-200 bg-white text-zinc-500 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.06)]"
               }`}
             >
@@ -1347,7 +1460,7 @@ export default function CasernaKartAppModerno() {
               value="stats"
               className={`h-[62px] rounded-[18px] px-2 py-0 shadow-sm transition-all duration-200 ${
                 isDarkMode
-                  ? `border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]`
+                  ? "border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]"
                   : "border border-zinc-200 bg-white text-zinc-500 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.06)]"
               }`}
             >
@@ -1381,14 +1494,26 @@ export default function CasernaKartAppModerno() {
                       isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                     }`}
                   >
-                    <Search className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.searchIcon}`} />
+                    <Search
+                      className={`h-4.5 w-4.5 ${
+                        isDarkMode ? theme.darkAccentText : theme.searchIcon
+                      }`}
+                    />
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <p className={`text-[9px] font-bold uppercase tracking-[0.18em] ${isDarkMode ? "text-zinc-400" : "text-zinc-400"}`}>
+                    <p
+                      className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-400"
+                      }`}
+                    >
                       Busca rápida
                     </p>
-                    <p className={`mt-0.5 text-[12px] font-semibold leading-tight ${isDarkMode ? "text-white" : "text-zinc-900"}`}>
+                    <p
+                      className={`mt-0.5 text-[12px] font-semibold leading-tight ${
+                        isDarkMode ? "text-white" : "text-zinc-900"
+                      }`}
+                    >
                       Encontre um piloto na classificação
                     </p>
                   </div>
@@ -1412,7 +1537,11 @@ export default function CasernaKartAppModerno() {
                   }`}
                 >
                   <div className="flex h-9 w-8 items-center justify-center">
-                    <Search className={`h-4.5 w-4.5 shrink-0 ${isDarkMode ? "text-zinc-400" : "text-zinc-400"}`} />
+                    <Search
+                      className={`h-4.5 w-4.5 shrink-0 ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-400"
+                      }`}
+                    />
                   </div>
                   <Input
                     value={search}
@@ -1445,17 +1574,31 @@ export default function CasernaKartAppModerno() {
                     <div className="flex min-w-0 items-center gap-3">
                       <div
                         className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
-                          isDarkMode ? `${theme.darkAccentIconWrap} border ${theme.darkAccentBorder}` : theme.titleIconWrap
+                          isDarkMode
+                            ? `${theme.darkAccentIconWrap} border ${theme.darkAccentBorder}`
+                            : theme.titleIconWrap
                         }`}
                       >
-                        <Swords className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.titleIcon}`} />
+                        <Swords
+                          className={`h-5 w-5 ${
+                            isDarkMode ? theme.darkAccentText : theme.titleIcon
+                          }`}
+                        />
                       </div>
 
                       <div className="min-w-0">
-                        <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                        <p
+                          className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                          }`}
+                        >
                           Corrida pelo campeonato
                         </p>
-                        <h2 className={`text-[17px] font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                        <h2
+                          className={`text-[17px] font-extrabold tracking-tight ${
+                            isDarkMode ? "text-white" : "text-zinc-950"
+                          }`}
+                        >
                           Disputa pelo título
                         </h2>
                       </div>
@@ -1588,47 +1731,75 @@ export default function CasernaKartAppModerno() {
                                   </div>
 
                                   <div className="min-w-0 flex-1">
-                                    <div className="flex items-center gap-2">
-                                      <p
-                                        className={`min-w-0 flex-1 whitespace-nowrap font-extrabold leading-none tracking-tight ${
-                                          isDarkMode ? "text-white" : "text-zinc-950"
-                                        } ${nameSize}`}
-                                      >
-                                        {pilotName}
-                                      </p>
+                                    {isLeader ? (
+                                      <>
+                                        <div className="flex items-center justify-between gap-2">
+                                          <p
+                                            className={`min-w-0 flex-1 whitespace-nowrap font-extrabold leading-none tracking-tight ${
+                                              isDarkMode ? "text-white" : "text-zinc-950"
+                                            } ${nameSize}`}
+                                          >
+                                            {pilotName}
+                                          </p>
 
-                                      {isLeader ? (
-                                        <span
-                                          className={`shrink-0 inline-flex rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.1em] ${
-                                            isDarkMode
-                                              ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                                              : theme.heroChip
-                                          }`}
-                                        >
-                                          líder
-                                        </span>
-                                      ) : null}
-                                    </div>
+                                          <span
+                                            className={`shrink-0 inline-flex rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.1em] ${
+                                              isDarkMode
+                                                ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                                                : theme.heroChip
+                                            }`}
+                                          >
+                                            líder
+                                          </span>
+                                        </div>
 
-                                    <div className="mt-1.5 flex flex-wrap items-center gap-2">
-                                      {warName ? (
-                                        <p className={`whitespace-nowrap text-[10px] italic ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-                                          {warName}
-                                        </p>
-                                      ) : null}
+                                        <div className="mt-1.5 flex items-center gap-2">
+                                          {warName ? (
+                                            <p
+                                              className={`whitespace-nowrap text-[10px] italic ${
+                                                isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                                              }`}
+                                            >
+                                              {warName}
+                                            </p>
+                                          ) : null}
+                                        </div>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <div className="flex items-center gap-2">
+                                          <p
+                                            className={`min-w-0 flex-1 whitespace-nowrap font-extrabold leading-none tracking-tight ${
+                                              isDarkMode ? "text-white" : "text-zinc-950"
+                                            } ${nameSize}`}
+                                          >
+                                            {pilotName}
+                                          </p>
+                                        </div>
 
-                                      {!isLeader ? (
-                                        <span
-                                          className={`inline-flex whitespace-nowrap rounded-full border px-2.5 py-1 text-[10px] font-semibold ${
-                                            isDarkMode
-                                              ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                                              : "border-zinc-200 bg-white text-zinc-600"
-                                          }`}
-                                        >
-                                          {gapLabel}
-                                        </span>
-                                      ) : null}
-                                    </div>
+                                        <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                                          {warName ? (
+                                            <p
+                                              className={`whitespace-nowrap text-[10px] italic ${
+                                                isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                                              }`}
+                                            >
+                                              {warName}
+                                            </p>
+                                          ) : null}
+
+                                          <span
+                                            className={`inline-flex whitespace-nowrap rounded-full border px-2.5 py-1 text-[10px] font-semibold ${
+                                              isDarkMode
+                                                ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                                                : "border-zinc-200 bg-white text-zinc-600"
+                                            }`}
+                                          >
+                                            {gapLabel}
+                                          </span>
+                                        </div>
+                                      </>
+                                    )}
                                   </div>
 
                                   <div className="shrink-0">
@@ -1655,7 +1826,11 @@ export default function CasernaKartAppModerno() {
                                           isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
                                         }`}
                                       >
-                                        <ChevronRight className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : "text-zinc-500"}`} />
+                                        <ChevronRight
+                                          className={`h-4 w-4 ${
+                                            isDarkMode ? theme.darkAccentText : "text-zinc-500"
+                                          }`}
+                                        />
                                       </div>
                                     </div>
                                   </div>
@@ -1720,7 +1895,11 @@ export default function CasernaKartAppModerno() {
                           : theme.titleIconWrap
                       }`}
                     >
-                      <TableProperties className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.titleIcon}`} />
+                      <TableProperties
+                        className={`h-5 w-5 ${
+                          isDarkMode ? theme.darkAccentText : theme.titleIcon
+                        }`}
+                      />
                     </div>
                   </div>
                 </div>
@@ -1746,13 +1925,25 @@ export default function CasernaKartAppModerno() {
                             isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
                           }`}
                         >
-                          <TableProperties className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : "text-zinc-600"}`} />
+                          <TableProperties
+                            className={`h-4 w-4 ${
+                              isDarkMode ? theme.darkAccentText : "text-zinc-600"
+                            }`}
+                          />
                         </div>
                         <div>
-                          <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                          <p
+                            className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                              isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                            }`}
+                          >
                             Ranking oficial
                           </p>
-                          <p className={`text-[13px] font-semibold ${isDarkMode ? "text-white" : "text-zinc-900"}`}>
+                          <p
+                            className={`text-[13px] font-semibold ${
+                              isDarkMode ? "text-white" : "text-zinc-900"
+                            }`}
+                          >
                             {category} · {competitionLabels[competition] || competition}
                           </p>
                         </div>
@@ -1909,7 +2100,11 @@ export default function CasernaKartAppModerno() {
                                 </button>
                               </td>
 
-                              <td className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                              <td
+                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold ${
+                                  isDarkMode ? "text-white" : "text-zinc-950"
+                                }`}
+                              >
                                 <button
                                   type="button"
                                   onClick={() => handleSelectPilot(item)}
@@ -1919,7 +2114,11 @@ export default function CasernaKartAppModerno() {
                                 </button>
                               </td>
 
-                              <td className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                              <td
+                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold ${
+                                  isDarkMode ? "text-white" : "text-zinc-950"
+                                }`}
+                              >
                                 <button
                                   type="button"
                                   onClick={() => handleSelectPilot(item)}
@@ -1929,7 +2128,11 @@ export default function CasernaKartAppModerno() {
                                 </button>
                               </td>
 
-                              <td className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                              <td
+                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold ${
+                                  isDarkMode ? "text-white" : "text-zinc-950"
+                                }`}
+                              >
                                 <button
                                   type="button"
                                   onClick={() => handleSelectPilot(item)}
@@ -1939,7 +2142,11 @@ export default function CasernaKartAppModerno() {
                                 </button>
                               </td>
 
-                              <td className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                              <td
+                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold ${
+                                  isDarkMode ? "text-white" : "text-zinc-950"
+                                }`}
+                              >
                                 <button
                                   type="button"
                                   onClick={() => handleSelectPilot(item)}
@@ -1980,13 +2187,29 @@ export default function CasernaKartAppModerno() {
                 }`}
               >
                 <CardContent className="p-8 text-center">
-                  <div className={`mx-auto flex h-14 w-14 items-center justify-center rounded-3xl ${isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"}`}>
-                    <User className={`h-7 w-7 ${isDarkMode ? theme.darkAccentText : "text-zinc-500"}`} />
+                  <div
+                    className={`mx-auto flex h-14 w-14 items-center justify-center rounded-3xl ${
+                      isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
+                    }`}
+                  >
+                    <User
+                      className={`h-7 w-7 ${
+                        isDarkMode ? theme.darkAccentText : "text-zinc-500"
+                      }`}
+                    />
                   </div>
-                  <p className={`mt-4 text-base font-semibold ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                  <p
+                    className={`mt-4 text-base font-semibold ${
+                      isDarkMode ? "text-white" : "text-zinc-950"
+                    }`}
+                  >
                     Nenhum piloto selecionado
                   </p>
-                  <p className={`mt-2 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                  <p
+                    className={`mt-2 text-sm ${
+                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                    }`}
+                  >
                     Toque em um piloto na classificação para abrir o perfil.
                   </p>
                 </CardContent>
@@ -2009,10 +2232,16 @@ export default function CasernaKartAppModerno() {
                       <div className="p-3">
                         <div
                           className={`grid grid-cols-[124px_1fr] gap-3 rounded-[22px] p-3 shadow-[0_8px_24px_rgba(15,23,42,0.05)] ${
-                            isDarkMode ? "border border-white/10 bg-[#0f172a]" : "border border-black/5 bg-white"
+                            isDarkMode
+                              ? "border border-white/10 bg-[#0f172a]"
+                              : "border border-black/5 bg-white"
                           }`}
                         >
-                          <div className={`overflow-hidden rounded-[20px] ${isDarkMode ? "border border-white/10" : "border border-black/5"}`}>
+                          <div
+                            className={`overflow-hidden rounded-[20px] ${
+                              isDarkMode ? "border border-white/10" : "border border-black/5"
+                            }`}
+                          >
                             <div className="relative h-[180px] w-full">
                               <PilotPhotoSlot
                                 pilot={selectedPilot}
@@ -2063,11 +2292,19 @@ export default function CasernaKartAppModerno() {
                             </div>
 
                             <div className="min-w-0">
-                              <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                              <p
+                                className={`text-[11px] font-bold uppercase tracking-[0.16em] ${
+                                  isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                                }`}
+                              >
                                 Perfil do piloto
                               </p>
 
-                              <h2 className={`mt-2 break-words text-[25px] font-extrabold leading-[1.05] tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                              <h2
+                                className={`mt-2 break-words text-[25px] font-extrabold leading-[1.05] tracking-tight ${
+                                  isDarkMode ? "text-white" : "text-zinc-950"
+                                }`}
+                              >
                                 {selectedPilotShortName}
                               </h2>
 
@@ -2093,8 +2330,16 @@ export default function CasernaKartAppModerno() {
                                       : "border border-black/5 bg-zinc-50"
                                   }`}
                                 >
-                                  <Crown className={`h-3.5 w-3.5 ${isDarkMode ? theme.darkAccentText : "text-zinc-600"}`} />
-                                  <span className={`text-[11px] font-semibold ${isDarkMode ? "text-zinc-200" : "text-zinc-700"}`}>
+                                  <Crown
+                                    className={`h-3.5 w-3.5 ${
+                                      isDarkMode ? theme.darkAccentText : "text-zinc-600"
+                                    }`}
+                                  />
+                                  <span
+                                    className={`text-[11px] font-semibold ${
+                                      isDarkMode ? "text-zinc-200" : "text-zinc-700"
+                                    }`}
+                                  >
                                     {selectedPilot.pos}º colocado
                                   </span>
                                 </div>
@@ -2123,12 +2368,24 @@ export default function CasernaKartAppModerno() {
                             >
                               <div className="flex items-center justify-between gap-3">
                                 <div>
-                                  <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}>
+                                  <p
+                                    className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                                      isDarkMode ? "text-zinc-500" : "text-zinc-500"
+                                    }`}
+                                  >
                                     Pontuação oficial
                                   </p>
-                                  <p className={`mt-1 text-[30px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                  <p
+                                    className={`mt-1 text-[30px] font-extrabold leading-none tracking-tight ${
+                                      isDarkMode ? "text-white" : "text-zinc-950"
+                                    }`}
+                                  >
                                     {selectedPilot.pontos}
-                                    <span className={`ml-1 text-[16px] font-bold ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                    <span
+                                      className={`ml-1 text-[16px] font-bold ${
+                                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                                      }`}
+                                    >
                                       pts
                                     </span>
                                   </p>
@@ -2139,7 +2396,11 @@ export default function CasernaKartAppModerno() {
                                     isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                                   }`}
                                 >
-                                  <Trophy className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                                  <Trophy
+                                    className={`h-5 w-5 ${
+                                      isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                                    }`}
+                                  />
                                 </div>
                               </div>
                             </div>
@@ -2243,17 +2504,33 @@ export default function CasernaKartAppModerno() {
                         isDarkMode ? theme.darkAccentIconWrap : theme.statsIconWrap
                       }`}
                     >
-                      <BarChart3 className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.statsIcon}`} />
+                      <BarChart3
+                        className={`h-5 w-5 ${
+                          isDarkMode ? theme.darkAccentText : theme.statsIcon
+                        }`}
+                      />
                     </div>
 
                     <div className="min-w-0">
-                      <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                      <p
+                        className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                          isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                        }`}
+                      >
                         Central de estatísticas
                       </p>
-                      <h2 className={`text-[17px] font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                      <h2
+                        className={`text-[17px] font-extrabold tracking-tight ${
+                          isDarkMode ? "text-white" : "text-zinc-950"
+                        }`}
+                      >
                         Stats da classificação
                       </h2>
-                      <p className={`text-[11px] font-semibold ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                      <p
+                        className={`text-[11px] font-semibold ${
+                          isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                        }`}
+                      >
                         {category} · {competitionLabels[competition] || competition}
                       </p>
                     </div>
@@ -2284,19 +2561,35 @@ export default function CasernaKartAppModerno() {
                     : "border-b border-black/5 bg-gradient-to-r from-white via-zinc-50/70 to-white"
                 }`}
               >
-                <CardTitle className={`flex items-center gap-3 ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                <CardTitle
+                  className={`flex items-center gap-3 ${
+                    isDarkMode ? "text-white" : "text-zinc-950"
+                  }`}
+                >
                   <div
                     className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
                       isDarkMode ? theme.darkAccentIconWrap : theme.statsIconWrap
                     }`}
                   >
-                    <BarChart3 className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.statsIcon}`} />
+                    <BarChart3
+                      className={`h-5 w-5 ${
+                        isDarkMode ? theme.darkAccentText : theme.statsIcon
+                      }`}
+                    />
                   </div>
                   <div>
-                    <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                    <p
+                      className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}
+                    >
                       Desempenho oficial
                     </p>
-                    <p className={`text-[16px] font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                    <p
+                      className={`text-[16px] font-extrabold tracking-tight ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}
+                    >
                       Top 5 em pontos
                     </p>
                   </div>
@@ -2318,7 +2611,11 @@ export default function CasernaKartAppModerno() {
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={topPointsChartData}>
                       <CartesianGrid
-                        stroke={isDarkMode ? "rgba(255,255,255,0.08)" : theme.chartGrid}
+                        stroke={
+                          isDarkMode
+                            ? "rgba(255,255,255,0.08)"
+                            : theme.chartGrid
+                        }
                         strokeDasharray="3 3"
                       />
                       <XAxis
