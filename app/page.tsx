@@ -17,6 +17,8 @@ import {
   Camera,
   Star,
   TableProperties,
+  Swords,
+  ChevronRight,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -333,6 +335,51 @@ function getCategoryTheme(category: string) {
   };
 
   return themes[category as keyof typeof themes] || themes.Elite;
+}
+
+function getGapToLeader(leaderPoints: number, pilotPoints: number) {
+  const diff = leaderPoints - pilotPoints;
+  if (diff <= 0) return "líder";
+  return `-${diff} pts`;
+}
+
+function getTitleFightStatus(top3: RankingItem[]) {
+  if (top3.length < 2) {
+    return {
+      label: "definição inicial",
+      tone: "border-zinc-200 bg-zinc-50 text-zinc-700",
+    };
+  }
+
+  const first = top3[0];
+  const second = top3[1];
+  const diff = first.pontos - second.pontos;
+
+  if (diff === 0) {
+    return {
+      label: "empate técnico",
+      tone: "border-red-200 bg-red-50 text-red-700",
+    };
+  }
+
+  if (diff <= 3) {
+    return {
+      label: "briga acirrada",
+      tone: "border-emerald-200 bg-emerald-50 text-emerald-700",
+    };
+  }
+
+  if (diff <= 8) {
+    return {
+      label: "disputa aberta",
+      tone: "border-yellow-200 bg-yellow-50 text-yellow-700",
+    };
+  }
+
+  return {
+    label: "líder com vantagem",
+    tone: "border-zinc-200 bg-zinc-50 text-zinc-700",
+  };
 }
 
 function CompactStatCard({
@@ -698,6 +745,13 @@ export default function CasernaKartAppModerno() {
     [selectedPilot]
   );
 
+  const top3TitleFight = useMemo(() => filteredRanking.slice(0, 3), [filteredRanking]);
+
+  const titleFightStatus = useMemo(
+    () => getTitleFightStatus(top3TitleFight),
+    [top3TitleFight]
+  );
+
   const topPointsChartData = useMemo(
     () => getTopPointsChartData(filteredRanking, 5),
     [filteredRanking]
@@ -1057,6 +1111,142 @@ export default function CasernaKartAppModerno() {
                     placeholder="Buscar piloto"
                     className="h-11 border-0 bg-transparent pl-1 pr-0 text-[15px] text-zinc-950 shadow-none outline-none ring-0 placeholder:text-zinc-400 focus-visible:ring-0"
                   />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card
+              className={`overflow-hidden rounded-[24px] border ${theme.titleBorder} bg-gradient-to-br ${theme.titleBg} shadow-sm`}
+            >
+              <CardContent className="p-0">
+                <div className="relative px-4 py-4">
+                  <div
+                    className={`absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
+                  />
+
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div
+                        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${theme.titleIconWrap}`}
+                      >
+                        <Swords className={`h-5 w-5 ${theme.titleIcon}`} />
+                      </div>
+
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-400">
+                          Corrida pelo campeonato
+                        </p>
+                        <h2 className="text-[17px] font-extrabold tracking-tight text-zinc-950">
+                          Disputa pelo título
+                        </h2>
+                      </div>
+                    </div>
+
+                    <div
+                      className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${titleFightStatus.tone}`}
+                    >
+                      {titleFightStatus.label}
+                    </div>
+                  </div>
+
+                  {top3TitleFight.length === 0 ? (
+                    <div className="rounded-[20px] border border-dashed border-black/10 bg-zinc-50 px-4 py-6 text-center text-sm text-zinc-500">
+                      Nenhum piloto com pontos para exibir a disputa pelo título.
+                    </div>
+                  ) : (
+                    <div className="space-y-2.5">
+                      {top3TitleFight.map((pilot, index) => {
+                        const isLeader = index === 0;
+                        const gapLabel = getGapToLeader(
+                          top3TitleFight[0]?.pontos || 0,
+                          pilot.pontos
+                        );
+                        const firstName = getPilotFirstAndLastName(pilot.piloto);
+                        const warName = getPilotWarNameDisplay(pilot);
+
+                        return (
+                          <button
+                            key={`title-fight-${pilot.pilotoId}-${index}`}
+                            type="button"
+                            onClick={() => handleSelectPilot(pilot)}
+                            className={`w-full rounded-[22px] border px-3 py-3 text-left transition hover:scale-[0.995] active:scale-[0.99] ${
+                              isLeader
+                                ? `${theme.heroBorder} bg-gradient-to-r ${theme.heroBg} shadow-[0_8px_18px_rgba(15,23,42,0.05)]`
+                                : "border-black/5 bg-white hover:bg-zinc-50/80"
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div
+                                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-sm font-extrabold ${
+                                  isLeader
+                                    ? `${theme.primaryBadge}`
+                                    : index === 1
+                                      ? "bg-zinc-200 text-zinc-900"
+                                      : "bg-amber-100 text-amber-800"
+                                }`}
+                              >
+                                {index + 1}º
+                              </div>
+
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2">
+                                  <p className="truncate text-[14px] font-extrabold tracking-tight text-zinc-950">
+                                    {firstName}
+                                  </p>
+
+                                  {isLeader ? (
+                                    <span
+                                      className={`inline-flex rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] ${theme.heroChip}`}
+                                    >
+                                      líder
+                                    </span>
+                                  ) : null}
+                                </div>
+
+                                {warName ? (
+                                  <p className="mt-0.5 truncate text-[10px] italic text-zinc-500">
+                                    {warName}
+                                  </p>
+                                ) : null}
+
+                                <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                                  <span className="inline-flex rounded-full border border-black/5 bg-zinc-50 px-2.5 py-1 text-[10px] font-semibold text-zinc-700">
+                                    {pilot.pontos} pts
+                                  </span>
+                                  <span
+                                    className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold ${
+                                      isLeader
+                                        ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                                        : gapLabel === "-0 pts"
+                                          ? "border-red-200 bg-red-50 text-red-700"
+                                          : "border-zinc-200 bg-white text-zinc-600"
+                                    }`}
+                                  >
+                                    {isLeader ? "na frente" : gapLabel} do líder
+                                  </span>
+                                </div>
+                              </div>
+
+                              <div className="flex shrink-0 items-center gap-2">
+                                <div className="text-right">
+                                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400">
+                                    Pontos
+                                  </p>
+                                  <p className="text-[20px] font-extrabold leading-none tracking-tight text-zinc-950">
+                                    {pilot.pontos}
+                                  </p>
+                                </div>
+
+                                <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-zinc-100">
+                                  <ChevronRight className="h-4 w-4 text-zinc-500" />
+                                </div>
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
