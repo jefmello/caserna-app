@@ -261,7 +261,6 @@ function getCategoryTheme(category: string) {
       chartGrid: "rgba(249,115,22,0.12)",
       chartAxis: "#9a3412",
       statAccentBg: "border-orange-200 bg-orange-50",
-      statAccentValue: "text-orange-800",
       statAccentRank: "bg-orange-500 text-white",
       lineTrack: "from-orange-200 via-orange-300 to-orange-200",
       lineGlow: "bg-orange-300/50",
@@ -314,7 +313,6 @@ function getCategoryTheme(category: string) {
       chartGrid: "rgba(59,130,246,0.12)",
       chartAxis: "#1d4ed8",
       statAccentBg: "border-blue-200 bg-blue-50",
-      statAccentValue: "text-blue-800",
       statAccentRank: "bg-blue-500 text-white",
       lineTrack: "from-blue-200 via-blue-300 to-blue-200",
       lineGlow: "bg-blue-300/50",
@@ -367,7 +365,6 @@ function getCategoryTheme(category: string) {
       chartGrid: "rgba(250,204,21,0.18)",
       chartAxis: "#a16207",
       statAccentBg: "border-yellow-200 bg-yellow-50",
-      statAccentValue: "text-yellow-800",
       statAccentRank: "bg-yellow-400 text-black",
       lineTrack: "from-yellow-200 via-yellow-300 to-yellow-200",
       lineGlow: "bg-yellow-300/50",
@@ -1571,7 +1568,7 @@ export default function CasernaKartAppModerno() {
                           const positionSize = isLeader
                             ? "h-14 w-14 text-[18px]"
                             : "h-11 w-11 text-sm";
-                          const nameSize = isLeader ? "text-[17px]" : "text-[14px]";
+                          const nameSize = isLeader ? "text-[14px]" : "text-[13px]";
                           const pointsValueSize = isLeader ? "text-[28px]" : "text-[20px]";
                           const pointsLabelSize = isLeader ? "text-[11px]" : "text-[10px]";
 
@@ -1636,9 +1633,9 @@ export default function CasernaKartAppModerno() {
                                   </div>
 
                                   <div className="min-w-0 flex-1">
-                                    <div className="flex flex-wrap items-center gap-2">
+                                    <div className="flex items-center gap-2">
                                       <p
-                                        className={`min-w-0 flex-1 whitespace-normal break-words leading-[1.08] font-extrabold tracking-tight ${
+                                        className={`min-w-0 whitespace-nowrap font-extrabold leading-none tracking-tight ${
                                           isDarkMode ? "text-white" : "text-zinc-950"
                                         } ${nameSize}`}
                                       >
@@ -1647,7 +1644,7 @@ export default function CasernaKartAppModerno() {
 
                                       {isLeader ? (
                                         <span
-                                          className={`shrink-0 inline-flex rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] ${
+                                          className={`shrink-0 inline-flex rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.1em] ${
                                             isDarkMode
                                               ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                                               : theme.heroChip
@@ -1660,7 +1657,7 @@ export default function CasernaKartAppModerno() {
 
                                     <div className="mt-1.5 flex flex-wrap items-center gap-2">
                                       {warName ? (
-                                        <p className={`max-w-full whitespace-normal break-words text-[10px] italic ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                        <p className={`whitespace-nowrap text-[10px] italic ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                                           {warName}
                                         </p>
                                       ) : null}
@@ -1679,9 +1676,9 @@ export default function CasernaKartAppModerno() {
                                     </div>
                                   </div>
 
-                                  <div className="shrink-0 pl-1">
+                                  <div className="shrink-0">
                                     <div className="flex items-center gap-2">
-                                      <div className="min-w-[70px] text-right">
+                                      <div className="min-w-[62px] text-right">
                                         <p
                                           className={`font-bold uppercase tracking-[0.12em] ${
                                             isDarkMode ? "text-zinc-500" : "text-zinc-400"
@@ -1699,7 +1696,7 @@ export default function CasernaKartAppModerno() {
                                       </div>
 
                                       <div
-                                        className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
+                                        className={`flex h-9 w-9 items-center justify-center rounded-2xl ${
                                           isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
                                         }`}
                                       >
