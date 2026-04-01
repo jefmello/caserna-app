@@ -1035,8 +1035,8 @@ export default function CasernaKartAppModerno() {
           </div>
         </section>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-2">
-          <TabsList className="mb-2 grid h-auto w-full grid-cols-3 gap-2 bg-transparent p-0 shadow-none">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-3">
+          <TabsList className="relative z-10 mb-4 grid h-auto w-full grid-cols-3 gap-2 bg-transparent p-0 shadow-none">
             <TabsTrigger
               value="classificacao"
               className="h-[62px] rounded-[18px] border border-zinc-200 bg-white px-2 py-0 text-zinc-500 shadow-sm transition-all duration-200 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.06)]"
@@ -1080,7 +1080,7 @@ export default function CasernaKartAppModerno() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="classificacao" className="mt-2 space-y-4 pt-0">
+          <TabsContent value="classificacao" className="mt-0 space-y-4 pt-0">
             <Card
               className={`rounded-[22px] border ${theme.searchBorder} bg-gradient-to-br from-white via-white to-zinc-50/70 shadow-sm`}
             >
@@ -1195,9 +1195,7 @@ export default function CasernaKartAppModerno() {
                           const positionSize = isLeader
                             ? "h-14 w-14 text-[18px]"
                             : "h-11 w-11 text-sm";
-                          const nameSize = isLeader
-                            ? "text-[18px]"
-                            : "text-[14px]";
+                          const nameSize = isLeader ? "text-[18px]" : "text-[14px]";
                           const pointsValueSize = isLeader
                             ? "text-[28px]"
                             : "text-[20px]";
@@ -1365,8 +1363,7 @@ export default function CasernaKartAppModerno() {
                             Ranking oficial
                           </p>
                           <p className="text-[13px] font-semibold text-zinc-900">
-                            {category} ·{" "}
-                            {competitionLabels[competition] || competition}
+                            {category} · {competitionLabels[competition] || competition}
                           </p>
                         </div>
                       </div>
@@ -1553,7 +1550,7 @@ export default function CasernaKartAppModerno() {
             </section>
           </TabsContent>
 
-          <TabsContent value="piloto" className="mt-2 space-y-4 pt-0">
+          <TabsContent value="piloto" className="mt-0 space-y-4 pt-0">
             {!selectedPilot ? (
               <Card className="rounded-[22px] border-black/5 bg-white shadow-sm">
                 <CardContent className="p-8 text-center">
@@ -1746,7 +1743,7 @@ export default function CasernaKartAppModerno() {
             )}
           </TabsContent>
 
-          <TabsContent value="stats" className="mt-2 space-y-4 pt-0">
+          <TabsContent value="stats" className="mt-0 space-y-4 pt-0">
             <div
               className={`overflow-hidden rounded-[24px] border ${theme.titleBorder} bg-gradient-to-br ${theme.statsSoft} shadow-sm`}
             >
