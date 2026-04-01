@@ -972,8 +972,8 @@ export default function CasernaKartAppModerno() {
           </div>
         </section>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
-          <TabsList className="mb-4 grid h-auto w-full grid-cols-3 gap-2 bg-transparent p-0 shadow-none">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-3">
+          <TabsList className="mb-3 grid h-auto w-full grid-cols-3 gap-2 bg-transparent p-0 shadow-none">
             <TabsTrigger
               value="classificacao"
               className="h-[62px] rounded-[18px] border border-zinc-200 bg-white px-2 py-0 text-zinc-500 shadow-sm transition-all duration-200 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.06)]"
@@ -1483,6 +1483,7 @@ export default function CasernaKartAppModerno() {
                     value={selectedPilot.adv}
                     subtitle="advertências"
                     icon={Gauge}
+                    accent
                   />
                   <CompactStatCard
                     title="Descarte"
