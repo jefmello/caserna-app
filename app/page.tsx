@@ -349,7 +349,7 @@ function getCategoryTheme(category: string) {
 function getGapToLeader(leaderPoints: number, pilotPoints: number) {
   const diff = leaderPoints - pilotPoints;
   if (diff <= 0) return "líder";
-  return `-${diff} pts`;
+  return `-${diff} pts do líder`;
 }
 
 function getTitleFightStatus(top3: RankingItem[]) {
@@ -1164,7 +1164,7 @@ export default function CasernaKartAppModerno() {
                     </div>
                   ) : (
                     <div className="relative">
-                      <div className="pointer-events-none absolute left-[21px] top-[30px] bottom-[30px] w-[2px]">
+                      <div className="pointer-events-none absolute left-[21px] top-[36px] bottom-[36px] w-[2px]">
                         <div
                           className={`absolute inset-0 rounded-full bg-gradient-to-b ${theme.lineTrack}`}
                         />
@@ -1189,6 +1189,24 @@ export default function CasernaKartAppModerno() {
                               : index === 1
                                 ? "bg-zinc-200 text-zinc-900"
                                 : "bg-amber-100 text-amber-800";
+
+                          const cardPadding = isLeader ? "py-4" : "py-3";
+                          const cardRadius = isLeader ? "rounded-[24px]" : "rounded-[22px]";
+                          const positionSize = isLeader
+                            ? "h-14 w-14 text-[18px]"
+                            : "h-11 w-11 text-sm";
+                          const nameSize = isLeader
+                            ? "text-[18px]"
+                            : "text-[14px]";
+                          const pointsValueSize = isLeader
+                            ? "text-[28px]"
+                            : "text-[20px]";
+                          const pointsLabelSize = isLeader
+                            ? "text-[11px]"
+                            : "text-[10px]";
+                          const arrowSize = isLeader
+                            ? "h-11 w-11 rounded-[18px]"
+                            : "h-9 w-9 rounded-2xl";
 
                           return (
                             <div
@@ -1220,7 +1238,7 @@ export default function CasernaKartAppModerno() {
                               <button
                                 type="button"
                                 onClick={() => handleSelectPilot(pilot)}
-                                className={`w-full rounded-[22px] border px-3 py-3 text-left transition hover:scale-[0.995] active:scale-[0.99] ${
+                                className={`w-full border px-3 ${cardPadding} ${cardRadius} text-left transition hover:scale-[0.995] active:scale-[0.99] ${
                                   isLeader
                                     ? `${theme.heroBorder} ${theme.leaderGlow} bg-gradient-to-r ${theme.heroBg}`
                                     : "border-black/5 bg-white hover:bg-zinc-50/80"
@@ -1228,62 +1246,58 @@ export default function CasernaKartAppModerno() {
                               >
                                 <div className="flex items-center gap-3">
                                   <div
-                                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-sm font-extrabold ${positionBadgeStyles}`}
+                                    className={`flex shrink-0 items-center justify-center rounded-[20px] font-extrabold ${positionSize} ${positionBadgeStyles}`}
                                   >
                                     {index + 1}º
                                   </div>
 
                                   <div className="min-w-0 flex-1">
-                                    <div className="flex items-center gap-2">
-                                      <p className="truncate text-[14px] font-extrabold tracking-tight text-zinc-950">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                      <p
+                                        className={`truncate font-extrabold tracking-tight text-zinc-950 ${nameSize}`}
+                                      >
                                         {pilotName}
                                       </p>
 
                                       {isLeader ? (
                                         <span
-                                          className={`inline-flex rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] ${theme.heroChip}`}
+                                          className={`inline-flex rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] ${theme.heroChip}`}
                                         >
                                           líder
                                         </span>
                                       ) : null}
                                     </div>
 
-                                    {warName ? (
-                                      <p className="mt-0.5 truncate text-[10px] italic text-zinc-500">
-                                        {warName}
-                                      </p>
-                                    ) : null}
+                                    <div className="mt-1 flex flex-wrap items-center gap-2">
+                                      {warName ? (
+                                        <p className="truncate text-[10px] italic text-zinc-500">
+                                          {warName}
+                                        </p>
+                                      ) : null}
 
-                                    <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                                      <span className="inline-flex rounded-full border border-black/5 bg-zinc-50 px-2.5 py-1 text-[10px] font-semibold text-zinc-700">
-                                        {pilot.pontos} pts
-                                      </span>
-
-                                      <span
-                                        className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold ${
-                                          isLeader
-                                            ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                                            : gapLabel === "-0 pts"
-                                              ? "border-red-200 bg-red-50 text-red-700"
-                                              : "border-zinc-200 bg-white text-zinc-600"
-                                        }`}
-                                      >
-                                        {isLeader ? "na frente" : gapLabel} do líder
-                                      </span>
+                                      {!isLeader ? (
+                                        <span className="inline-flex rounded-full border border-zinc-200 bg-white px-2.5 py-1 text-[10px] font-semibold text-zinc-600">
+                                          {gapLabel}
+                                        </span>
+                                      ) : null}
                                     </div>
                                   </div>
 
                                   <div className="flex shrink-0 items-center gap-2">
                                     <div className="text-right">
-                                      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400">
+                                      <p
+                                        className={`font-bold uppercase tracking-[0.12em] text-zinc-400 ${pointsLabelSize}`}
+                                      >
                                         Pontos
                                       </p>
-                                      <p className="text-[20px] font-extrabold leading-none tracking-tight text-zinc-950">
+                                      <p
+                                        className={`font-extrabold leading-none tracking-tight text-zinc-950 ${pointsValueSize}`}
+                                      >
                                         {pilot.pontos}
                                       </p>
                                     </div>
 
-                                    <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-zinc-100">
+                                    <div className={`flex items-center justify-center bg-zinc-100 ${arrowSize}`}>
                                       <ChevronRight className="h-4 w-4 text-zinc-500" />
                                     </div>
                                   </div>
