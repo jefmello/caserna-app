@@ -435,7 +435,7 @@ function getTitleFightStatus(top3: RankingItem[]) {
   return {
     label: "líder com vantagem",
     tone: "border-zinc-200 bg-zinc-50 text-zinc-700",
-  };
+    };
 }
 
 function CompactStatCard({
@@ -1639,9 +1639,9 @@ export default function CasernaKartAppModerno() {
                                   </div>
 
                                   <div className="min-w-0 flex-1">
-                                    <div className="flex flex-wrap items-center gap-2">
+                                    <div className="flex flex-wrap items-start gap-2">
                                       <p
-                                        className={`truncate font-extrabold tracking-tight ${
+                                        className={`block max-w-full whitespace-normal break-words leading-[1.05] font-extrabold tracking-tight ${
                                           isDarkMode ? "text-white" : "text-zinc-950"
                                         } ${nameSize}`}
                                       >
@@ -1663,7 +1663,7 @@ export default function CasernaKartAppModerno() {
 
                                     <div className="mt-1 flex flex-wrap items-center gap-2">
                                       {warName ? (
-                                        <p className={`truncate text-[10px] italic ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                        <p className={`max-w-full whitespace-normal break-words text-[10px] italic ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                                           {warName}
                                         </p>
                                       ) : null}
