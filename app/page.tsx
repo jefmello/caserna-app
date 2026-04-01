@@ -393,6 +393,51 @@ function getCategoryTheme(category: string) {
   return themes[category as keyof typeof themes] || themes.Elite;
 }
 
+function getGapToLeader(leaderPoints: number, pilotPoints: number) {
+  const diff = leaderPoints - pilotPoints;
+  if (diff <= 0) return "líder";
+  return `-${diff} pts do líder`;
+}
+
+function getTitleFightStatus(top3: RankingItem[]) {
+  if (top3.length < 2) {
+    return {
+      label: "definição inicial",
+      tone: "border-zinc-200 bg-zinc-50 text-zinc-700",
+    };
+  }
+
+  const first = top3[0];
+  const second = top3[1];
+  const diff = first.pontos - second.pontos;
+
+  if (diff === 0) {
+    return {
+      label: "empate técnico",
+      tone: "border-red-200 bg-red-50 text-red-700",
+    };
+  }
+
+  if (diff <= 3) {
+    return {
+      label: "briga acirrada",
+      tone: "border-emerald-200 bg-emerald-50 text-emerald-700",
+    };
+  }
+
+  if (diff <= 8) {
+    return {
+      label: "disputa aberta",
+      tone: "border-yellow-200 bg-yellow-50 text-yellow-700",
+    };
+  }
+
+  return {
+    label: "líder com vantagem",
+    tone: "border-zinc-200 bg-zinc-50 text-zinc-700",
+  };
+}
+
 function CompactStatCard({
   title,
   value,
@@ -1306,7 +1351,7 @@ export default function CasernaKartAppModerno() {
               value="classificacao"
               className={`h-[62px] rounded-[18px] px-2 py-0 shadow-sm transition-all duration-200 ${
                 isDarkMode
-                  ? `border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:${theme.darkAccentBorder} data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]`
+                  ? `border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]`
                   : "border border-zinc-200 bg-white text-zinc-500 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.06)]"
               }`}
             >
@@ -1328,7 +1373,7 @@ export default function CasernaKartAppModerno() {
               value="piloto"
               className={`h-[62px] rounded-[18px] px-2 py-0 shadow-sm transition-all duration-200 ${
                 isDarkMode
-                  ? `border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:${theme.darkAccentBorder} data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]`
+                  ? `border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]`
                   : "border border-zinc-200 bg-white text-zinc-500 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.06)]"
               }`}
             >
@@ -1350,7 +1395,7 @@ export default function CasernaKartAppModerno() {
               value="stats"
               className={`h-[62px] rounded-[18px] px-2 py-0 shadow-sm transition-all duration-200 ${
                 isDarkMode
-                  ? `border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:${theme.darkAccentBorder} data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]`
+                  ? `border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]`
                   : "border border-zinc-200 bg-white text-zinc-500 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.06)]"
               }`}
             >
@@ -1533,6 +1578,13 @@ export default function CasernaKartAppModerno() {
                             ? "h-11 w-11 rounded-[18px]"
                             : "h-9 w-9 rounded-2xl";
 
+                          const leaderDotClass =
+                            category === "Base"
+                              ? "bg-orange-400"
+                              : category === "Graduados"
+                                ? "bg-blue-400"
+                                : "bg-yellow-400";
+
                           return (
                             <div
                               key={`title-fight-${pilot.pilotoId}-${index}`}
@@ -1556,11 +1608,7 @@ export default function CasernaKartAppModerno() {
                                     className={`h-2.5 w-2.5 rounded-full ${
                                       isLeader
                                         ? isDarkMode
-                                          ? theme.darkAccentBg.replace("bg-", "bg-").includes("orange")
-                                            ? "bg-orange-400"
-                                            : theme.darkAccentBg.includes("blue")
-                                              ? "bg-blue-400"
-                                              : "bg-yellow-400"
+                                          ? leaderDotClass
                                           : "bg-yellow-400"
                                         : index === 1
                                           ? "bg-zinc-400"
@@ -1577,9 +1625,7 @@ export default function CasernaKartAppModerno() {
                                   isDarkMode
                                     ? isLeader
                                       ? `${theme.darkAccentBorder} ${theme.darkLeaderRow} shadow-[0_10px_22px_rgba(0,0,0,0.35)]`
-                                      : index === 1
-                                        ? "border-white/10 bg-[#111827] hover:bg-[#161e2b]"
-                                        : "border-white/10 bg-[#111827] hover:bg-[#161e2b]"
+                                      : "border-white/10 bg-[#111827] hover:bg-[#161e2b]"
                                     : isLeader
                                       ? `${theme.heroBorder} ${theme.leaderGlow} bg-gradient-to-r ${theme.heroBg}`
                                       : "border-black/5 bg-white hover:bg-zinc-50/80"
