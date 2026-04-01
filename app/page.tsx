@@ -435,7 +435,7 @@ function getTitleFightStatus(top3: RankingItem[]) {
   return {
     label: "líder com vantagem",
     tone: "border-zinc-200 bg-zinc-50 text-zinc-700",
-    };
+  };
 }
 
 function CompactStatCard({
@@ -1571,12 +1571,9 @@ export default function CasernaKartAppModerno() {
                           const positionSize = isLeader
                             ? "h-14 w-14 text-[18px]"
                             : "h-11 w-11 text-sm";
-                          const nameSize = isLeader ? "text-[18px]" : "text-[14px]";
+                          const nameSize = isLeader ? "text-[17px]" : "text-[14px]";
                           const pointsValueSize = isLeader ? "text-[28px]" : "text-[20px]";
                           const pointsLabelSize = isLeader ? "text-[11px]" : "text-[10px]";
-                          const arrowSize = isLeader
-                            ? "h-11 w-11 rounded-[18px]"
-                            : "h-9 w-9 rounded-2xl";
 
                           const leaderDotClass =
                             category === "Base"
@@ -1639,9 +1636,9 @@ export default function CasernaKartAppModerno() {
                                   </div>
 
                                   <div className="min-w-0 flex-1">
-                                    <div className="flex flex-wrap items-start gap-2">
+                                    <div className="flex flex-wrap items-center gap-2">
                                       <p
-                                        className={`block max-w-full whitespace-normal break-words leading-[1.05] font-extrabold tracking-tight ${
+                                        className={`min-w-0 flex-1 whitespace-normal break-words leading-[1.08] font-extrabold tracking-tight ${
                                           isDarkMode ? "text-white" : "text-zinc-950"
                                         } ${nameSize}`}
                                       >
@@ -1650,7 +1647,7 @@ export default function CasernaKartAppModerno() {
 
                                       {isLeader ? (
                                         <span
-                                          className={`inline-flex rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] ${
+                                          className={`shrink-0 inline-flex rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] ${
                                             isDarkMode
                                               ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                                               : theme.heroChip
@@ -1661,7 +1658,7 @@ export default function CasernaKartAppModerno() {
                                       ) : null}
                                     </div>
 
-                                    <div className="mt-1 flex flex-wrap items-center gap-2">
+                                    <div className="mt-1.5 flex flex-wrap items-center gap-2">
                                       {warName ? (
                                         <p className={`max-w-full whitespace-normal break-words text-[10px] italic ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                                           {warName}
@@ -1682,30 +1679,32 @@ export default function CasernaKartAppModerno() {
                                     </div>
                                   </div>
 
-                                  <div className="flex shrink-0 items-center gap-2">
-                                    <div className="text-right">
-                                      <p
-                                        className={`font-bold uppercase tracking-[0.12em] ${
-                                          isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                                        } ${pointsLabelSize}`}
-                                      >
-                                        Pontos
-                                      </p>
-                                      <p
-                                        className={`font-extrabold leading-none tracking-tight ${
-                                          isDarkMode ? "text-white" : "text-zinc-950"
-                                        } ${pointsValueSize}`}
-                                      >
-                                        {pilot.pontos}
-                                      </p>
-                                    </div>
+                                  <div className="shrink-0 pl-1">
+                                    <div className="flex items-center gap-2">
+                                      <div className="min-w-[70px] text-right">
+                                        <p
+                                          className={`font-bold uppercase tracking-[0.12em] ${
+                                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                                          } ${pointsLabelSize}`}
+                                        >
+                                          Pontos
+                                        </p>
+                                        <p
+                                          className={`font-extrabold leading-none tracking-tight ${
+                                            isDarkMode ? "text-white" : "text-zinc-950"
+                                          } ${pointsValueSize}`}
+                                        >
+                                          {pilot.pontos}
+                                        </p>
+                                      </div>
 
-                                    <div
-                                      className={`flex items-center justify-center ${arrowSize} ${
-                                        isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
-                                      }`}
-                                    >
-                                      <ChevronRight className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : "text-zinc-500"}`} />
+                                      <div
+                                        className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
+                                          isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
+                                        }`}
+                                      >
+                                        <ChevronRight className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : "text-zinc-500"}`} />
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
