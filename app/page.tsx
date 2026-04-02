@@ -978,6 +978,45 @@ function StatRankingCard({
   );
 }
 
+
+function getComparisonWinner(a: number, b: number, lowerIsBetter = false) {
+  if (a === b) return "tie" as const;
+  if (lowerIsBetter) {
+    return a < b ? ("a" as const) : ("b" as const);
+  }
+  return a > b ? ("a" as const) : ("b" as const);
+}
+
+function getComparisonCardTone({
+  winner,
+  side,
+  isDark,
+  theme,
+}: {
+  winner: "a" | "b" | "tie";
+  side: "a" | "b";
+  isDark: boolean;
+  theme: ReturnType<typeof getCategoryTheme>;
+}) {
+  if (winner === "tie") {
+    return isDark
+      ? "border-white/10 bg-[#0f172a] text-zinc-200"
+      : "border-zinc-200 bg-zinc-50 text-zinc-800";
+  }
+
+  const isWinner = winner === side;
+
+  if (isDark) {
+    return isWinner
+      ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft} text-white`
+      : "border-white/10 bg-[#0f172a] text-zinc-300";
+  }
+
+  return isWinner
+    ? `${theme.primaryBorder} bg-gradient-to-br ${theme.heroBg} text-zinc-950`
+    : "border-zinc-200 bg-white text-zinc-700";
+}
+
 export default function CasernaKartAppModerno() {
   const [rankingData, setRankingData] = useState<RankingData>({});
   const [loading, setLoading] = useState(true);
@@ -987,6 +1026,8 @@ export default function CasernaKartAppModerno() {
   const [search, setSearch] = useState("");
   const [selectedPilot, setSelectedPilot] = useState<RankingItem | null>(null);
   const [activeTab, setActiveTab] = useState("classificacao");
+  const [comparePilotAId, setComparePilotAId] = useState("");
+  const [comparePilotBId, setComparePilotBId] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -1046,6 +1087,8 @@ export default function CasernaKartAppModerno() {
 
   useEffect(() => {
     setSelectedPilot(null);
+    setComparePilotAId("");
+    setComparePilotBId("");
   }, [category, competition]);
 
   const currentCompetitionList = useMemo(() => {
@@ -1065,6 +1108,16 @@ export default function CasernaKartAppModerno() {
   const leader = filteredRanking[0];
   const leaderName = useMemo(() => getPilotNameParts(leader?.piloto), [leader]);
   const theme = useMemo(() => getCategoryTheme(category), [category]);
+
+  const comparePilotA = useMemo(
+    () => filteredRanking.find((item) => (item.pilotoId || item.piloto) === comparePilotAId) || null,
+    [filteredRanking, comparePilotAId]
+  );
+
+  const comparePilotB = useMemo(
+    () => filteredRanking.find((item) => (item.pilotoId || item.piloto) === comparePilotBId) || null,
+    [filteredRanking, comparePilotBId]
+  );
 
   const selectedPilotShortName = useMemo(
     () => getPilotFirstAndLastName(selectedPilot?.piloto),
@@ -1747,7 +1800,7 @@ export default function CasernaKartAppModerno() {
         </section>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
-          <TabsList className="relative z-10 mb-5 grid h-auto w-full grid-cols-3 gap-2 bg-transparent p-0 shadow-none">
+          <TabsList className="relative z-10 mb-5 grid h-auto w-full grid-cols-4 gap-2 bg-transparent p-0 shadow-none">
             <TabsTrigger
               value="classificacao"
               className={`h-[62px] rounded-[18px] px-2 py-0 shadow-sm transition-all duration-200 ${
@@ -1788,6 +1841,28 @@ export default function CasernaKartAppModerno() {
                 </div>
                 <span className="text-[10px] font-bold uppercase tracking-[0.12em]">
                   Piloto
+                </span>
+              </div>
+            </TabsTrigger>
+
+            <TabsTrigger
+              value="comparador"
+              className={`h-[62px] rounded-[18px] px-2 py-0 shadow-sm transition-all duration-200 ${
+                isDarkMode
+                  ? "border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]"
+                  : "border border-zinc-200 bg-white text-zinc-500 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.06)]"
+              }`}
+            >
+              <div className="flex h-full flex-col items-center justify-center gap-0.5">
+                <div
+                  className={`flex h-7 w-7 items-center justify-center rounded-xl ${
+                    isDarkMode ? "bg-white/5 text-zinc-300" : "bg-zinc-50 text-zinc-500"
+                  }`}
+                >
+                  <Swords className="h-4 w-4" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-[0.12em]">
+                  Comparar
                 </span>
               </div>
             </TabsTrigger>
@@ -3423,6 +3498,284 @@ export default function CasernaKartAppModerno() {
                 </Card>
               </div>
             )}
+          </TabsContent>
+
+          <TabsContent value="comparador" className="mt-0 space-y-4 pt-0">
+            <Card
+              className={`overflow-hidden rounded-[24px] shadow-sm ${
+                isDarkMode
+                  ? `border ${theme.darkAccentBorder} bg-gradient-to-br ${theme.darkAccentCard}`
+                  : `${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow}`
+              }`}
+            >
+              <CardContent className="p-0">
+                <div className="relative px-4 py-4">
+                  <div
+                    className={`absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
+                  />
+
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`flex h-11 w-11 items-center justify-center rounded-2xl ${
+                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                        }`}
+                      >
+                        <Swords
+                          className={`h-5 w-5 ${
+                            isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                          }`}
+                        />
+                      </div>
+
+                      <div>
+                        <p
+                          className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                          }`}
+                        >
+                          Comparativo oficial
+                        </p>
+                        <h2
+                          className={`text-[17px] font-extrabold tracking-tight ${
+                            isDarkMode ? "text-white" : "text-zinc-950"
+                          }`}
+                        >
+                          Duelo entre pilotos
+                        </h2>
+                      </div>
+                    </div>
+
+                    <div
+                      className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+                        isDarkMode
+                          ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                          : theme.searchBadge
+                      }`}
+                    >
+                      {competitionLabels[competition] || competition}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card
+              className={`rounded-[24px] shadow-sm ${
+                isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
+              }`}
+            >
+              <CardContent className="p-4 space-y-4">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div>
+                    <p className={`mb-2 text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                      Piloto A
+                    </p>
+                    <select
+                      value={comparePilotAId}
+                      onChange={(e) => setComparePilotAId(e.target.value)}
+                      className={`h-12 w-full rounded-2xl border px-3 text-sm font-semibold outline-none ${
+                        isDarkMode
+                          ? `border-white/10 bg-[#0f172a] text-white`
+                          : `border-zinc-200 bg-white text-zinc-950`
+                      }`}
+                    >
+                      <option value="">Selecionar piloto A</option>
+                      {filteredRanking.map((pilot) => {
+                        const value = pilot.pilotoId || pilot.piloto;
+                        return (
+                          <option key={`a-${value}`} value={value}>
+                            {getPilotFirstAndLastName(pilot.piloto)}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+
+                  <div>
+                    <p className={`mb-2 text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                      Piloto B
+                    </p>
+                    <select
+                      value={comparePilotBId}
+                      onChange={(e) => setComparePilotBId(e.target.value)}
+                      className={`h-12 w-full rounded-2xl border px-3 text-sm font-semibold outline-none ${
+                        isDarkMode
+                          ? `border-white/10 bg-[#0f172a] text-white`
+                          : `border-zinc-200 bg-white text-zinc-950`
+                      }`}
+                    >
+                      <option value="">Selecionar piloto B</option>
+                      {filteredRanking.map((pilot) => {
+                        const value = pilot.pilotoId || pilot.piloto;
+                        return (
+                          <option key={`b-${value}`} value={value}>
+                            {getPilotFirstAndLastName(pilot.piloto)}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                </div>
+
+                {!comparePilotA || !comparePilotB ? (
+                  <div
+                    className={`rounded-[22px] px-4 py-8 text-center text-sm ${
+                      isDarkMode
+                        ? "border border-dashed border-white/10 bg-[#0f172a] text-zinc-400"
+                        : "border border-dashed border-black/10 bg-zinc-50 text-zinc-500"
+                    }`}
+                  >
+                    Selecione dois pilotos da categoria atual para liberar o comparativo 1x1.
+                  </div>
+                ) : comparePilotAId === comparePilotBId ? (
+                  <div
+                    className={`rounded-[22px] px-4 py-8 text-center text-sm ${
+                      isDarkMode
+                        ? "border border-dashed border-white/10 bg-[#0f172a] text-zinc-400"
+                        : "border border-dashed border-black/10 bg-zinc-50 text-zinc-500"
+                    }`}
+                  >
+                    Escolha dois pilotos diferentes para montar o duelo oficial.
+                  </div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+                      {[comparePilotA, comparePilotB].map((pilot, index) => {
+                        const side = index === 0 ? "a" : "b";
+                        return (
+                          <div
+                            key={`${side}-${pilot.pilotoId || pilot.piloto}`}
+                            className={`rounded-[22px] border p-3 ${
+                              isDarkMode
+                                ? "border-white/10 bg-[#0f172a]"
+                                : "border-black/5 bg-zinc-50/70"
+                            }`}
+                          >
+                            <div className="mx-auto mb-3 h-24 w-24 overflow-hidden rounded-[22px] border border-black/5">
+                              <PilotPhotoSlot
+                                pilot={pilot}
+                                alt={getPilotFirstAndLastName(pilot.piloto)}
+                                isDark={isDarkMode}
+                              />
+                            </div>
+                            <div className="text-center">
+                              <p className={`text-[13px] font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                {getPilotFirstAndLastName(pilot.piloto)}
+                              </p>
+                              {getPilotWarNameDisplay(pilot) ? (
+                                <p className={`mt-1 text-[10px] italic ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                  {getPilotWarNameDisplay(pilot)}
+                                </p>
+                              ) : null}
+                              <div className="mt-3 flex items-center justify-center gap-2">
+                                <span className={`rounded-full border px-2.5 py-1 text-[10px] font-bold ${isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}` : theme.heroChip}`}>
+                                  {pilot.pos || filteredRanking.findIndex((item) => (item.pilotoId || item.piloto) === (pilot.pilotoId || pilot.piloto)) + 1}º lugar
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      <div
+                        className={`flex h-14 w-14 items-center justify-center rounded-full border text-sm font-black tracking-[0.14em] ${
+                          isDarkMode
+                            ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                            : `${theme.primaryBorder} bg-white text-zinc-950`
+                        }`}
+                      >
+                        VS
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      {[
+                        {
+                          label: "Pontos",
+                          a: comparePilotA.pontos,
+                          b: comparePilotB.pontos,
+                          lowerIsBetter: false,
+                        },
+                        {
+                          label: "Vitórias",
+                          a: comparePilotA.vitorias,
+                          b: comparePilotB.vitorias,
+                          lowerIsBetter: false,
+                        },
+                        {
+                          label: "Pódios",
+                          a: comparePilotA.podios,
+                          b: comparePilotB.podios,
+                          lowerIsBetter: false,
+                        },
+                        {
+                          label: "Poles",
+                          a: comparePilotA.poles,
+                          b: comparePilotB.poles,
+                          lowerIsBetter: false,
+                        },
+                        {
+                          label: "Melhores voltas",
+                          a: comparePilotA.mv,
+                          b: comparePilotB.mv,
+                          lowerIsBetter: false,
+                        },
+                        {
+                          label: "ADV",
+                          a: comparePilotA.adv,
+                          b: comparePilotB.adv,
+                          lowerIsBetter: true,
+                        },
+                      ].map((metric) => {
+                        const winner = getComparisonWinner(metric.a, metric.b, metric.lowerIsBetter);
+                        return (
+                          <div
+                            key={metric.label}
+                            className={`rounded-[22px] border p-3 ${
+                              isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50/70"
+                            }`}
+                          >
+                            <div className="mb-3 flex items-center justify-between gap-2">
+                              <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                                {metric.label}
+                              </p>
+                              <span className={`rounded-full border px-2 py-1 text-[9px] font-bold uppercase tracking-[0.12em] ${
+                                winner === "tie"
+                                  ? isDarkMode
+                                    ? "border-white/10 bg-white/5 text-zinc-300"
+                                    : "border-zinc-200 bg-white text-zinc-600"
+                                  : isDarkMode
+                                    ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                                    : theme.searchBadge
+                              }`}>
+                                {winner === "tie" ? "Empate" : winner === "a" ? "Vantagem A" : "Vantagem B"}
+                              </span>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className={`rounded-2xl border px-3 py-3 text-center ${getComparisonCardTone({ winner, side: "a", isDark: isDarkMode, theme })}`}>
+                                <p className={`text-[10px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                  Piloto A
+                                </p>
+                                <p className="mt-1 text-[24px] font-extrabold leading-none tracking-tight">{metric.a}</p>
+                              </div>
+
+                              <div className={`rounded-2xl border px-3 py-3 text-center ${getComparisonCardTone({ winner, side: "b", isDark: isDarkMode, theme })}`}>
+                                <p className={`text-[10px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                  Piloto B
+                                </p>
+                                <p className="mt-1 text-[24px] font-extrabold leading-none tracking-tight">{metric.b}</p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="stats" className="mt-0 space-y-4 pt-0">
