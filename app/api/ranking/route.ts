@@ -27,6 +27,47 @@ type RankingItem = {
 type RankingByCompetition = Record<string, RankingItem[]>;
 type RankingData = Record<string, RankingByCompetition>;
 
+type RankingMetaPilot = {
+  pos: number;
+  pilotoId: string;
+  piloto: string;
+  nomeGuerra: string;
+  pontos: number;
+  adv: number;
+  participacoes: number;
+  vitorias: number;
+  poles: number;
+  mv: number;
+  podios: number;
+  descarte: number;
+};
+
+type RankingCompetitionMeta = {
+  summary: {
+    totalPilots: number;
+    leaderPoints: number;
+    vicePoints: number;
+    leaderAdvantage: number;
+    top6CutPoints: number;
+    avgPoints: number;
+    totalVictories: number;
+    totalPodiums: number;
+  };
+  radar: {
+    hottestPilot: RankingMetaPilot | null;
+    hottestLabel: string;
+    podiumPressure: number;
+    titleHeat: string;
+  };
+  titleFight: {
+    label: string;
+    tone: string;
+  };
+  bestEfficiencyPilot: RankingMetaPilot | null;
+};
+
+type RankingMetaData = Record<string, Record<string, RankingCompetitionMeta>>;
+
 type PilotosMaps = {
   byId: Record<string, string>;
   byFullName: Record<string, string>;
@@ -467,6 +508,162 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
   };
 }
 
+
+function toMetaPilot(item: RankingItem | null | undefined): RankingMetaPilot | null {
+  if (!item) return null;
+
+  return {
+    pos: item.pos,
+    pilotoId: item.pilotoId,
+    piloto: item.piloto,
+    nomeGuerra: item.nomeGuerra,
+    pontos: item.pontos,
+    adv: item.adv,
+    participacoes: item.participacoes,
+    vitorias: item.vitorias,
+    poles: item.poles,
+    mv: item.mv,
+    podios: item.podios,
+    descarte: item.descarte,
+  };
+}
+
+function getTitleFightStatus(top3: RankingItem[]) {
+  if (!top3 || top3.length < 2) {
+    return {
+      label: "SEM DISPUTA",
+      tone: "border-zinc-200 bg-zinc-100 text-zinc-600",
+    };
+  }
+
+  const leader = top3[0];
+  const second = top3[1];
+  const diff = leader.pontos - second.pontos;
+
+  if (diff <= 3) {
+    return {
+      label: "BRIGA ACIRRADA",
+      tone: "border-emerald-300 bg-emerald-100 text-emerald-800",
+    };
+  }
+
+  if (diff <= 8) {
+    return {
+      label: "DISPUTA CONTROLADA",
+      tone: "border-yellow-300 bg-yellow-100 text-yellow-800",
+    };
+  }
+
+  return {
+    label: "LIDERANÇA ISOLADA",
+    tone: "border-zinc-300 bg-zinc-100 text-zinc-700",
+  };
+}
+
+function buildCompetitionMeta(list: RankingItem[]): RankingCompetitionMeta {
+  const filtered = list.filter((item) => item.pontos > 0);
+  const totalPilots = filtered.length;
+  const leaderPoints = filtered[0]?.pontos || 0;
+  const vicePoints = filtered[1]?.pontos || 0;
+  const top6CutPoints =
+    totalPilots >= 6
+      ? filtered[5]?.pontos || 0
+      : filtered[totalPilots - 1]?.pontos || 0;
+
+  const totalPoints = filtered.reduce((sum, item) => sum + item.pontos, 0);
+  const avgPoints = totalPilots > 0 ? totalPoints / totalPilots : 0;
+  const totalVictories = filtered.reduce((sum, item) => sum + item.vitorias, 0);
+  const totalPodiums = filtered.reduce((sum, item) => sum + item.podios, 0);
+
+  let hottestPilot: RankingItem | null = null;
+  let hottestLabel = "Sem leitura";
+  let podiumPressure = 0;
+  let titleHeat = "Sem disputa";
+
+  if (filtered.length > 0) {
+    hottestPilot =
+      [...filtered].sort((a, b) => {
+        const aScore = a.vitorias * 4 + a.poles * 2 + a.mv * 2 + a.podios;
+        const bScore = b.vitorias * 4 + b.poles * 2 + b.mv * 2 + b.podios;
+        if (bScore !== aScore) return bScore - aScore;
+        return b.pontos - a.pontos;
+      })[0] || null;
+
+    podiumPressure =
+      filtered.length >= 6
+        ? Math.max((filtered[2]?.pontos || 0) - (filtered[5]?.pontos || 0), 0)
+        : Math.max((filtered[0]?.pontos || 0) - (filtered[filtered.length - 1]?.pontos || 0), 0);
+
+    const titleDiff = Math.max((filtered[0]?.pontos || 0) - (filtered[1]?.pontos || 0), 0);
+
+    if (filtered.length < 2) {
+      titleHeat = "Sem disputa";
+    } else if (titleDiff <= 3) {
+      titleHeat = "Briga acirrada";
+    } else if (titleDiff <= 8) {
+      titleHeat = "Controle parcial";
+    } else {
+      titleHeat = "Liderança isolada";
+    }
+
+    hottestLabel = "Momento forte";
+    if ((hottestPilot?.vitorias || 0) >= 3) {
+      hottestLabel = "Ataque dominante";
+    } else if ((hottestPilot?.podios || 0) >= 4) {
+      hottestLabel = "Consistência premium";
+    } else if ((hottestPilot?.poles || 0) >= 2 || (hottestPilot?.mv || 0) >= 2) {
+      hottestLabel = "Velocidade em alta";
+    }
+  }
+
+  const eligible = filtered.filter((item) => item.participacoes > 0);
+  const bestEfficiencyPilot =
+    eligible.length > 0
+      ? [...eligible].sort((a, b) => {
+          const aEfficiency = a.pontos / Math.max(a.participacoes, 1);
+          const bEfficiency = b.pontos / Math.max(b.participacoes, 1);
+          if (bEfficiency !== aEfficiency) return bEfficiency - aEfficiency;
+          return b.pontos - a.pontos;
+        })[0]
+      : null;
+
+  return {
+    summary: {
+      totalPilots,
+      leaderPoints,
+      vicePoints,
+      leaderAdvantage: Math.max(leaderPoints - vicePoints, 0),
+      top6CutPoints,
+      avgPoints,
+      totalVictories,
+      totalPodiums,
+    },
+    radar: {
+      hottestPilot: toMetaPilot(hottestPilot),
+      hottestLabel,
+      podiumPressure,
+      titleHeat,
+    },
+    titleFight: getTitleFightStatus(filtered.slice(0, 3)),
+    bestEfficiencyPilot: toMetaPilot(bestEfficiencyPilot),
+  };
+}
+
+function buildRankingMeta(grouped: RankingData): RankingMetaData {
+  const meta: RankingMetaData = {};
+
+  for (const [category, competitions] of Object.entries(grouped)) {
+    meta[category] = {};
+
+    for (const [competition, list] of Object.entries(competitions)) {
+      meta[category][competition] = buildCompetitionMeta(list || []);
+    }
+  }
+
+  return meta;
+}
+
+
 export async function GET() {
   try {
     const [rankingResponse, pilotosResponse] = await Promise.all([
@@ -510,9 +707,12 @@ export async function GET() {
     const pilotosParsed = parsePilotosCsv(pilotosText);
     const rankingParsed = parseRankingCsv(rankingText, pilotosParsed.maps);
 
+    const rankingMeta = buildRankingMeta(rankingParsed.grouped);
+
     return NextResponse.json({
       categories: Object.keys(rankingParsed.grouped),
       data: rankingParsed.grouped,
+      meta: rankingMeta,
       debug: {
         pilotos: pilotosParsed.debug,
         ranking: rankingParsed.debug,
