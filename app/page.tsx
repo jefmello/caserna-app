@@ -2776,6 +2776,206 @@ export default function CasernaKartAppModerno() {
 
                 <Card
                   className={`rounded-[24px] shadow-sm ${
+                    isDarkMode
+                      ? `border ${theme.darkAccentBorder} bg-[#111827]`
+                      : `border ${theme.titleBorder} bg-gradient-to-br ${theme.titleBg}`
+                  }`}
+                >
+                  <CardContent className="p-4">
+                    <div className="mb-4 flex items-center justify-between gap-3">
+                      <div>
+                        <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                          Performance do piloto
+                        </p>
+                        <h3 className={`text-[18px] font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                          Leitura por blocos oficiais
+                        </h3>
+                      </div>
+
+                      <div className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}` : theme.headerChip}`}>
+                        ataque · consistência · status
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+                      <Card
+                        className={`rounded-[22px] shadow-none ${
+                          isDarkMode
+                            ? `${theme.darkAccentBorder} bg-[#0f172a]`
+                            : `${theme.heroBorder} bg-gradient-to-b ${theme.heroBg}`
+                        }`}
+                      >
+                        <CardContent className="p-4">
+                          <div className="mb-4 flex items-center justify-between gap-2">
+                            <div>
+                              <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                                Ataque
+                              </p>
+                              <h4 className={`mt-1 text-[16px] font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                Força ofensiva
+                              </h4>
+                            </div>
+                            <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap}`}>
+                              <Swords className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                            </div>
+                          </div>
+
+                          <div className="space-y-2.5">
+                            <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
+                              <div className="flex items-center justify-between gap-3">
+                                <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                  Vitórias
+                                </span>
+                                <span className={`text-[20px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                  {selectedPilot.vitorias}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
+                              <div className="flex items-center justify-between gap-3">
+                                <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                  Poles
+                                </span>
+                                <span className={`text-[20px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                  {selectedPilot.poles}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
+                              <div className="flex items-center justify-between gap-3">
+                                <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                  Melhores voltas
+                                </span>
+                                <span className={`text-[20px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                  {selectedPilot.mv}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card
+                        className={`rounded-[22px] shadow-none ${
+                          isDarkMode ? "border border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                        }`}
+                      >
+                        <CardContent className="p-4">
+                          <div className="mb-4 flex items-center justify-between gap-2">
+                            <div>
+                              <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                                Consistência
+                              </p>
+                              <h4 className={`mt-1 text-[16px] font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                Regularidade na temporada
+                              </h4>
+                            </div>
+                            <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap}`}>
+                              <BarChart3 className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                            </div>
+                          </div>
+
+                          <div className="space-y-2.5">
+                            <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
+                              <div className="flex items-center justify-between gap-3">
+                                <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                  Pódios
+                                </span>
+                                <span className={`text-[20px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                  {selectedPilot.podios}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
+                              <div className="flex items-center justify-between gap-3">
+                                <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                  Participações
+                                </span>
+                                <span className={`text-[20px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                  {selectedPilot.participacoes}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
+                              <div className="flex items-center justify-between gap-3">
+                                <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                  Média de pontos
+                                </span>
+                                <span className={`text-[20px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                  {selectedPilotAverage.toFixed(1)}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card
+                        className={`rounded-[22px] shadow-none ${
+                          isDarkMode ? "border border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                        }`}
+                      >
+                        <CardContent className="p-4">
+                          <div className="mb-4 flex items-center justify-between gap-2">
+                            <div>
+                              <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                                Status no campeonato
+                              </p>
+                              <h4 className={`mt-1 text-[16px] font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                Posição atual do piloto
+                              </h4>
+                            </div>
+                            <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap}`}>
+                              <TableProperties className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                            </div>
+                          </div>
+
+                          <div className="space-y-2.5">
+                            <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
+                              <div className="flex items-center justify-between gap-3">
+                                <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                  Posição atual
+                                </span>
+                                <span className={`text-[20px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                  {selectedPilot.pos}º
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
+                              <div className="flex items-center justify-between gap-3">
+                                <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                  Pontos totais
+                                </span>
+                                <span className={`text-[20px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                  {selectedPilot.pontos}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
+                              <div className="flex items-center justify-between gap-3">
+                                <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                  Diferença do líder
+                                </span>
+                                <span className={`text-[20px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                  {selectedPilotGap === "líder" ? "LÍDER" : `${selectedPilotLeaderGapValue} pts`}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card
+                  className={`rounded-[24px] shadow-sm ${
                     isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
                   }`}
                 >
