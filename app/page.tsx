@@ -67,6 +67,47 @@ type RankingItem = {
 type RankingByCompetition = Record<string, RankingItem[]>;
 type RankingData = Record<string, RankingByCompetition>;
 
+type RankingMetaPilot = {
+  pos: number;
+  pilotoId: string;
+  piloto: string;
+  nomeGuerra: string;
+  pontos: number;
+  adv: number;
+  participacoes: number;
+  vitorias: number;
+  poles: number;
+  mv: number;
+  podios: number;
+  descarte: number;
+};
+
+type RankingCompetitionMeta = {
+  summary: {
+    totalPilots: number;
+    leaderPoints: number;
+    vicePoints: number;
+    leaderAdvantage: number;
+    top6CutPoints: number;
+    avgPoints: number;
+    totalVictories: number;
+    totalPodiums: number;
+  };
+  radar: {
+    hottestPilot: RankingMetaPilot | null;
+    hottestLabel: string;
+    podiumPressure: number;
+    titleHeat: string;
+  };
+  titleFight: {
+    label: string;
+    tone: string;
+  };
+  bestEfficiencyPilot: RankingMetaPilot | null;
+};
+
+type RankingMetaData = Record<string, Record<string, RankingCompetitionMeta>>;
+
 const categoryColors: Record<string, string> = {
   Base: "bg-orange-50 text-orange-700 border-orange-200",
   Graduados: "bg-blue-50 text-blue-700 border-blue-200",
@@ -1078,6 +1119,7 @@ function getDuelProfileLabel({
 
 export default function CasernaKartAppModerno() {
   const [rankingData, setRankingData] = useState<RankingData>({});
+  const [rankingMeta, setRankingMeta] = useState<RankingMetaData>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [category, setCategory] = useState("Base");
@@ -1116,6 +1158,7 @@ export default function CasernaKartAppModerno() {
         }
 
         setRankingData(json.data || {});
+        setRankingMeta(json.meta || {});
 
         const cats = json.categories || [];
         if (cats.length > 0) {
@@ -1155,6 +1198,10 @@ export default function CasernaKartAppModerno() {
   const currentCompetitionList = useMemo(() => {
     return rankingData[category]?.[competition] || [];
   }, [rankingData, category, competition]);
+
+  const currentCompetitionMeta = useMemo(() => {
+    return rankingMeta[category]?.[competition] || null;
+  }, [rankingMeta, category, competition]);
 
   const filteredRanking = useMemo(() => {
     return currentCompetitionList.filter(
@@ -1402,8 +1449,8 @@ const duelSummary = useMemo(() => {
   }, [filteredRanking, rankingData, category, competition]);
 
   const titleFightStatus = useMemo(
-    () => getTitleFightStatus(top3TitleFight),
-    [top3TitleFight]
+    () => currentCompetitionMeta?.titleFight || getTitleFightStatus(top3TitleFight),
+    [top3TitleFight, currentCompetitionMeta]
   );
 
   const topPointsChartData = useMemo(
@@ -1432,6 +1479,10 @@ const duelSummary = useMemo(() => {
   );
 
   const statsSummary = useMemo(() => {
+    if (currentCompetitionMeta?.summary) {
+      return currentCompetitionMeta.summary;
+    }
+
     const totalPilots = filteredRanking.length;
     const leaderPoints = filteredRanking[0]?.pontos || 0;
     const vicePoints = filteredRanking[1]?.pontos || 0;
@@ -1462,12 +1513,16 @@ const duelSummary = useMemo(() => {
       totalVictories,
       totalPodiums,
     };
-  }, [filteredRanking]);
+  }, [filteredRanking, currentCompetitionMeta]);
 
   const statsRadar = useMemo(() => {
+    if (currentCompetitionMeta?.radar) {
+      return currentCompetitionMeta.radar;
+    }
+
     if (filteredRanking.length === 0) {
       return {
-        hottestPilot: null as RankingItem | null,
+        hottestPilot: null as RankingMetaPilot | null,
         hottestLabel: "Sem leitura",
         podiumPressure: 0,
         titleHeat: "Sem disputa",
@@ -1517,9 +1572,13 @@ const duelSummary = useMemo(() => {
       podiumPressure,
       titleHeat,
     };
-  }, [filteredRanking]);
+  }, [filteredRanking, currentCompetitionMeta]);
 
   const bestEfficiencyPilot = useMemo(() => {
+    if (currentCompetitionMeta?.bestEfficiencyPilot) {
+      return currentCompetitionMeta.bestEfficiencyPilot;
+    }
+
     const eligible = filteredRanking.filter((item) => item.participacoes > 0);
 
     if (eligible.length === 0) return null;
@@ -1530,7 +1589,7 @@ const duelSummary = useMemo(() => {
       if (bEfficiency !== aEfficiency) return bEfficiency - aEfficiency;
       return b.pontos - a.pontos;
     })[0];
-  }, [filteredRanking]);
+  }, [filteredRanking, currentCompetitionMeta]);
 
   function handleSelectPilot(pilot: RankingItem) {
     setSelectedPilot(pilot);
@@ -5084,5 +5143,4 @@ const duelSummary = useMemo(() => {
     </div>
   );
 }
-
 
