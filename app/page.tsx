@@ -1827,94 +1827,100 @@ export default function CasernaKartAppModerno() {
         </section>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
-          <TabsList className="relative z-10 mb-5 grid h-auto w-full grid-cols-4 gap-2 bg-transparent p-0 shadow-none">
-            <TabsTrigger
-              value="classificacao"
-              className={`h-[62px] rounded-[18px] px-2 py-0 shadow-sm transition-all duration-200 ${
-                isDarkMode
-                  ? "border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]"
-                  : "border border-zinc-200 bg-white text-zinc-500 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.06)]"
-              }`}
-            >
-              <div className="flex h-full flex-col items-center justify-center gap-0.5">
-                <div
-                  className={`flex h-7 w-7 items-center justify-center rounded-xl ${
-                    isDarkMode ? "bg-white/5 text-zinc-300" : "bg-zinc-50 text-zinc-500"
-                  }`}
-                >
-                  <TableProperties className="h-4 w-4" />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.12em]">
-                  Classificação
-                </span>
-              </div>
-            </TabsTrigger>
+          <TabsList className="relative z-10 mb-7 grid h-auto w-full grid-cols-4 gap-3 bg-transparent p-0 shadow-none">
+            {[
+              {
+                value: "classificacao",
+                label: "Classificação",
+                icon: TableProperties,
+              },
+              {
+                value: "piloto",
+                label: "Piloto",
+                icon: User,
+              },
+              {
+                value: "comparador",
+                label: "Comparar",
+                icon: Swords,
+              },
+              {
+                value: "stats",
+                label: "Stats",
+                icon: BarChart3,
+              },
+            ].map((tabItem) => {
+              const Icon = tabItem.icon;
+              const isActive = activeTab === tabItem.value;
 
-            <TabsTrigger
-              value="piloto"
-              className={`h-[62px] rounded-[18px] px-2 py-0 shadow-sm transition-all duration-200 ${
-                isDarkMode
-                  ? "border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]"
-                  : "border border-zinc-200 bg-white text-zinc-500 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.06)]"
-              }`}
-            >
-              <div className="flex h-full flex-col items-center justify-center gap-0.5">
-                <div
-                  className={`flex h-7 w-7 items-center justify-center rounded-xl ${
-                    isDarkMode ? "bg-white/5 text-zinc-300" : "bg-zinc-50 text-zinc-500"
-                  }`}
-                >
-                  <User className="h-4 w-4" />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.12em]">
-                  Piloto
-                </span>
-              </div>
-            </TabsTrigger>
+              const activeGlow =
+                category === "Base"
+                  ? isDarkMode
+                    ? "shadow-[0_10px_22px_rgba(249,115,22,0.24),0_0_0_1px_rgba(249,115,22,0.28)]"
+                    : "shadow-[0_10px_22px_rgba(249,115,22,0.18),0_0_0_1px_rgba(249,115,22,0.16)]"
+                  : category === "Graduados"
+                    ? isDarkMode
+                      ? "shadow-[0_10px_22px_rgba(59,130,246,0.24),0_0_0_1px_rgba(59,130,246,0.28)]"
+                      : "shadow-[0_10px_22px_rgba(59,130,246,0.18),0_0_0_1px_rgba(59,130,246,0.16)]"
+                    : isDarkMode
+                      ? "shadow-[0_10px_22px_rgba(234,179,8,0.24),0_0_0_1px_rgba(234,179,8,0.28)]"
+                      : "shadow-[0_10px_22px_rgba(234,179,8,0.18),0_0_0_1px_rgba(234,179,8,0.16)]";
 
-            <TabsTrigger
-              value="comparador"
-              className={`h-[62px] rounded-[18px] px-2 py-0 shadow-sm transition-all duration-200 ${
-                isDarkMode
-                  ? "border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]"
-                  : "border border-zinc-200 bg-white text-zinc-500 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.06)]"
-              }`}
-            >
-              <div className="flex h-full flex-col items-center justify-center gap-0.5">
-                <div
-                  className={`flex h-7 w-7 items-center justify-center rounded-xl ${
-                    isDarkMode ? "bg-white/5 text-zinc-300" : "bg-zinc-50 text-zinc-500"
-                  }`}
-                >
-                  <Swords className="h-4 w-4" />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.12em]">
-                  Comparar
-                </span>
-              </div>
-            </TabsTrigger>
+              const activeSurface =
+                category === "Base"
+                  ? isDarkMode
+                    ? "border-orange-500/40 bg-gradient-to-b from-orange-500/12 to-[#161e2b] text-white"
+                    : "border-orange-300 bg-gradient-to-b from-orange-50 to-white text-zinc-950"
+                  : category === "Graduados"
+                    ? isDarkMode
+                      ? "border-blue-500/40 bg-gradient-to-b from-blue-500/12 to-[#161e2b] text-white"
+                      : "border-blue-300 bg-gradient-to-b from-blue-50 to-white text-zinc-950"
+                    : isDarkMode
+                      ? "border-yellow-500/40 bg-gradient-to-b from-yellow-500/12 to-[#161e2b] text-white"
+                      : "border-yellow-300 bg-gradient-to-b from-yellow-50 to-white text-zinc-950";
 
-            <TabsTrigger
-              value="stats"
-              className={`h-[62px] rounded-[18px] px-2 py-0 shadow-sm transition-all duration-200 ${
-                isDarkMode
-                  ? "border border-white/10 bg-[#111827] text-zinc-400 data-[state=active]:bg-[#161e2b] data-[state=active]:text-white data-[state=active]:shadow-[0_6px_14px_rgba(0,0,0,0.35)]"
-                  : "border border-zinc-200 bg-white text-zinc-500 data-[state=active]:border-yellow-300 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-[0_6px_14px_rgba(15,23,42,0.06)]"
-              }`}
-            >
-              <div className="flex h-full flex-col items-center justify-center gap-0.5">
-                <div
-                  className={`flex h-7 w-7 items-center justify-center rounded-xl ${
-                    isDarkMode ? "bg-white/5 text-zinc-300" : "bg-zinc-50 text-zinc-500"
+              return (
+                <TabsTrigger
+                  key={tabItem.value}
+                  value={tabItem.value}
+                  className={`h-[74px] rounded-[20px] px-3 py-2 shadow-sm transition-all duration-300 ${
+                    isActive
+                      ? `${activeSurface} ${activeGlow} scale-[1.01]`
+                      : isDarkMode
+                        ? "border border-white/10 bg-[#111827] text-zinc-400 hover:border-white/15 hover:bg-[#161e2b]"
+                        : "border border-zinc-200 bg-white text-zinc-500 hover:border-zinc-300 hover:bg-zinc-50"
                   }`}
                 >
-                  <BarChart3 className="h-4 w-4" />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.12em]">
-                  Stats
-                </span>
-              </div>
-            </TabsTrigger>
+                  <div className="flex h-full flex-col items-center justify-center gap-1.5">
+                    <div
+                      className={`flex h-9 w-9 items-center justify-center rounded-[13px] transition-all duration-300 ${
+                        isActive
+                          ? category === "Base"
+                            ? isDarkMode
+                              ? "bg-orange-500/15 text-orange-300"
+                              : "bg-orange-100 text-orange-700"
+                            : category === "Graduados"
+                              ? isDarkMode
+                                ? "bg-blue-500/15 text-blue-300"
+                                : "bg-blue-100 text-blue-700"
+                              : isDarkMode
+                                ? "bg-yellow-500/15 text-yellow-300"
+                                : "bg-yellow-100 text-yellow-700"
+                          : isDarkMode
+                            ? "bg-white/5 text-zinc-300"
+                            : "bg-zinc-50 text-zinc-500"
+                      }`}
+                    >
+                      <Icon className="h-4 w-4" />
+                    </div>
+
+                    <span className="max-w-[68px] text-center text-[9px] font-bold uppercase leading-[1.05] tracking-[0.1em] whitespace-normal break-words">
+                      {tabItem.label}
+                    </span>
+                  </div>
+                </TabsTrigger>
+              );
+            })}
           </TabsList>
 
           <TabsContent value="classificacao" className="mt-0 space-y-4 pt-0">
@@ -4452,3 +4458,4 @@ export default function CasernaKartAppModerno() {
     </div>
   );
 }
+
