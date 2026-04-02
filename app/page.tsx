@@ -1043,6 +1043,35 @@ export default function CasernaKartAppModerno() {
     return Math.max(0, 100 - penalty);
   }, [selectedPilot]);
 
+  const selectedPilotLeaderGapValue = useMemo(() => {
+    if (!selectedPilot || !leader) return 0;
+    return Math.max(0, leader.pontos - selectedPilot.pontos);
+  }, [selectedPilot, leader]);
+
+  const selectedPilotWinRateLabel = useMemo(() => {
+    if (!selectedPilot || selectedPilot.participacoes <= 0) return "sem leitura";
+    if (selectedPilotWinRate >= 40) return "índice vencedor";
+    if (selectedPilotWinRate >= 20) return "boa conversão";
+    if (selectedPilotWinRate > 0) return "ainda pode crescer";
+    return "busca a 1ª vitória";
+  }, [selectedPilot, selectedPilotWinRate]);
+
+  const selectedPilotPodiumRateLabel = useMemo(() => {
+    if (!selectedPilot || selectedPilot.participacoes <= 0) return "sem leitura";
+    if (selectedPilotPodiumRate >= 70) return "top 6 muito forte";
+    if (selectedPilotPodiumRate >= 50) return "regularidade alta";
+    if (selectedPilotPodiumRate > 0) return "presença competitiva";
+    return "fora do top 6";
+  }, [selectedPilot, selectedPilotPodiumRate]);
+
+  const selectedPilotDisciplineLabel = useMemo(() => {
+    if (!selectedPilot || selectedPilot.participacoes <= 0) return "sem leitura";
+    if (selectedPilotDiscipline >= 90) return "conduta exemplar";
+    if (selectedPilotDiscipline >= 75) return "controle estável";
+    if (selectedPilotDiscipline >= 60) return "atenção moderada";
+    return "risco disciplinar";
+  }, [selectedPilot, selectedPilotDiscipline]);
+
   const selectedPilotRivalAhead = useMemo(() => {
     if (!selectedPilot) return null;
 
@@ -2601,91 +2630,149 @@ export default function CasernaKartAppModerno() {
                   </CardContent>
                 </Card>
 
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  <Card
-                    className={`rounded-[22px] shadow-sm ${
-                      isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
-                    }`}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between gap-2">
-                        <div>
-                          <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
-                            Contra o líder
-                          </p>
-                          <p className={`mt-1 text-[22px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                            {selectedPilotVsLeader}%
-                          </p>
-                        </div>
-                        <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap}`}>
-                          <Trophy className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
-                        </div>
+                <Card
+                  className={`rounded-[24px] shadow-sm ${
+                    isDarkMode
+                      ? `border ${theme.darkAccentBorder} bg-[#111827]`
+                      : `border ${theme.titleBorder} bg-gradient-to-br ${theme.titleBg}`
+                  }`}
+                >
+                  <CardContent className="p-4">
+                    <div className="mb-4 flex items-center justify-between gap-3">
+                      <div>
+                        <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                          Comparativo oficial
+                        </p>
+                        <h3 className={`text-[18px] font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                          Momento competitivo do piloto
+                        </h3>
                       </div>
-                      <div className={`mt-3 h-2.5 w-full overflow-hidden rounded-full ${isDarkMode ? "bg-white/10" : "bg-zinc-100"}`}>
-                        <div className={`h-full rounded-full ${isDarkMode ? "bg-white/80" : "bg-zinc-900"}`} style={{ width: `${selectedPilotVsLeader}%` }} />
-                      </div>
-                      <p className={`mt-2 text-[11px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-                        rendimento em pontos comparado ao líder atual
-                      </p>
-                    </CardContent>
-                  </Card>
 
-                  <Card
-                    className={`rounded-[22px] shadow-sm ${
-                      isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
-                    }`}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between gap-2">
-                        <div>
-                          <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
-                            Taxa de pódio
-                          </p>
-                          <p className={`mt-1 text-[22px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                            {selectedPilotPodiumRate}%
-                          </p>
-                        </div>
-                        <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap}`}>
-                          <Medal className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
-                        </div>
+                      <div className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}` : theme.headerChip}`}>
+                        leitura rápida
                       </div>
-                      <div className={`mt-3 h-2.5 w-full overflow-hidden rounded-full ${isDarkMode ? "bg-white/10" : "bg-zinc-100"}`}>
-                        <div className={`h-full rounded-full ${isDarkMode ? "bg-white/80" : "bg-zinc-900"}`} style={{ width: `${selectedPilotPodiumRate}%` }} />
-                      </div>
-                      <p className={`mt-2 text-[11px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-                        presença do piloto no top 6 das etapas válidas
-                      </p>
-                    </CardContent>
-                  </Card>
+                    </div>
 
-                  <Card
-                    className={`rounded-[22px] shadow-sm ${
-                      isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
-                    }`}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between gap-2">
-                        <div>
-                          <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
-                            Disciplina esportiva
+                    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+                      <Card
+                        className={`rounded-[22px] shadow-none ${
+                          isDarkMode
+                            ? `${theme.darkAccentBorder} bg-[#0f172a]`
+                            : `${theme.heroBorder} bg-gradient-to-b ${theme.heroBg}`
+                        }`}
+                      >
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between gap-2">
+                            <div>
+                              <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                                Distância do líder
+                              </p>
+                              <p className={`mt-1 text-[22px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                {selectedPilotLeaderGapValue}
+                                <span className={`ml-1 text-[12px] font-bold ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                  pts
+                                </span>
+                              </p>
+                            </div>
+                            <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap}`}>
+                              <Trophy className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                            </div>
+                          </div>
+                          <div className={`mt-3 h-2.5 w-full overflow-hidden rounded-full ${isDarkMode ? "bg-white/10" : "bg-zinc-100"}`}>
+                            <div className={`h-full rounded-full ${isDarkMode ? "bg-white/80" : "bg-zinc-900"}`} style={{ width: `${selectedPilotVsLeader}%` }} />
+                          </div>
+                          <p className={`mt-2 text-[11px] leading-snug ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                            {selectedPilotGap === "líder" ? "piloto já ocupa a liderança da seleção" : `${selectedPilotVsLeader}% do rendimento em pontos do líder atual`}
                           </p>
-                          <p className={`mt-1 text-[22px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                            {selectedPilotDiscipline}%
+                        </CardContent>
+                      </Card>
+
+                      <Card
+                        className={`rounded-[22px] shadow-none ${
+                          isDarkMode ? "border border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                        }`}
+                      >
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between gap-2">
+                            <div>
+                              <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                                Aproveitamento em vitórias
+                              </p>
+                              <p className={`mt-1 text-[22px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                {selectedPilotWinRate}%
+                              </p>
+                            </div>
+                            <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap}`}>
+                              <Crown className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                            </div>
+                          </div>
+                          <div className={`mt-3 h-2.5 w-full overflow-hidden rounded-full ${isDarkMode ? "bg-white/10" : "bg-zinc-100"}`}>
+                            <div className={`h-full rounded-full ${isDarkMode ? "bg-white/80" : "bg-zinc-900"}`} style={{ width: `${selectedPilotWinRate}%` }} />
+                          </div>
+                          <p className={`mt-2 text-[11px] leading-snug ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                            {selectedPilotWinRateLabel} · {selectedPilot.vitorias} vitória(s) em {selectedPilot.participacoes} participação(ões)
                           </p>
-                        </div>
-                        <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap}`}>
-                          <Gauge className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
-                        </div>
-                      </div>
-                      <div className={`mt-3 h-2.5 w-full overflow-hidden rounded-full ${isDarkMode ? "bg-white/10" : "bg-zinc-100"}`}>
-                        <div className={`h-full rounded-full ${isDarkMode ? "bg-white/80" : "bg-zinc-900"}`} style={{ width: `${selectedPilotDiscipline}%` }} />
-                      </div>
-                      <p className={`mt-2 text-[11px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-                        leitura baseada na relação entre advertências e participações
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card
+                        className={`rounded-[22px] shadow-none ${
+                          isDarkMode ? "border border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                        }`}
+                      >
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between gap-2">
+                            <div>
+                              <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                                Taxa de pódios
+                              </p>
+                              <p className={`mt-1 text-[22px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                {selectedPilotPodiumRate}%
+                              </p>
+                            </div>
+                            <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap}`}>
+                              <Medal className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                            </div>
+                          </div>
+                          <div className={`mt-3 h-2.5 w-full overflow-hidden rounded-full ${isDarkMode ? "bg-white/10" : "bg-zinc-100"}`}>
+                            <div className={`h-full rounded-full ${isDarkMode ? "bg-white/80" : "bg-zinc-900"}`} style={{ width: `${selectedPilotPodiumRate}%` }} />
+                          </div>
+                          <p className={`mt-2 text-[11px] leading-snug ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                            {selectedPilotPodiumRateLabel} · presença no top 6 em {selectedPilot.podios} etapa(s)
+                          </p>
+                        </CardContent>
+                      </Card>
+
+                      <Card
+                        className={`rounded-[22px] shadow-none ${
+                          isDarkMode ? "border border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                        }`}
+                      >
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between gap-2">
+                            <div>
+                              <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                                Nível disciplinar
+                              </p>
+                              <p className={`mt-1 text-[22px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                {selectedPilotDiscipline}%
+                              </p>
+                            </div>
+                            <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap}`}>
+                              <Gauge className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                            </div>
+                          </div>
+                          <div className={`mt-3 h-2.5 w-full overflow-hidden rounded-full ${isDarkMode ? "bg-white/10" : "bg-zinc-100"}`}>
+                            <div className={`h-full rounded-full ${isDarkMode ? "bg-white/80" : "bg-zinc-900"}`} style={{ width: `${selectedPilotDiscipline}%` }} />
+                          </div>
+                          <p className={`mt-2 text-[11px] leading-snug ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                            {selectedPilotDisciplineLabel} · {selectedPilot.adv} advertências em {selectedPilot.participacoes} participação(ões)
+                          </p>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CardContent>
+                </Card>
 
                 <Card
                   className={`rounded-[24px] shadow-sm ${
