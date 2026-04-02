@@ -447,6 +447,52 @@ function getPilotEfficiency(pilot?: RankingItem | null) {
   return Math.round((pilot.pontos / pilot.participacoes) * 10) / 10;
 }
 
+function getRivalryVerdict(
+  pilot?: RankingItem | null,
+  rival?: RankingItem | null
+) {
+  if (!pilot || !rival) {
+    return {
+      label: "Sem duelo direto",
+      summary: "Selecione um piloto dentro de uma classificação com adversários próximos.",
+    };
+  }
+
+  let pilotScore = 0;
+  let rivalScore = 0;
+
+  if (pilot.pontos > rival.pontos) pilotScore += 2;
+  else if (pilot.pontos < rival.pontos) rivalScore += 2;
+
+  if (pilot.vitorias > rival.vitorias) pilotScore += 1;
+  else if (pilot.vitorias < rival.vitorias) rivalScore += 1;
+
+  if (pilot.podios > rival.podios) pilotScore += 1;
+  else if (pilot.podios < rival.podios) rivalScore += 1;
+
+  if (pilot.mv > rival.mv) pilotScore += 1;
+  else if (pilot.mv < rival.mv) rivalScore += 1;
+
+  if (pilotScore > rivalScore) {
+    return {
+      label: "Piloto em vantagem",
+      summary: "Leva a melhor no duelo pelos principais indicadores.",
+    };
+  }
+
+  if (rivalScore > pilotScore) {
+    return {
+      label: "Rival em vantagem",
+      summary: "O adversário ainda leva vantagem no recorte atual.",
+    };
+  }
+
+  return {
+    label: "Duelo equilibrado",
+    summary: "Os dois pilotos estão muito próximos nesta leitura.",
+  };
+}
+
 function getTitleFightStatus(top3: RankingItem[]) {
   if (!top3 || top3.length < 2) {
     return {
@@ -1072,18 +1118,40 @@ export default function CasernaKartAppModerno() {
     return "risco disciplinar";
   }, [selectedPilot, selectedPilotDiscipline]);
 
-  const selectedPilotRivalAhead = useMemo(() => {
-    if (!selectedPilot) return null;
+  const selectedPilotIndex = useMemo(() => {
+    if (!selectedPilot) return -1;
 
-    const pilotIndex = filteredRanking.findIndex(
+    return filteredRanking.findIndex(
       (item) =>
         item.pilotoId === selectedPilot.pilotoId &&
         item.competicao === selectedPilot.competicao
     );
-
-    if (pilotIndex <= 0) return null;
-    return filteredRanking[pilotIndex - 1] || null;
   }, [filteredRanking, selectedPilot]);
+
+  const selectedPilotRivalAhead = useMemo(() => {
+    if (selectedPilotIndex <= 0) return null;
+    return filteredRanking[selectedPilotIndex - 1] || null;
+  }, [filteredRanking, selectedPilotIndex]);
+
+  const selectedPilotRivalBehind = useMemo(() => {
+    if (selectedPilotIndex < 0) return null;
+    return filteredRanking[selectedPilotIndex + 1] || null;
+  }, [filteredRanking, selectedPilotIndex]);
+
+  const selectedPilotPointsToRivalAhead = useMemo(() => {
+    if (!selectedPilot || !selectedPilotRivalAhead) return 0;
+    return Math.max(0, selectedPilotRivalAhead.pontos - selectedPilot.pontos);
+  }, [selectedPilot, selectedPilotRivalAhead]);
+
+  const selectedPilotPointsAheadOfBehind = useMemo(() => {
+    if (!selectedPilot || !selectedPilotRivalBehind) return 0;
+    return Math.max(0, selectedPilot.pontos - selectedPilotRivalBehind.pontos);
+  }, [selectedPilot, selectedPilotRivalBehind]);
+
+  const selectedPilotRivalVerdict = useMemo(
+    () => getRivalryVerdict(selectedPilot, selectedPilotRivalAhead),
+    [selectedPilot, selectedPilotRivalAhead]
+  );
 
   const top3TitleFight = useMemo(() => filteredRanking.slice(0, 3), [filteredRanking]);
 
@@ -2970,6 +3038,134 @@ export default function CasernaKartAppModerno() {
                           </div>
                         </CardContent>
                       </Card>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card
+                  className={`rounded-[24px] shadow-sm ${
+                    isDarkMode
+                      ? `border ${theme.darkAccentBorder} bg-[#111827]`
+                      : `border ${theme.titleBorder} bg-gradient-to-br ${theme.titleBg}`
+                  }`}
+                >
+                  <CardContent className="p-4">
+                    <div className="mb-4 flex items-center justify-between gap-3">
+                      <div>
+                        <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                          Rival direto
+                        </p>
+                        <h3 className={`text-[18px] font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                          Duelo mais próximo do campeonato
+                        </h3>
+                      </div>
+
+                      <div className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}` : theme.headerChip}`}>
+                        pressão competitiva
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-3">
+                      <div className={`rounded-[22px] border p-4 ${
+                        isDarkMode
+                          ? `${theme.darkAccentBorder} bg-gradient-to-r from-[#111827] to-[#161e2b]`
+                          : `${theme.heroBorder} bg-gradient-to-r ${theme.heroBg}`
+                      }`}>
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0 flex-1">
+                            <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}>
+                              Leitura oficial do duelo
+                            </p>
+                            <p className={`mt-1 text-[18px] font-extrabold leading-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                              {selectedPilotRivalVerdict.label}
+                            </p>
+                            <p className={`mt-2 text-[12px] leading-relaxed ${isDarkMode ? "text-zinc-400" : "text-zinc-600"}`}>
+                              {selectedPilotRivalAhead
+                                ? `${selectedPilotRivalVerdict.summary} Faltam ${selectedPilotPointsToRivalAhead} ponto(s) para alcançar ${getPilotFirstAndLastName(selectedPilotRivalAhead.piloto)}.`
+                                : "Este piloto ocupa a liderança da classificação atual e não possui rival acima nesta leitura."}
+                            </p>
+                          </div>
+
+                          <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap}`}>
+                            <Swords className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                        <div className={`rounded-[22px] border p-4 ${isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"}`}>
+                          <div className="flex items-center justify-between gap-3">
+                            <div>
+                              <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                                Rival acima
+                              </p>
+                              <p className={`mt-1 text-[17px] font-extrabold leading-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                {selectedPilotRivalAhead ? getPilotFirstAndLastName(selectedPilotRivalAhead.piloto) : "Nenhum acima"}
+                              </p>
+                            </div>
+                            <span className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] ${isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}` : theme.heroChip}`}>
+                              {selectedPilotRivalAhead ? `${selectedPilotPointsToRivalAhead} pts` : "líder"}
+                            </span>
+                          </div>
+
+                          <div className="mt-4 space-y-2.5">
+                            <div className={`flex items-center justify-between rounded-[16px] border px-3 py-2 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50"}`}>
+                              <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>Pontos</span>
+                              <span className={`text-[13px] font-extrabold ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilot.pontos} x {selectedPilotRivalAhead?.pontos ?? "-"}</span>
+                            </div>
+                            <div className={`flex items-center justify-between rounded-[16px] border px-3 py-2 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50"}`}>
+                              <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>Vitórias</span>
+                              <span className={`text-[13px] font-extrabold ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilot.vitorias} x {selectedPilotRivalAhead?.vitorias ?? "-"}</span>
+                            </div>
+                            <div className={`flex items-center justify-between rounded-[16px] border px-3 py-2 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50"}`}>
+                              <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>Pódios</span>
+                              <span className={`text-[13px] font-extrabold ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilot.podios} x {selectedPilotRivalAhead?.podios ?? "-"}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className={`rounded-[22px] border p-4 ${isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"}`}>
+                          <div className="flex items-center justify-between gap-3">
+                            <div>
+                              <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                                Pressão abaixo
+                              </p>
+                              <p className={`mt-1 text-[17px] font-extrabold leading-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                {selectedPilotRivalBehind ? getPilotFirstAndLastName(selectedPilotRivalBehind.piloto) : "Sem perseguidor imediato"}
+                              </p>
+                            </div>
+                            <span className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] ${isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}` : theme.heroChip}`}>
+                              {selectedPilotRivalBehind ? `+${selectedPilotPointsAheadOfBehind} pts` : "livre"}
+                            </span>
+                          </div>
+
+                          <div className="mt-4 grid grid-cols-2 gap-2.5">
+                            <div className={`rounded-[16px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50"}`}>
+                              <p className={`text-[10px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                                Vantagem
+                              </p>
+                              <p className={`mt-1 text-[22px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                {selectedPilotRivalBehind ? `+${selectedPilotPointsAheadOfBehind}` : "--"}
+                              </p>
+                              <p className={`mt-1 text-[11px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                sobre o piloto abaixo
+                              </p>
+                            </div>
+
+                            <div className={`rounded-[16px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50"}`}>
+                              <p className={`text-[10px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                                VMR duelo
+                              </p>
+                              <p className={`mt-1 text-[22px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                {selectedPilot.mv}
+                              </p>
+                              <p className={`mt-1 text-[11px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                vs {selectedPilotRivalAhead ? selectedPilotRivalAhead.mv : 0} do rival acima
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
