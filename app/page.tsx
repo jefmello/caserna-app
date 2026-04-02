@@ -684,7 +684,7 @@ function HighlightCard({
   return (
     <Card
       className={`rounded-[22px] border shadow-none ${
-        compact ? "h-[156px]" : "h-[182px]"
+        compact ? "h-[156px]" : "h-auto min-h-[182px]"
       } ${
         isDark
           ? accent
@@ -696,7 +696,7 @@ function HighlightCard({
       }`}
     >
       <CardContent
-        className={`flex h-full flex-col ${
+        className={`${compact ? "flex h-full flex-col" : "flex flex-col"} ${
           compact ? "px-3 pb-3 pt-2" : "px-4 pb-4 pt-2"
         }`}
       >
