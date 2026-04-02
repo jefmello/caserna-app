@@ -1986,7 +1986,7 @@ const duelSummary = useMemo(() => {
         </section>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
-          <TabsList className="relative z-10 mb-7 grid h-auto w-full grid-cols-4 gap-3 bg-transparent p-0 shadow-none">
+          <TabsList className="relative z-10 mb-9 grid h-auto w-full grid-cols-4 gap-3 bg-transparent p-0 shadow-none">
             {[
               {
                 value: "classificacao",
@@ -2042,7 +2042,7 @@ const duelSummary = useMemo(() => {
                 <TabsTrigger
                   key={tabItem.value}
                   value={tabItem.value}
-                  className={`h-[74px] rounded-[20px] px-3 py-2 shadow-sm transition-all duration-300 ${
+                  className={`h-[72px] rounded-[20px] px-2.5 py-2 shadow-sm transition-all duration-300 ${
                     isActive
                       ? `${activeSurface} ${activeGlow} scale-[1.01]`
                       : isDarkMode
@@ -2073,7 +2073,13 @@ const duelSummary = useMemo(() => {
                       <Icon className="h-4 w-4" />
                     </div>
 
-                    <span className="max-w-[68px] text-center text-[9px] font-bold uppercase leading-[1.05] tracking-[0.1em] whitespace-normal break-words">
+                    <span
+                      className={`max-w-full text-center font-bold uppercase whitespace-nowrap ${
+                        tabItem.value === "classificacao"
+                          ? "text-[8px] leading-none tracking-[0.06em]"
+                          : "text-[9px] leading-none tracking-[0.1em]"
+                      }`}
+                    >
                       {tabItem.label}
                     </span>
                   </div>
@@ -2082,7 +2088,7 @@ const duelSummary = useMemo(() => {
             })}
           </TabsList>
 
-          <TabsContent value="classificacao" className="mt-0 space-y-4 pt-0">
+          <TabsContent value="classificacao" className="mt-0 space-y-4 pt-1">
             <Card
               className={`rounded-[22px] shadow-sm ${
                 isDarkMode
