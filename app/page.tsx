@@ -3823,7 +3823,7 @@ export default function CasernaKartAppModerno() {
                 isDark={isDarkMode}
               />
             </div>
-          </TabsContent>          </TabsContent>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
