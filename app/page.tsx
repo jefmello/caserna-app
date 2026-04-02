@@ -1215,6 +1215,107 @@ export default function CasernaKartAppModerno() {
     [filteredRanking]
   );
 
+  const statsSummary = useMemo(() => {
+    const totalPilots = filteredRanking.length;
+    const leaderPoints = filteredRanking[0]?.pontos || 0;
+    const vicePoints = filteredRanking[1]?.pontos || 0;
+    const top6CutPoints =
+      totalPilots >= 6
+        ? filteredRanking[5]?.pontos || 0
+        : filteredRanking[totalPilots - 1]?.pontos || 0;
+
+    const totalPoints = filteredRanking.reduce((sum, item) => sum + item.pontos, 0);
+    const avgPoints = totalPilots > 0 ? totalPoints / totalPilots : 0;
+
+    const totalVictories = filteredRanking.reduce(
+      (sum, item) => sum + item.vitorias,
+      0
+    );
+    const totalPodiums = filteredRanking.reduce(
+      (sum, item) => sum + item.podios,
+      0
+    );
+
+    return {
+      totalPilots,
+      leaderPoints,
+      vicePoints,
+      leaderAdvantage: Math.max(leaderPoints - vicePoints, 0),
+      top6CutPoints,
+      avgPoints,
+      totalVictories,
+      totalPodiums,
+    };
+  }, [filteredRanking]);
+
+  const statsRadar = useMemo(() => {
+    if (filteredRanking.length === 0) {
+      return {
+        hottestPilot: null as RankingItem | null,
+        hottestLabel: "Sem leitura",
+        podiumPressure: 0,
+        titleHeat: "Sem disputa",
+      };
+    }
+
+    const hottestPilot = [...filteredRanking].sort((a, b) => {
+      const aScore = a.vitorias * 4 + a.poles * 2 + a.mv * 2 + a.podios;
+      const bScore = b.vitorias * 4 + b.poles * 2 + b.mv * 2 + b.podios;
+      if (bScore !== aScore) return bScore - aScore;
+      return b.pontos - a.pontos;
+    })[0];
+
+    const podiumPressure =
+      filteredRanking.length >= 6
+        ? Math.max((filteredRanking[2]?.pontos || 0) - (filteredRanking[5]?.pontos || 0), 0)
+        : Math.max((filteredRanking[0]?.pontos || 0) - (filteredRanking[filteredRanking.length - 1]?.pontos || 0), 0);
+
+    const titleDiff = Math.max(
+      (filteredRanking[0]?.pontos || 0) - (filteredRanking[1]?.pontos || 0),
+      0
+    );
+
+    let titleHeat = "Disputa em aberto";
+    if (filteredRanking.length < 2) {
+      titleHeat = "Sem disputa";
+    } else if (titleDiff <= 3) {
+      titleHeat = "Briga acirrada";
+    } else if (titleDiff <= 8) {
+      titleHeat = "Controle parcial";
+    } else {
+      titleHeat = "Liderança isolada";
+    }
+
+    let hottestLabel = "Momento forte";
+    if ((hottestPilot?.vitorias || 0) >= 3) {
+      hottestLabel = "Ataque dominante";
+    } else if ((hottestPilot?.podios || 0) >= 4) {
+      hottestLabel = "Consistência premium";
+    } else if ((hottestPilot?.poles || 0) >= 2 || (hottestPilot?.mv || 0) >= 2) {
+      hottestLabel = "Velocidade em alta";
+    }
+
+    return {
+      hottestPilot,
+      hottestLabel,
+      podiumPressure,
+      titleHeat,
+    };
+  }, [filteredRanking]);
+
+  const bestEfficiencyPilot = useMemo(() => {
+    const eligible = filteredRanking.filter((item) => item.participacoes > 0);
+
+    if (eligible.length === 0) return null;
+
+    return [...eligible].sort((a, b) => {
+      const aEfficiency = a.pontos / Math.max(a.participacoes, 1);
+      const bEfficiency = b.pontos / Math.max(b.participacoes, 1);
+      if (bEfficiency !== aEfficiency) return bEfficiency - aEfficiency;
+      return b.pontos - a.pontos;
+    })[0];
+  }, [filteredRanking]);
+
   function handleSelectPilot(pilot: RankingItem) {
     setSelectedPilot(pilot);
     setActiveTab("piloto");
@@ -3383,10 +3484,205 @@ export default function CasernaKartAppModerno() {
                         : theme.headerChip
                     }`}
                   >
-                    Top 5
+                    Painel premium
                   </div>
                 </div>
               </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <CompactStatCard
+                title="Pilotos ativos"
+                value={statsSummary.totalPilots}
+                subtitle="com pontuação na seleção atual"
+                icon={Users}
+                categoryTheme={theme}
+                isDark={isDarkMode}
+              />
+              <CompactStatCard
+                title="Vantagem do líder"
+                value={`${statsSummary.leaderAdvantage} pts`}
+                subtitle="sobre o 2º colocado"
+                icon={Crown}
+                accent
+                categoryTheme={theme}
+                isDark={isDarkMode}
+              />
+              <CompactStatCard
+                title="Média geral"
+                value={statsSummary.totalPilots ? statsSummary.avgPoints.toFixed(1) : "0.0"}
+                subtitle="pontos por piloto nesta leitura"
+                icon={Gauge}
+                categoryTheme={theme}
+                isDark={isDarkMode}
+              />
+              <CompactStatCard
+                title="Corte Top 6"
+                value={`${statsSummary.top6CutPoints} pts`}
+                subtitle="pontuação mínima da zona de troféu"
+                icon={Medal}
+                accent
+                categoryTheme={theme}
+                isDark={isDarkMode}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-3">
+              <HighlightCard
+                title="Radar oficial"
+                icon={Star}
+                accent
+                isDark={isDarkMode}
+                categoryTheme={theme}
+                accentStyles={{
+                  border: theme.heroBorder,
+                  bg: `bg-gradient-to-b ${theme.heroBg}`,
+                  iconWrap: theme.primaryIconWrap,
+                  icon: theme.primaryIcon,
+                  text:
+                    category === "Base"
+                      ? "text-orange-800"
+                      : category === "Graduados"
+                        ? "text-blue-800"
+                        : "text-yellow-800",
+                  divider:
+                    category === "Base"
+                      ? "bg-orange-200/80"
+                      : category === "Graduados"
+                        ? "bg-blue-200/80"
+                        : "bg-yellow-200/80",
+                }}
+              >
+                <div className="grid grid-cols-2 gap-3 pt-1">
+                  <div
+                    className={`rounded-[18px] border px-3 py-3 ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} bg-[#0f172a]`
+                        : "border-black/5 bg-white/80"
+                    }`}
+                  >
+                    <p
+                      className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}
+                    >
+                      Momento do grid
+                    </p>
+                    <p
+                      className={`mt-1 text-[15px] font-extrabold leading-tight ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}
+                    >
+                      {statsRadar.hottestLabel}
+                    </p>
+                    <p
+                      className={`mt-1 text-[11px] leading-snug ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}
+                    >
+                      {statsRadar.hottestPilot
+                        ? `${getPilotFirstAndLastName(statsRadar.hottestPilot.piloto)} lidera a leitura de impacto.`
+                        : "Sem piloto destacado nesta seleção."}
+                    </p>
+                  </div>
+
+                  <div
+                    className={`rounded-[18px] border px-3 py-3 ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} bg-[#0f172a]`
+                        : "border-black/5 bg-white/80"
+                    }`}
+                  >
+                    <p
+                      className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}
+                    >
+                      Temperatura do título
+                    </p>
+                    <p
+                      className={`mt-1 text-[15px] font-extrabold leading-tight ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}
+                    >
+                      {statsRadar.titleHeat}
+                    </p>
+                    <p
+                      className={`mt-1 text-[11px] leading-snug ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}
+                    >
+                      {statsSummary.totalPilots > 1
+                        ? `${statsSummary.leaderAdvantage} pts separam líder e vice.`
+                        : "Ainda não há duelo consolidado nesta seleção."}
+                    </p>
+                  </div>
+
+                  <div
+                    className={`rounded-[18px] border px-3 py-3 ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} bg-[#0f172a]`
+                        : "border-black/5 bg-white/80"
+                    }`}
+                  >
+                    <p
+                      className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}
+                    >
+                      Pressão do Top 6
+                    </p>
+                    <p
+                      className={`mt-1 text-[15px] font-extrabold leading-tight ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}
+                    >
+                      {statsRadar.podiumPressure} pts
+                    </p>
+                    <p
+                      className={`mt-1 text-[11px] leading-snug ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}
+                    >
+                      diferença entre o topo do pódio ampliado e a zona de troféu.
+                    </p>
+                  </div>
+
+                  <div
+                    className={`rounded-[18px] border px-3 py-3 ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} bg-[#0f172a]`
+                        : "border-black/5 bg-white/80"
+                    }`}
+                  >
+                    <p
+                      className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}
+                    >
+                      Eficiência oficial
+                    </p>
+                    <p
+                      className={`mt-1 text-[15px] font-extrabold leading-tight ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}
+                    >
+                      {bestEfficiencyPilot
+                        ? getPilotFirstAndLastName(bestEfficiencyPilot.piloto)
+                        : "Sem leitura"}
+                    </p>
+                    <p
+                      className={`mt-1 text-[11px] leading-snug ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}
+                    >
+                      {bestEfficiencyPilot
+                        ? `${(bestEfficiencyPilot.pontos / Math.max(bestEfficiencyPilot.participacoes, 1)).toFixed(1)} pts por participação.`
+                        : "Nenhuma participação registrada para calcular eficiência."}
+                    </p>
+                  </div>
+                </div>
+              </HighlightCard>
             </div>
 
             <Card
@@ -3486,46 +3782,48 @@ export default function CasernaKartAppModerno() {
               </CardContent>
             </Card>
 
-            <StatRankingCard
-              title="Mais vitórias"
-              icon={Trophy}
-              items={topVitorias}
-              metricKey="vitorias"
-              emptyLabel="Nenhuma vitória registrada nesta seleção."
-              theme={theme}
-              isDark={isDarkMode}
-            />
+            <div className="grid grid-cols-1 gap-3">
+              <StatRankingCard
+                title="Mais vitórias"
+                icon={Trophy}
+                items={topVitorias}
+                metricKey="vitorias"
+                emptyLabel="Nenhuma vitória registrada nesta seleção."
+                theme={theme}
+                isDark={isDarkMode}
+              />
 
-            <StatRankingCard
-              title="Mais poles"
-              icon={Flag}
-              items={topPoles}
-              metricKey="poles"
-              emptyLabel="Nenhuma pole registrada nesta seleção."
-              theme={theme}
-              isDark={isDarkMode}
-            />
+              <StatRankingCard
+                title="Mais poles"
+                icon={Flag}
+                items={topPoles}
+                metricKey="poles"
+                emptyLabel="Nenhuma pole registrada nesta seleção."
+                theme={theme}
+                isDark={isDarkMode}
+              />
 
-            <StatRankingCard
-              title="Mais VMR"
-              icon={Timer}
-              items={topMv}
-              metricKey="mv"
-              emptyLabel="Nenhuma volta mais rápida registrada nesta seleção."
-              theme={theme}
-              isDark={isDarkMode}
-            />
+              <StatRankingCard
+                title="Mais VMR"
+                icon={Timer}
+                items={topMv}
+                metricKey="mv"
+                emptyLabel="Nenhuma volta mais rápida registrada nesta seleção."
+                theme={theme}
+                isDark={isDarkMode}
+              />
 
-            <StatRankingCard
-              title="Mais pódios"
-              icon={Medal}
-              items={topPodios}
-              metricKey="podios"
-              emptyLabel="Nenhum pódio registrado nesta seleção."
-              theme={theme}
-              isDark={isDarkMode}
-            />
-          </TabsContent>
+              <StatRankingCard
+                title="Mais pódios"
+                icon={Medal}
+                items={topPodios}
+                metricKey="podios"
+                emptyLabel="Nenhum pódio registrado nesta seleção."
+                theme={theme}
+                isDark={isDarkMode}
+              />
+            </div>
+          </TabsContent>          </TabsContent>
         </Tabs>
       </div>
     </div>
