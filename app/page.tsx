@@ -21,6 +21,9 @@ import {
   ChevronRight,
   Moon,
   Sun,
+  TrendingUp,
+  TrendingDown,
+  Minus,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -148,7 +151,7 @@ function getTop6RowStyles(position: number) {
   switch (position) {
     case 1:
       return {
-        row: "border-l-[4px] border-l-yellow-500 bg-gradient-to-r from-yellow-100 via-yellow-50 to-white shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]",
+        row: "border-l-[4px] border-l-yellow-500 bg-gradient-to-r from-yellow-100 via-yellow-50 to-white shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_0_0_1px_rgba(234,179,8,0.16),0_10px_24px_rgba(234,179,8,0.18)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_0_0_1px_rgba(234,179,8,0.22),0_14px_28px_rgba(234,179,8,0.24)]",
         badge: "bg-yellow-400 text-black",
         points: "text-yellow-700",
         name: "text-zinc-950",
@@ -156,7 +159,7 @@ function getTop6RowStyles(position: number) {
       };
     case 2:
       return {
-        row: "border-l-[4px] border-l-zinc-400 bg-gradient-to-r from-zinc-100 via-zinc-50 to-white",
+        row: "border-l-[4px] border-l-zinc-400 bg-gradient-to-r from-zinc-100 via-zinc-50 to-white shadow-[0_0_0_1px_rgba(161,161,170,0.14),0_8px_20px_rgba(113,113,122,0.12)] hover:shadow-[0_0_0_1px_rgba(161,161,170,0.18),0_12px_24px_rgba(113,113,122,0.18)]",
         badge: "bg-zinc-300 text-zinc-900",
         points: "text-zinc-800",
         name: "text-zinc-950",
@@ -164,7 +167,7 @@ function getTop6RowStyles(position: number) {
       };
     case 3:
       return {
-        row: "border-l-[4px] border-l-amber-700 bg-gradient-to-r from-amber-50 via-amber-50/80 to-white",
+        row: "border-l-[4px] border-l-amber-700 bg-gradient-to-r from-amber-50 via-amber-50/80 to-white shadow-[0_0_0_1px_rgba(217,119,6,0.12),0_8px_20px_rgba(180,83,9,0.12)] hover:shadow-[0_0_0_1px_rgba(217,119,6,0.16),0_12px_24px_rgba(180,83,9,0.18)]",
         badge: "bg-amber-600 text-white",
         points: "text-amber-800",
         name: "text-zinc-950",
@@ -172,7 +175,7 @@ function getTop6RowStyles(position: number) {
       };
     case 4:
       return {
-        row: "border-l-[4px] border-l-sky-500 bg-gradient-to-r from-sky-50 via-sky-50/70 to-white",
+        row: "border-l-[4px] border-l-sky-500 bg-gradient-to-r from-sky-50 via-sky-50/70 to-white shadow-[0_0_0_1px_rgba(14,165,233,0.12),0_8px_20px_rgba(14,165,233,0.12)] hover:shadow-[0_0_0_1px_rgba(14,165,233,0.18),0_12px_24px_rgba(14,165,233,0.18)]",
         badge: "bg-sky-500 text-white",
         points: "text-sky-700",
         name: "text-zinc-950",
@@ -180,7 +183,7 @@ function getTop6RowStyles(position: number) {
       };
     case 5:
       return {
-        row: "border-l-[4px] border-l-violet-500 bg-gradient-to-r from-violet-50 via-violet-50/70 to-white",
+        row: "border-l-[4px] border-l-violet-500 bg-gradient-to-r from-violet-50 via-violet-50/70 to-white shadow-[0_0_0_1px_rgba(139,92,246,0.12),0_8px_20px_rgba(139,92,246,0.12)] hover:shadow-[0_0_0_1px_rgba(139,92,246,0.18),0_12px_24px_rgba(139,92,246,0.18)]",
         badge: "bg-violet-500 text-white",
         points: "text-violet-700",
         name: "text-zinc-950",
@@ -188,7 +191,7 @@ function getTop6RowStyles(position: number) {
       };
     case 6:
       return {
-        row: "border-l-[4px] border-l-emerald-500 bg-gradient-to-r from-emerald-50 via-emerald-50/70 to-white",
+        row: "border-l-[4px] border-l-emerald-500 bg-gradient-to-r from-emerald-50 via-emerald-50/70 to-white shadow-[0_0_0_1px_rgba(16,185,129,0.12),0_8px_20px_rgba(16,185,129,0.12)] hover:shadow-[0_0_0_1px_rgba(16,185,129,0.18),0_12px_24px_rgba(16,185,129,0.18)]",
         badge: "bg-emerald-500 text-white",
         points: "text-emerald-700",
         name: "text-zinc-950",
@@ -273,11 +276,11 @@ function getCategoryTheme(category: string) {
       darkAccentDivider: "bg-orange-500/20",
       darkAccentCard: "from-[#1a1a14] via-[#151922] to-[#111827]",
       darkLeaderRow:
-        "bg-gradient-to-r from-orange-500/12 via-[#161e2b] to-[#111827] border-l-[4px] border-l-orange-400",
+        "bg-gradient-to-r from-orange-500/16 via-[#161e2b] to-[#111827] border-l-[4px] border-l-orange-400 shadow-[0_0_0_1px_rgba(249,115,22,0.16),0_12px_26px_rgba(0,0,0,0.32)]",
       darkSecondRow:
-        "bg-gradient-to-r from-white/5 via-[#111827] to-[#111827] border-l-[4px] border-l-zinc-400",
+        "bg-gradient-to-r from-white/5 via-[#111827] to-[#111827] border-l-[4px] border-l-zinc-400 shadow-[0_0_0_1px_rgba(161,161,170,0.14),0_10px_22px_rgba(0,0,0,0.24)]",
       darkThirdRow:
-        "bg-gradient-to-r from-amber-500/10 via-[#111827] to-[#111827] border-l-[4px] border-l-amber-500",
+        "bg-gradient-to-r from-amber-500/12 via-[#111827] to-[#111827] border-l-[4px] border-l-amber-500 shadow-[0_0_0_1px_rgba(245,158,11,0.16),0_10px_22px_rgba(0,0,0,0.24)]",
       darkTopBadge: "bg-orange-400 text-black",
       darkChartBar: "#fb923c",
     },
@@ -327,9 +330,9 @@ function getCategoryTheme(category: string) {
       darkLeaderRow:
         "bg-gradient-to-r from-blue-500/12 via-[#161e2b] to-[#111827] border-l-[4px] border-l-blue-400",
       darkSecondRow:
-        "bg-gradient-to-r from-white/5 via-[#111827] to-[#111827] border-l-[4px] border-l-zinc-400",
+        "bg-gradient-to-r from-white/5 via-[#111827] to-[#111827] border-l-[4px] border-l-zinc-400 shadow-[0_0_0_1px_rgba(161,161,170,0.14),0_10px_22px_rgba(0,0,0,0.24)]",
       darkThirdRow:
-        "bg-gradient-to-r from-amber-500/10 via-[#111827] to-[#111827] border-l-[4px] border-l-amber-500",
+        "bg-gradient-to-r from-amber-500/12 via-[#111827] to-[#111827] border-l-[4px] border-l-amber-500 shadow-[0_0_0_1px_rgba(245,158,11,0.16),0_10px_22px_rgba(0,0,0,0.24)]",
       darkTopBadge: "bg-blue-400 text-black",
       darkChartBar: "#60a5fa",
     },
@@ -379,9 +382,9 @@ function getCategoryTheme(category: string) {
       darkLeaderRow:
         "bg-gradient-to-r from-yellow-500/12 via-[#161e2b] to-[#111827] border-l-[4px] border-l-yellow-400",
       darkSecondRow:
-        "bg-gradient-to-r from-white/5 via-[#111827] to-[#111827] border-l-[4px] border-l-zinc-400",
+        "bg-gradient-to-r from-white/5 via-[#111827] to-[#111827] border-l-[4px] border-l-zinc-400 shadow-[0_0_0_1px_rgba(161,161,170,0.14),0_10px_22px_rgba(0,0,0,0.24)]",
       darkThirdRow:
-        "bg-gradient-to-r from-amber-500/10 via-[#111827] to-[#111827] border-l-[4px] border-l-amber-500",
+        "bg-gradient-to-r from-amber-500/12 via-[#111827] to-[#111827] border-l-[4px] border-l-amber-500 shadow-[0_0_0_1px_rgba(245,158,11,0.16),0_10px_22px_rgba(0,0,0,0.24)]",
       darkTopBadge: "bg-yellow-400 text-black",
       darkChartBar: "#facc15",
     },
@@ -394,6 +397,85 @@ function getGapToLeader(leaderPoints: number, pilotPoints: number) {
   const diff = leaderPoints - pilotPoints;
   if (diff <= 0) return "líder";
   return `-${diff} pts do líder`;
+}
+function getPilotPositionInList(list: RankingItem[], pilotoId: string, fallbackName: string) {
+  const index = list.findIndex(
+    (item) =>
+      (pilotoId && item.pilotoId === pilotoId) ||
+      (!pilotoId && normalizePilotName(item.piloto) === normalizePilotName(fallbackName))
+  );
+
+  return index >= 0 ? index + 1 : null;
+}
+
+type PilotTrendStatus = "up" | "stable" | "down";
+
+function getPilotTrendStatus({
+  pilot,
+  competition,
+  categoryData,
+}: {
+  pilot: RankingItem;
+  competition: string;
+  categoryData: RankingByCompetition | undefined;
+}): PilotTrendStatus {
+  if (!categoryData) return "stable";
+
+  const currentList = categoryData[competition] || [];
+  const currentPos = getPilotPositionInList(currentList, pilot.pilotoId, pilot.piloto);
+  if (!currentPos) return "stable";
+
+  if (competition === "GERAL") {
+    const turnoPositions = ["T1", "T2", "T3"]
+      .map((key) => getPilotPositionInList(categoryData[key] || [], pilot.pilotoId, pilot.piloto))
+      .filter((value): value is number => value !== null);
+
+    if (turnoPositions.length === 0) return "stable";
+
+    const bestTurnoPos = Math.min(...turnoPositions);
+    if (currentPos < bestTurnoPos) return "up";
+    if (currentPos <= bestTurnoPos + 1) return "stable";
+    return "down";
+  }
+
+  const geralPos = getPilotPositionInList(categoryData.GERAL || [], pilot.pilotoId, pilot.piloto);
+  if (!geralPos) return "stable";
+
+  if (currentPos < geralPos) return "up";
+  if (currentPos === geralPos || currentPos === geralPos + 1 || currentPos + 1 === geralPos) {
+    return "stable";
+  }
+  return "down";
+}
+
+function getTrendVisual(status: PilotTrendStatus, isDark: boolean) {
+  if (status === "up") {
+    return {
+      Icon: TrendingUp,
+      label: "em alta",
+      className: isDark
+        ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+        : "border-emerald-200 bg-emerald-50 text-emerald-700",
+    };
+  }
+
+  if (status === "down") {
+    return {
+      Icon: TrendingDown,
+      label: "em queda",
+      className: isDark
+        ? "border-red-500/30 bg-red-500/10 text-red-300"
+        : "border-red-200 bg-red-50 text-red-700",
+    };
+  }
+
+  return {
+    Icon: Minus,
+    label: "estável",
+    className: isDark
+      ? "border-yellow-500/30 bg-yellow-500/10 text-yellow-300"
+      : "border-yellow-200 bg-yellow-50 text-yellow-700",
+  };
 }
 
 function getPerformancePercentage(value: number, total: number) {
@@ -445,52 +527,6 @@ function getPilotMomentumLabel(pilot?: RankingItem | null, leader?: RankingItem 
 function getPilotEfficiency(pilot?: RankingItem | null) {
   if (!pilot || pilot.participacoes <= 0) return 0;
   return Math.round((pilot.pontos / pilot.participacoes) * 10) / 10;
-}
-
-function getRivalryVerdict(
-  pilot?: RankingItem | null,
-  rival?: RankingItem | null
-) {
-  if (!pilot || !rival) {
-    return {
-      label: "Sem duelo direto",
-      summary: "Selecione um piloto dentro de uma classificação com adversários próximos.",
-    };
-  }
-
-  let pilotScore = 0;
-  let rivalScore = 0;
-
-  if (pilot.pontos > rival.pontos) pilotScore += 2;
-  else if (pilot.pontos < rival.pontos) rivalScore += 2;
-
-  if (pilot.vitorias > rival.vitorias) pilotScore += 1;
-  else if (pilot.vitorias < rival.vitorias) rivalScore += 1;
-
-  if (pilot.podios > rival.podios) pilotScore += 1;
-  else if (pilot.podios < rival.podios) rivalScore += 1;
-
-  if (pilot.mv > rival.mv) pilotScore += 1;
-  else if (pilot.mv < rival.mv) rivalScore += 1;
-
-  if (pilotScore > rivalScore) {
-    return {
-      label: "Piloto em vantagem",
-      summary: "Leva a melhor no duelo pelos principais indicadores.",
-    };
-  }
-
-  if (rivalScore > pilotScore) {
-    return {
-      label: "Rival em vantagem",
-      summary: "O adversário ainda leva vantagem no recorte atual.",
-    };
-  }
-
-  return {
-    label: "Duelo equilibrado",
-    summary: "Os dois pilotos estão muito próximos nesta leitura.",
-  };
 }
 
 function getTitleFightStatus(top3: RankingItem[]) {
@@ -1118,42 +1154,36 @@ export default function CasernaKartAppModerno() {
     return "risco disciplinar";
   }, [selectedPilot, selectedPilotDiscipline]);
 
-  const selectedPilotIndex = useMemo(() => {
-    if (!selectedPilot) return -1;
+  const selectedPilotRivalAhead = useMemo(() => {
+    if (!selectedPilot) return null;
 
-    return filteredRanking.findIndex(
+    const pilotIndex = filteredRanking.findIndex(
       (item) =>
         item.pilotoId === selectedPilot.pilotoId &&
         item.competicao === selectedPilot.competicao
     );
+
+    if (pilotIndex <= 0) return null;
+    return filteredRanking[pilotIndex - 1] || null;
   }, [filteredRanking, selectedPilot]);
 
-  const selectedPilotRivalAhead = useMemo(() => {
-    if (selectedPilotIndex <= 0) return null;
-    return filteredRanking[selectedPilotIndex - 1] || null;
-  }, [filteredRanking, selectedPilotIndex]);
-
-  const selectedPilotRivalBehind = useMemo(() => {
-    if (selectedPilotIndex < 0) return null;
-    return filteredRanking[selectedPilotIndex + 1] || null;
-  }, [filteredRanking, selectedPilotIndex]);
-
-  const selectedPilotPointsToRivalAhead = useMemo(() => {
-    if (!selectedPilot || !selectedPilotRivalAhead) return 0;
-    return Math.max(0, selectedPilotRivalAhead.pontos - selectedPilot.pontos);
-  }, [selectedPilot, selectedPilotRivalAhead]);
-
-  const selectedPilotPointsAheadOfBehind = useMemo(() => {
-    if (!selectedPilot || !selectedPilotRivalBehind) return 0;
-    return Math.max(0, selectedPilot.pontos - selectedPilotRivalBehind.pontos);
-  }, [selectedPilot, selectedPilotRivalBehind]);
-
-  const selectedPilotRivalVerdict = useMemo(
-    () => getRivalryVerdict(selectedPilot, selectedPilotRivalAhead),
-    [selectedPilot, selectedPilotRivalAhead]
-  );
-
   const top3TitleFight = useMemo(() => filteredRanking.slice(0, 3), [filteredRanking]);
+
+  const pilotTrendMap = useMemo(() => {
+    const categoryData = rankingData[category];
+    const map: Record<string, PilotTrendStatus> = {};
+
+    filteredRanking.forEach((pilot) => {
+      const key = pilot.pilotoId || normalizePilotName(pilot.piloto);
+      map[key] = getPilotTrendStatus({
+        pilot,
+        competition,
+        categoryData,
+      });
+    });
+
+    return map;
+  }, [filteredRanking, rankingData, category, competition]);
 
   const titleFightStatus = useMemo(
     () => getTitleFightStatus(top3TitleFight),
@@ -2126,36 +2156,44 @@ export default function CasernaKartAppModerno() {
               >
                 <CardContent className="p-0">
                   <div
-                    className={`px-3 py-2.5 ${
+                    className={`px-3 py-3 ${
                       isDarkMode
                         ? "border-b border-white/10 bg-gradient-to-r from-[#111827] via-[#161e2b] to-[#111827]"
                         : "border-b border-black/5 bg-gradient-to-r from-white via-zinc-50/70 to-white"
                     }`}
                   >
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-2">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex min-w-0 items-center gap-2.5">
                         <div
-                          className={`flex h-8 w-8 items-center justify-center rounded-xl ${
-                            isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
+                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl shadow-sm ${
+                            isDarkMode ? theme.darkAccentIconWrap : theme.titleIconWrap
                           }`}
                         >
                           <TableProperties
-                            className={`h-4 w-4 ${
-                              isDarkMode ? theme.darkAccentText : "text-zinc-600"
+                            className={`h-4.5 w-4.5 ${
+                              isDarkMode ? theme.darkAccentText : theme.titleIcon
                             }`}
                           />
                         </div>
-                        <div>
+
+                        <div className="min-w-0">
                           <p
-                            className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                            className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
                               isDarkMode ? "text-zinc-500" : "text-zinc-400"
                             }`}
                           >
-                            Ranking oficial
+                            Painel oficial
                           </p>
                           <p
-                            className={`text-[13px] font-semibold ${
-                              isDarkMode ? "text-white" : "text-zinc-900"
+                            className={`text-[15px] font-extrabold tracking-tight ${
+                              isDarkMode ? "text-white" : "text-zinc-950"
+                            }`}
+                          >
+                            Grade de classificação
+                          </p>
+                          <p
+                            className={`mt-0.5 text-[11px] font-medium ${
+                              isDarkMode ? "text-zinc-400" : "text-zinc-500"
                             }`}
                           >
                             {category} · {competitionLabels[competition] || competition}
@@ -2163,15 +2201,117 @@ export default function CasernaKartAppModerno() {
                         </div>
                       </div>
 
+                      <div className="flex shrink-0 flex-col items-end gap-2">
+                        <div
+                          className={`rounded-full border px-3 py-1 text-[11px] font-bold ${
+                            isDarkMode
+                              ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                              : "border-black/5 bg-zinc-50 text-zinc-700"
+                          }`}
+                        >
+                          {filteredRanking.length} piloto
+                          {filteredRanking.length === 1 ? "" : "s"}
+                        </div>
+
+                        <div
+                          className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${titleFightStatus.tone}`}
+                        >
+                          {titleFightStatus.label}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 grid grid-cols-3 gap-2">
                       <div
-                        className={`rounded-full border px-3 py-1 text-[11px] font-bold ${
+                        className={`rounded-[16px] border px-3 py-2 ${
                           isDarkMode
-                            ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                            : "border-black/5 bg-zinc-50 text-zinc-700"
+                            ? "border-white/10 bg-[#0f172a]"
+                            : "border-black/5 bg-white"
                         }`}
                       >
-                        {filteredRanking.length} piloto
-                        {filteredRanking.length === 1 ? "" : "s"}
+                        <p
+                          className={`text-[9px] font-bold uppercase tracking-[0.16em] ${
+                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                          }`}
+                        >
+                          Líder
+                        </p>
+                        <p
+                          className={`mt-1 truncate text-[12px] font-extrabold ${
+                            isDarkMode ? "text-white" : "text-zinc-950"
+                          }`}
+                        >
+                          {leader ? getPilotFirstAndLastName(leader.piloto) : "-"}
+                        </p>
+                        <p
+                          className={`mt-0.5 text-[11px] font-semibold ${
+                            isDarkMode ? theme.darkAccentText : "text-zinc-700"
+                          }`}
+                        >
+                          {leader?.pontos || 0} pts
+                        </p>
+                      </div>
+
+                      <div
+                        className={`rounded-[16px] border px-3 py-2 ${
+                          isDarkMode
+                            ? "border-white/10 bg-[#0f172a]"
+                            : "border-black/5 bg-white"
+                        }`}
+                      >
+                        <p
+                          className={`text-[9px] font-bold uppercase tracking-[0.16em] ${
+                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                          }`}
+                        >
+                          Zona troféu
+                        </p>
+                        <p
+                          className={`mt-1 text-[12px] font-extrabold ${
+                            isDarkMode ? "text-white" : "text-zinc-950"
+                          }`}
+                        >
+                          Top 6 oficial
+                        </p>
+                        <p
+                          className={`mt-0.5 text-[11px] font-medium ${
+                            isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                          }`}
+                        >
+                          corte: {filteredRanking[5]?.pontos ?? 0} pts
+                        </p>
+                      </div>
+
+                      <div
+                        className={`rounded-[16px] border px-3 py-2 ${
+                          isDarkMode
+                            ? "border-white/10 bg-[#0f172a]"
+                            : "border-black/5 bg-white"
+                        }`}
+                      >
+                        <p
+                          className={`text-[9px] font-bold uppercase tracking-[0.16em] ${
+                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                          }`}
+                        >
+                          Pressão no topo
+                        </p>
+                        <p
+                          className={`mt-1 text-[12px] font-extrabold ${
+                            isDarkMode ? "text-white" : "text-zinc-950"
+                          }`}
+                        >
+                          {filteredRanking[1]
+                            ? `${Math.max((leader?.pontos || 0) - filteredRanking[1].pontos, 0)} pts`
+                            : "0 pts"}
+                        </p>
+                        <p
+                          className={`mt-0.5 text-[11px] font-medium ${
+                            isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                          }`}
+                        >
+                          vantagem do líder
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -2213,15 +2353,24 @@ export default function CasernaKartAppModerno() {
                           const isTop6 = index < 6;
                           const isLeader = index === 0;
                           const styles = getTop6RowStyles(index + 1);
+                          const trendStatus =
+                            pilotTrendMap[item.pilotoId || normalizePilotName(item.piloto)] ||
+                            "stable";
+                          const trendVisual = getTrendVisual(trendStatus, isDarkMode);
+                          const TrendIcon = trendVisual.Icon;
 
                           const darkRow = isTop6
                             ? index === 0
-                              ? theme.darkLeaderRow
+                              ? `${theme.darkLeaderRow} shadow-[0_0_0_1px_rgba(250,204,21,0.14),0_12px_26px_rgba(0,0,0,0.28)]`
                               : index === 1
-                                ? theme.darkSecondRow
+                                ? `${theme.darkSecondRow} shadow-[0_0_0_1px_rgba(161,161,170,0.14),0_10px_22px_rgba(0,0,0,0.22)]`
                                 : index === 2
-                                  ? theme.darkThirdRow
-                                  : "bg-[#111827]"
+                                  ? `${theme.darkThirdRow} shadow-[0_0_0_1px_rgba(245,158,11,0.14),0_10px_22px_rgba(0,0,0,0.22)]`
+                                  : index === 3
+                                    ? "bg-gradient-to-r from-sky-500/10 via-[#161e2b] to-[#111827] border-l-[4px] border-l-sky-400 shadow-[0_0_0_1px_rgba(56,189,248,0.12),0_10px_22px_rgba(0,0,0,0.2)]"
+                                    : index === 4
+                                      ? "bg-gradient-to-r from-violet-500/10 via-[#161e2b] to-[#111827] border-l-[4px] border-l-violet-400 shadow-[0_0_0_1px_rgba(168,85,247,0.12),0_10px_22px_rgba(0,0,0,0.2)]"
+                                      : "bg-gradient-to-r from-emerald-500/10 via-[#161e2b] to-[#111827] border-l-[4px] border-l-emerald-400 shadow-[0_0_0_1px_rgba(52,211,153,0.12),0_10px_22px_rgba(0,0,0,0.2)]"
                             : `${index % 2 === 0 ? "bg-[#111827]" : "bg-[#0f172a]"} hover:bg-[#161e2b]`;
 
                           return (
@@ -2242,7 +2391,7 @@ export default function CasernaKartAppModerno() {
                                   className="mx-auto flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold transition active:scale-95"
                                 >
                                   <span
-                                    className={`relative flex h-8 w-8 items-center justify-center rounded-xl shadow-sm ${
+                                    className={`relative flex h-8 w-8 items-center justify-center rounded-xl ${isTop6 ? "shadow-[0_6px_14px_rgba(0,0,0,0.14)]" : "shadow-sm"} ${
                                       isDarkMode
                                         ? index === 0
                                           ? theme.darkTopBadge
@@ -2269,13 +2418,22 @@ export default function CasernaKartAppModerno() {
                                   className="block w-full text-left transition active:scale-[0.99]"
                                 >
                                   <div className="min-w-0">
-                                    <span
-                                      className={`block whitespace-normal break-words text-[12.8px] font-extrabold leading-[1.15] tracking-tight ${
-                                        isDarkMode ? "text-white" : styles.name
-                                      }`}
-                                    >
-                                      {nomeLinha1}
-                                    </span>
+                                    <div className="flex items-start justify-between gap-2">
+                                      <span
+                                        className={`block min-w-0 flex-1 whitespace-normal break-words text-[12.8px] font-extrabold leading-[1.15] tracking-tight ${
+                                          isDarkMode ? "text-white" : styles.name
+                                        }`}
+                                      >
+                                        {nomeLinha1}
+                                      </span>
+
+                                      <span
+                                        className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em] ${trendVisual.className}`}
+                                      >
+                                        <TrendIcon className="h-3 w-3" />
+                                        {trendVisual.label}
+                                      </span>
+                                    </div>
 
                                     {nomeLinha2 ? (
                                       <div className="mt-1 flex items-center gap-1.5">
@@ -3038,134 +3196,6 @@ export default function CasernaKartAppModerno() {
                           </div>
                         </CardContent>
                       </Card>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card
-                  className={`rounded-[24px] shadow-sm ${
-                    isDarkMode
-                      ? `border ${theme.darkAccentBorder} bg-[#111827]`
-                      : `border ${theme.titleBorder} bg-gradient-to-br ${theme.titleBg}`
-                  }`}
-                >
-                  <CardContent className="p-4">
-                    <div className="mb-4 flex items-center justify-between gap-3">
-                      <div>
-                        <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
-                          Rival direto
-                        </p>
-                        <h3 className={`text-[18px] font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                          Duelo mais próximo do campeonato
-                        </h3>
-                      </div>
-
-                      <div className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}` : theme.headerChip}`}>
-                        pressão competitiva
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-3">
-                      <div className={`rounded-[22px] border p-4 ${
-                        isDarkMode
-                          ? `${theme.darkAccentBorder} bg-gradient-to-r from-[#111827] to-[#161e2b]`
-                          : `${theme.heroBorder} bg-gradient-to-r ${theme.heroBg}`
-                      }`}>
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="min-w-0 flex-1">
-                            <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}>
-                              Leitura oficial do duelo
-                            </p>
-                            <p className={`mt-1 text-[18px] font-extrabold leading-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                              {selectedPilotRivalVerdict.label}
-                            </p>
-                            <p className={`mt-2 text-[12px] leading-relaxed ${isDarkMode ? "text-zinc-400" : "text-zinc-600"}`}>
-                              {selectedPilotRivalAhead
-                                ? `${selectedPilotRivalVerdict.summary} Faltam ${selectedPilotPointsToRivalAhead} ponto(s) para alcançar ${getPilotFirstAndLastName(selectedPilotRivalAhead.piloto)}.`
-                                : "Este piloto ocupa a liderança da classificação atual e não possui rival acima nesta leitura."}
-                            </p>
-                          </div>
-
-                          <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap}`}>
-                            <Swords className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                        <div className={`rounded-[22px] border p-4 ${isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"}`}>
-                          <div className="flex items-center justify-between gap-3">
-                            <div>
-                              <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
-                                Rival acima
-                              </p>
-                              <p className={`mt-1 text-[17px] font-extrabold leading-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                                {selectedPilotRivalAhead ? getPilotFirstAndLastName(selectedPilotRivalAhead.piloto) : "Nenhum acima"}
-                              </p>
-                            </div>
-                            <span className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] ${isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}` : theme.heroChip}`}>
-                              {selectedPilotRivalAhead ? `${selectedPilotPointsToRivalAhead} pts` : "líder"}
-                            </span>
-                          </div>
-
-                          <div className="mt-4 space-y-2.5">
-                            <div className={`flex items-center justify-between rounded-[16px] border px-3 py-2 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50"}`}>
-                              <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>Pontos</span>
-                              <span className={`text-[13px] font-extrabold ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilot.pontos} x {selectedPilotRivalAhead?.pontos ?? "-"}</span>
-                            </div>
-                            <div className={`flex items-center justify-between rounded-[16px] border px-3 py-2 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50"}`}>
-                              <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>Vitórias</span>
-                              <span className={`text-[13px] font-extrabold ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilot.vitorias} x {selectedPilotRivalAhead?.vitorias ?? "-"}</span>
-                            </div>
-                            <div className={`flex items-center justify-between rounded-[16px] border px-3 py-2 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50"}`}>
-                              <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>Pódios</span>
-                              <span className={`text-[13px] font-extrabold ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilot.podios} x {selectedPilotRivalAhead?.podios ?? "-"}</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className={`rounded-[22px] border p-4 ${isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"}`}>
-                          <div className="flex items-center justify-between gap-3">
-                            <div>
-                              <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
-                                Pressão abaixo
-                              </p>
-                              <p className={`mt-1 text-[17px] font-extrabold leading-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                                {selectedPilotRivalBehind ? getPilotFirstAndLastName(selectedPilotRivalBehind.piloto) : "Sem perseguidor imediato"}
-                              </p>
-                            </div>
-                            <span className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] ${isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}` : theme.heroChip}`}>
-                              {selectedPilotRivalBehind ? `+${selectedPilotPointsAheadOfBehind} pts` : "livre"}
-                            </span>
-                          </div>
-
-                          <div className="mt-4 grid grid-cols-2 gap-2.5">
-                            <div className={`rounded-[16px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50"}`}>
-                              <p className={`text-[10px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
-                                Vantagem
-                              </p>
-                              <p className={`mt-1 text-[22px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                                {selectedPilotRivalBehind ? `+${selectedPilotPointsAheadOfBehind}` : "--"}
-                              </p>
-                              <p className={`mt-1 text-[11px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-                                sobre o piloto abaixo
-                              </p>
-                            </div>
-
-                            <div className={`rounded-[16px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50"}`}>
-                              <p className={`text-[10px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
-                                VMR duelo
-                              </p>
-                              <p className={`mt-1 text-[22px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                                {selectedPilot.mv}
-                              </p>
-                              <p className={`mt-1 text-[11px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-                                vs {selectedPilotRivalAhead ? selectedPilotRivalAhead.mv : 0} do rival acima
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </CardContent>
                 </Card>
