@@ -2282,255 +2282,396 @@ const duelSummary = useMemo(() => {
             </Card>
 
             <Card
-              className={`overflow-hidden rounded-[22px] shadow-sm ${
+              className={`overflow-hidden rounded-[24px] shadow-sm ${
                 isDarkMode
                   ? `border ${theme.darkAccentBorder} bg-[#111827]`
-                  : `border ${theme.searchBorder} bg-gradient-to-br from-white via-white to-zinc-50/70`
+                  : `border ${theme.searchBorder} bg-gradient-to-br from-white via-white to-zinc-50/80`
               }`}
             >
               <CardContent className="p-3">
-                <div className="mb-3 flex items-center gap-2.5">
-                  <div
-                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
-                      isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                    }`}
-                  >
-                    <Gauge
-                      className={`h-4.5 w-4.5 ${
-                        isDarkMode ? theme.darkAccentText : theme.searchIcon
-                      }`}
+                <div
+                  className={`overflow-hidden rounded-[20px] border ${
+                    isDarkMode
+                      ? `${theme.darkAccentBorder} bg-gradient-to-br from-[#111827] via-[#161e2b] to-[#0f172a]`
+                      : `border-black/5 bg-gradient-to-br ${theme.shellGlow}`
+                  }`}
+                >
+                  <div className="relative px-3 pb-3 pt-3">
+                    <div
+                      className={`absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
                     />
-                  </div>
 
-                  <div className="min-w-0 flex-1">
-                    <p
-                      className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
-                        isDarkMode ? "text-zinc-400" : "text-zinc-400"
-                      }`}
-                    >
-                      Contexto competitivo
-                    </p>
-                    <p
-                      className={`mt-0.5 text-[12px] font-semibold leading-tight ${
-                        isDarkMode ? "text-white" : "text-zinc-900"
-                      }`}
-                    >
-                      Leitura rápida oficial do campeonato selecionado
-                    </p>
-                  </div>
-
-                  <div
-                    className={`shrink-0 rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] ${
-                      isDarkMode
-                        ? titleFightStatus.label === "BRIGA ACIRRADA"
-                          ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
-                          : titleFightStatus.label === "DISPUTA CONTROLADA"
-                            ? "border-yellow-500/30 bg-yellow-500/10 text-yellow-300"
-                            : "border-white/10 bg-white/5 text-zinc-300"
-                        : titleFightStatus.tone
-                    }`}
-                  >
-                    {titleFightStatus.label}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2.5">
-                  <div
-                    className={`rounded-[18px] border px-3 py-3 ${
-                      isDarkMode
-                        ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                        : "border-black/5 bg-white/80"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <p
-                          className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
-                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                    <div className="flex items-start gap-2.5">
+                      <div
+                        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
+                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                        }`}
+                      >
+                        <Gauge
+                          className={`h-4.5 w-4.5 ${
+                            isDarkMode ? theme.darkAccentText : theme.searchIcon
                           }`}
-                        >
-                          Título
-                        </p>
+                        />
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p
+                            className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
+                              isDarkMode ? "text-zinc-400" : "text-zinc-400"
+                            }`}
+                          >
+                            Contexto competitivo
+                          </p>
+
+                          <div
+                            className={`rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] ${
+                              isDarkMode
+                                ? titleFightStatus.label === "BRIGA ACIRRADA"
+                                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                                  : titleFightStatus.label === "DISPUTA CONTROLADA"
+                                    ? "border-yellow-500/30 bg-yellow-500/10 text-yellow-300"
+                                    : "border-white/10 bg-white/5 text-zinc-300"
+                                : titleFightStatus.tone
+                            }`}
+                          >
+                            {titleFightStatus.label}
+                          </div>
+                        </div>
+
                         <p
-                          className={`mt-1 text-[15px] font-extrabold leading-tight ${
+                          className={`mt-1 text-[13px] font-extrabold leading-tight ${
                             isDarkMode ? "text-white" : "text-zinc-950"
                           }`}
                         >
-                          {statsRadar.titleHeat}
+                          Leitura premium do momento atual do campeonato
+                        </p>
+                        <p
+                          className={`mt-1 text-[11px] leading-snug ${
+                            isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                          }`}
+                        >
+                          {statsSummary.totalPilots > 1
+                            ? `${statsSummary.leaderAdvantage} pts separam líder e vice, com corte do Top 6 em ${statsSummary.top6CutPoints} pts.`
+                            : "Ainda não há pilotos suficientes para uma leitura competitiva completa."}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 grid grid-cols-2 gap-2.5">
+                      <div
+                        className={`rounded-[18px] border px-3 py-3 ${
+                          isDarkMode
+                            ? `${theme.darkAccentBorder} bg-[#0f172a]`
+                            : `${theme.heroBorder} bg-white/90`
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <p
+                              className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                                isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                              }`}
+                            >
+                              Temperatura do título
+                            </p>
+                            <p
+                              className={`mt-1 text-[16px] font-extrabold leading-tight ${
+                                isDarkMode ? "text-white" : "text-zinc-950"
+                              }`}
+                            >
+                              {statsRadar.titleHeat}
+                            </p>
+                          </div>
+
+                          <div
+                            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl ${
+                              isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                            }`}
+                          >
+                            <Crown
+                              className={`h-4.5 w-4.5 ${
+                                isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                              }`}
+                            />
+                          </div>
+                        </div>
+
+                        <div
+                          className={`mt-3 flex items-end justify-between gap-2 rounded-[14px] border px-2.5 py-2 ${
+                            isDarkMode
+                              ? "border-white/10 bg-white/5"
+                              : "border-black/5 bg-zinc-50/80"
+                          }`}
+                        >
+                          <div>
+                            <p
+                              className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+                                isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                              }`}
+                            >
+                              Vantagem atual
+                            </p>
+                            <p
+                              className={`mt-1 text-[22px] font-extrabold leading-none ${
+                                isDarkMode ? "text-white" : "text-zinc-950"
+                              }`}
+                            >
+                              {statsSummary.leaderAdvantage}
+                              <span
+                                className={`ml-1 text-[11px] font-bold uppercase tracking-[0.12em] ${
+                                  isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                                }`}
+                              >
+                                pts
+                              </span>
+                            </p>
+                          </div>
+
+                          <p
+                            className={`max-w-[86px] text-right text-[10px] leading-snug ${
+                              isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                            }`}
+                          >
+                            {statsSummary.totalPilots > 1
+                              ? "entre líder e vice"
+                              : "grid em formação"}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div
+                        className={`rounded-[18px] border px-3 py-3 ${
+                          isDarkMode
+                            ? `${theme.darkAccentBorder} bg-[#0f172a]`
+                            : `${theme.heroBorder} bg-white/90`
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <p
+                              className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                                isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                              }`}
+                            >
+                              Linha de corte
+                            </p>
+                            <p
+                              className={`mt-1 text-[16px] font-extrabold leading-tight ${
+                                isDarkMode ? "text-white" : "text-zinc-950"
+                              }`}
+                            >
+                              Top 6 oficial
+                            </p>
+                          </div>
+
+                          <div
+                            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl ${
+                              isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                            }`}
+                          >
+                            <Trophy
+                              className={`h-4.5 w-4.5 ${
+                                isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                              }`}
+                            />
+                          </div>
+                        </div>
+
+                        <div
+                          className={`mt-3 flex items-end justify-between gap-2 rounded-[14px] border px-2.5 py-2 ${
+                            isDarkMode
+                              ? "border-white/10 bg-white/5"
+                              : "border-black/5 bg-zinc-50/80"
+                          }`}
+                        >
+                          <div>
+                            <p
+                              className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+                                isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                              }`}
+                            >
+                              Corte atual
+                            </p>
+                            <p
+                              className={`mt-1 text-[22px] font-extrabold leading-none ${
+                                isDarkMode ? "text-white" : "text-zinc-950"
+                              }`}
+                            >
+                              {statsSummary.top6CutPoints}
+                              <span
+                                className={`ml-1 text-[11px] font-bold uppercase tracking-[0.12em] ${
+                                  isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                                }`}
+                              >
+                                pts
+                              </span>
+                            </p>
+                          </div>
+
+                          <p
+                            className={`max-w-[86px] text-right text-[10px] leading-snug ${
+                              isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                            }`}
+                          >
+                            {statsSummary.totalPilots >= 6
+                              ? `${statsRadar.podiumPressure} pts entre 3º e 6º`
+                              : "leitura adaptada ao grid"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-2.5 grid grid-cols-2 gap-2.5">
+                      <div
+                        className={`rounded-[18px] border px-3 py-3 ${
+                          isDarkMode
+                            ? `${theme.darkAccentBorder} bg-[#0f172a]`
+                            : "border-black/5 bg-white/80"
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <p
+                              className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                                isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                              }`}
+                            >
+                              Momento do grid
+                            </p>
+                            <p
+                              className={`mt-1 text-[15px] font-extrabold leading-tight ${
+                                isDarkMode ? "text-white" : "text-zinc-950"
+                              }`}
+                            >
+                              {statsRadar.hottestLabel}
+                            </p>
+                          </div>
+
+                          <div
+                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl ${
+                              isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                            }`}
+                          >
+                            <TrendingUp
+                              className={`h-4 w-4 ${
+                                isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                              }`}
+                            />
+                          </div>
+                        </div>
+
+                        <p
+                          className={`mt-2 text-[11px] leading-snug ${
+                            isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                          }`}
+                        >
+                          {statsRadar.hottestPilot
+                            ? `${getPilotFirstAndLastName(statsRadar.hottestPilot.piloto)} lidera o impacto competitivo atual.`
+                            : "Sem piloto destacado nesta seleção."}
                         </p>
                       </div>
 
                       <div
-                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl ${
-                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                        className={`rounded-[18px] border px-3 py-3 ${
+                          isDarkMode
+                            ? `${theme.darkAccentBorder} bg-[#0f172a]`
+                            : "border-black/5 bg-white/80"
                         }`}
                       >
-                        <Crown
-                          className={`h-4 w-4 ${
-                            isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                          }`}
-                        />
-                      </div>
-                    </div>
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <p
+                              className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                                isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                              }`}
+                            >
+                              Eficiência premium
+                            </p>
+                            <p
+                              className={`mt-1 text-[15px] font-extrabold leading-tight ${
+                                isDarkMode ? "text-white" : "text-zinc-950"
+                              }`}
+                            >
+                              {bestEfficiencyPilot
+                                ? getPilotFirstAndLastName(bestEfficiencyPilot.piloto)
+                                : "Sem leitura"}
+                            </p>
+                          </div>
 
-                    <p
-                      className={`mt-2 text-[11px] leading-snug ${
-                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                      }`}
-                    >
-                      {statsSummary.totalPilots > 1
-                        ? `${statsSummary.leaderAdvantage} pts entre líder e vice nesta leitura oficial.`
-                        : "Ainda não há confronto consolidado pela liderança."}
-                    </p>
-                  </div>
+                          <div
+                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl ${
+                              isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                            }`}
+                          >
+                            <Users
+                              className={`h-4 w-4 ${
+                                isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                              }`}
+                            />
+                          </div>
+                        </div>
 
-                  <div
-                    className={`rounded-[18px] border px-3 py-3 ${
-                      isDarkMode
-                        ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                        : "border-black/5 bg-white/80"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
                         <p
-                          className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
-                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                          }`}
-                        >
-                          Corte Top 6
-                        </p>
-                        <p
-                          className={`mt-1 text-[15px] font-extrabold leading-tight ${
-                            isDarkMode ? "text-white" : "text-zinc-950"
-                          }`}
-                        >
-                          {statsSummary.top6CutPoints} pts
-                        </p>
-                      </div>
-
-                      <div
-                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl ${
-                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                        }`}
-                      >
-                        <Trophy
-                          className={`h-4 w-4 ${
-                            isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                          }`}
-                        />
-                      </div>
-                    </div>
-
-                    <p
-                      className={`mt-2 text-[11px] leading-snug ${
-                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                      }`}
-                    >
-                      {statsSummary.totalPilots >= 6
-                        ? `${statsRadar.podiumPressure} pts separam o 3º do 6º colocado.`
-                        : "Leitura adaptada ao número atual de pilotos pontuando."}
-                    </p>
-                  </div>
-
-                  <div
-                    className={`rounded-[18px] border px-3 py-3 ${
-                      isDarkMode
-                        ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                        : "border-black/5 bg-white/80"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <p
-                          className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
-                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                          }`}
-                        >
-                          Momento do grid
-                        </p>
-                        <p
-                          className={`mt-1 text-[15px] font-extrabold leading-tight ${
-                            isDarkMode ? "text-white" : "text-zinc-950"
-                          }`}
-                        >
-                          {statsRadar.hottestLabel}
-                        </p>
-                      </div>
-
-                      <div
-                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl ${
-                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                        }`}
-                      >
-                        <TrendingUp
-                          className={`h-4 w-4 ${
-                            isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                          }`}
-                        />
-                      </div>
-                    </div>
-
-                    <p
-                      className={`mt-2 text-[11px] leading-snug ${
-                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                      }`}
-                    >
-                      {statsRadar.hottestPilot
-                        ? `${getPilotFirstAndLastName(statsRadar.hottestPilot.piloto)} lidera o impacto competitivo atual.`
-                        : "Sem piloto destacado nesta seleção."}
-                    </p>
-                  </div>
-
-                  <div
-                    className={`rounded-[18px] border px-3 py-3 ${
-                      isDarkMode
-                        ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                        : "border-black/5 bg-white/80"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <p
-                          className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
-                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                          }`}
-                        >
-                          Eficiência premium
-                        </p>
-                        <p
-                          className={`mt-1 text-[15px] font-extrabold leading-tight ${
-                            isDarkMode ? "text-white" : "text-zinc-950"
+                          className={`mt-2 text-[11px] leading-snug ${
+                            isDarkMode ? "text-zinc-400" : "text-zinc-500"
                           }`}
                         >
                           {bestEfficiencyPilot
-                            ? getPilotFirstAndLastName(bestEfficiencyPilot.piloto)
-                            : "Sem leitura"}
+                            ? `${(bestEfficiencyPilot.pontos / Math.max(bestEfficiencyPilot.participacoes, 1)).toFixed(1)} pts por participação.`
+                            : "Nenhuma participação registrada para calcular eficiência."}
                         </p>
-                      </div>
-
-                      <div
-                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl ${
-                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                        }`}
-                      >
-                        <Users
-                          className={`h-4 w-4 ${
-                            isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                          }`}
-                        />
                       </div>
                     </div>
 
-                    <p
-                      className={`mt-2 text-[11px] leading-snug ${
-                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                    <div
+                      className={`mt-2.5 rounded-[18px] border px-3 py-3 ${
+                        isDarkMode
+                          ? `${theme.darkAccentBorder} bg-[#0f172a]`
+                          : "border-black/5 bg-white/80"
                       }`}
                     >
-                      {bestEfficiencyPilot
-                        ? `${(bestEfficiencyPilot.pontos / Math.max(bestEfficiencyPilot.participacoes, 1)).toFixed(1)} pts por participação.`
-                        : "Nenhuma participação registrada para calcular eficiência."}
-                    </p>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <p
+                            className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                              isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                            }`}
+                          >
+                            Resumo oficial
+                          </p>
+                          <p
+                            className={`mt-1 text-[13px] font-extrabold leading-tight ${
+                              isDarkMode ? "text-white" : "text-zinc-950"
+                            }`}
+                          >
+                            Panorama premium da disputa atual
+                          </p>
+                        </div>
+
+                        <div
+                          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl ${
+                            isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                          }`}
+                        >
+                          <Flag
+                            className={`h-4 w-4 ${
+                              isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                            }`}
+                          />
+                        </div>
+                      </div>
+
+                      <p
+                        className={`mt-2 text-[11px] leading-relaxed ${
+                          isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                        }`}
+                      >
+                        {statsSummary.totalPilots > 1
+                          ? `${leader ? getPilotFirstAndLastName(leader.piloto) : "O líder"} comanda a leitura atual, ${titleFightStatus.label === "BRIGA ACIRRADA" ? "mas a disputa segue muito apertada" : titleFightStatus.label === "DISPUTA CONTROLADA" ? "com vantagem administrável no topo" : "com liderança mais sólida no momento"}. O Top 6 fecha em ${statsSummary.top6CutPoints} pontos e ${statsRadar.hottestPilot ? `${getPilotFirstAndLastName(statsRadar.hottestPilot.piloto)} vive o melhor momento do grid.` : "o grid ainda busca um nome dominante em momento competitivo."}`
+                          : "A leitura oficial será refinada assim que houver mais pilotos pontuando no campeonato selecionado."}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </CardContent>
