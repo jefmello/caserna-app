@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import * as htmlToImage from "html-to-image";
 import {
   Trophy,
   Medal,
@@ -21,6 +22,7 @@ import {
   ChevronRight,
   Moon,
   Sun,
+  Share2,
   TrendingUp,
   TrendingDown,
   Minus,
@@ -1029,6 +1031,8 @@ export default function CasernaKartAppModerno() {
   const [comparePilotAId, setComparePilotAId] = useState("");
   const [comparePilotBId, setComparePilotBId] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const shareCardRef = useRef<HTMLDivElement | null>(null);
+  const [isSharingImage, setIsSharingImage] = useState(false);
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("caserna-theme");
@@ -1380,6 +1384,29 @@ export default function CasernaKartAppModerno() {
 
   function toggleDarkMode() {
     setIsDarkMode((prev) => !prev);
+  }
+
+  async function handleShareClassification() {
+    if (!shareCardRef.current || isSharingImage) return;
+
+    try {
+      setIsSharingImage(true);
+      const dataUrl = await htmlToImage.toPng(shareCardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
+      });
+
+      const link = document.createElement("a");
+      link.download = `classificacao-${category.toLowerCase()}-${competition.toLowerCase()}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error(err);
+      window.alert("Não foi possível gerar a imagem da classificação.");
+    } finally {
+      setIsSharingImage(false);
+    }
   }
 
   if (loading) {
@@ -1967,6 +1994,249 @@ export default function CasernaKartAppModerno() {
                 </div>
               </CardContent>
             </Card>
+
+            <Card
+              className={`rounded-[22px] shadow-sm ${
+                isDarkMode
+                  ? `border ${theme.darkAccentBorder} bg-[#111827]`
+                  : `border ${theme.searchBorder} bg-gradient-to-br from-white via-white to-zinc-50/70`
+              }`}
+            >
+              <CardContent className="p-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-2.5">
+                    <div
+                      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
+                        isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                      }`}
+                    >
+                      <Share2
+                        className={`h-4.5 w-4.5 ${
+                          isDarkMode ? theme.darkAccentText : theme.searchIcon
+                        }`}
+                      />
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <p
+                        className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
+                          isDarkMode ? "text-zinc-400" : "text-zinc-400"
+                        }`}
+                      >
+                        Compartilhamento oficial
+                      </p>
+                      <p
+                        className={`mt-0.5 text-[12px] font-semibold leading-tight ${
+                          isDarkMode ? "text-white" : "text-zinc-900"
+                        }`}
+                      >
+                        Gere uma imagem pronta da classificação atual
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleShareClassification}
+                    disabled={isSharingImage || filteredRanking.length === 0}
+                    className={`shrink-0 rounded-full border px-3 py-2 text-[10px] font-bold uppercase tracking-[0.12em] transition-all duration-200 ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText} disabled:opacity-50`
+                        : `${theme.searchBadge} disabled:opacity-50`
+                    }`}
+                  >
+                    {isSharingImage ? "Gerando..." : "Compartilhar"}
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="pointer-events-none fixed -left-[9999px] top-0 z-[-1] opacity-0">
+              <div
+                ref={shareCardRef}
+                className={`w-[1200px] overflow-hidden rounded-[36px] border p-10 ${
+                  isDarkMode
+                    ? `border-white/10 bg-gradient-to-br ${theme.darkAccentCard} text-white`
+                    : `${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow} text-zinc-950`
+                }`}
+              >
+                <div
+                  className={`rounded-[28px] border px-8 py-7 ${
+                    isDarkMode
+                      ? `${theme.darkAccentBorder} bg-[#111827]`
+                      : `${theme.heroBorder} bg-white/90`
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-6">
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`flex h-16 w-16 items-center justify-center rounded-[22px] ${
+                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                        }`}
+                      >
+                        <Trophy
+                          className={`h-8 w-8 ${
+                            isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                          }`}
+                        />
+                      </div>
+                      <div>
+                        <p className={`text-[16px] font-bold uppercase tracking-[0.22em] ${
+                          isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                        }`}>
+                          Classificação oficial
+                        </p>
+                        <h2 className="mt-2 text-[42px] font-extrabold leading-none tracking-[0.04em]">
+                          CASERNA KART RACING
+                        </h2>
+                        <p className={`mt-3 text-[22px] font-semibold ${
+                          isDarkMode ? "text-zinc-300" : "text-zinc-700"
+                        }`}>
+                          {category} · {competitionLabels[competition] || competition}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div
+                      className={`rounded-full border px-5 py-2 text-[18px] font-bold uppercase tracking-[0.12em] ${
+                        isDarkMode
+                          ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                          : theme.searchBadge
+                      }`}
+                    >
+                      Top 6 oficial
+                    </div>
+                  </div>
+
+                  <div className="mt-8 grid grid-cols-3 gap-4">
+                    <div className={`rounded-[22px] border px-5 py-4 ${
+                      isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                    }`}>
+                      <p className={`text-[14px] font-bold uppercase tracking-[0.16em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}>Líder</p>
+                      <p className="mt-2 text-[26px] font-extrabold">{leader ? getPilotFirstAndLastName(leader.piloto) : "-"}</p>
+                      <p className={`mt-1 text-[18px] font-semibold ${
+                        isDarkMode ? theme.darkAccentText : "text-zinc-700"
+                      }`}>{leader?.pontos || 0} pontos</p>
+                    </div>
+                    <div className={`rounded-[22px] border px-5 py-4 ${
+                      isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                    }`}>
+                      <p className={`text-[14px] font-bold uppercase tracking-[0.16em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}>Pilotos</p>
+                      <p className="mt-2 text-[26px] font-extrabold">{filteredRanking.length}</p>
+                      <p className={`mt-1 text-[18px] font-semibold ${
+                        isDarkMode ? "text-zinc-300" : "text-zinc-700"
+                      }`}>na classificação atual</p>
+                    </div>
+                    <div className={`rounded-[22px] border px-5 py-4 ${
+                      isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                    }`}>
+                      <p className={`text-[14px] font-bold uppercase tracking-[0.16em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}>Vantagem</p>
+                      <p className="mt-2 text-[26px] font-extrabold">{filteredRanking[1] ? Math.max((leader?.pontos || 0) - filteredRanking[1].pontos, 0) : 0} pts</p>
+                      <p className={`mt-1 text-[18px] font-semibold ${
+                        isDarkMode ? "text-zinc-300" : "text-zinc-700"
+                      }`}>do líder para o vice</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 space-y-3">
+                  {filteredRanking.slice(0, 6).map((item, index) => {
+                    const styles = getTop6RowStyles(index + 1);
+                    const trendStatus =
+                      pilotTrendMap[item.pilotoId || normalizePilotName(item.piloto)] ||
+                      "stable";
+                    const trendVisual = getTrendVisual(trendStatus, isDarkMode);
+                    const TrendIcon = trendVisual.Icon;
+
+                    return (
+                      <div
+                        key={`share-${item.pilotoId || item.piloto}-${index}`}
+                        className={`flex items-center justify-between rounded-[24px] border px-5 py-4 ${
+                          isDarkMode
+                            ? index === 0
+                              ? `${theme.darkLeaderRow}`
+                              : index === 1
+                                ? `${theme.darkSecondRow}`
+                                : index === 2
+                                  ? `${theme.darkThirdRow}`
+                                  : "border-white/10 bg-[#111827]"
+                            : isDarkMode
+                              ? ""
+                              : styles.row || "border-black/5 bg-white"
+                        }`}
+                      >
+                        <div className="flex min-w-0 items-center gap-4">
+                          <div className={`flex h-14 w-14 items-center justify-center rounded-[18px] text-[22px] font-extrabold ${
+                            isDarkMode
+                              ? index === 0
+                                ? theme.darkTopBadge
+                                : index === 1
+                                  ? "bg-white/10 text-white"
+                                  : index === 2
+                                    ? "bg-amber-500/15 text-amber-300"
+                                    : "bg-white/10 text-white"
+                              : styles.badge
+                          }`}>
+                            {index + 1}
+                          </div>
+
+                          <div className="min-w-0">
+                            <p className="truncate text-[26px] font-extrabold tracking-tight">
+                              {getPilotFirstAndLastName(item.piloto)}
+                            </p>
+                            <div className="mt-2 flex items-center gap-2">
+                              <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[13px] font-semibold ${trendVisual.className}`}>
+                                <TrendIcon className="h-3.5 w-3.5" />
+                                {trendVisual.label}
+                              </span>
+                              {getPilotWarNameDisplay(item) ? (
+                                <span className={`text-[14px] italic ${
+                                  isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                                }`}>
+                                  {getPilotWarNameDisplay(item)}
+                                </span>
+                              ) : null}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-5 gap-3 text-center">
+                          {[
+                            { label: "PTS", value: item.pontos },
+                            { label: "VIT", value: item.vitorias },
+                            { label: "POL", value: item.poles },
+                            { label: "VMR", value: item.mv },
+                            { label: "PDS", value: item.podios },
+                          ].map((stat) => (
+                            <div
+                              key={`${item.pilotoId || item.piloto}-${stat.label}`}
+                              className={`min-w-[74px] rounded-[18px] border px-3 py-2 ${
+                                isDarkMode
+                                  ? "border-white/10 bg-[#0f172a]"
+                                  : "border-black/5 bg-white/90"
+                              }`}
+                            >
+                              <p className={`text-[11px] font-bold uppercase tracking-[0.14em] ${
+                                isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                              }`}>
+                                {stat.label}
+                              </p>
+                              <p className="mt-1 text-[22px] font-extrabold leading-none">{stat.value}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
 
             <Card
               className={`overflow-hidden rounded-[24px] shadow-sm ${
