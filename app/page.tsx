@@ -2151,23 +2151,10 @@ const duelWinnerPilot = useMemo(() => {
                       isDark={isDarkMode}
                     />
 
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/18 to-transparent" />
-
-                    <div className="absolute left-2.5 top-2.5">
-                      <div
-                        className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[8px] font-bold uppercase tracking-[0.18em] ${
-                          isDarkMode
-                            ? `${theme.darkAccentBorder} bg-black/35 text-zinc-100 backdrop-blur-md`
-                            : "border-white/30 bg-black/35 text-white backdrop-blur-md"
-                        }`}
-                      >
-                        <Star className="h-3 w-3" />
-                        Destaque oficial
-                      </div>
-                    </div>
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/58 via-black/12 to-transparent" />
 
                     <div className="absolute inset-x-0 bottom-3 px-3">
-                      <div className="mx-auto flex max-w-full items-center justify-center rounded-[18px] border border-white/20 bg-[linear-gradient(180deg,rgba(15,23,42,0.18),rgba(15,23,42,0.48))] px-3 py-2 shadow-[0_14px_30px_rgba(0,0,0,0.34)] backdrop-blur-md">
+                      <div className="mx-auto flex max-w-full items-center justify-center rounded-[18px] border border-white/20 bg-[linear-gradient(180deg,rgba(15,23,42,0.2),rgba(15,23,42,0.52))] px-3 py-2.5 shadow-[0_14px_30px_rgba(0,0,0,0.34)] backdrop-blur-md">
                         <p className="truncate whitespace-nowrap text-[11px] font-black uppercase tracking-[0.16em] text-white">
                           {getPilotWarName(leader) ? getPilotWarName(leader).toUpperCase() : getPilotHighlightName(leader?.piloto)}
                         </p>
@@ -2184,51 +2171,52 @@ const duelWinnerPilot = useMemo(() => {
                     : `${theme.heroBorder} bg-gradient-to-br ${theme.heroBg}`
                 }`}
               >
-                <CardContent className="relative h-full p-3">
-                  <div className="flex h-full flex-col justify-between">
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <p
-                          className={`text-[10px] font-bold uppercase tracking-[0.18em] ${
-                            isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                          }`}
-                        >
-                          Líder
-                        </p>
-                        <p
-                          className={`mt-2 text-[25px] font-black leading-none tracking-tight ${
-                            isDarkMode ? "text-white" : "text-zinc-950"
-                          }`}
-                        >
-                          {leaderName.firstName.toUpperCase()}
-                        </p>
-                        <p
-                          className={`mt-1 text-[15px] font-semibold leading-none tracking-tight ${
-                            isDarkMode ? "text-zinc-300" : "text-zinc-800"
-                          }`}
-                        >
-                          {leaderName.lastName ? leaderName.lastName.toUpperCase() : ""}
-                        </p>
-                      </div>
+                <CardContent className="relative flex h-full items-center justify-center p-3">
+                  <div className="flex w-full flex-col items-center justify-center text-center">
+                    <div className="flex w-full items-center justify-center gap-2">
+                      <p
+                        className={`text-[10px] font-bold uppercase tracking-[0.18em] ${
+                          isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                        }`}
+                      >
+                        Líder
+                      </p>
 
                       <div
-                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[16px] ${
+                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[14px] ${
                           isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                         }`}
                       >
-                        <Crown className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                        <Crown className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
                       </div>
                     </div>
 
-                    <div className="flex justify-start pb-1">
+                    <div className="mt-2 flex flex-col items-center justify-center">
+                      <p
+                        className={`text-[25px] font-black leading-none tracking-tight ${
+                          isDarkMode ? "text-white" : "text-zinc-950"
+                        }`}
+                      >
+                        {leaderName.firstName.toUpperCase()}
+                      </p>
+                      <p
+                        className={`mt-1 text-[15px] font-semibold leading-none tracking-tight ${
+                          isDarkMode ? "text-zinc-300" : "text-zinc-800"
+                        }`}
+                      >
+                        {leaderName.lastName ? leaderName.lastName.toUpperCase() : ""}
+                      </p>
+                    </div>
+
+                    <div className="mt-4 flex w-full justify-center px-3 pb-1">
                       <div
-                        className={`inline-flex items-center rounded-full border px-4 py-2 shadow-[0_10px_24px_rgba(0,0,0,0.12)] ${
+                        className={`inline-flex items-center rounded-full border px-5 py-2.5 shadow-[0_10px_24px_rgba(0,0,0,0.12)] ${
                           isDarkMode
                             ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                             : theme.heroChip
                         }`}
                       >
-                        <p className="text-[14px] font-black leading-none">
+                        <p className="text-[15px] font-black leading-none">
                           {leader?.pontos || 0} pontos
                         </p>
                       </div>
@@ -2272,7 +2260,7 @@ const duelWinnerPilot = useMemo(() => {
                   >
                     <CardContent className="relative h-full p-3">
                       <div className="flex h-full items-center justify-between gap-2.5">
-                        <div className="min-w-0">
+                        <div className="flex min-w-0 flex-1 flex-col items-center justify-center text-center">
                           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/90">
                             {item.title}
                           </p>
