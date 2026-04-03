@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import RankingShell from "@/components/ranking/ranking-shell";
 import RankingHeader from "@/components/ranking/ranking-header";
+import RankingSpotlight from "@/components/ranking/ranking-spotlight";
 import Image from "next/image";
 import * as htmlToImage from "html-to-image";
 import {
@@ -2015,173 +2016,16 @@ const duelWinnerPilot = useMemo(() => {
           toggleDarkMode={toggleDarkMode}
         />
 
-        <section
-          className={`overflow-hidden rounded-[24px] border px-3 py-3 shadow-sm ${
-            isDarkMode
-              ? `border-white/10 bg-gradient-to-br ${theme.darkAccentCard}`
-              : `${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow}`
-          }`}
-        >
-          <div
-            className={`mb-3 rounded-[18px] border px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] ${
-              isDarkMode
-                ? `${theme.darkAccentBorder} bg-gradient-to-b from-[#111827] to-[#161e2b]`
-                : `${theme.heroBorder} bg-gradient-to-b ${theme.heroBg}`
-            }`}
-          >
-            <div className="flex items-center justify-center">
-              <div className="flex items-center gap-3.5">
-                <div
-                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] shadow-sm ${
-                    isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                  }`}
-                >
-                  <Trophy
-                    className={`h-5.5 w-5.5 ${
-                      isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                    }`}
-                  />
-                </div>
-
-                <div className="flex flex-col justify-center">
-                  <p
-                    className={`text-[18px] font-extrabold uppercase tracking-[0.14em] leading-none ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
-                    }`}
-                  >
-                    PILOTO DESTAQUE
-                  </p>
-                  <p
-                    className={`mt-1 whitespace-nowrap text-[8.5px] font-semibold uppercase tracking-[0.08em] sm:text-[9px] ${
-                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                    }`}
-                  >
-                    LÍDER DA CATEGORIA E CAMPEONATO SELECIONADO
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2.5">
-            <div className="flex min-h-[288px] flex-col gap-2.5">
-              <Card
-                className={`h-[162px] overflow-hidden rounded-[24px] shadow-none ${
-                  isDarkMode ? spotlightStyles.leftCard : spotlightStyles.leftCard
-                }`}
-              >
-                <CardContent className="h-full p-0">
-                  <div className="relative h-full w-full overflow-hidden">
-                    <PilotPhotoSlot
-                      pilot={leader}
-                      alt={getPilotHighlightName(leader?.piloto)}
-                      isDark={isDarkMode}
-                    />
-
-                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/34 via-black/8 to-transparent" />
-
-                    <div className="absolute inset-x-0 bottom-2 z-20 px-3">
-                      <div className={`mx-auto flex max-w-[74%] items-center justify-center rounded-[15px] border px-2.5 py-1.5 backdrop-blur-md ${spotlightStyles.badge}`}>
-                        <p className="truncate whitespace-nowrap text-[9.5px] font-black uppercase tracking-[0.12em]">
-                          {getPilotWarName(leader) ? getPilotWarName(leader).toUpperCase() : getPilotHighlightName(leader?.piloto)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card
-                className={`h-[123px] overflow-hidden rounded-[24px] shadow-none ${spotlightStyles.leftSubcard}`}
-              >
-                <CardContent className="flex h-full items-center justify-center px-3 py-2.5">
-                  <div className="flex h-full w-full flex-col items-center justify-center text-center">
-                    <div className="mb-2 flex items-center justify-center gap-2">
-                      <p className={`text-[8px] font-bold uppercase tracking-[0.22em] ${spotlightStyles.label}`}>
-                        Líder
-                      </p>
-                      <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-[12px] ${isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap}`}>
-                        <Crown className={`h-3.5 w-3.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col items-center justify-center leading-none">
-                      <p className={`text-[18px] font-black tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                        {leaderName.firstName.toUpperCase()}
-                      </p>
-                      <p className={`mt-1 text-[10.5px] font-semibold tracking-[0.08em] ${isDarkMode ? "text-zinc-300" : "text-zinc-800"}`}>
-                        {leaderName.lastName ? leaderName.lastName.toUpperCase() : ""}
-                      </p>
-                    </div>
-
-                    <div className="mt-3 flex justify-center">
-                      <div className={`inline-flex items-center rounded-full border px-4 py-1.5 ${spotlightStyles.badge}`}>
-                        <p className="text-[10.5px] font-black leading-none">
-                          {leader?.pontos || 0} pontos
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className="flex min-h-[288px] flex-col gap-2">
-              {[
-                {
-                  title: "Vitórias",
-                  value: leader?.vitorias || 0,
-                  subtitle: "ataque vencedor",
-                  icon: Medal,
-                },
-                {
-                  title: "Pódios",
-                  value: leader?.podios || 0,
-                  subtitle: "presença top 6",
-                  icon: Trophy,
-                },
-                {
-                  title: "VMR",
-                  value: leader?.mv || 0,
-                  subtitle: "ritmo mais rápido",
-                  icon: Timer,
-                },
-              ].map((item) => {
-                const Icon = item.icon;
-
-                return (
-                  <Card
-                    key={item.title}
-                    className={`h-[92px] overflow-hidden rounded-[22px] shadow-none ${spotlightStyles.statCard}`}
-                  >
-                    <CardContent className="relative h-full p-3">
-                      <div className="flex h-full items-center justify-between gap-2">
-                        <div className="flex min-w-0 w-[40%] flex-col items-center justify-center text-center">
-                          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/92">
-                            {item.title}
-                          </p>
-                          <p className="mt-2 text-[34px] font-black leading-none tracking-tight text-white">
-                            {item.value}
-                          </p>
-                        </div>
-
-                        <div className="flex min-w-0 w-[44%] flex-col items-end justify-center gap-2 pr-1">
-                          <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${spotlightStyles.iconBubble}`}>
-                            <Icon className="h-4.5 w-4.5" />
-                          </div>
-
-                          <p className="max-w-[82px] text-right text-[8.5px] font-semibold uppercase leading-[1.15] tracking-[0.08em] text-white/86">
-                            {item.subtitle}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </div>
-        </section>
+        <RankingSpotlight
+          isDarkMode={isDarkMode}
+          theme={theme}
+          spotlightStyles={spotlightStyles}
+          leader={leader}
+          leaderName={leaderName}
+          PilotPhotoSlot={PilotPhotoSlot}
+          getPilotHighlightName={getPilotHighlightName}
+          getPilotWarName={getPilotWarName}
+        />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-3">
           <TabsList className="relative z-10 mb-6 grid h-auto w-full grid-cols-4 gap-2.5 bg-transparent p-0 shadow-none">
