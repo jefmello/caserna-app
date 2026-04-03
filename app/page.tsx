@@ -989,7 +989,6 @@ function PilotPhotoSlot({
     </div>
   );
 }
-}
 
 function StatRankingCard({
   title,
