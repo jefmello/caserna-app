@@ -2106,12 +2106,21 @@ const duelSummary = useMemo(() => {
                     isDark={isDarkMode}
                   />
 
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/65 via-black/35 to-transparent" />
 
                   {getPilotWarName(leader) ? (
-                    <div className="absolute inset-x-0 bottom-3 flex justify-center px-3">
-                      <div className="max-w-[85%] rounded-full border border-white/20 bg-black/45 px-4 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.28),0_0_18px_rgba(255,255,255,0.08)] backdrop-blur-sm">
-                        <p className="truncate text-center text-[11px] font-extrabold uppercase tracking-[0.16em] text-white">
+                    <div className="absolute inset-x-0 bottom-3 flex justify-center px-2">
+                      <div
+                        className={`max-w-[92%] rounded-[18px] border px-3 py-2 text-center shadow-[0_10px_28px_rgba(0,0,0,0.32)] backdrop-blur-md ${
+                          isDarkMode
+                            ? "border-yellow-400/30 bg-black/45 shadow-[0_12px_30px_rgba(0,0,0,0.42),0_0_24px_rgba(250,204,21,0.18)]"
+                            : "border-white/45 bg-black/38 shadow-[0_12px_30px_rgba(0,0,0,0.30),0_0_24px_rgba(255,255,255,0.18)]"
+                        }`}
+                      >
+                        <p
+                          className="text-center text-[11px] font-extrabold uppercase leading-[1.15] tracking-[0.16em] whitespace-normal break-words text-white [text-wrap:balance]"
+                          style={{ wordBreak: "break-word", overflowWrap: "anywhere" }}
+                        >
                           {getPilotWarName(leader)}
                         </p>
                       </div>
