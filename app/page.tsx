@@ -955,16 +955,10 @@ function PilotPhotoSlot({
           <img
             src={src}
             alt={alt}
-            className="absolute inset-0 h-full w-full scale-[1.18] object-cover object-center opacity-24 blur-2xl"
+            className="absolute inset-0 h-full w-full object-cover object-center"
             onError={() => setHasError(true)}
           />
-          <div className={`absolute inset-0 ${isDark ? "bg-slate-950/18" : "bg-white/8"}`} />
-          <img
-            src={src}
-            alt={alt}
-            className="relative z-[1] h-full w-full object-contain object-center"
-            onError={() => setHasError(true)}
-          />
+          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
         </>
       ) : (
         <div
@@ -989,18 +983,12 @@ function PilotPhotoSlot({
             >
               Espaço foto
             </p>
-            <p
-              className={`mt-1 text-[10px] font-medium ${
-                isDark ? "text-zinc-500" : "text-zinc-500"
-              }`}
-            >
-              piloto 1:1
-            </p>
           </div>
         </div>
       )}
     </div>
   );
+}
 }
 
 function StatRankingCard({
