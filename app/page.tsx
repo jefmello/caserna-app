@@ -1381,7 +1381,7 @@ const duelSummary = useMemo(() => {
     descarte: 0,
     categoriaAtual: category,
     competicao: competition,
-    categoria,
+    categoria: category,
   };
 
   const selectedPilotVsLeader = useMemo(() => {
