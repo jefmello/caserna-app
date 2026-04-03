@@ -1331,6 +1331,24 @@ const duelSummary = useMemo(() => {
   };
 }, [comparePilotA, comparePilotB, duelMetrics]);
 
+  const safeSelectedPilot: RankingItem = selectedPilot ?? {
+    pos: 0,
+    pilotoId: "",
+    piloto: "",
+    nomeGuerra: "",
+    pontos: 0,
+    adv: 0,
+    participacoes: 0,
+    vitorias: 0,
+    poles: 0,
+    mv: 0,
+    podios: 0,
+    descarte: 0,
+    categoriaAtual: category,
+    competicao: competition,
+    categoria: category,
+  };
+
   const selectedPilotShortName = useMemo(
     () => getPilotFirstAndLastName(selectedPilot?.piloto),
     [selectedPilot]
@@ -1344,7 +1362,7 @@ const duelSummary = useMemo(() => {
   const selectedPilotGap = useMemo(() => {
     if (!selectedPilot || !leader) return "-";
     return getGapToLeader(leader.pontos, safeSelectedPilot.pontos);
-  }, [selectedPilot, leader]);
+  }, [selectedPilot, leader, safeSelectedPilot.pontos]);
 
   const selectedPilotAverage = useMemo(
     () => getPilotEfficiency(selectedPilot),
@@ -1365,24 +1383,6 @@ const duelSummary = useMemo(() => {
     () => getPilotMomentumLabel(selectedPilot, leader),
     [selectedPilot, leader]
   );
-
-  const safeSelectedPilot: RankingItem = selectedPilot ?? {
-    pos: 0,
-    pilotoId: "",
-    piloto: "",
-    nomeGuerra: "",
-    pontos: 0,
-    adv: 0,
-    participacoes: 0,
-    vitorias: 0,
-    poles: 0,
-    mv: 0,
-    podios: 0,
-    descarte: 0,
-    categoriaAtual: category,
-    competicao: competition,
-    categoria: category,
-  };
 
   const selectedPilotVsLeader = useMemo(() => {
     if (!selectedPilot || !leader) return 0;
