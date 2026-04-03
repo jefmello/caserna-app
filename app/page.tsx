@@ -125,44 +125,44 @@ const sponsorLogos = [
   {
     name: "Lumine",
     src: "/patrocinadores/lumine.png",
-    wrapper: "px-2 py-2",
-    image: "h-[34px] w-auto scale-[1.18] object-contain",
-    shareImage: "max-h-[54px] w-auto scale-[1.18] object-contain",
+    wrapper: "px-2 py-1.5",
+    image: "h-[36px] w-auto max-w-none scale-[1.22] object-contain",
+    shareImage: "max-h-[58px] w-auto max-w-none scale-[1.22] object-contain",
   },
   {
     name: "LazyKart",
     src: "/patrocinadores/lazykart.png",
-    wrapper: "px-2 py-2",
-    image: "h-[36px] w-auto scale-[1.05] object-contain",
-    shareImage: "max-h-[56px] w-auto scale-[1.05] object-contain",
+    wrapper: "px-2 py-1.5",
+    image: "h-[38px] w-auto max-w-none scale-[1.1] object-contain",
+    shareImage: "max-h-[60px] w-auto max-w-none scale-[1.1] object-contain",
   },
   {
     name: "Precision",
     src: "/patrocinadores/precision.png",
-    wrapper: "px-1 py-1",
-    image: "h-[42px] w-auto scale-[1.45] object-contain",
-    shareImage: "max-h-[66px] w-auto scale-[1.45] object-contain",
+    wrapper: "px-0 py-0.5",
+    image: "h-[48px] w-auto max-w-none scale-[2.05] object-contain",
+    shareImage: "max-h-[72px] w-auto max-w-none scale-[2.05] object-contain",
   },
   {
     name: "Vits",
     src: "/patrocinadores/vits.png",
-    wrapper: "px-1 py-1",
-    image: "h-[40px] w-auto scale-[1.4] object-contain",
-    shareImage: "max-h-[62px] w-auto scale-[1.4] object-contain",
+    wrapper: "px-0 py-0.5",
+    image: "h-[46px] w-auto max-w-none scale-[1.95] object-contain",
+    shareImage: "max-h-[70px] w-auto max-w-none scale-[1.95] object-contain",
   },
   {
     name: "Skyflow",
     src: "/patrocinadores/skyflow.png",
-    wrapper: "px-1 py-1",
-    image: "h-[42px] w-auto scale-[1.42] object-contain",
-    shareImage: "max-h-[66px] w-auto scale-[1.42] object-contain",
+    wrapper: "px-0 py-0.5",
+    image: "h-[48px] w-auto max-w-none scale-[2.0] object-contain",
+    shareImage: "max-h-[72px] w-auto max-w-none scale-[2.0] object-contain",
   },
   {
     name: "Astera",
     src: "/patrocinadores/astera.png",
-    wrapper: "px-2 py-2",
-    image: "h-[34px] w-auto scale-[1.14] object-contain",
-    shareImage: "max-h-[54px] w-auto scale-[1.14] object-contain",
+    wrapper: "px-2 py-1.5",
+    image: "h-[36px] w-auto max-w-none scale-[1.18] object-contain",
+    shareImage: "max-h-[58px] w-auto max-w-none scale-[1.18] object-contain",
   },
 ] as const;
 
@@ -5557,35 +5557,30 @@ const duelSummary = useMemo(() => {
 
           <div className="fixed bottom-3 left-1/2 z-30 w-[calc(100%-24px)] max-w-md -translate-x-1/2">
             <Card
-              className={`overflow-hidden rounded-[24px] shadow-[0_18px_40px_rgba(15,23,42,0.12)] backdrop-blur-xl ${
+              className={`overflow-hidden rounded-[22px] shadow-[0_14px_30px_rgba(15,23,42,0.12)] backdrop-blur-xl ${
                 isDarkMode
-                  ? "border border-white/10 bg-[rgba(15,23,42,0.86)]"
-                  : "border border-black/5 bg-[rgba(255,255,255,0.92)]"
+                  ? "border border-white/10 bg-[rgba(15,23,42,0.88)]"
+                  : "border border-black/5 bg-[rgba(255,255,255,0.94)]"
               }`}
             >
-              <CardContent className="p-3">
-                <div className="mb-2 flex items-center justify-between gap-3 px-1">
-                  <p className={`text-[10px] font-bold uppercase tracking-[0.18em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+              <CardContent className="p-2">
+                <div className="mb-1.5 px-1">
+                  <p className={`text-[9px] font-bold uppercase tracking-[0.18em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                     Patrocinadores oficiais
                   </p>
-                  <div className={`rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] ${
-                    isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}` : theme.heroChip
-                  }`}>
-                    premium
-                  </div>
                 </div>
 
-                <div className="relative overflow-hidden rounded-[20px]">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[rgba(255,255,255,0.95)] to-transparent dark:from-[rgba(15,23,42,0.95)]" />
-                  <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[rgba(255,255,255,0.95)] to-transparent dark:from-[rgba(15,23,42,0.95)]" />
+                <div className="relative overflow-hidden rounded-[18px]">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-7 bg-gradient-to-r from-[rgba(255,255,255,0.97)] to-transparent dark:from-[rgba(15,23,42,0.97)]" />
+                  <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-7 bg-gradient-to-l from-[rgba(255,255,255,0.97)] to-transparent dark:from-[rgba(15,23,42,0.97)]" />
 
-                  <div className="sponsor-marquee-track flex w-max items-center gap-3">
+                  <div className="sponsor-marquee-track flex w-max items-center gap-2">
                     {sponsorTrack.map((sponsor, index) => (
                       <div
                         key={`fixed-sponsor-${sponsor.name}-${index}`}
-                        className={`flex h-[72px] w-[132px] shrink-0 items-center justify-center overflow-hidden rounded-[20px] border ${sponsor.wrapper} ${
+                        className={`flex h-[64px] w-[124px] shrink-0 items-center justify-center overflow-hidden rounded-[18px] border ${sponsor.wrapper} ${
                           isDarkMode
-                            ? "border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.04]"
+                            ? "border-white/10 bg-gradient-to-b from-white/[0.1] to-white/[0.05]"
                             : "border-black/5 bg-gradient-to-b from-white to-zinc-50"
                         }`}
                       >
@@ -5593,7 +5588,7 @@ const duelSummary = useMemo(() => {
                           src={sponsor.src}
                           alt={sponsor.name}
                           className={`${sponsor.image} ${
-                            isDarkMode ? "brightness-[1.2] contrast-[1.16] saturate-[1.06]" : "brightness-[0.98] contrast-[1.14] saturate-[1.04]"
+                            isDarkMode ? "brightness-[1.22] contrast-[1.18] saturate-[1.08]" : "brightness-[0.99] contrast-[1.16] saturate-[1.05]"
                           }`}
                         />
                       </div>
