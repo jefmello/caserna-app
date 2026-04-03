@@ -6,6 +6,7 @@ import RankingHeader from "@/components/ranking/ranking-header";
 import RankingSpotlight from "@/components/ranking/ranking-spotlight";
 import RankingTabs from "@/components/ranking/ranking-tabs";
 import RankingSearchCard from "@/components/ranking/ranking-search-card";
+import RankingClassificationSection from "@/components/ranking/ranking-classification-section";
 import Image from "next/image";
 import * as htmlToImage from "html-to-image";
 import {
@@ -2043,6 +2044,7 @@ const duelWinnerPilot = useMemo(() => {
               onSearchChange={setSearch}
             />
 
+            <RankingClassificationSection>
             <Card
               className={`rounded-[20px] shadow-sm ${
                 isDarkMode
@@ -3298,6 +3300,7 @@ const duelWinnerPilot = useMemo(() => {
                 </CardContent>
               </Card>
             </section>
+            </RankingClassificationSection>
           </TabsContent>
 
           <TabsContent value="piloto" className="mt-0 space-y-4 pt-0">
