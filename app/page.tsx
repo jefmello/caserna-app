@@ -667,7 +667,7 @@ function getSpotlightCategoryStyles(category: string, isDark: boolean) {
     if (category === "Base") {
       return {
         leftCard: "border-orange-500/30 bg-[linear-gradient(180deg,#1f1b16_0%,#151922_48%,#111827_100%)]",
-        leftSubcard: "border-orange-500/30 bg-[linear-gradient(180deg,rgba(249,115,22,0.12),rgba(17,24,39,0.96))]",
+        leftSubcard: "border-orange-500/28 bg-[linear-gradient(180deg,#1a2232_0%,#111827_58%,#0b1220_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_18px_34px_rgba(0,0,0,0.34)]",
         badge: "border-orange-400/35 bg-[linear-gradient(180deg,rgba(251,146,60,0.32),rgba(124,45,18,0.92))] text-white shadow-[0_14px_26px_rgba(249,115,22,0.24)]",
         statCard: "border-orange-500/30 bg-[linear-gradient(135deg,#7c2d12_0%,#9a3412_48%,#7c2d12_100%)]",
         label: "text-orange-300",
@@ -678,7 +678,7 @@ function getSpotlightCategoryStyles(category: string, isDark: boolean) {
     if (category === "Graduados") {
       return {
         leftCard: "border-blue-500/30 bg-[linear-gradient(180deg,#14233d_0%,#151922_48%,#111827_100%)]",
-        leftSubcard: "border-blue-500/30 bg-[linear-gradient(180deg,rgba(59,130,246,0.14),rgba(17,24,39,0.96))]",
+        leftSubcard: "border-blue-500/28 bg-[linear-gradient(180deg,#17243d_0%,#111827_58%,#0b1220_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_18px_34px_rgba(0,0,0,0.34)]",
         badge: "border-blue-300/35 bg-[linear-gradient(180deg,rgba(96,165,250,0.34),rgba(30,64,175,0.92))] text-white shadow-[0_14px_26px_rgba(59,130,246,0.22)]",
         statCard: "border-blue-500/30 bg-[linear-gradient(135deg,#274a9b_0%,#4169c6_52%,#274a9b_100%)]",
         label: "text-blue-300",
@@ -688,7 +688,7 @@ function getSpotlightCategoryStyles(category: string, isDark: boolean) {
 
     return {
       leftCard: "border-yellow-500/30 bg-[linear-gradient(180deg,#2a2412_0%,#151922_48%,#111827_100%)]",
-      leftSubcard: "border-yellow-500/30 bg-[linear-gradient(180deg,rgba(234,179,8,0.14),rgba(17,24,39,0.96))]",
+      leftSubcard: "border-yellow-500/28 bg-[linear-gradient(180deg,#201d14_0%,#111827_58%,#0b1220_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_18px_34px_rgba(0,0,0,0.34)]",
       badge: "border-yellow-300/35 bg-[linear-gradient(180deg,rgba(250,204,21,0.34),rgba(161,98,7,0.94))] text-white shadow-[0_14px_26px_rgba(234,179,8,0.22)]",
       statCard: "border-yellow-500/30 bg-[linear-gradient(135deg,#8a6a08_0%,#b88a10_52%,#8a6a08_100%)]",
       label: "text-yellow-300",
@@ -2374,39 +2374,39 @@ const duelWinnerPilot = useMemo(() => {
               const activeGlow =
                 category === "Base"
                   ? isDarkMode
-                    ? "shadow-[0_10px_22px_rgba(249,115,22,0.24),0_0_0_1px_rgba(249,115,22,0.28)]"
+                    ? "shadow-[0_18px_34px_rgba(0,0,0,0.52),0_0_0_1px_rgba(249,115,22,0.24)]"
                     : "shadow-[0_10px_22px_rgba(249,115,22,0.18),0_0_0_1px_rgba(249,115,22,0.16)]"
                   : category === "Graduados"
                     ? isDarkMode
-                      ? "shadow-[0_10px_22px_rgba(59,130,246,0.24),0_0_0_1px_rgba(59,130,246,0.28)]"
+                      ? "shadow-[0_18px_34px_rgba(0,0,0,0.52),0_0_0_1px_rgba(59,130,246,0.24)]"
                       : "shadow-[0_10px_22px_rgba(59,130,246,0.18),0_0_0_1px_rgba(59,130,246,0.16)]"
                     : isDarkMode
-                      ? "shadow-[0_10px_22px_rgba(234,179,8,0.24),0_0_0_1px_rgba(234,179,8,0.28)]"
+                      ? "shadow-[0_18px_34px_rgba(0,0,0,0.52),0_0_0_1px_rgba(234,179,8,0.24)]"
                       : "shadow-[0_10px_22px_rgba(234,179,8,0.18),0_0_0_1px_rgba(234,179,8,0.16)]";
 
               const activeSurface =
                 category === "Base"
                   ? isDarkMode
-                    ? "border-orange-500/60 bg-gradient-to-b from-orange-500/24 via-orange-500/12 to-[#101a2a] text-white"
+                    ? "border-orange-500/40 bg-[linear-gradient(180deg,#1a2232_0%,#111827_56%,#0b1220_100%)] text-white"
                     : "border-orange-300 bg-gradient-to-b from-orange-50 to-white text-zinc-950"
                   : category === "Graduados"
                     ? isDarkMode
-                      ? "border-blue-500/60 bg-gradient-to-b from-blue-500/24 via-blue-500/12 to-[#101a2a] text-white"
+                      ? "border-blue-500/40 bg-[linear-gradient(180deg,#17243d_0%,#111827_56%,#0b1220_100%)] text-white"
                       : "border-blue-300 bg-gradient-to-b from-blue-50 to-white text-zinc-950"
                     : isDarkMode
-                      ? "border-yellow-500/60 bg-gradient-to-b from-yellow-500/24 via-yellow-500/12 to-[#101a2a] text-white"
+                      ? "border-yellow-500/40 bg-[linear-gradient(180deg,#201d14_0%,#111827_56%,#0b1220_100%)] text-white"
                       : "border-yellow-300 bg-gradient-to-b from-yellow-50 to-white text-zinc-950";
 
               return (
                 <TabsTrigger
                   key={tabItem.value}
                   value={tabItem.value}
-                  className={`h-[64px] rounded-[18px] px-2 py-1.5 transition-all duration-300 ${
+                  className={`h-[64px] rounded-[18px] px-2 py-1.5 shadow-sm transition-all duration-300 ${
                     isActive
-                      ? `${activeSurface} ${activeGlow} scale-[1.01] shadow-[0_12px_28px_rgba(0,0,0,0.55)]`
+                      ? `${activeSurface} ${activeGlow} scale-[1.01]`
                       : isDarkMode
-                        ? "border border-white/6 bg-[#081121] text-zinc-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.03),0_10px_24px_rgba(0,0,0,0.34)] hover:border-white/12 hover:bg-[#0d1728] hover:text-white"
-                        : "border border-zinc-200 bg-white text-zinc-500 shadow-sm hover:border-zinc-300 hover:bg-zinc-50"
+                        ? "border border-white/8 bg-[linear-gradient(180deg,#0f172a_0%,#091224_100%)] text-zinc-300 hover:border-white/12 hover:bg-[linear-gradient(180deg,#162033_0%,#0b1220_100%)]"
+                        : "border border-zinc-200 bg-white text-zinc-500 hover:border-zinc-300 hover:bg-zinc-50"
                   }`}
                 >
                   <div className="flex h-full flex-col items-center justify-center gap-1">
@@ -2415,17 +2415,17 @@ const duelWinnerPilot = useMemo(() => {
                         isActive
                           ? category === "Base"
                             ? isDarkMode
-                              ? "bg-orange-500/18 text-orange-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                              ? "bg-orange-500/18 text-orange-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
                               : "bg-orange-100 text-orange-700"
                             : category === "Graduados"
                               ? isDarkMode
-                                ? "bg-blue-500/18 text-blue-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                                ? "bg-blue-500/18 text-blue-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
                                 : "bg-blue-100 text-blue-700"
                               : isDarkMode
-                                ? "bg-yellow-500/18 text-yellow-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                                ? "bg-yellow-500/18 text-yellow-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
                                 : "bg-yellow-100 text-yellow-700"
                           : isDarkMode
-                            ? "bg-white/[0.04] text-zinc-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+                            ? "bg-white/6 text-zinc-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
                             : "bg-zinc-50 text-zinc-500"
                       }`}
                     >
