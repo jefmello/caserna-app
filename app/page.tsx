@@ -2137,8 +2137,10 @@ const duelWinnerPilot = useMemo(() => {
           <div className="grid grid-cols-2 gap-2.5">
             <div className="flex min-h-[288px] flex-col gap-2.5">
               <Card
-                className={`h-[154px] overflow-hidden rounded-[22px] shadow-none ${
-                  isDarkMode ? "border border-white/10 bg-[#111827]" : "border border-black/5"
+                className={`h-[162px] overflow-hidden rounded-[24px] shadow-none ${
+                  isDarkMode
+                    ? `border ${theme.darkAccentBorder} bg-[#111827]`
+                    : `${theme.heroBorder} bg-gradient-to-br ${theme.heroBg}`
                 }`}
               >
                 <CardContent className="h-full p-0">
@@ -2149,11 +2151,24 @@ const duelWinnerPilot = useMemo(() => {
                       isDark={isDarkMode}
                     />
 
-                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/18 to-transparent" />
+
+                    <div className="absolute left-2.5 top-2.5">
+                      <div
+                        className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[8px] font-bold uppercase tracking-[0.18em] ${
+                          isDarkMode
+                            ? `${theme.darkAccentBorder} bg-black/35 text-zinc-100 backdrop-blur-md`
+                            : "border-white/30 bg-black/35 text-white backdrop-blur-md"
+                        }`}
+                      >
+                        <Star className="h-3 w-3" />
+                        Destaque oficial
+                      </div>
+                    </div>
 
                     <div className="absolute inset-x-0 bottom-3 px-3">
-                      <div className="mx-auto flex w-fit max-w-full items-center justify-center rounded-full border border-white/20 bg-black/45 px-3 py-1.5 shadow-[0_10px_26px_rgba(0,0,0,0.28)] backdrop-blur-md">
-                        <p className="truncate whitespace-nowrap text-[11px] font-extrabold uppercase tracking-[0.14em] text-white">
+                      <div className="mx-auto flex max-w-full items-center justify-center rounded-[18px] border border-white/20 bg-[linear-gradient(180deg,rgba(15,23,42,0.18),rgba(15,23,42,0.48))] px-3 py-2 shadow-[0_14px_30px_rgba(0,0,0,0.34)] backdrop-blur-md">
+                        <p className="truncate whitespace-nowrap text-[11px] font-black uppercase tracking-[0.16em] text-white">
                           {getPilotWarName(leader) ? getPilotWarName(leader).toUpperCase() : getPilotHighlightName(leader?.piloto)}
                         </p>
                       </div>
@@ -2162,142 +2177,128 @@ const duelWinnerPilot = useMemo(() => {
                 </CardContent>
               </Card>
 
-              <HighlightCard
-                title="Líder"
-                icon={Crown}
-                accent
-                compact
-                isDark={isDarkMode}
-                categoryTheme={theme}
-                accentStyles={{
-                  border: theme.heroBorder,
-                  bg: `bg-gradient-to-b ${theme.heroBg}`,
-                  iconWrap: theme.primaryIconWrap,
-                  icon: theme.primaryIcon,
-                  text:
-                    category === "Base"
-                      ? "text-orange-800"
-                      : category === "Graduados"
-                        ? "text-blue-800"
-                        : "text-yellow-800",
-                  divider:
-                    category === "Base"
-                      ? "bg-orange-200/80"
-                      : category === "Graduados"
-                        ? "bg-blue-200/80"
-                        : "bg-yellow-200/80",
-                }}
+              <Card
+                className={`h-[118px] overflow-hidden rounded-[24px] shadow-none ${
+                  isDarkMode
+                    ? `border ${theme.darkAccentBorder} bg-gradient-to-br from-[#111827] via-[#161e2b] to-[#111827]`
+                    : `${theme.heroBorder} bg-gradient-to-br ${theme.heroBg}`
+                }`}
               >
-                <div className="flex h-full flex-col justify-between text-left">
-                  <div className="flex flex-1 flex-col justify-center pt-1">
-                    <p
-                      className={`text-[25px] font-extrabold leading-none tracking-tight ${
-                        isDarkMode ? "text-white" : "text-zinc-950"
-                      }`}
-                    >
-                      {leaderName.firstName.toUpperCase()}
-                    </p>
-                    <p
-                      className={`mt-1.5 text-[16px] font-semibold leading-none tracking-tight ${
-                        isDarkMode ? "text-zinc-200" : "text-zinc-800"
-                      }`}
-                    >
-                      {leaderName.lastName ? leaderName.lastName.toUpperCase() : ""}
-                    </p>
-                  </div>
+                <CardContent className="relative h-full p-3">
+                  <div className="flex h-full flex-col justify-between">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p
+                          className={`text-[10px] font-bold uppercase tracking-[0.18em] ${
+                            isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                          }`}
+                        >
+                          Líder
+                        </p>
+                        <p
+                          className={`mt-2 text-[25px] font-black leading-none tracking-tight ${
+                            isDarkMode ? "text-white" : "text-zinc-950"
+                          }`}
+                        >
+                          {leaderName.firstName.toUpperCase()}
+                        </p>
+                        <p
+                          className={`mt-1 text-[15px] font-semibold leading-none tracking-tight ${
+                            isDarkMode ? "text-zinc-300" : "text-zinc-800"
+                          }`}
+                        >
+                          {leaderName.lastName ? leaderName.lastName.toUpperCase() : ""}
+                        </p>
+                      </div>
 
-                  <div className="flex justify-start pb-1 pl-0.5">
-                    <div
-                      className={`inline-flex rounded-full border px-4 py-1.5 ${
-                        isDarkMode
-                          ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                          : theme.heroChip
-                      }`}
-                    >
-                      <p className="text-[13px] font-extrabold">
-                        {leader?.pontos || 0} pontos
-                      </p>
+                      <div
+                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[16px] ${
+                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                        }`}
+                      >
+                        <Crown className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-start pb-1">
+                      <div
+                        className={`inline-flex items-center rounded-full border px-4 py-2 shadow-[0_10px_24px_rgba(0,0,0,0.12)] ${
+                          isDarkMode
+                            ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                            : theme.heroChip
+                        }`}
+                      >
+                        <p className="text-[14px] font-black leading-none">
+                          {leader?.pontos || 0} pontos
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </HighlightCard>
+                </CardContent>
+              </Card>
             </div>
 
-            <div className="flex min-h-[288px] flex-col gap-2.5">
-              <HighlightCard
-                title="Vitórias"
-                icon={Medal}
-                compact
-                isDark={isDarkMode}
-                categoryTheme={theme}
-              >
-                <div className="flex h-full flex-col items-center justify-center text-center">
-                  <p
-                    className={`text-[31px] font-extrabold leading-none tracking-tight ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
-                    }`}
-                  >
-                    {leader?.vitorias || 0}
-                  </p>
-                  <p
-                    className={`mt-1.5 max-w-[110px] text-[10px] leading-snug ${
-                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                    }`}
-                  >
-                    vitórias nesta classificação
-                  </p>
-                </div>
-              </HighlightCard>
+            <div className="flex min-h-[288px] flex-col gap-2">
+              {[
+                {
+                  title: "Vitórias",
+                  value: leader?.vitorias || 0,
+                  subtitle: "ataque vencedor",
+                  icon: Medal,
+                },
+                {
+                  title: "Pódios",
+                  value: leader?.podios || 0,
+                  subtitle: "presença top 6",
+                  icon: Trophy,
+                },
+                {
+                  title: "VMR",
+                  value: leader?.mv || 0,
+                  subtitle: "ritmo mais rápido",
+                  icon: Timer,
+                },
+              ].map((item) => {
+                const Icon = item.icon;
 
-              <HighlightCard
-                title="Pódios"
-                icon={Medal}
-                compact
-                isDark={isDarkMode}
-                categoryTheme={theme}
-              >
-                <div className="flex h-full flex-col items-center justify-center text-center">
-                  <p
-                    className={`text-[31px] font-extrabold leading-none tracking-tight ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
+                return (
+                  <Card
+                    key={item.title}
+                    className={`h-[92px] overflow-hidden rounded-[22px] shadow-none ${
+                      isDarkMode
+                        ? `border ${theme.darkAccentBorder} bg-[#111827]`
+                        : "border border-black/5 bg-[linear-gradient(180deg,#243457,#223250)]"
                     }`}
                   >
-                    {leader?.podios || 0}
-                  </p>
-                  <p
-                    className={`mt-1.5 max-w-[110px] text-[10px] leading-snug ${
-                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                    }`}
-                  >
-                    pódios nesta classificação
-                  </p>
-                </div>
-              </HighlightCard>
+                    <CardContent className="relative h-full p-3">
+                      <div className="flex h-full items-center justify-between gap-2.5">
+                        <div className="min-w-0">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/90">
+                            {item.title}
+                          </p>
+                          <p className="mt-2 text-[34px] font-black leading-none tracking-tight text-white">
+                            {item.value}
+                          </p>
+                        </div>
 
-              <HighlightCard
-                title="VMR"
-                icon={Timer}
-                compact
-                isDark={isDarkMode}
-                categoryTheme={theme}
-              >
-                <div className="flex h-full flex-col items-center justify-center text-center">
-                  <p
-                    className={`text-[31px] font-extrabold leading-none tracking-tight ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
-                    }`}
-                  >
-                    {leader?.mv || 0}
-                  </p>
-                  <p
-                    className={`mt-1.5 max-w-[112px] text-[10px] leading-snug ${
-                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                    }`}
-                  >
-                    voltas mais rápidas nesta classificação
-                  </p>
-                </div>
-              </HighlightCard>
+                        <div className="flex flex-col items-end justify-between self-stretch">
+                          <div
+                            className={`flex h-9 w-9 items-center justify-center rounded-[16px] ${
+                              isDarkMode ? "bg-white/8 text-zinc-100" : "bg-white/12 text-white"
+                            }`}
+                          >
+                            <Icon className="h-4.5 w-4.5" />
+                          </div>
+
+                          <p className="max-w-[74px] text-right text-[9px] font-medium uppercase tracking-[0.08em] text-white/72">
+                            {item.subtitle}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           </div>
         </section>
