@@ -888,7 +888,7 @@ function PilotPhotoSlot({
         <img
           src={src}
           alt={alt}
-          className="h-full w-full scale-[1.14] object-cover object-center"
+          className="h-full w-full object-contain object-center"
           onError={() => setHasError(true)}
         />
       ) : (
@@ -2165,17 +2165,17 @@ const duelWinnerPilot = useMemo(() => {
               </Card>
 
               <Card
-                className={`min-h-[156px] overflow-hidden rounded-[24px] shadow-none ${
+                className={`h-[123px] overflow-hidden rounded-[24px] shadow-none ${
                   isDarkMode
                     ? `border ${theme.darkAccentBorder} bg-gradient-to-br from-[#111827] via-[#161e2b] to-[#111827]`
                     : `${theme.heroBorder} bg-gradient-to-br ${theme.heroBg}`
                 }`}
               >
-                <CardContent className="flex h-full min-h-[156px] items-center justify-center px-4 py-4">
-                  <div className="flex w-full flex-col items-center justify-center text-center">
-                    <div className="flex w-full items-center justify-center gap-2">
+                <CardContent className="flex h-full items-center justify-center px-3 py-2.5">
+                  <div className="flex h-full w-full flex-col items-center justify-between text-center">
+                    <div className="flex items-center justify-center gap-1.5">
                       <p
-                        className={`text-[10px] font-bold uppercase tracking-[0.18em] ${
+                        className={`text-[9px] font-bold uppercase tracking-[0.16em] ${
                           isDarkMode ? theme.darkAccentText : theme.primaryIcon
                         }`}
                       >
@@ -2183,24 +2183,24 @@ const duelWinnerPilot = useMemo(() => {
                       </p>
 
                       <div
-                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[14px] ${
+                        className={`flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-[12px] ${
                           isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                         }`}
                       >
-                        <Crown className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                        <Crown className={`h-3.5 w-3.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
                       </div>
                     </div>
 
-                    <div className="mt-4 flex flex-col items-center justify-center">
+                    <div className="flex flex-1 flex-col items-center justify-center leading-none">
                       <p
-                        className={`text-[26px] font-black leading-[0.92] tracking-tight ${
+                        className={`text-[22px] font-black tracking-tight ${
                           isDarkMode ? "text-white" : "text-zinc-950"
                         }`}
                       >
                         {leaderName.firstName.toUpperCase()}
                       </p>
                       <p
-                        className={`mt-2 text-[15px] font-semibold leading-none tracking-tight ${
+                        className={`mt-1 text-[13px] font-semibold tracking-tight ${
                           isDarkMode ? "text-zinc-300" : "text-zinc-800"
                         }`}
                       >
@@ -2208,15 +2208,15 @@ const duelWinnerPilot = useMemo(() => {
                       </p>
                     </div>
 
-                    <div className="mt-5 flex w-full justify-center px-4 pb-2">
+                    <div className="flex w-full justify-center pb-1">
                       <div
-                        className={`inline-flex items-center rounded-full border px-5 py-2.5 shadow-[0_10px_24px_rgba(0,0,0,0.12)] ${
+                        className={`inline-flex items-center rounded-full border px-4 py-1.5 shadow-[0_10px_24px_rgba(0,0,0,0.12)] ${
                           isDarkMode
                             ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                             : theme.heroChip
                         }`}
                       >
-                        <p className="text-[15px] font-black leading-none">
+                        <p className="text-[13px] font-black leading-none">
                           {leader?.pontos || 0} pontos
                         </p>
                       </div>
