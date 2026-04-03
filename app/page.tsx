@@ -667,7 +667,7 @@ function getSpotlightCategoryStyles(category: string, isDark: boolean) {
     if (category === "Base") {
       return {
         leftCard: "border-orange-500/30 bg-[linear-gradient(180deg,#1f1b16_0%,#151922_48%,#111827_100%)]",
-        leftSubcard: "border-orange-500/30 bg-[linear-gradient(180deg,rgba(249,115,22,0.12),rgba(17,24,39,0.96))]",
+        leftSubcard: "border-orange-500/35 bg-[linear-gradient(180deg,#172033_0%,#101827_58%,#0a1220_100%)] shadow-[0_16px_34px_rgba(0,0,0,0.34),inset_0_1px_0_rgba(255,255,255,0.04)]",
         badge: "border-orange-400/35 bg-[linear-gradient(180deg,rgba(251,146,60,0.32),rgba(124,45,18,0.92))] text-white shadow-[0_14px_26px_rgba(249,115,22,0.24)]",
         statCard: "border-orange-500/30 bg-[linear-gradient(135deg,#7c2d12_0%,#9a3412_48%,#7c2d12_100%)]",
         label: "text-orange-300",
@@ -678,7 +678,7 @@ function getSpotlightCategoryStyles(category: string, isDark: boolean) {
     if (category === "Graduados") {
       return {
         leftCard: "border-blue-500/30 bg-[linear-gradient(180deg,#14233d_0%,#151922_48%,#111827_100%)]",
-        leftSubcard: "border-blue-500/30 bg-[linear-gradient(180deg,rgba(59,130,246,0.14),rgba(17,24,39,0.96))]",
+        leftSubcard: "border-blue-500/35 bg-[linear-gradient(180deg,#15233b_0%,#101827_58%,#0a1220_100%)] shadow-[0_16px_34px_rgba(0,0,0,0.34),inset_0_1px_0_rgba(255,255,255,0.04)]",
         badge: "border-blue-300/35 bg-[linear-gradient(180deg,rgba(96,165,250,0.34),rgba(30,64,175,0.92))] text-white shadow-[0_14px_26px_rgba(59,130,246,0.22)]",
         statCard: "border-blue-500/30 bg-[linear-gradient(135deg,#274a9b_0%,#4169c6_52%,#274a9b_100%)]",
         label: "text-blue-300",
@@ -688,7 +688,7 @@ function getSpotlightCategoryStyles(category: string, isDark: boolean) {
 
     return {
       leftCard: "border-yellow-500/30 bg-[linear-gradient(180deg,#2a2412_0%,#151922_48%,#111827_100%)]",
-      leftSubcard: "border-yellow-500/30 bg-[linear-gradient(180deg,rgba(234,179,8,0.14),rgba(17,24,39,0.96))]",
+      leftSubcard: "border-yellow-500/35 bg-[linear-gradient(180deg,#1d2130_0%,#101827_58%,#0a1220_100%)] shadow-[0_16px_34px_rgba(0,0,0,0.34),inset_0_1px_0_rgba(255,255,255,0.04)]",
       badge: "border-yellow-300/35 bg-[linear-gradient(180deg,rgba(250,204,21,0.34),rgba(161,98,7,0.94))] text-white shadow-[0_14px_26px_rgba(234,179,8,0.22)]",
       statCard: "border-yellow-500/30 bg-[linear-gradient(135deg,#8a6a08_0%,#b88a10_52%,#8a6a08_100%)]",
       label: "text-yellow-300",
@@ -2387,14 +2387,14 @@ const duelWinnerPilot = useMemo(() => {
               const activeSurface =
                 category === "Base"
                   ? isDarkMode
-                    ? "border-orange-500/40 bg-gradient-to-b from-orange-500/12 to-[#161e2b] text-white"
+                    ? "border-orange-500/45 bg-[linear-gradient(180deg,rgba(249,115,22,0.18)_0%,#132033_54%,#09111d_100%)] text-white shadow-[0_12px_24px_rgba(0,0,0,0.34),0_0_0_1px_rgba(249,115,22,0.12)]"
                     : "border-orange-300 bg-gradient-to-b from-orange-50 to-white text-zinc-950"
                   : category === "Graduados"
                     ? isDarkMode
-                      ? "border-blue-500/40 bg-gradient-to-b from-blue-500/12 to-[#161e2b] text-white"
+                      ? "border-blue-500/45 bg-[linear-gradient(180deg,rgba(59,130,246,0.18)_0%,#132033_54%,#09111d_100%)] text-white shadow-[0_12px_24px_rgba(0,0,0,0.34),0_0_0_1px_rgba(59,130,246,0.12)]"
                       : "border-blue-300 bg-gradient-to-b from-blue-50 to-white text-zinc-950"
                     : isDarkMode
-                      ? "border-yellow-500/40 bg-gradient-to-b from-yellow-500/12 to-[#161e2b] text-white"
+                      ? "border-yellow-500/45 bg-[linear-gradient(180deg,rgba(234,179,8,0.18)_0%,#132033_54%,#09111d_100%)] text-white shadow-[0_12px_24px_rgba(0,0,0,0.34),0_0_0_1px_rgba(234,179,8,0.12)]"
                       : "border-yellow-300 bg-gradient-to-b from-yellow-50 to-white text-zinc-950";
 
               return (
@@ -2405,7 +2405,7 @@ const duelWinnerPilot = useMemo(() => {
                     isActive
                       ? `${activeSurface} ${activeGlow} scale-[1.01]`
                       : isDarkMode
-                        ? "border border-white/10 bg-[#111827] text-zinc-400 hover:border-white/15 hover:bg-[#161e2b]"
+                        ? "border border-white/8 bg-[linear-gradient(180deg,#091120_0%,#060d18_100%)] text-zinc-300 hover:border-white/16 hover:bg-[#0d1726] shadow-[0_10px_22px_rgba(0,0,0,0.28)]"
                         : "border border-zinc-200 bg-white text-zinc-500 hover:border-zinc-300 hover:bg-zinc-50"
                   }`}
                 >
@@ -2425,7 +2425,7 @@ const duelWinnerPilot = useMemo(() => {
                                 ? "bg-yellow-500/15 text-yellow-300"
                                 : "bg-yellow-100 text-yellow-700"
                           : isDarkMode
-                            ? "bg-white/5 text-zinc-300"
+                            ? "bg-white/6 text-zinc-200"
                             : "bg-zinc-50 text-zinc-500"
                       }`}
                     >
