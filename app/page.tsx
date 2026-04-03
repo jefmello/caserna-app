@@ -26,7 +26,6 @@ import {
   TrendingUp,
   TrendingDown,
   Minus,
-  AlertTriangle,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -667,7 +666,7 @@ function getSpotlightCategoryStyles(category: string, isDark: boolean) {
     if (category === "Base") {
       return {
         leftCard: "border-orange-500/30 bg-[linear-gradient(180deg,#1f1b16_0%,#151922_48%,#111827_100%)]",
-        leftSubcard: "border-orange-500/28 bg-[linear-gradient(180deg,#1a2232_0%,#111827_58%,#0b1220_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_18px_34px_rgba(0,0,0,0.34)]",
+        leftSubcard: "border-orange-500/30 bg-[linear-gradient(180deg,rgba(249,115,22,0.12),rgba(17,24,39,0.96))]",
         badge: "border-orange-400/35 bg-[linear-gradient(180deg,rgba(251,146,60,0.32),rgba(124,45,18,0.92))] text-white shadow-[0_14px_26px_rgba(249,115,22,0.24)]",
         statCard: "border-orange-500/30 bg-[linear-gradient(135deg,#7c2d12_0%,#9a3412_48%,#7c2d12_100%)]",
         label: "text-orange-300",
@@ -678,7 +677,7 @@ function getSpotlightCategoryStyles(category: string, isDark: boolean) {
     if (category === "Graduados") {
       return {
         leftCard: "border-blue-500/30 bg-[linear-gradient(180deg,#14233d_0%,#151922_48%,#111827_100%)]",
-        leftSubcard: "border-blue-500/28 bg-[linear-gradient(180deg,#17243d_0%,#111827_58%,#0b1220_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_18px_34px_rgba(0,0,0,0.34)]",
+        leftSubcard: "border-blue-500/30 bg-[linear-gradient(180deg,rgba(59,130,246,0.14),rgba(17,24,39,0.96))]",
         badge: "border-blue-300/35 bg-[linear-gradient(180deg,rgba(96,165,250,0.34),rgba(30,64,175,0.92))] text-white shadow-[0_14px_26px_rgba(59,130,246,0.22)]",
         statCard: "border-blue-500/30 bg-[linear-gradient(135deg,#274a9b_0%,#4169c6_52%,#274a9b_100%)]",
         label: "text-blue-300",
@@ -688,7 +687,7 @@ function getSpotlightCategoryStyles(category: string, isDark: boolean) {
 
     return {
       leftCard: "border-yellow-500/30 bg-[linear-gradient(180deg,#2a2412_0%,#151922_48%,#111827_100%)]",
-      leftSubcard: "border-yellow-500/28 bg-[linear-gradient(180deg,#201d14_0%,#111827_58%,#0b1220_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_18px_34px_rgba(0,0,0,0.34)]",
+      leftSubcard: "border-yellow-500/30 bg-[linear-gradient(180deg,rgba(234,179,8,0.14),rgba(17,24,39,0.96))]",
       badge: "border-yellow-300/35 bg-[linear-gradient(180deg,rgba(250,204,21,0.34),rgba(161,98,7,0.94))] text-white shadow-[0_14px_26px_rgba(234,179,8,0.22)]",
       statCard: "border-yellow-500/30 bg-[linear-gradient(135deg,#8a6a08_0%,#b88a10_52%,#8a6a08_100%)]",
       label: "text-yellow-300",
@@ -989,6 +988,7 @@ function PilotPhotoSlot({
       )}
     </div>
   );
+}
 }
 
 function StatRankingCard({
@@ -1688,29 +1688,6 @@ const duelWinnerPilot = useMemo(() => {
     return filteredRanking[pilotIndex - 1] || null;
   }, [filteredRanking, selectedPilot]);
 
-  const selectedPilotRivalDirect = useMemo(() => {
-    if (!selectedPilot || filteredRanking.length <= 1) return null;
-
-    const currentIndex = filteredRanking.findIndex(
-      (item) =>
-        item.pilotoId === safeSelectedPilot.pilotoId &&
-        item.competicao === safeSelectedPilot.competicao
-    );
-
-    if (currentIndex === -1) return null;
-
-    const previousPilot = currentIndex > 0 ? filteredRanking[currentIndex - 1] : null;
-    const nextPilot = currentIndex < filteredRanking.length - 1 ? filteredRanking[currentIndex + 1] : null;
-
-    if (!previousPilot) return nextPilot;
-    if (!nextPilot) return previousPilot;
-
-    const diffAbove = Math.abs(previousPilot.pontos - safeSelectedPilot.pontos);
-    const diffBelow = Math.abs(safeSelectedPilot.pontos - nextPilot.pontos);
-
-    return diffAbove <= diffBelow ? previousPilot : nextPilot;
-  }, [filteredRanking, selectedPilot, safeSelectedPilot]);
-
   const top3TitleFight = useMemo(() => filteredRanking.slice(0, 3), [filteredRanking]);
 
   const pilotTrendMap = useMemo(() => {
@@ -2374,39 +2351,39 @@ const duelWinnerPilot = useMemo(() => {
               const activeGlow =
                 category === "Base"
                   ? isDarkMode
-                    ? "shadow-[0_18px_34px_rgba(0,0,0,0.52),0_0_0_1px_rgba(249,115,22,0.24)]"
+                    ? "shadow-[0_10px_22px_rgba(249,115,22,0.24),0_0_0_1px_rgba(249,115,22,0.28)]"
                     : "shadow-[0_10px_22px_rgba(249,115,22,0.18),0_0_0_1px_rgba(249,115,22,0.16)]"
                   : category === "Graduados"
                     ? isDarkMode
-                      ? "shadow-[0_18px_34px_rgba(0,0,0,0.52),0_0_0_1px_rgba(59,130,246,0.24)]"
+                      ? "shadow-[0_10px_22px_rgba(59,130,246,0.24),0_0_0_1px_rgba(59,130,246,0.28)]"
                       : "shadow-[0_10px_22px_rgba(59,130,246,0.18),0_0_0_1px_rgba(59,130,246,0.16)]"
                     : isDarkMode
-                      ? "shadow-[0_18px_34px_rgba(0,0,0,0.52),0_0_0_1px_rgba(234,179,8,0.24)]"
+                      ? "shadow-[0_10px_22px_rgba(234,179,8,0.24),0_0_0_1px_rgba(234,179,8,0.28)]"
                       : "shadow-[0_10px_22px_rgba(234,179,8,0.18),0_0_0_1px_rgba(234,179,8,0.16)]";
 
               const activeSurface =
                 category === "Base"
                   ? isDarkMode
-                    ? "border-orange-500/40 bg-[linear-gradient(180deg,#1a2232_0%,#111827_56%,#0b1220_100%)] text-white"
+                    ? "border-orange-400/80 bg-[radial-gradient(circle_at_top,rgba(251,146,60,0.34),transparent_48%),linear-gradient(180deg,#1f2937_0%,#111827_58%,#0b1220_100%)] text-white"
                     : "border-orange-300 bg-gradient-to-b from-orange-50 to-white text-zinc-950"
                   : category === "Graduados"
                     ? isDarkMode
-                      ? "border-blue-500/40 bg-[linear-gradient(180deg,#17243d_0%,#111827_56%,#0b1220_100%)] text-white"
+                      ? "border-blue-400/80 bg-[radial-gradient(circle_at_top,rgba(96,165,250,0.34),transparent_48%),linear-gradient(180deg,#1e293b_0%,#111827_58%,#0b1220_100%)] text-white"
                       : "border-blue-300 bg-gradient-to-b from-blue-50 to-white text-zinc-950"
                     : isDarkMode
-                      ? "border-yellow-500/40 bg-[linear-gradient(180deg,#201d14_0%,#111827_56%,#0b1220_100%)] text-white"
+                      ? "border-yellow-400/80 bg-[radial-gradient(circle_at_top,rgba(250,204,21,0.30),transparent_48%),linear-gradient(180deg,#2a2412_0%,#151922_56%,#0b1220_100%)] text-white"
                       : "border-yellow-300 bg-gradient-to-b from-yellow-50 to-white text-zinc-950";
 
               return (
                 <TabsTrigger
                   key={tabItem.value}
                   value={tabItem.value}
-                  className={`h-[64px] rounded-[18px] px-2 py-1.5 shadow-sm transition-all duration-300 ${
+                  className={`relative h-[64px] rounded-[18px] px-2 py-1.5 overflow-hidden transition-all duration-300 ${
                     isActive
-                      ? `${activeSurface} ${activeGlow} scale-[1.01]`
+                      ? `${activeSurface} ${activeGlow} scale-[1.02] shadow-[0_16px_34px_rgba(0,0,0,0.48),inset_0_1px_0_rgba(255,255,255,0.10)]`
                       : isDarkMode
-                        ? "border border-white/8 bg-[linear-gradient(180deg,#0f172a_0%,#091224_100%)] text-zinc-300 hover:border-white/12 hover:bg-[linear-gradient(180deg,#162033_0%,#0b1220_100%)]"
-                        : "border border-zinc-200 bg-white text-zinc-500 hover:border-zinc-300 hover:bg-zinc-50"
+                        ? "border border-white/8 bg-[#081121] text-zinc-300 shadow-[0_10px_24px_rgba(0,0,0,0.36),inset_0_1px_0_rgba(255,255,255,0.03)] hover:border-white/14 hover:bg-[#0d1728] hover:text-white"
+                        : "border border-zinc-200 bg-white text-zinc-500 shadow-sm hover:border-zinc-300 hover:bg-zinc-50"
                   }`}
                 >
                   <div className="flex h-full flex-col items-center justify-center gap-1">
@@ -2415,17 +2392,17 @@ const duelWinnerPilot = useMemo(() => {
                         isActive
                           ? category === "Base"
                             ? isDarkMode
-                              ? "bg-orange-500/18 text-orange-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
+                              ? "bg-orange-400/18 text-orange-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_8px_16px_rgba(249,115,22,0.18)]"
                               : "bg-orange-100 text-orange-700"
                             : category === "Graduados"
                               ? isDarkMode
-                                ? "bg-blue-500/18 text-blue-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
+                                ? "bg-blue-400/18 text-blue-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_8px_16px_rgba(59,130,246,0.18)]"
                                 : "bg-blue-100 text-blue-700"
                               : isDarkMode
-                                ? "bg-yellow-500/18 text-yellow-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
+                                ? "bg-yellow-400/18 text-yellow-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_8px_16px_rgba(234,179,8,0.18)]"
                                 : "bg-yellow-100 text-yellow-700"
                           : isDarkMode
-                            ? "bg-white/6 text-zinc-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
+                            ? "bg-white/[0.04] text-zinc-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
                             : "bg-zinc-50 text-zinc-500"
                       }`}
                     >
@@ -5823,66 +5800,35 @@ const duelWinnerPilot = useMemo(() => {
                         }`}>
                           Perfil oficial do piloto
                         </p>
-                        <div className="mt-2 flex items-center gap-3">
-                          <h2 className="text-[40px] font-extrabold leading-none tracking-tight">
-                            {selectedPilotShortName || "Piloto"}
-                          </h2>
-                          {selectedPilotWarName ? (
-                            <div
-                              className={`rounded-full border px-4 py-1.5 text-[14px] font-bold tracking-[0.04em] ${
-                                isDarkMode
-                                  ? `${theme.darkAccentBorder} bg-white/5 text-zinc-100`
-                                  : `${theme.heroBorder} bg-white text-zinc-700`
-                              }`}
-                            >
-                              {selectedPilotWarName}
-                            </div>
-                          ) : null}
-                        </div>
+                        <h2 className="mt-2 text-[40px] font-extrabold leading-none tracking-tight">
+                          {selectedPilotShortName || "Piloto"}
+                        </h2>
+                        <p className={`mt-3 text-[20px] font-semibold ${
+                          isDarkMode ? "text-zinc-300" : "text-zinc-700"
+                        }`}>
+                          {category} · {competitionLabels[competition] || competition}
+                        </p>
                       </div>
                     </div>
 
-                    <div className="flex items-start justify-end gap-3 max-w-[440px]">
-                      <div className="flex flex-col items-end gap-3">
-                        <div
-                          className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${
-                            isDarkMode
-                              ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                              : theme.searchBadge
-                          }`}
-                        >
-                          {selectedPilot ? `${safeSelectedPilot.pos}º lugar` : "Sem posição"}
-                        </div>
-                        <div
-                          className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${
-                            isDarkMode
-                              ? "border-white/10 bg-white/5 text-zinc-200"
-                              : "border-zinc-200 bg-zinc-50 text-zinc-700"
-                          }`}
-                        >
-                          {selectedPilot ? `${safeSelectedPilot.pontos} pontos` : "0 pontos"}
-                        </div>
+                    <div className="flex flex-col items-end gap-3">
+                      <div
+                        className={`rounded-full border px-5 py-2 text-[16px] font-bold uppercase tracking-[0.14em] ${
+                          isDarkMode
+                            ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                            : theme.searchBadge
+                        }`}
+                      >
+                        {selectedPilot ? `${safeSelectedPilot.pos}º lugar` : "Sem posição"}
                       </div>
-
-                      <div className="flex flex-col items-end gap-3">
-                        <div
-                          className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${
-                            isDarkMode
-                              ? `${theme.darkAccentBorder} bg-white/5 text-zinc-200`
-                              : `${theme.heroBorder} bg-white text-zinc-700`
-                          }`}
-                        >
-                          {category}
-                        </div>
-                        <div
-                          className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${
-                            isDarkMode
-                              ? `${theme.darkAccentBorder} bg-white/5 text-zinc-200`
-                              : `${theme.heroBorder} bg-white text-zinc-700`
-                          }`}
-                        >
-                          {competitionLabels[competition] || competition}
-                        </div>
+                      <div
+                        className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${
+                          isDarkMode
+                            ? "border-white/10 bg-white/5 text-zinc-200"
+                            : "border-zinc-200 bg-zinc-50 text-zinc-700"
+                        }`}
+                      >
+                        {selectedPilot ? `${safeSelectedPilot.pontos} pontos` : "0 pontos"}
                       </div>
                     </div>
                   </div>
@@ -5918,45 +5864,59 @@ const duelWinnerPilot = useMemo(() => {
                           </div>
                         )}
 
-                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
+                        <div className="absolute inset-x-0 bottom-0 p-5">
+                          <div className={`rounded-[22px] border px-4 py-4 backdrop-blur-md ${
+                            isDarkMode ? "border-white/10 bg-black/30" : "border-white/70 bg-white/78"
+                          }`}>
+                            <p className={`text-[24px] font-extrabold leading-none tracking-tight ${
+                              isDarkMode ? "text-white" : "text-zinc-950"
+                            }`}>
+                              {selectedPilotShortName || "Piloto"}
+                            </p>
+                            {selectedPilotWarName ? (
+                              <p className={`mt-2 text-[15px] font-semibold italic ${
+                                isDarkMode ? "text-zinc-300" : "text-zinc-600"
+                              }`}>
+                                {selectedPilotWarName}
+                              </p>
+                            ) : null}
+                          </div>
+                        </div>
                       </div>
                     </div>
 
                       <div className={`rounded-[24px] border px-4 py-4 ${
                         isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white/90"
                       }`}>
-                        <div className="mb-3 flex items-center justify-center">
-                          <div className={`rounded-full border px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] ${
-                            isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}` : theme.heroChip
+                        <div className="mb-3 flex items-center justify-between gap-3">
+                          <p className={`text-[10px] font-bold uppercase tracking-[0.18em] ${
+                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
                           }`}>
                             Patrocinadores oficiais
+                          </p>
+                          <div className={`rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] ${
+                            isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}` : theme.heroChip
+                          }`}>
+                            parceiros
                           </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-2">
-                          {sponsorLogos.map((sponsor) => {
-                            const shareLogoClass =
-                              sponsor.name === "LazyKart"
-                                ? "max-h-[42px] max-w-[118px] object-contain"
-                                : sponsor.name === "Astera"
-                                  ? "max-h-[40px] max-w-[118px] object-contain"
-                                  : sponsor.shareImage;
-
-                            return (
-                              <div
-                                key={`pilot-share-sponsor-${sponsor.name}`}
-                                className={`flex h-[74px] items-center justify-center overflow-hidden rounded-[18px] border shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${sponsor.wrapper} ${
-                                  isDarkMode ? sponsor.surfaceDark : sponsor.surfaceLight
-                                }`}
-                              >
-                                <img
-                                  src={sponsor.src}
-                                  alt={sponsor.name}
-                                  className={shareLogoClass}
-                                />
-                              </div>
-                            );
-                          })}
+                          {sponsorLogos.map((sponsor) => (
+                            <div
+                              key={`pilot-share-sponsor-${sponsor.name}`}
+                              className={`flex h-[74px] items-center justify-center overflow-hidden rounded-[18px] border shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${sponsor.wrapper} ${
+                                isDarkMode ? sponsor.surfaceDark : sponsor.surfaceLight
+                              }`}
+                            >
+                              <img
+                                src={sponsor.src}
+                                alt={sponsor.name}
+                                className={sponsor.shareImage}
+                              />
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -6023,64 +5983,15 @@ const duelWinnerPilot = useMemo(() => {
                           </div>
                         </div>
                       </div>
+
                       <div className="grid grid-cols-4 gap-4">
                         {[
-                          {
-                            label: "Poles",
-                            value: selectedPilot?.poles || 0,
-                            subtext: "classificações vencidas",
-                            icon: Flag,
-                          },
-                          {
-                            label: "VMR",
-                            value: selectedPilot?.mv || 0,
-                            subtext: "voltas mais rápidas",
-                            icon: Timer,
-                          },
-                          {
-                            label: "Participações",
-                            value: selectedPilot?.participacoes || 0,
-                            subtext: "presenças oficiais",
-                            icon: Users,
-                          },
-                          {
-                            label: "Distância do líder",
-                            value: selectedPilotLeaderGapValue,
-                            subtext: selectedPilotLeaderGapValue === 0 ? "na liderança" : "pontos para alcançar",
-                            icon: Gauge,
-                          },
-                          {
-                            label: "Pódios",
-                            value: selectedPilot?.podios || 0,
-                            subtext: "chegadas no top 6",
-                            icon: Trophy,
-                          },
-                          {
-                            label: "Média de pontos",
-                            value: selectedPilotAverage.toFixed(1),
-                            subtext: "por participação",
-                            icon: BarChart3,
-                          },
-                          {
-                            label: "Rival direto",
-                            value: selectedPilotRivalDirect
-                              ? getPilotFirstAndLastName(selectedPilotRivalDirect.piloto)
-                              : "Sem rival",
-                            subtext: selectedPilotRivalDirect
-                              ? `${Math.abs(selectedPilotRivalDirect.pontos - safeSelectedPilot.pontos)} pt(s) de diferença`
-                              : "vantagem isolada",
-                            icon: Swords,
-                          },
-                          {
-                            label: "Advertências",
-                            value: safeSelectedPilot.adv,
-                            subtext: safeSelectedPilot.adv === 0 ? "sem punições" : "advertências recebidas",
-                            icon: AlertTriangle,
-                          },
+                          { label: "Poles", value: selectedPilot?.poles || 0, icon: Flag },
+                          { label: "VMR", value: selectedPilot?.mv || 0, icon: Timer },
+                          { label: "Participações", value: selectedPilot?.participacoes || 0, icon: Users },
+                          { label: "Descarte", value: selectedPilot?.descarte || 0, icon: Gauge },
                         ].map((item) => {
                           const Icon = item.icon;
-                          const isTextValue = typeof item.value === "string";
-
                           return (
                             <div
                               key={item.label}
@@ -6098,11 +6009,8 @@ const duelWinnerPilot = useMemo(() => {
                                   <Icon className={`h-3.5 w-3.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
                                 </div>
                               </div>
-                              <p className={`mt-4 ${isTextValue ? "text-[18px] leading-tight" : "text-[28px] leading-none tracking-tight"} font-extrabold ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                              <p className={`mt-4 text-[28px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
                                 {item.value}
-                              </p>
-                              <p className={`mt-2 text-[12px] leading-snug ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-                                {item.subtext}
                               </p>
                             </div>
                           );
