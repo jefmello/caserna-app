@@ -13,6 +13,7 @@ import RankingStatsHeader from "@/components/ranking/ranking-stats-header";
 import RankingStatsSummaryGrid from "@/components/ranking/ranking-stats-summary-grid";
 import RankingStatsRadarCard from "@/components/ranking/ranking-stats-radar-card";
 import RankingStatsTopPointsChartCard from "@/components/ranking/ranking-stats-top-points-chart-card";
+import RankingStatsMetricCardsGrid from "@/components/ranking/ranking-stats-metric-cards-grid";
 import Image from "next/image";
 import * as htmlToImage from "html-to-image";
 import {
@@ -4632,47 +4633,19 @@ const duelWinnerPilot = useMemo(() => {
               BarComponent={Bar}
             />
 
-            <div className="grid grid-cols-1 gap-3">
-              <StatRankingCard
-                title="Mais vitórias"
-                icon={Trophy}
-                items={topVitorias}
-                metricKey="vitorias"
-                emptyLabel="Nenhuma vitória registrada nesta seleção."
-                theme={theme}
-                isDark={isDarkMode}
-              />
-
-              <StatRankingCard
-                title="Mais poles"
-                icon={Flag}
-                items={topPoles}
-                metricKey="poles"
-                emptyLabel="Nenhuma pole registrada nesta seleção."
-                theme={theme}
-                isDark={isDarkMode}
-              />
-
-              <StatRankingCard
-                title="Mais VMR"
-                icon={Timer}
-                items={topMv}
-                metricKey="mv"
-                emptyLabel="Nenhuma volta mais rápida registrada nesta seleção."
-                theme={theme}
-                isDark={isDarkMode}
-              />
-
-              <StatRankingCard
-                title="Mais pódios"
-                icon={Medal}
-                items={topPodios}
-                metricKey="podios"
-                emptyLabel="Nenhum pódio registrado nesta seleção."
-                theme={theme}
-                isDark={isDarkMode}
-              />
-            </div>
+            <RankingStatsMetricCardsGrid
+              StatRankingCardComponent={StatRankingCard}
+              topVitorias={topVitorias}
+              topPoles={topPoles}
+              topMv={topMv}
+              topPodios={topPodios}
+              theme={theme}
+              isDarkMode={isDarkMode}
+              TrophyIcon={Trophy}
+              FlagIcon={Flag}
+              TimerIcon={Timer}
+              MedalIcon={Medal}
+            />
           </TabsContent>
             <div className="pointer-events-none fixed -left-[9999px] top-0 z-[-1] opacity-0">
               <div
