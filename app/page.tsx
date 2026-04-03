@@ -2106,13 +2106,17 @@ const duelSummary = useMemo(() => {
                     isDark={isDarkMode}
                   />
 
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/55 to-transparent" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
-                  <div className="absolute inset-x-0 bottom-2 px-3 text-center">
-                    <p className="truncate text-[10px] font-bold uppercase tracking-[0.10em] text-white">
-                      {getPilotHighlightName(leader?.piloto)}
-                    </p>
-                  </div>
+                  {getPilotWarName(leader) ? (
+                    <div className="absolute inset-x-0 bottom-3 flex justify-center px-3">
+                      <div className="max-w-[85%] rounded-full border border-white/20 bg-black/45 px-4 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.28),0_0_18px_rgba(255,255,255,0.08)] backdrop-blur-sm">
+                        <p className="truncate text-center text-[11px] font-extrabold uppercase tracking-[0.16em] text-white">
+                          {getPilotWarName(leader)}
+                        </p>
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
               </CardContent>
             </Card>
