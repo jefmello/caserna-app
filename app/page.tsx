@@ -1197,15 +1197,6 @@ export default function CasernaKartAppModerno() {
     setComparePilotBId("");
   }, [category, competition]);
 
-  useEffect(() => {
-    if (activeTab === "piloto") {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    }
-  }, [activeTab]);
-
   const currentCompetitionList = useMemo(() => {
     return rankingData[category]?.[competition] || [];
   }, [rankingData, category, competition]);
@@ -3695,55 +3686,7 @@ const duelSummary = useMemo(() => {
                                   </div>
                                 </div>
 
-                                <div className="absolute inset-x-0 bottom-0 p-3">
-                                  <div
-                                    className={`rounded-[20px] border px-3 py-3 backdrop-blur-md ${
-                                      isDarkMode
-                                        ? "border-white/10 bg-black/30"
-                                        : "border-white/60 bg-white/72"
-                                    }`}
-                                  >
-                                    <p
-                                      className={`truncate text-[15px] font-extrabold leading-none tracking-tight ${
-                                        isDarkMode ? "text-white" : "text-zinc-950"
-                                      }`}
-                                    >
-                                      {selectedPilotShortName}
-                                    </p>
 
-                                    {selectedPilotWarName ? (
-                                      <p
-                                        className={`mt-1 truncate text-[11px] font-semibold italic ${
-                                          isDarkMode ? "text-zinc-300" : "text-zinc-600"
-                                        }`}
-                                      >
-                                        {selectedPilotWarName}
-                                      </p>
-                                    ) : null}
-
-                                    <div className="mt-2 flex items-center justify-between gap-2">
-                                      <span
-                                        className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] ${
-                                          isDarkMode
-                                            ? "border-white/10 bg-white/5 text-zinc-300"
-                                            : "border-black/5 bg-white/80 text-zinc-700"
-                                        }`}
-                                      >
-                                        piloto oficial
-                                      </span>
-
-                                      <span
-                                        className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] ${
-                                          isDarkMode
-                                            ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                                            : theme.heroChip
-                                        }`}
-                                      >
-                                        {competitionLabels[competition] || competition}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
                               </div>
                             </div>
 
@@ -3756,27 +3699,27 @@ const duelSummary = useMemo(() => {
                                 Perfil premium do piloto
                               </p>
 
-                              <h2
-                                className={`mt-2 break-words text-[28px] font-extrabold leading-[1.02] tracking-tight ${
-                                  isDarkMode ? "text-white" : "text-zinc-950"
-                                }`}
-                              >
-                                {selectedPilotShortName}
-                              </h2>
+                              <div className="mt-2 flex flex-wrap items-center gap-3">
+                                <h2
+                                  className={`break-words text-[28px] font-extrabold leading-[1.02] tracking-tight ${
+                                    isDarkMode ? "text-white" : "text-zinc-950"
+                                  }`}
+                                >
+                                  {selectedPilotShortName}
+                                </h2>
 
-                              {selectedPilotWarName ? (
-                                <div className="mt-3">
+                                {selectedPilotWarName ? (
                                   <span
-                                    className={`inline-flex max-w-full break-words rounded-full border px-3 py-1.5 text-[11px] font-semibold italic ${
+                                    className={`inline-flex max-w-full break-words rounded-full border px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] shadow-[0_8px_22px_rgba(0,0,0,0.10)] ${
                                       isDarkMode
-                                        ? `${theme.darkAccentBorder} ${theme.darkAccentBg} text-zinc-300`
-                                        : theme.heroChip
+                                        ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                                        : `${theme.heroChip} shadow-[0_8px_20px_rgba(234,179,8,0.14)]`
                                     }`}
                                   >
-                                    {selectedPilotWarName}
+                                    {selectedPilotWarName.replace(/"/g, "")}
                                   </span>
-                                </div>
-                              ) : null}
+                                ) : null}
+                              </div>
 
                               <div className="mt-4 grid grid-cols-2 gap-2">
                                 <div
@@ -5242,9 +5185,22 @@ const duelSummary = useMemo(() => {
                         }`}>
                           Perfil oficial do piloto
                         </p>
-                        <h2 className="mt-2 text-[40px] font-extrabold leading-none tracking-tight">
-                          {selectedPilotShortName || "Piloto"}
-                        </h2>
+                        <div className="mt-2 flex flex-wrap items-center gap-3">
+                          <h2 className="text-[40px] font-extrabold leading-none tracking-tight">
+                            {selectedPilotShortName || "Piloto"}
+                          </h2>
+                          {selectedPilotWarName ? (
+                            <span
+                              className={`inline-flex max-w-full break-words rounded-full border px-4 py-1.5 text-[12px] font-bold uppercase tracking-[0.12em] shadow-[0_10px_24px_rgba(0,0,0,0.10)] ${
+                                isDarkMode
+                                  ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                                  : `${theme.heroChip} shadow-[0_10px_24px_rgba(234,179,8,0.14)]`
+                              }`}
+                            >
+                              {selectedPilotWarName.replace(/"/g, "")}
+                            </span>
+                          ) : null}
+                        </div>
                         <p className={`mt-3 text-[20px] font-semibold ${
                           isDarkMode ? "text-zinc-300" : "text-zinc-700"
                         }`}>
@@ -5305,25 +5261,7 @@ const duelSummary = useMemo(() => {
                           </div>
                         )}
 
-                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
-                        <div className="absolute inset-x-0 bottom-0 p-5">
-                          <div className={`rounded-[22px] border px-4 py-4 backdrop-blur-md ${
-                            isDarkMode ? "border-white/10 bg-black/30" : "border-white/70 bg-white/78"
-                          }`}>
-                            <p className={`text-[24px] font-extrabold leading-none tracking-tight ${
-                              isDarkMode ? "text-white" : "text-zinc-950"
-                            }`}>
-                              {selectedPilotShortName || "Piloto"}
-                            </p>
-                            {selectedPilotWarName ? (
-                              <p className={`mt-2 text-[15px] font-semibold italic ${
-                                isDarkMode ? "text-zinc-300" : "text-zinc-600"
-                              }`}>
-                                {selectedPilotWarName}
-                              </p>
-                            ) : null}
-                          </div>
-                        </div>
+
                       </div>
                     </div>
 
