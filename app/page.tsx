@@ -2730,7 +2730,7 @@ const duelSummary = useMemo(() => {
                               Momento: <span className="font-semibold">{selectedPilotMomentum}</span> · destaque principal em <span className="font-semibold">{selectedPilotBestAttribute.label.toLowerCase()}</span> ({selectedPilotBestAttribute.value}).
                             </p>
                             <p className={`mt-2 text-[15px] leading-relaxed ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-                              {selectedPilotRivalAhead
+                              {selectedPilotRivalAhead && selectedPilot
                                 ? `${selectedPilotRivalAhead.pontos - selectedPilot.pontos} ponto(s) para alcançar ${getPilotFirstAndLastName(selectedPilotRivalAhead.piloto)}.`
                                 : "Piloto já ocupa a liderança desta leitura oficial."}
                             </p>
@@ -4422,7 +4422,7 @@ const duelSummary = useMemo(() => {
                           {selectedPilotRivalAhead ? getPilotFirstAndLastName(selectedPilotRivalAhead.piloto) : "Nenhum piloto acima"}
                         </p>
                         <p className={`mt-2 text-[12px] ${isDarkMode ? "text-zinc-400" : "text-zinc-600"}`}>
-                          {selectedPilotRivalAhead
+                          {selectedPilotRivalAhead && selectedPilot
                             ? `${selectedPilotRivalAhead.pontos - selectedPilot.pontos} ponto(s) para avançar mais uma posição.`
                             : "Piloto ocupa a liderança desta seleção."}
                         </p>
