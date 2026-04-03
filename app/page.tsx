@@ -121,6 +121,21 @@ const competitionLabels: Record<string, string> = {
   GERAL: "Geral",
 };
 
+
+type SponsorItem = {
+  name: string;
+  src: string;
+};
+
+const sponsorItems: SponsorItem[] = [
+  { name: "Lumine", src: "/patrocinadores/lumine.png" },
+  { name: "Lazy Kart", src: "/patrocinadores/lazykart.png" },
+  { name: "Precision", src: "/patrocinadores/precision.png" },
+  { name: "Vit's Burger", src: "/patrocinadores/vits.png" },
+  { name: "Sky Flow", src: "/patrocinadores/skyflow.png" },
+  { name: "Astera", src: "/patrocinadores/astera.png" },
+];
+
 function sortRanking(list: RankingItem[]) {
   return [...list].sort((a, b) => {
     if (b.pontos !== a.pontos) return b.pontos - a.pontos;
@@ -1117,6 +1132,50 @@ function getDuelProfileLabel({
   return leader === "a" ? "A compensa na regularidade" : "B compensa na regularidade";
 }
 
+
+
+function SponsorGrid({
+  isDark = false,
+  variant = "fixed",
+}: {
+  isDark?: boolean;
+  variant?: "fixed" | "share";
+}) {
+  const isShare = variant === "share";
+
+  return (
+    <div
+      className={isShare ? "grid grid-cols-2 gap-3" : "grid grid-cols-3 gap-2"}
+    >
+      {sponsorItems.map((sponsor) => (
+        <div
+          key={sponsor.name}
+          className={`group flex items-center justify-center overflow-hidden rounded-[16px] border ${
+            isShare
+              ? `h-[84px] px-3 py-3 ${
+                  isDark
+                    ? "border-white/10 bg-[#0f172a]"
+                    : "border-black/5 bg-white"
+                }`
+              : `h-[54px] px-2.5 py-2 ${
+                  isDark
+                    ? "border-white/10 bg-[#111827]/95 backdrop-blur-md"
+                    : "border-black/5 bg-white/95 backdrop-blur-md"
+                }`
+          }`}
+        >
+          <img
+            src={sponsor.src}
+            alt={sponsor.name}
+            className={`w-full object-contain ${isShare ? "h-12" : "h-7"}`}
+            loading="lazy"
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function CasernaKartAppModerno() {
   const [rankingData, setRankingData] = useState<RankingData>({});
   const [rankingMeta, setRankingMeta] = useState<RankingMetaData>({});
@@ -1794,7 +1853,7 @@ const duelSummary = useMemo(() => {
         isDarkMode ? "bg-[#0b1220] text-white" : "bg-[#f3f4f6] text-zinc-950"
       }`}
     >
-      <div className="mx-auto max-w-md px-3 pb-20 pt-2">
+      <div className="mx-auto max-w-md px-3 pb-40 pt-2">
         <header
           className={`sticky top-0 z-20 mb-2 overflow-hidden rounded-[22px] shadow-[0_10px_25px_rgba(15,23,42,0.06)] ${
             isDarkMode
@@ -2106,26 +2165,13 @@ const duelSummary = useMemo(() => {
                     isDark={isDarkMode}
                   />
 
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/65 via-black/35 to-transparent" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/55 to-transparent" />
 
-                  {getPilotWarName(leader) ? (
-                    <div className="absolute inset-x-0 bottom-3 flex justify-center px-2">
-                      <div
-                        className={`max-w-[92%] rounded-[18px] border px-3 py-2 text-center shadow-[0_10px_28px_rgba(0,0,0,0.32)] backdrop-blur-md ${
-                          isDarkMode
-                            ? "border-yellow-400/30 bg-black/45 shadow-[0_12px_30px_rgba(0,0,0,0.42),0_0_24px_rgba(250,204,21,0.18)]"
-                            : "border-white/45 bg-black/38 shadow-[0_12px_30px_rgba(0,0,0,0.30),0_0_24px_rgba(255,255,255,0.18)]"
-                        }`}
-                      >
-                        <p
-                          className="text-center text-[11px] font-extrabold uppercase leading-[1.15] tracking-[0.16em] whitespace-normal break-words text-white [text-wrap:balance]"
-                          style={{ wordBreak: "break-word", overflowWrap: "anywhere" }}
-                        >
-                          {getPilotWarName(leader)}
-                        </p>
-                      </div>
-                    </div>
-                  ) : null}
+                  <div className="absolute inset-x-0 bottom-2 px-3 text-center">
+                    <p className="truncate text-[10px] font-bold uppercase tracking-[0.10em] text-white">
+                      {getPilotHighlightName(leader?.piloto)}
+                    </p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -5330,54 +5376,75 @@ const duelSummary = useMemo(() => {
                   </div>
 
                   <div className="mt-8 grid grid-cols-[280px_1fr] items-start gap-6">
-                    <div className={`self-start overflow-hidden rounded-[28px] border ${
-                      isDarkMode ? `${theme.darkAccentBorder} bg-[#0f172a]` : `${theme.heroBorder} bg-zinc-50`
-                    }`}>
-                      <div className="relative aspect-square w-full overflow-hidden">
-                        {selectedPilot && getPilotPhotoPath(selectedPilot) ? (
-                          <img
-                            src={getPilotPhotoPath(selectedPilot) || ""}
-                            alt={selectedPilotShortName || "Piloto"}
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
-                          <div className={`flex h-full w-full items-center justify-center ${
-                            isDarkMode ? "bg-gradient-to-b from-[#0f172a] to-[#111827]" : "bg-gradient-to-b from-zinc-50 to-zinc-100"
-                          }`}>
-                            <div className="text-center">
-                              <div className={`mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-[22px] ${
-                                isDarkMode ? "bg-white/5" : "bg-white"
-                              }`}>
-                                <Camera className={`h-7 w-7 ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`} />
+                    <div className="self-start space-y-4">
+                      <div className={`overflow-hidden rounded-[28px] border ${
+                        isDarkMode ? `${theme.darkAccentBorder} bg-[#0f172a]` : `${theme.heroBorder} bg-zinc-50`
+                      }`}>
+                        <div className="relative aspect-square w-full overflow-hidden">
+                          {selectedPilot && getPilotPhotoPath(selectedPilot) ? (
+                            <img
+                              src={getPilotPhotoPath(selectedPilot) || ""}
+                              alt={selectedPilotShortName || "Piloto"}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <div className={`flex h-full w-full items-center justify-center ${
+                              isDarkMode ? "bg-gradient-to-b from-[#0f172a] to-[#111827]" : "bg-gradient-to-b from-zinc-50 to-zinc-100"
+                            }`}>
+                              <div className="text-center">
+                                <div className={`mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-[22px] ${
+                                  isDarkMode ? "bg-white/5" : "bg-white"
+                                }`}>
+                                  <Camera className={`h-7 w-7 ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`} />
+                                </div>
+                                <p className={`text-[13px] font-bold uppercase tracking-[0.14em] ${
+                                  isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                                }`}>
+                                  Espaço da foto
+                                </p>
                               </div>
-                              <p className={`text-[13px] font-bold uppercase tracking-[0.14em] ${
-                                isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                            </div>
+                          )}
+
+                          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
+                          <div className="absolute inset-x-0 bottom-0 p-5">
+                            <div className={`rounded-[22px] border px-4 py-4 backdrop-blur-md ${
+                              isDarkMode ? "border-white/10 bg-black/30" : "border-white/70 bg-white/78"
+                            }`}>
+                              <p className={`text-[24px] font-extrabold leading-none tracking-tight ${
+                                isDarkMode ? "text-white" : "text-zinc-950"
                               }`}>
-                                Espaço da foto
+                                {selectedPilotShortName || "Piloto"}
                               </p>
+                              {selectedPilotWarName ? (
+                                <p className={`mt-2 text-[15px] font-semibold italic ${
+                                  isDarkMode ? "text-zinc-300" : "text-zinc-600"
+                                }`}>
+                                  {selectedPilotWarName}
+                                </p>
+                              ) : null}
                             </div>
                           </div>
-                        )}
-
-                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
-                        <div className="absolute inset-x-0 bottom-0 p-5">
-                          <div className={`rounded-[22px] border px-4 py-4 backdrop-blur-md ${
-                            isDarkMode ? "border-white/10 bg-black/30" : "border-white/70 bg-white/78"
-                          }`}>
-                            <p className={`text-[24px] font-extrabold leading-none tracking-tight ${
-                              isDarkMode ? "text-white" : "text-zinc-950"
-                            }`}>
-                              {selectedPilotShortName || "Piloto"}
-                            </p>
-                            {selectedPilotWarName ? (
-                              <p className={`mt-2 text-[15px] font-semibold italic ${
-                                isDarkMode ? "text-zinc-300" : "text-zinc-600"
-                              }`}>
-                                {selectedPilotWarName}
-                              </p>
-                            ) : null}
-                          </div>
                         </div>
+                      </div>
+
+                      <div className={`rounded-[24px] border px-4 py-4 ${
+                        isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                      }`}>
+                        <div className="mb-3 flex items-center justify-between gap-2">
+                          <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                          }`}>
+                            Patrocinadores oficiais
+                          </p>
+                          <div className={`h-px flex-1 ${
+                            isDarkMode
+                              ? "bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                              : "bg-gradient-to-r from-transparent via-zinc-200 to-transparent"
+                          }`} />
+                        </div>
+
+                        <SponsorGrid isDark={isDarkMode} variant="share" />
                       </div>
                     </div>
 
@@ -5481,6 +5548,40 @@ const duelSummary = useMemo(() => {
                 </div>
               </div>
             </div>
+
+
+        <div className="pointer-events-none fixed inset-x-0 bottom-3 z-30 flex justify-center px-3">
+          <div className="pointer-events-auto w-full max-w-md">
+            <Card
+              className={`overflow-hidden rounded-[22px] shadow-[0_14px_28px_rgba(15,23,42,0.12)] ${
+                isDarkMode
+                  ? "border border-white/10 bg-[#0b1220]/96"
+                  : "border border-black/5 bg-white/96"
+              }`}
+            >
+              <CardContent className="p-2.5">
+                <div className="mb-2 flex items-center justify-between gap-2 px-0.5">
+                  <p
+                    className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
+                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                    }`}
+                  >
+                    Patrocinadores oficiais
+                  </p>
+                  <div
+                    className={`h-px flex-1 ${
+                      isDarkMode
+                        ? "bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                        : "bg-gradient-to-r from-transparent via-zinc-200 to-transparent"
+                    }`}
+                  />
+                </div>
+
+                <SponsorGrid isDark={isDarkMode} variant="fixed" />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
 
         </Tabs>
       </div>
