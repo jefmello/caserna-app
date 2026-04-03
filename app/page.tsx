@@ -1343,7 +1343,7 @@ const duelSummary = useMemo(() => {
 
   const selectedPilotGap = useMemo(() => {
     if (!selectedPilot || !leader) return "-";
-    return getGapToLeader(leader.pontos, selectedPilot.pontos);
+    return getGapToLeader(leader.pontos, safeSelectedPilot.pontos);
   }, [selectedPilot, leader]);
 
   const selectedPilotAverage = useMemo(
@@ -1366,37 +1366,55 @@ const duelSummary = useMemo(() => {
     [selectedPilot, leader]
   );
 
+  const safeSelectedPilot: RankingItem = selectedPilot ?? {
+    pos: 0,
+    pilotoId: "",
+    piloto: "",
+    nomeGuerra: "",
+    pontos: 0,
+    adv: 0,
+    participacoes: 0,
+    vitorias: 0,
+    poles: 0,
+    mv: 0,
+    podios: 0,
+    descarte: 0,
+    categoriaAtual: category,
+    competicao: competition,
+    categoria,
+  };
+
   const selectedPilotVsLeader = useMemo(() => {
     if (!selectedPilot || !leader) return 0;
     return getPerformancePercentage(
-      selectedPilot.pontos,
-      leader.pontos || selectedPilot.pontos || 1
+      safeSelectedPilot.pontos,
+      leader.pontos || safeSelectedPilot.pontos || 1
     );
   }, [selectedPilot, leader]);
 
   const selectedPilotPodiumRate = useMemo(() => {
     if (!selectedPilot) return 0;
-    return getPerformancePercentage(selectedPilot.podios, selectedPilot.participacoes || 1);
+    return getPerformancePercentage(safeSelectedPilot.podios, safeSelectedPilot.participacoes || 1);
   }, [selectedPilot]);
 
   const selectedPilotWinRate = useMemo(() => {
     if (!selectedPilot) return 0;
-    return getPerformancePercentage(selectedPilot.vitorias, selectedPilot.participacoes || 1);
+    return getPerformancePercentage(safeSelectedPilot.vitorias, safeSelectedPilot.participacoes || 1);
   }, [selectedPilot]);
 
   const selectedPilotDiscipline = useMemo(() => {
-    if (!selectedPilot || selectedPilot.participacoes <= 0) return 100;
-    const penalty = getPerformancePercentage(selectedPilot.adv, selectedPilot.participacoes);
+    if (!selectedPilot || safeSelectedPilot.participacoes <= 0) return 100;
+    const penalty = getPerformancePercentage(safeSelectedPilot.adv, safeSelectedPilot.participacoes);
     return Math.max(0, 100 - penalty);
   }, [selectedPilot]);
 
   const selectedPilotLeaderGapValue = useMemo(() => {
     if (!selectedPilot || !leader) return 0;
-    return Math.max(0, leader.pontos - selectedPilot.pontos);
+    return Math.max(0, leader.pontos - safeSelectedPilot.pontos);
   }, [selectedPilot, leader]);
 
   const selectedPilotWinRateLabel = useMemo(() => {
-    if (!selectedPilot || selectedPilot.participacoes <= 0) return "sem leitura";
+    if (!selectedPilot || safeSelectedPilot.participacoes <= 0) return "sem leitura";
     if (selectedPilotWinRate >= 40) return "índice vencedor";
     if (selectedPilotWinRate >= 20) return "boa conversão";
     if (selectedPilotWinRate > 0) return "ainda pode crescer";
@@ -1404,7 +1422,7 @@ const duelSummary = useMemo(() => {
   }, [selectedPilot, selectedPilotWinRate]);
 
   const selectedPilotPodiumRateLabel = useMemo(() => {
-    if (!selectedPilot || selectedPilot.participacoes <= 0) return "sem leitura";
+    if (!selectedPilot || safeSelectedPilot.participacoes <= 0) return "sem leitura";
     if (selectedPilotPodiumRate >= 70) return "top 6 muito forte";
     if (selectedPilotPodiumRate >= 50) return "regularidade alta";
     if (selectedPilotPodiumRate > 0) return "presença competitiva";
@@ -1412,7 +1430,7 @@ const duelSummary = useMemo(() => {
   }, [selectedPilot, selectedPilotPodiumRate]);
 
   const selectedPilotDisciplineLabel = useMemo(() => {
-    if (!selectedPilot || selectedPilot.participacoes <= 0) return "sem leitura";
+    if (!selectedPilot || safeSelectedPilot.participacoes <= 0) return "sem leitura";
     if (selectedPilotDiscipline >= 90) return "conduta exemplar";
     if (selectedPilotDiscipline >= 75) return "controle estável";
     if (selectedPilotDiscipline >= 60) return "atenção moderada";
@@ -1424,8 +1442,8 @@ const duelSummary = useMemo(() => {
 
     const pilotIndex = filteredRanking.findIndex(
       (item) =>
-        item.pilotoId === selectedPilot.pilotoId &&
-        item.competicao === selectedPilot.competicao
+        item.pilotoId === safeSelectedPilot.pilotoId &&
+        item.competicao === safeSelectedPilot.competicao
     );
 
     if (pilotIndex <= 0) return null;
@@ -1640,7 +1658,7 @@ const duelSummary = useMemo(() => {
         backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
       });
 
-      const safePilotName = getPilotFirstAndLastName(selectedPilot.piloto)
+      const safePilotName = getPilotFirstAndLastName(safeSelectedPilot.piloto)
         .toLowerCase()
         .normalize("NFD")
         .replace(/[̀-ͯ]/g, "")
@@ -2617,7 +2635,7 @@ const duelSummary = useMemo(() => {
                             : theme.searchBadge
                         }`}
                       >
-                        {selectedPilot ? `${selectedPilot.pos}º lugar` : "Sem posição"}
+                        {selectedPilot ? `${safeSelectedPilot.pos}º lugar` : "Sem posição"}
                       </div>
                       <div
                         className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${
@@ -2626,7 +2644,7 @@ const duelSummary = useMemo(() => {
                             : "border-zinc-200 bg-zinc-50 text-zinc-700"
                         }`}
                       >
-                        {selectedPilot ? `${selectedPilot.pontos} pontos` : "0 pontos"}
+                        {selectedPilot ? `${safeSelectedPilot.pontos} pontos` : "0 pontos"}
                       </div>
                     </div>
                   </div>
@@ -2731,7 +2749,7 @@ const duelSummary = useMemo(() => {
                             </p>
                             <p className={`mt-2 text-[15px] leading-relaxed ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                               {selectedPilotRivalAhead && selectedPilot
-                                ? `${selectedPilotRivalAhead.pontos - selectedPilot.pontos} ponto(s) para alcançar ${getPilotFirstAndLastName(selectedPilotRivalAhead.piloto)}.`
+                                ? `${selectedPilotRivalAhead.pontos - safeSelectedPilot.pontos} ponto(s) para alcançar ${getPilotFirstAndLastName(selectedPilotRivalAhead.piloto)}.`
                                 : "Piloto já ocupa a liderança desta leitura oficial."}
                             </p>
                           </div>
@@ -2741,7 +2759,7 @@ const duelSummary = useMemo(() => {
                           }`}>
                             <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>Disciplina</p>
                             <p className={`mt-2 text-[30px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilotDiscipline}%</p>
-                            <p className={`mt-2 text-[13px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>{selectedPilot.adv} ADV</p>
+                            <p className={`mt-2 text-[13px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>{safeSelectedPilot.adv} ADV</p>
                           </div>
                         </div>
                       </div>
@@ -3869,7 +3887,7 @@ const duelSummary = useMemo(() => {
                                         : "border-white/70 bg-white/88 text-zinc-950 backdrop-blur-md"
                                     }`}
                                   >
-                                    {selectedPilot.pos}º
+                                    {safeSelectedPilot.pos}º
                                   </div>
 
                                   <div
@@ -3978,7 +3996,7 @@ const duelSummary = useMemo(() => {
                                     Posição atual
                                   </p>
                                   <p className={`mt-1 text-[24px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                                    {selectedPilot.pos}º
+                                    {safeSelectedPilot.pos}º
                                   </p>
                                   <p className={`mt-1 text-[11px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                                     {selectedPilotGap}
@@ -3996,7 +4014,7 @@ const duelSummary = useMemo(() => {
                                     Pontuação oficial
                                   </p>
                                   <p className={`mt-1 text-[24px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                                    {selectedPilot.pontos}
+                                    {safeSelectedPilot.pontos}
                                     <span className={`ml-1 text-[14px] font-bold ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                                       pts
                                     </span>
@@ -4128,7 +4146,7 @@ const duelSummary = useMemo(() => {
                             <div className={`h-full rounded-full ${isDarkMode ? "bg-white/80" : "bg-zinc-900"}`} style={{ width: `${selectedPilotWinRate}%` }} />
                           </div>
                           <p className={`mt-2 text-[11px] leading-snug ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-                            {selectedPilotWinRateLabel} · {selectedPilot.vitorias} vitória(s) em {selectedPilot.participacoes} participação(ões)
+                            {selectedPilotWinRateLabel} · {safeSelectedPilot.vitorias} vitória(s) em {safeSelectedPilot.participacoes} participação(ões)
                           </p>
                         </CardContent>
                       </Card>
@@ -4156,7 +4174,7 @@ const duelSummary = useMemo(() => {
                             <div className={`h-full rounded-full ${isDarkMode ? "bg-white/80" : "bg-zinc-900"}`} style={{ width: `${selectedPilotPodiumRate}%` }} />
                           </div>
                           <p className={`mt-2 text-[11px] leading-snug ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-                            {selectedPilotPodiumRateLabel} · presença no top 6 em {selectedPilot.podios} etapa(s)
+                            {selectedPilotPodiumRateLabel} · presença no top 6 em {safeSelectedPilot.podios} etapa(s)
                           </p>
                         </CardContent>
                       </Card>
@@ -4184,7 +4202,7 @@ const duelSummary = useMemo(() => {
                             <div className={`h-full rounded-full ${isDarkMode ? "bg-white/80" : "bg-zinc-900"}`} style={{ width: `${selectedPilotDiscipline}%` }} />
                           </div>
                           <p className={`mt-2 text-[11px] leading-snug ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-                            {selectedPilotDisciplineLabel} · {selectedPilot.adv} advertências em {selectedPilot.participacoes} participação(ões)
+                            {selectedPilotDisciplineLabel} · {safeSelectedPilot.adv} advertências em {safeSelectedPilot.participacoes} participação(ões)
                           </p>
                         </CardContent>
                       </Card>
@@ -4245,7 +4263,7 @@ const duelSummary = useMemo(() => {
                                   Vitórias
                                 </span>
                                 <span className={`text-[20px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                                  {selectedPilot.vitorias}
+                                  {safeSelectedPilot.vitorias}
                                 </span>
                               </div>
                             </div>
@@ -4256,7 +4274,7 @@ const duelSummary = useMemo(() => {
                                   Poles
                                 </span>
                                 <span className={`text-[20px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                                  {selectedPilot.poles}
+                                  {safeSelectedPilot.poles}
                                 </span>
                               </div>
                             </div>
@@ -4267,7 +4285,7 @@ const duelSummary = useMemo(() => {
                                   Melhores voltas
                                 </span>
                                 <span className={`text-[20px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                                  {selectedPilot.mv}
+                                  {safeSelectedPilot.mv}
                                 </span>
                               </div>
                             </div>
@@ -4302,7 +4320,7 @@ const duelSummary = useMemo(() => {
                                   Pódios
                                 </span>
                                 <span className={`text-[20px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                                  {selectedPilot.podios}
+                                  {safeSelectedPilot.podios}
                                 </span>
                               </div>
                             </div>
@@ -4313,7 +4331,7 @@ const duelSummary = useMemo(() => {
                                   Participações
                                 </span>
                                 <span className={`text-[20px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                                  {selectedPilot.participacoes}
+                                  {safeSelectedPilot.participacoes}
                                 </span>
                               </div>
                             </div>
@@ -4359,7 +4377,7 @@ const duelSummary = useMemo(() => {
                                   Posição atual
                                 </span>
                                 <span className={`text-[20px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                                  {selectedPilot.pos}º
+                                  {safeSelectedPilot.pos}º
                                 </span>
                               </div>
                             </div>
@@ -4370,7 +4388,7 @@ const duelSummary = useMemo(() => {
                                   Pontos totais
                                 </span>
                                 <span className={`text-[20px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
-                                  {selectedPilot.pontos}
+                                  {safeSelectedPilot.pontos}
                                 </span>
                               </div>
                             </div>
@@ -4423,7 +4441,7 @@ const duelSummary = useMemo(() => {
                         </p>
                         <p className={`mt-2 text-[12px] ${isDarkMode ? "text-zinc-400" : "text-zinc-600"}`}>
                           {selectedPilotRivalAhead && selectedPilot
-                            ? `${selectedPilotRivalAhead.pontos - selectedPilot.pontos} ponto(s) para avançar mais uma posição.`
+                            ? `${selectedPilotRivalAhead.pontos - safeSelectedPilot.pontos} ponto(s) para avançar mais uma posição.`
                             : "Piloto ocupa a liderança desta seleção."}
                         </p>
                       </div>
@@ -4444,7 +4462,7 @@ const duelSummary = useMemo(() => {
                     <div className="mt-4 grid grid-cols-2 gap-3">
                       <CompactStatCard
                         title="Posição"
-                        value={selectedPilot.pos}
+                        value={safeSelectedPilot.pos}
                         subtitle="na classificação"
                         icon={Crown}
                         accent
@@ -4453,7 +4471,7 @@ const duelSummary = useMemo(() => {
                       />
                       <CompactStatCard
                         title="Vitórias"
-                        value={selectedPilot.vitorias}
+                        value={safeSelectedPilot.vitorias}
                         subtitle={`taxa ${selectedPilotWinRate}%`}
                         icon={Medal}
                         isDark={isDarkMode}
@@ -4461,7 +4479,7 @@ const duelSummary = useMemo(() => {
                       />
                       <CompactStatCard
                         title="Poles"
-                        value={selectedPilot.poles}
+                        value={safeSelectedPilot.poles}
                         subtitle="desempenho de qualify"
                         icon={Flag}
                         isDark={isDarkMode}
@@ -4469,7 +4487,7 @@ const duelSummary = useMemo(() => {
                       />
                       <CompactStatCard
                         title="VMR"
-                        value={selectedPilot.mv}
+                        value={safeSelectedPilot.mv}
                         subtitle="voltas mais rápidas"
                         icon={Timer}
                         accent
@@ -4478,7 +4496,7 @@ const duelSummary = useMemo(() => {
                       />
                       <CompactStatCard
                         title="Pódios"
-                        value={selectedPilot.podios}
+                        value={safeSelectedPilot.podios}
                         subtitle={`${selectedPilotPodiumRate}% de presença`}
                         icon={Medal}
                         isDark={isDarkMode}
@@ -4486,7 +4504,7 @@ const duelSummary = useMemo(() => {
                       />
                       <CompactStatCard
                         title="Participações"
-                        value={selectedPilot.participacoes}
+                        value={safeSelectedPilot.participacoes}
                         subtitle="corridas válidas"
                         icon={Users}
                         isDark={isDarkMode}
@@ -4494,7 +4512,7 @@ const duelSummary = useMemo(() => {
                       />
                       <CompactStatCard
                         title="ADV"
-                        value={selectedPilot.adv}
+                        value={safeSelectedPilot.adv}
                         subtitle="controle disciplinar"
                         icon={Gauge}
                         accent
@@ -4503,7 +4521,7 @@ const duelSummary = useMemo(() => {
                       />
                       <CompactStatCard
                         title="Descarte"
-                        value={selectedPilot.descarte}
+                        value={safeSelectedPilot.descarte}
                         subtitle="impacto no campeonato"
                         icon={Gauge}
                         isDark={isDarkMode}
