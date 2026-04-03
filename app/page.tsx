@@ -680,7 +680,7 @@ function CompactStatCard({
 }) {
   return (
     <Card
-      className={`rounded-[20px] border shadow-none ${
+      className={`rounded-[18px] border shadow-none ${
         isDark
           ? accent
             ? `${categoryTheme.darkAccentBorder} ${categoryTheme.darkAccentBgSoft}`
@@ -690,8 +690,8 @@ function CompactStatCard({
             : "border-black/5 bg-white"
       }`}
     >
-      <CardContent className="p-3.5">
-        <div className="mb-2 flex items-center justify-between gap-2">
+      <CardContent className="p-3">
+        <div className="mb-1.5 flex items-center justify-between gap-1.5">
           <p
             className={`text-[10px] font-semibold uppercase tracking-[0.14em] ${
               isDark ? "text-zinc-400" : "text-zinc-500"
@@ -733,7 +733,7 @@ function CompactStatCard({
         </p>
 
         <p
-          className={`mt-1.5 text-xs leading-snug ${
+          className={`mt-1 text-[11px] leading-snug ${
             isDark ? "text-zinc-400" : "text-zinc-500"
           }`}
         >
@@ -784,7 +784,7 @@ function HighlightCard({
   return (
     <Card
       className={`rounded-[22px] border shadow-none ${
-        compact ? "h-[156px]" : "h-auto min-h-[182px]"
+        compact ? "h-[144px]" : "h-auto min-h-[168px]"
       } ${
         isDark
           ? accent
@@ -797,10 +797,10 @@ function HighlightCard({
     >
       <CardContent
         className={`${compact ? "flex h-full flex-col" : "flex flex-col"} ${
-          compact ? "px-3 pb-3 pt-2" : "px-4 pb-4 pt-2"
+          compact ? "px-2.5 pb-2.5 pt-2" : "px-3 pb-3 pt-2"
         }`}
       >
-        <div className="mb-1 flex items-start justify-between gap-2">
+        <div className="mb-0.5 flex items-start justify-between gap-1.5">
           <p
             className={`w-full text-center font-bold uppercase leading-none ${
               compact
@@ -947,24 +947,24 @@ function StatRankingCard({
 }) {
   return (
     <Card
-      className={`overflow-hidden rounded-[24px] shadow-sm ${
+      className={`overflow-hidden rounded-[22px] shadow-sm ${
         isDark ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"
       }`}
     >
       <CardHeader
-        className={`pb-3 ${
+        className={`pb-2.5 ${
           isDark
             ? `border-b border-white/10 bg-gradient-to-r from-[#111827] via-[#161e2b] to-[#111827]`
             : "border-b border-black/5 bg-gradient-to-r from-white via-zinc-50/70 to-white"
         }`}
       >
         <CardTitle
-          className={`flex items-center gap-2 text-sm font-bold ${
+          className={`flex items-center gap-1.5 text-sm font-bold ${
             isDark ? "text-white" : "text-zinc-950"
           }`}
         >
           <div
-            className={`flex h-9 w-9 items-center justify-center rounded-2xl ${
+            className={`flex h-8 w-8 items-center justify-center rounded-[18px] ${
               isDark ? theme.darkAccentIconWrap : theme.statsIconWrap
             }`}
           >
@@ -972,14 +972,14 @@ function StatRankingCard({
           </div>
           <div>
             <p
-              className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+              className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
                 isDark ? "text-zinc-500" : "text-zinc-400"
               }`}
             >
               Ranking estatístico
             </p>
             <p
-              className={`text-[15px] font-extrabold tracking-tight ${
+              className={`text-[14px] font-extrabold tracking-tight ${
                 isDark ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -989,10 +989,10 @@ function StatRankingCard({
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="pt-4">
+      <CardContent className="pt-3">
         {items.length === 0 ? (
           <div
-            className={`rounded-2xl px-4 py-6 text-center text-sm ${
+            className={`rounded-2xl px-3 py-5 text-center text-sm ${
               isDark
                 ? "border border-dashed border-white/10 bg-[#0f172a] text-zinc-400"
                 : "border border-dashed border-black/10 bg-zinc-50 text-zinc-500"
@@ -1001,7 +1001,7 @@ function StatRankingCard({
             {emptyLabel}
           </div>
         ) : (
-          <div className="space-y-2.5">
+          <div className="space-y-2">
             {items.map((item, index) => {
               const value = item[metricKey];
               const isFirst = index === 0;
@@ -1009,7 +1009,7 @@ function StatRankingCard({
               return (
                 <div
                   key={`${title}-${item.pilotoId}-${index}`}
-                  className={`flex items-center justify-between gap-3 rounded-[20px] border px-3 py-3 ${
+                  className={`flex items-center justify-between gap-2.5 rounded-[18px] border px-2.5 py-2.5 ${
                     isDark
                       ? isFirst
                         ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft}`
@@ -1019,9 +1019,9 @@ function StatRankingCard({
                         : "border-black/5 bg-zinc-50/70"
                   }`}
                 >
-                  <div className="flex min-w-0 items-center gap-3">
+                  <div className="flex min-w-0 items-center gap-2.5">
                     <div
-                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl text-xs font-extrabold ${
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[18px] text-[11px] font-extrabold ${
                         isDark
                           ? isFirst
                             ? theme.darkTopBadge
@@ -1852,9 +1852,9 @@ const duelSummary = useMemo(() => {
         isDarkMode ? "bg-[#0b1220] text-white" : "bg-[#f3f4f6] text-zinc-950"
       }`}
     >
-      <div className="mx-auto max-w-md px-3 pb-36 pt-2">
+      <div className="mx-auto max-w-md px-2.5 pb-32 pt-1.5">
         <header
-          className={`sticky top-0 z-20 mb-2 overflow-hidden rounded-[22px] shadow-[0_10px_25px_rgba(15,23,42,0.06)] ${
+          className={`sticky top-0 z-20 mb-1.5 overflow-hidden rounded-[20px] shadow-[0_10px_25px_rgba(15,23,42,0.06)] ${
             isDarkMode
               ? "border border-white/10 bg-[#111827]"
               : "border border-black/5 bg-white"
@@ -1864,7 +1864,7 @@ const duelSummary = useMemo(() => {
             className={`absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
           />
 
-          <div className="space-y-1.5 px-2.5 pb-2 pt-2.5">
+          <div className="space-y-1 px-2.5 pb-1.5 pt-2">
             <div
               className={`overflow-hidden rounded-[15px] ${
                 isDarkMode
@@ -1872,7 +1872,7 @@ const duelSummary = useMemo(() => {
                   : "border border-black/5 bg-zinc-50"
               }`}
             >
-              <div className="relative h-[68px] w-full sm:h-[76px] md:h-[84px]">
+              <div className="relative h-[62px] w-full sm:h-[70px] md:h-[78px]">
                 <Image
                   src="/banner-topo.png"
                   alt="Classificação Oficial"
@@ -1884,15 +1884,15 @@ const duelSummary = useMemo(() => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-1.5">
+            <div className="grid grid-cols-1 gap-1">
               <div
-                className={`rounded-[15px] px-2 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
+                className={`rounded-[15px] px-2 py-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
                   isDarkMode
                     ? "border border-white/10 bg-gradient-to-b from-[#111827] to-[#0f172a]"
                     : "border border-black/5 bg-gradient-to-b from-zinc-50 to-white"
                 }`}
               >
-                <div className="mb-1 flex items-center justify-between">
+                <div className="mb-0.5 flex items-center justify-between">
                   <p
                     className={`text-[8px] font-bold uppercase tracking-[0.16em] ${
                       isDarkMode ? "text-zinc-400" : "text-zinc-400"
@@ -1909,8 +1909,8 @@ const duelSummary = useMemo(() => {
                   />
                 </div>
 
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex flex-wrap gap-1.5">
+                <div className="flex items-center justify-between gap-1.5">
+                  <div className="flex flex-wrap gap-1">
                     {categories.map((cat) => {
                       const active = category === cat;
 
@@ -1936,7 +1936,7 @@ const duelSummary = useMemo(() => {
                         <button
                           key={cat}
                           onClick={() => setCategory(cat)}
-                          className={`whitespace-nowrap rounded-full border px-3 py-1 text-[11px] font-semibold transition-all duration-200 ${
+                          className={`whitespace-nowrap rounded-full border px-2.5 py-1 text-[10px] font-semibold transition-all duration-200 ${
                             styles[cat as keyof typeof styles]
                           }`}
                         >
@@ -1971,13 +1971,13 @@ const duelSummary = useMemo(() => {
               </div>
 
               <div
-                className={`rounded-[15px] px-2 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
+                className={`rounded-[15px] px-2 py-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
                   isDarkMode
                     ? "border border-white/10 bg-gradient-to-b from-[#111827] to-[#0f172a]"
                     : "border border-black/5 bg-gradient-to-b from-zinc-50 to-white"
                 }`}
               >
-                <div className="mb-1 flex items-center justify-between">
+                <div className="mb-0.5 flex items-center justify-between">
                   <p
                     className={`text-[8px] font-bold uppercase tracking-[0.16em] ${
                       isDarkMode ? "text-zinc-400" : "text-zinc-400"
@@ -2202,8 +2202,8 @@ const duelSummary = useMemo(() => {
           </div>
         </section>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
-          <TabsList className="relative z-10 mb-9 grid h-auto w-full grid-cols-4 gap-3 bg-transparent p-0 shadow-none">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-3">
+          <TabsList className="relative z-10 mb-6 grid h-auto w-full grid-cols-4 gap-2.5 bg-transparent p-0 shadow-none">
             {[
               {
                 value: "classificacao",
@@ -2259,7 +2259,7 @@ const duelSummary = useMemo(() => {
                 <TabsTrigger
                   key={tabItem.value}
                   value={tabItem.value}
-                  className={`h-[72px] rounded-[20px] px-2.5 py-2 shadow-sm transition-all duration-300 ${
+                  className={`h-[64px] rounded-[18px] px-2 py-1.5 shadow-sm transition-all duration-300 ${
                     isActive
                       ? `${activeSurface} ${activeGlow} scale-[1.01]`
                       : isDarkMode
@@ -2267,9 +2267,9 @@ const duelSummary = useMemo(() => {
                         : "border border-zinc-200 bg-white text-zinc-500 hover:border-zinc-300 hover:bg-zinc-50"
                   }`}
                 >
-                  <div className="flex h-full flex-col items-center justify-center gap-1.5">
+                  <div className="flex h-full flex-col items-center justify-center gap-1">
                     <div
-                      className={`flex h-9 w-9 items-center justify-center rounded-[13px] transition-all duration-300 ${
+                      className={`flex h-8 w-8 items-center justify-center rounded-[12px] transition-all duration-300 ${
                         isActive
                           ? category === "Base"
                             ? isDarkMode
@@ -2305,18 +2305,18 @@ const duelSummary = useMemo(() => {
             })}
           </TabsList>
 
-          <TabsContent value="classificacao" className="mt-0 space-y-4 pt-1">
+          <TabsContent value="classificacao" className="mt-0 space-y-3 pt-0.5">
             <Card
-              className={`rounded-[22px] shadow-sm ${
+              className={`rounded-[20px] shadow-sm ${
                 isDarkMode
                   ? `border ${theme.darkAccentBorder} bg-[#111827]`
                   : `border ${theme.searchBorder} bg-gradient-to-br from-white via-white to-zinc-50/70`
               }`}
             >
-              <CardContent className="p-3">
-                <div className="mb-3 flex items-center gap-2.5">
+              <CardContent className="p-2.5">
+                <div className="mb-2.5 flex items-center gap-2">
                   <div
-                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[16px] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
                       isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                     }`}
                   >
@@ -2336,7 +2336,7 @@ const duelSummary = useMemo(() => {
                       Busca rápida
                     </p>
                     <p
-                      className={`mt-0.5 text-[12px] font-semibold leading-tight ${
+                      className={`mt-0.5 text-[11px] font-semibold leading-tight ${
                         isDarkMode ? "text-white" : "text-zinc-900"
                       }`}
                     >
@@ -2345,7 +2345,7 @@ const duelSummary = useMemo(() => {
                   </div>
 
                   <div
-                    className={`shrink-0 rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] ${
+                    className={`shrink-0 rounded-full border px-2 py-1 text-[8px] font-bold uppercase tracking-[0.12em] ${
                       isDarkMode
                         ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                         : theme.searchBadge
@@ -2356,13 +2356,13 @@ const duelSummary = useMemo(() => {
                 </div>
 
                 <div
-                  className={`group flex items-center rounded-[18px] border px-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.98)] transition ${
+                  className={`group flex items-center rounded-[16px] border px-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.98)] transition ${
                     isDarkMode
                       ? `${theme.darkAccentBorder} bg-[#0f172a]`
                       : `border-black/5 bg-gradient-to-b from-white to-zinc-50 focus-within:ring-4 ${theme.searchGlow}`
                   }`}
                 >
-                  <div className="flex h-9 w-8 items-center justify-center">
+                  <div className="flex h-8 w-7 items-center justify-center">
                     <Search
                       className={`h-4.5 w-4.5 shrink-0 ${
                         isDarkMode ? "text-zinc-400" : "text-zinc-400"
@@ -2373,7 +2373,7 @@ const duelSummary = useMemo(() => {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Buscar piloto"
-                    className={`h-11 border-0 bg-transparent pl-1 pr-0 text-[15px] shadow-none outline-none ring-0 focus-visible:ring-0 ${
+                    className={`h-10 border-0 bg-transparent pl-0.5 pr-0 text-[14px] shadow-none outline-none ring-0 focus-visible:ring-0 ${
                       isDarkMode
                         ? "text-white placeholder:text-zinc-500"
                         : "text-zinc-950 placeholder:text-zinc-400"
@@ -2384,17 +2384,17 @@ const duelSummary = useMemo(() => {
             </Card>
 
             <Card
-              className={`rounded-[22px] shadow-sm ${
+              className={`rounded-[20px] shadow-sm ${
                 isDarkMode
                   ? `border ${theme.darkAccentBorder} bg-[#111827]`
                   : `border ${theme.searchBorder} bg-gradient-to-br from-white via-white to-zinc-50/70`
               }`}
             >
-              <CardContent className="p-3">
-                <div className="flex items-center justify-between gap-3">
+              <CardContent className="p-2.5">
+                <div className="flex items-center justify-between gap-2.5">
                   <div className="flex min-w-0 items-center gap-2.5">
                     <div
-                      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[16px] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
                         isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                       }`}
                     >
@@ -2414,7 +2414,7 @@ const duelSummary = useMemo(() => {
                         Compartilhamento oficial
                       </p>
                       <p
-                        className={`mt-0.5 text-[12px] font-semibold leading-tight ${
+                        className={`mt-0.5 text-[11px] font-semibold leading-tight ${
                           isDarkMode ? "text-white" : "text-zinc-900"
                         }`}
                       >
@@ -2427,7 +2427,7 @@ const duelSummary = useMemo(() => {
                     type="button"
                     onClick={handleShareClassification}
                     disabled={isSharingImage || filteredRanking.length === 0}
-                    className={`shrink-0 rounded-full border px-3 py-2 text-[10px] font-bold uppercase tracking-[0.12em] transition-all duration-200 ${
+                    className={`shrink-0 rounded-full border px-2.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.12em] transition-all duration-200 ${
                       isDarkMode
                         ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText} disabled:opacity-50`
                         : `${theme.searchBadge} disabled:opacity-50`
@@ -2446,10 +2446,10 @@ const duelSummary = useMemo(() => {
                   : `border ${theme.searchBorder} bg-gradient-to-br from-white via-white to-zinc-50/70`
               }`}
             >
-              <CardContent className="p-3">
-                <div className="mb-3 flex items-center gap-2.5">
+              <CardContent className="p-2.5">
+                <div className="mb-2.5 flex items-center gap-2">
                   <div
-                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[16px] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
                       isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                     }`}
                   >
@@ -2469,7 +2469,7 @@ const duelSummary = useMemo(() => {
                       Contexto competitivo
                     </p>
                     <p
-                      className={`mt-0.5 text-[12px] font-semibold leading-tight ${
+                      className={`mt-0.5 text-[11px] font-semibold leading-tight ${
                         isDarkMode ? "text-white" : "text-zinc-900"
                       }`}
                     >
@@ -2478,7 +2478,7 @@ const duelSummary = useMemo(() => {
                   </div>
 
                   <div
-                    className={`shrink-0 rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] ${
+                    className={`shrink-0 rounded-full border px-2 py-1 text-[8px] font-bold uppercase tracking-[0.12em] ${
                       isDarkMode
                         ? titleFightStatus.label === "BRIGA ACIRRADA"
                           ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
@@ -2492,9 +2492,9 @@ const duelSummary = useMemo(() => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-2 gap-2">
                   <div
-                    className={`rounded-[18px] border px-3 py-3 ${
+                    className={`rounded-[16px] border px-2.5 py-2.5 ${
                       isDarkMode
                         ? `${theme.darkAccentBorder} bg-[#0f172a]`
                         : "border-black/5 bg-white/80"
@@ -2503,7 +2503,7 @@ const duelSummary = useMemo(() => {
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <p
-                          className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                          className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
                             isDarkMode ? "text-zinc-500" : "text-zinc-400"
                           }`}
                         >
@@ -2532,7 +2532,7 @@ const duelSummary = useMemo(() => {
                     </div>
 
                     <p
-                      className={`mt-2 text-[11px] leading-snug ${
+                      className={`mt-1.5 text-[10px] leading-snug ${
                         isDarkMode ? "text-zinc-400" : "text-zinc-500"
                       }`}
                     >
@@ -2543,7 +2543,7 @@ const duelSummary = useMemo(() => {
                   </div>
 
                   <div
-                    className={`rounded-[18px] border px-3 py-3 ${
+                    className={`rounded-[16px] border px-2.5 py-2.5 ${
                       isDarkMode
                         ? `${theme.darkAccentBorder} bg-[#0f172a]`
                         : "border-black/5 bg-white/80"
@@ -2552,7 +2552,7 @@ const duelSummary = useMemo(() => {
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <p
-                          className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                          className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
                             isDarkMode ? "text-zinc-500" : "text-zinc-400"
                           }`}
                         >
@@ -2581,7 +2581,7 @@ const duelSummary = useMemo(() => {
                     </div>
 
                     <p
-                      className={`mt-2 text-[11px] leading-snug ${
+                      className={`mt-1.5 text-[10px] leading-snug ${
                         isDarkMode ? "text-zinc-400" : "text-zinc-500"
                       }`}
                     >
@@ -2592,7 +2592,7 @@ const duelSummary = useMemo(() => {
                   </div>
 
                   <div
-                    className={`rounded-[18px] border px-3 py-3 ${
+                    className={`rounded-[16px] border px-2.5 py-2.5 ${
                       isDarkMode
                         ? `${theme.darkAccentBorder} bg-[#0f172a]`
                         : "border-black/5 bg-white/80"
@@ -2601,7 +2601,7 @@ const duelSummary = useMemo(() => {
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <p
-                          className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                          className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
                             isDarkMode ? "text-zinc-500" : "text-zinc-400"
                           }`}
                         >
@@ -2630,7 +2630,7 @@ const duelSummary = useMemo(() => {
                     </div>
 
                     <p
-                      className={`mt-2 text-[11px] leading-snug ${
+                      className={`mt-1.5 text-[10px] leading-snug ${
                         isDarkMode ? "text-zinc-400" : "text-zinc-500"
                       }`}
                     >
@@ -2641,7 +2641,7 @@ const duelSummary = useMemo(() => {
                   </div>
 
                   <div
-                    className={`rounded-[18px] border px-3 py-3 ${
+                    className={`rounded-[16px] border px-2.5 py-2.5 ${
                       isDarkMode
                         ? `${theme.darkAccentBorder} bg-[#0f172a]`
                         : "border-black/5 bg-white/80"
@@ -2650,7 +2650,7 @@ const duelSummary = useMemo(() => {
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <p
-                          className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                          className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
                             isDarkMode ? "text-zinc-500" : "text-zinc-400"
                           }`}
                         >
@@ -2681,7 +2681,7 @@ const duelSummary = useMemo(() => {
                     </div>
 
                     <p
-                      className={`mt-2 text-[11px] leading-snug ${
+                      className={`mt-1.5 text-[10px] leading-snug ${
                         isDarkMode ? "text-zinc-400" : "text-zinc-500"
                       }`}
                     >
@@ -2882,7 +2882,7 @@ const duelSummary = useMemo(() => {
             </div>
 
             <Card
-              className={`overflow-hidden rounded-[24px] shadow-sm ${
+              className={`overflow-hidden rounded-[22px] shadow-sm ${
                 isDarkMode
                   ? `border ${theme.darkAccentBorder} bg-[#111827]`
                   : `border ${theme.titleBorder} bg-gradient-to-br ${theme.titleBg}`
@@ -2895,7 +2895,7 @@ const duelSummary = useMemo(() => {
                   />
 
                   <div className="mb-3 flex items-center justify-between gap-3">
-                    <div className="flex min-w-0 items-center gap-3">
+                    <div className="flex min-w-0 items-center gap-2.5">
                       <div
                         className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
                           isDarkMode
@@ -3122,7 +3122,7 @@ const duelSummary = useMemo(() => {
                                           </div>
 
                                           <div
-                                            className={`flex h-9 w-9 items-center justify-center rounded-2xl ${
+                                            className={`flex h-8 w-8 items-center justify-center rounded-[18px] ${
                                               isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
                                             }`}
                                           >
@@ -3154,7 +3154,7 @@ const duelSummary = useMemo(() => {
                                         </div>
 
                                         <div
-                                          className={`flex h-9 w-9 items-center justify-center rounded-2xl ${
+                                          className={`flex h-8 w-8 items-center justify-center rounded-[18px] ${
                                             isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
                                           }`}
                                         >
@@ -3181,7 +3181,7 @@ const duelSummary = useMemo(() => {
 
             <section className="space-y-3">
               <div
-                className={`overflow-hidden rounded-[24px] shadow-sm ${
+                className={`overflow-hidden rounded-[22px] shadow-sm ${
                   isDarkMode
                     ? `border ${theme.darkAccentBorder} bg-[#111827]`
                     : `border ${theme.titleBorder} bg-gradient-to-br ${theme.titleBg}`
@@ -3192,7 +3192,7 @@ const duelSummary = useMemo(() => {
                     className={`absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
                   />
 
-                  <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center justify-between gap-2.5">
                     <div className="flex flex-1 justify-center pr-1">
                       <div className="flex flex-col items-center">
                         <div
@@ -3239,7 +3239,7 @@ const duelSummary = useMemo(() => {
               </div>
 
               <Card
-                className={`overflow-hidden rounded-[24px] shadow-sm ${
+                className={`overflow-hidden rounded-[22px] shadow-sm ${
                   isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
                 }`}
               >
@@ -3274,7 +3274,7 @@ const duelSummary = useMemo(() => {
                             Painel oficial
                           </p>
                           <p
-                            className={`text-[15px] font-extrabold tracking-tight ${
+                            className={`text-[14px] font-extrabold tracking-tight ${
                               isDarkMode ? "text-white" : "text-zinc-950"
                             }`}
                           >
@@ -3425,13 +3425,13 @@ const duelSummary = useMemo(() => {
                               : `border-b border-black/5 ${theme.tableHeadBg} text-zinc-500`
                           }`}
                         >
-                          <th className="whitespace-nowrap px-1 py-3 text-center">Pos</th>
-                          <th className="whitespace-nowrap px-2 py-3 text-left">Piloto</th>
-                          <th className="whitespace-nowrap px-0.5 py-3 text-center">Pts</th>
-                          <th className="whitespace-nowrap px-0.5 py-3 text-center">Vit</th>
-                          <th className="whitespace-nowrap px-0.5 py-3 text-center">Pol</th>
-                          <th className="whitespace-nowrap px-0.5 py-3 text-center">VMR</th>
-                          <th className="whitespace-nowrap px-0.5 py-3 text-center">PDS</th>
+                          <th className="whitespace-nowrap px-1 py-2.5 text-center">Pos</th>
+                          <th className="whitespace-nowrap px-2 py-2.5 text-left">Piloto</th>
+                          <th className="whitespace-nowrap px-0.5 py-2.5 text-center">Pts</th>
+                          <th className="whitespace-nowrap px-0.5 py-2.5 text-center">Vit</th>
+                          <th className="whitespace-nowrap px-0.5 py-2.5 text-center">Pol</th>
+                          <th className="whitespace-nowrap px-0.5 py-2.5 text-center">VMR</th>
+                          <th className="whitespace-nowrap px-0.5 py-2.5 text-center">PDS</th>
                         </tr>
                       </thead>
 
@@ -3473,14 +3473,14 @@ const duelSummary = useMemo(() => {
                                     : `${index % 2 === 0 ? "bg-white" : "bg-zinc-50/40"} hover:bg-zinc-50`
                               }`}
                             >
-                              <td className="px-1 py-3 text-center align-middle">
+                              <td className="px-1 py-2.5 text-center align-middle">
                                 <button
                                   type="button"
                                   onClick={() => handleSelectPilot(item)}
-                                  className="mx-auto flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold transition active:scale-95"
+                                  className="mx-auto flex h-7 w-7 items-center justify-center rounded-[10px] text-[11px] font-bold transition active:scale-95"
                                 >
                                   <span
-                                    className={`relative flex h-8 w-8 items-center justify-center rounded-xl ${isTop6 ? "shadow-[0_6px_14px_rgba(0,0,0,0.14)]" : "shadow-sm"} ${
+                                    className={`relative flex h-7 w-7 items-center justify-center rounded-[10px] ${isTop6 ? "shadow-[0_6px_14px_rgba(0,0,0,0.14)]" : "shadow-sm"} ${
                                       isDarkMode
                                         ? index === 0
                                           ? theme.darkTopBadge
@@ -3493,23 +3493,23 @@ const duelSummary = useMemo(() => {
                                     }`}
                                   >
                                     {isLeader ? (
-                                      <Star className="absolute -right-1 -top-1 h-3.5 w-3.5 fill-yellow-300 text-yellow-500" />
+                                      <Star className="absolute -right-1 -top-1 h-3 w-3 fill-yellow-300 text-yellow-500" />
                                     ) : null}
                                     {index + 1}
                                   </span>
                                 </button>
                               </td>
 
-                              <td className="min-w-0 px-2 py-3 align-middle">
+                              <td className="min-w-0 px-2 py-2.5 align-middle">
                                 <button
                                   type="button"
                                   onClick={() => handleSelectPilot(item)}
                                   className="block w-full text-left transition active:scale-[0.99]"
                                 >
                                   <div className="min-w-0">
-                                    <div className="flex items-start justify-between gap-2">
+                                    <div className="flex items-start justify-between gap-1.5">
                                       <span
-                                        className={`block min-w-0 flex-1 whitespace-normal break-words text-[12.8px] font-extrabold leading-[1.15] tracking-tight ${
+                                        className={`block min-w-0 flex-1 whitespace-normal break-words text-[12px] font-extrabold leading-[1.1] tracking-tight ${
                                           isDarkMode ? "text-white" : styles.name
                                         }`}
                                       >
@@ -3517,7 +3517,7 @@ const duelSummary = useMemo(() => {
                                       </span>
 
                                       <span
-                                        className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em] ${trendVisual.className}`}
+                                        className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.08em] ${trendVisual.className}`}
                                       >
                                         <TrendIcon className="h-3 w-3" />
                                         {trendVisual.label}
@@ -3525,9 +3525,9 @@ const duelSummary = useMemo(() => {
                                     </div>
 
                                     {nomeLinha2 ? (
-                                      <div className="mt-1 flex items-center gap-1.5">
+                                      <div className="mt-0.5 flex items-center gap-1">
                                         <span
-                                          className={`inline-flex max-w-full whitespace-normal break-words rounded-full border px-2 py-0.5 text-[10px] font-semibold italic tracking-[0.02em] ${
+                                          className={`inline-flex max-w-full whitespace-normal break-words rounded-full border px-1.5 py-0.5 text-[9px] font-semibold italic tracking-[0.02em] ${
                                             isDarkMode
                                               ? `${theme.darkAccentBorder} ${theme.darkAccentBg} text-zinc-200`
                                               : styles.chip
@@ -3542,7 +3542,7 @@ const duelSummary = useMemo(() => {
                               </td>
 
                               <td
-                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-extrabold ${
+                                className={`px-0.5 py-2.5 text-center align-middle text-[11px] font-extrabold ${
                                   isDarkMode
                                     ? index === 0
                                       ? theme.darkAccentText
@@ -3562,7 +3562,7 @@ const duelSummary = useMemo(() => {
                               </td>
 
                               <td
-                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold ${
+                                className={`px-0.5 py-2.5 text-center align-middle text-[11px] font-semibold ${
                                   isDarkMode ? "text-white" : "text-zinc-950"
                                 }`}
                               >
@@ -3576,7 +3576,7 @@ const duelSummary = useMemo(() => {
                               </td>
 
                               <td
-                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold ${
+                                className={`px-0.5 py-2.5 text-center align-middle text-[11px] font-semibold ${
                                   isDarkMode ? "text-white" : "text-zinc-950"
                                 }`}
                               >
@@ -3590,7 +3590,7 @@ const duelSummary = useMemo(() => {
                               </td>
 
                               <td
-                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold ${
+                                className={`px-0.5 py-2.5 text-center align-middle text-[11px] font-semibold ${
                                   isDarkMode ? "text-white" : "text-zinc-950"
                                 }`}
                               >
@@ -3604,7 +3604,7 @@ const duelSummary = useMemo(() => {
                               </td>
 
                               <td
-                                className={`px-0.5 py-3 text-center align-middle text-[12px] font-semibold ${
+                                className={`px-0.5 py-2.5 text-center align-middle text-[11px] font-semibold ${
                                   isDarkMode ? "text-white" : "text-zinc-950"
                                 }`}
                               >
@@ -3643,7 +3643,7 @@ const duelSummary = useMemo(() => {
           <TabsContent value="piloto" className="mt-0 space-y-4 pt-0">
             {!selectedPilot ? (
               <Card
-                className={`rounded-[22px] shadow-sm ${
+                className={`rounded-[20px] shadow-sm ${
                   isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
                 }`}
               >
@@ -3678,7 +3678,7 @@ const duelSummary = useMemo(() => {
             ) : (
               <div className="space-y-3">
                 <Card
-                  className={`overflow-hidden rounded-[24px] shadow-sm ${
+                  className={`overflow-hidden rounded-[22px] shadow-sm ${
                     isDarkMode
                       ? `border ${theme.darkAccentBorder} bg-gradient-to-br ${theme.darkAccentCard}`
                       : `${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow}`
@@ -3879,7 +3879,7 @@ const duelSummary = useMemo(() => {
 
                               <div className="mt-4 grid grid-cols-2 gap-2">
                                 <div
-                                  className={`rounded-[18px] border px-3 py-3 ${
+                                  className={`rounded-[16px] border px-2.5 py-2.5 ${
                                     isDarkMode
                                       ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft}`
                                       : `${theme.heroBorder} bg-gradient-to-b ${theme.heroBg}`
@@ -3897,7 +3897,7 @@ const duelSummary = useMemo(() => {
                                 </div>
 
                                 <div
-                                  className={`rounded-[18px] border px-3 py-3 ${
+                                  className={`rounded-[16px] border px-2.5 py-2.5 ${
                                     isDarkMode
                                       ? `${theme.darkAccentBorder} bg-[#111827]`
                                       : "border-black/5 bg-zinc-50/80"
@@ -3991,7 +3991,7 @@ const duelSummary = useMemo(() => {
                         }`}
                       >
                         <CardContent className="p-4">
-                          <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center justify-between gap-1.5">
                             <div>
                               <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
                                 Distância do líder
@@ -4022,7 +4022,7 @@ const duelSummary = useMemo(() => {
                         }`}
                       >
                         <CardContent className="p-4">
-                          <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center justify-between gap-1.5">
                             <div>
                               <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
                                 Aproveitamento em vitórias
@@ -4050,7 +4050,7 @@ const duelSummary = useMemo(() => {
                         }`}
                       >
                         <CardContent className="p-4">
-                          <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center justify-between gap-1.5">
                             <div>
                               <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
                                 Taxa de pódios
@@ -4078,7 +4078,7 @@ const duelSummary = useMemo(() => {
                         }`}
                       >
                         <CardContent className="p-4">
-                          <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center justify-between gap-1.5">
                             <div>
                               <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
                                 Nível disciplinar
@@ -4149,9 +4149,9 @@ const duelSummary = useMemo(() => {
                             </div>
                           </div>
 
-                          <div className="space-y-2.5">
+                          <div className="space-y-2">
                             <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
-                              <div className="flex items-center justify-between gap-3">
+                              <div className="flex items-center justify-between gap-2.5">
                                 <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                                   Vitórias
                                 </span>
@@ -4162,7 +4162,7 @@ const duelSummary = useMemo(() => {
                             </div>
 
                             <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
-                              <div className="flex items-center justify-between gap-3">
+                              <div className="flex items-center justify-between gap-2.5">
                                 <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                                   Poles
                                 </span>
@@ -4173,7 +4173,7 @@ const duelSummary = useMemo(() => {
                             </div>
 
                             <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
-                              <div className="flex items-center justify-between gap-3">
+                              <div className="flex items-center justify-between gap-2.5">
                                 <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                                   Melhores voltas
                                 </span>
@@ -4206,9 +4206,9 @@ const duelSummary = useMemo(() => {
                             </div>
                           </div>
 
-                          <div className="space-y-2.5">
+                          <div className="space-y-2">
                             <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
-                              <div className="flex items-center justify-between gap-3">
+                              <div className="flex items-center justify-between gap-2.5">
                                 <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                                   Pódios
                                 </span>
@@ -4219,7 +4219,7 @@ const duelSummary = useMemo(() => {
                             </div>
 
                             <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
-                              <div className="flex items-center justify-between gap-3">
+                              <div className="flex items-center justify-between gap-2.5">
                                 <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                                   Participações
                                 </span>
@@ -4230,7 +4230,7 @@ const duelSummary = useMemo(() => {
                             </div>
 
                             <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
-                              <div className="flex items-center justify-between gap-3">
+                              <div className="flex items-center justify-between gap-2.5">
                                 <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                                   Média de pontos
                                 </span>
@@ -4263,9 +4263,9 @@ const duelSummary = useMemo(() => {
                             </div>
                           </div>
 
-                          <div className="space-y-2.5">
+                          <div className="space-y-2">
                             <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
-                              <div className="flex items-center justify-between gap-3">
+                              <div className="flex items-center justify-between gap-2.5">
                                 <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                                   Posição atual
                                 </span>
@@ -4276,7 +4276,7 @@ const duelSummary = useMemo(() => {
                             </div>
 
                             <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
-                              <div className="flex items-center justify-between gap-3">
+                              <div className="flex items-center justify-between gap-2.5">
                                 <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                                   Pontos totais
                                 </span>
@@ -4287,7 +4287,7 @@ const duelSummary = useMemo(() => {
                             </div>
 
                             <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
-                              <div className="flex items-center justify-between gap-3">
+                              <div className="flex items-center justify-between gap-2.5">
                                 <span className={`text-[11px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                                   Diferença do líder
                                 </span>
@@ -4830,7 +4830,7 @@ const duelSummary = useMemo(() => {
                         </div>
 
                         <span
-                          className={`shrink-0 rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] ${
+                          className={`shrink-0 rounded-full border px-2 py-1 text-[8px] font-bold uppercase tracking-[0.12em] ${
                             winner === "tie"
                               ? isDarkMode
                                 ? "border-white/10 bg-white/5 text-zinc-300"
@@ -4913,7 +4913,7 @@ const duelSummary = useMemo(() => {
 
           <TabsContent value="stats" className="mt-0 space-y-4 pt-0">
             <div
-              className={`overflow-hidden rounded-[24px] shadow-sm ${
+              className={`overflow-hidden rounded-[22px] shadow-sm ${
                 isDarkMode
                   ? `border ${theme.darkAccentBorder} bg-[#111827]`
                   : `border ${theme.titleBorder} bg-gradient-to-br ${theme.statsSoft}`
@@ -4924,8 +4924,8 @@ const duelSummary = useMemo(() => {
                   className={`absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
                 />
 
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex min-w-0 items-center gap-3">
+                <div className="flex items-center justify-between gap-2.5">
+                  <div className="flex min-w-0 items-center gap-2.5">
                     <div
                       className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${
                         isDarkMode ? theme.darkAccentIconWrap : theme.statsIconWrap
@@ -5041,14 +5041,14 @@ const duelSummary = useMemo(() => {
               >
                 <div className="grid grid-cols-2 gap-3 pt-1">
                   <div
-                    className={`rounded-[18px] border px-3 py-3 ${
+                    className={`rounded-[16px] border px-2.5 py-2.5 ${
                       isDarkMode
                         ? `${theme.darkAccentBorder} bg-[#0f172a]`
                         : "border-black/5 bg-white/80"
                     }`}
                   >
                     <p
-                      className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                      className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
                         isDarkMode ? "text-zinc-500" : "text-zinc-400"
                       }`}
                     >
@@ -5073,14 +5073,14 @@ const duelSummary = useMemo(() => {
                   </div>
 
                   <div
-                    className={`rounded-[18px] border px-3 py-3 ${
+                    className={`rounded-[16px] border px-2.5 py-2.5 ${
                       isDarkMode
                         ? `${theme.darkAccentBorder} bg-[#0f172a]`
                         : "border-black/5 bg-white/80"
                     }`}
                   >
                     <p
-                      className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                      className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
                         isDarkMode ? "text-zinc-500" : "text-zinc-400"
                       }`}
                     >
@@ -5105,14 +5105,14 @@ const duelSummary = useMemo(() => {
                   </div>
 
                   <div
-                    className={`rounded-[18px] border px-3 py-3 ${
+                    className={`rounded-[16px] border px-2.5 py-2.5 ${
                       isDarkMode
                         ? `${theme.darkAccentBorder} bg-[#0f172a]`
                         : "border-black/5 bg-white/80"
                     }`}
                   >
                     <p
-                      className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                      className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
                         isDarkMode ? "text-zinc-500" : "text-zinc-400"
                       }`}
                     >
@@ -5135,14 +5135,14 @@ const duelSummary = useMemo(() => {
                   </div>
 
                   <div
-                    className={`rounded-[18px] border px-3 py-3 ${
+                    className={`rounded-[16px] border px-2.5 py-2.5 ${
                       isDarkMode
                         ? `${theme.darkAccentBorder} bg-[#0f172a]`
                         : "border-black/5 bg-white/80"
                     }`}
                   >
                     <p
-                      className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                      className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
                         isDarkMode ? "text-zinc-500" : "text-zinc-400"
                       }`}
                     >
@@ -5172,7 +5172,7 @@ const duelSummary = useMemo(() => {
             </div>
 
             <Card
-              className={`overflow-hidden rounded-[24px] shadow-sm ${
+              className={`overflow-hidden rounded-[22px] shadow-sm ${
                 isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
               }`}
             >
@@ -5201,7 +5201,7 @@ const duelSummary = useMemo(() => {
                   </div>
                   <div>
                     <p
-                      className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                      className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
                         isDarkMode ? "text-zinc-500" : "text-zinc-400"
                       }`}
                     >
@@ -5443,7 +5443,7 @@ const duelSummary = useMemo(() => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-2.5">
+                        <div className="grid grid-cols-2 gap-2">
                           {sponsorLogos.map((sponsor) => (
                             <div
                               key={`pilot-share-sponsor-${sponsor.name}`}
