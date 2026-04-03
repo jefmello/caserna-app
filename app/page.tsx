@@ -125,54 +125,54 @@ const sponsorLogos = [
   {
     name: "Lumine",
     src: "/patrocinadores/lumine.png",
-    wrapper: "px-2 py-2",
-    image: "max-h-[42px] max-w-[102px] object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.18)]",
-    shareImage: "max-h-[56px] max-w-[148px] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.22)]",
+    wrapper: "px-1.5 py-1.5",
+    image: "max-h-[40px] max-w-[98px] object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.18)]",
+    shareImage: "max-h-[52px] max-w-[140px] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.22)]",
     surfaceLight: "border-zinc-800/90 bg-[#111827]",
     surfaceDark: "border-white/10 bg-[#10151f]",
   },
   {
     name: "LazyKart",
     src: "/patrocinadores/lazykart.png",
-    wrapper: "px-3 py-2",
-    image: "max-h-[40px] max-w-[112px] object-contain",
-    shareImage: "max-h-[54px] max-w-[154px] object-contain",
+    wrapper: "px-2 py-1.5",
+    image: "max-h-[34px] max-w-[94px] object-contain",
+    shareImage: "max-h-[48px] max-w-[132px] object-contain",
     surfaceLight: "border-black/10 bg-white",
     surfaceDark: "border-white/10 bg-white",
   },
   {
     name: "Precision",
     src: "/patrocinadores/precision.png",
-    wrapper: "px-2 py-1.5",
-    image: "max-h-[48px] max-w-[108px] object-contain",
-    shareImage: "max-h-[62px] max-w-[148px] object-contain",
+    wrapper: "px-0.5 py-0.5",
+    image: "h-[48px] w-[108px] scale-[1.7] object-contain",
+    shareImage: "h-[62px] w-[148px] scale-[1.7] object-contain",
     surfaceLight: "border-black/10 bg-white",
     surfaceDark: "border-white/10 bg-white",
   },
   {
     name: "Vits",
     src: "/patrocinadores/vits.png",
-    wrapper: "px-2 py-1.5",
-    image: "max-h-[44px] max-w-[100px] object-contain",
-    shareImage: "max-h-[58px] max-w-[138px] object-contain",
+    wrapper: "px-0.5 py-0.5",
+    image: "h-[46px] w-[104px] scale-[1.95] object-contain",
+    shareImage: "h-[60px] w-[142px] scale-[1.95] object-contain",
     surfaceLight: "border-black/10 bg-white",
     surfaceDark: "border-white/10 bg-white",
   },
   {
     name: "Skyflow",
     src: "/patrocinadores/skyflow.png",
-    wrapper: "px-2 py-1.5",
-    image: "max-h-[48px] max-w-[108px] object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.18)]",
-    shareImage: "max-h-[62px] max-w-[148px] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.22)]",
+    wrapper: "px-0.5 py-0.5",
+    image: "h-[48px] w-[108px] scale-[1.65] object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.18)]",
+    shareImage: "h-[62px] w-[148px] scale-[1.65] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.22)]",
     surfaceLight: "border-zinc-800/90 bg-[#111827]",
     surfaceDark: "border-white/10 bg-[#0f172a]",
   },
   {
     name: "Astera",
     src: "/patrocinadores/astera.png",
-    wrapper: "px-2 py-2",
-    image: "max-h-[42px] max-w-[102px] object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.18)]",
-    shareImage: "max-h-[56px] max-w-[148px] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.22)]",
+    wrapper: "px-1.5 py-1.5",
+    image: "max-h-[40px] max-w-[98px] object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.18)]",
+    shareImage: "max-h-[52px] max-w-[140px] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.22)]",
     surfaceLight: "border-zinc-800/90 bg-[#111827]",
     surfaceDark: "border-white/10 bg-[#10151f]",
   },
@@ -2329,7 +2329,7 @@ const duelSummary = useMemo(() => {
 
                   <div className="min-w-0 flex-1">
                     <p
-                      className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
+                      className={`text-[8px] font-bold uppercase tracking-[0.18em] ${
                         isDarkMode ? "text-zinc-400" : "text-zinc-400"
                       }`}
                     >
@@ -2407,7 +2407,7 @@ const duelSummary = useMemo(() => {
 
                     <div className="min-w-0 flex-1">
                       <p
-                        className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
+                        className={`text-[8px] font-bold uppercase tracking-[0.18em] ${
                           isDarkMode ? "text-zinc-400" : "text-zinc-400"
                         }`}
                       >
@@ -2462,7 +2462,7 @@ const duelSummary = useMemo(() => {
 
                   <div className="min-w-0 flex-1">
                     <p
-                      className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
+                      className={`text-[8px] font-bold uppercase tracking-[0.18em] ${
                         isDarkMode ? "text-zinc-400" : "text-zinc-400"
                       }`}
                     >
@@ -3267,7 +3267,7 @@ const duelSummary = useMemo(() => {
 
                         <div className="min-w-0">
                           <p
-                            className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
+                            className={`text-[8px] font-bold uppercase tracking-[0.18em] ${
                               isDarkMode ? "text-zinc-500" : "text-zinc-400"
                             }`}
                           >
@@ -5565,28 +5565,28 @@ const duelSummary = useMemo(() => {
 
           <div className="fixed bottom-3 left-1/2 z-30 w-[calc(100%-24px)] max-w-md -translate-x-1/2">
             <Card
-              className={`overflow-hidden rounded-[22px] shadow-[0_14px_30px_rgba(15,23,42,0.12)] backdrop-blur-xl ${
+              className={`overflow-hidden rounded-[20px] shadow-[0_12px_24px_rgba(15,23,42,0.10)] backdrop-blur-xl ${
                 isDarkMode
                   ? "border border-white/10 bg-[rgba(15,23,42,0.88)]"
                   : "border border-black/5 bg-[rgba(255,255,255,0.94)]"
               }`}
             >
-              <CardContent className="p-2">
-                <div className="mb-1.5 px-1">
-                  <p className={`text-[9px] font-bold uppercase tracking-[0.18em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+              <CardContent className="p-1.5">
+                <div className="mb-1 px-0.5">
+                  <p className={`text-[8px] font-bold uppercase tracking-[0.18em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                     Patrocinadores oficiais
                   </p>
                 </div>
 
                 <div className="relative overflow-hidden rounded-[18px]">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-7 bg-gradient-to-r from-[rgba(255,255,255,0.97)] to-transparent dark:from-[rgba(15,23,42,0.97)]" />
-                  <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-7 bg-gradient-to-l from-[rgba(255,255,255,0.97)] to-transparent dark:from-[rgba(15,23,42,0.97)]" />
+                  <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-5 bg-gradient-to-r from-[rgba(255,255,255,0.97)] to-transparent dark:from-[rgba(15,23,42,0.97)]" />
+                  <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-5 bg-gradient-to-l from-[rgba(255,255,255,0.97)] to-transparent dark:from-[rgba(15,23,42,0.97)]" />
 
-                  <div className="sponsor-marquee-track flex w-max items-center gap-2">
+                  <div className="sponsor-marquee-track flex w-max items-center gap-1.5">
                     {sponsorTrack.map((sponsor, index) => (
                       <div
                         key={`fixed-sponsor-${sponsor.name}-${index}`}
-                        className={`flex h-[64px] w-[124px] shrink-0 items-center justify-center overflow-hidden rounded-[18px] border shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${sponsor.wrapper} ${
+                        className={`flex h-[54px] w-[108px] shrink-0 items-center justify-center overflow-hidden rounded-[16px] border shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${sponsor.wrapper} ${
                           isDarkMode ? sponsor.surfaceDark : sponsor.surfaceLight
                         }`}
                       >
