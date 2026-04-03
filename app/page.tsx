@@ -1317,12 +1317,6 @@ export default function CasernaKartAppModerno() {
     );
   }, [currentCompetitionList, search]);
 
-  const top6Ranking = useMemo(() => filteredRanking.slice(0, 6), [filteredRanking]);
-  const top6CutoffPoints =
-    top6Ranking.length > 0
-      ? top6Ranking[Math.min(5, top6Ranking.length - 1)]?.pontos || 0
-      : 0;
-
   const leader = filteredRanking[0];
   const leaderName = useMemo(() => getPilotNameParts(leader?.piloto), [leader]);
   const theme = useMemo(() => getCategoryTheme(category), [category]);
@@ -3411,294 +3405,7 @@ const duelSummary = useMemo(() => {
                     </div>
                   </div>
 
-                  {top6Ranking.length > 0 ? (
-                    <div className="px-3 pb-3 pt-0">
-                      <div
-                        className={`overflow-hidden rounded-[20px] border ${
-                          isDarkMode
-                            ? `${theme.darkAccentBorder} bg-gradient-to-br ${theme.darkAccentCard}`
-                            : `${theme.heroBorder} bg-gradient-to-br ${theme.heroBg}`
-                        }`}
-                      >
-                        <div
-                          className={`border-b px-3 py-3 ${
-                            isDarkMode
-                              ? `${theme.darkAccentBorder} bg-black/10`
-                              : "border-black/5 bg-white/60"
-                          }`}
-                        >
-                          <div className="flex items-start justify-between gap-3">
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-2">
-                                <div
-                                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl ${
-                                    isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                                  }`}
-                                >
-                                  <Trophy
-                                    className={`h-4.5 w-4.5 ${
-                                      isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                                    }`}
-                                  />
-                                </div>
-
-                                <div className="min-w-0">
-                                  <p
-                                    className={`text-[8px] font-bold uppercase tracking-[0.18em] ${
-                                      isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                                    }`}
-                                  >
-                                    Zona troféu
-                                  </p>
-                                  <p
-                                    className={`text-[14px] font-extrabold tracking-tight ${
-                                      isDarkMode ? "text-white" : "text-zinc-950"
-                                    }`}
-                                  >
-                                    Top 6 oficial
-                                  </p>
-                                </div>
-                              </div>
-
-                              <p
-                                className={`mt-2 text-[11px] leading-snug ${
-                                  isDarkMode ? "text-zinc-400" : "text-zinc-600"
-                                }`}
-                              >
-                                Clique em qualquer piloto para abrir a ficha individual com leitura rápida de desempenho.
-                              </p>
-                            </div>
-
-                            <div className="grid shrink-0 grid-cols-2 gap-2">
-                              <div
-                                className={`rounded-[14px] border px-2.5 py-2 text-right ${
-                                  isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white/80"
-                                }`}
-                              >
-                                <p
-                                  className={`text-[8px] font-bold uppercase tracking-[0.16em] ${
-                                    isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                                  }`}
-                                >
-                                  Corte
-                                </p>
-                                <p
-                                  className={`mt-1 text-[13px] font-extrabold ${
-                                    isDarkMode ? "text-white" : "text-zinc-950"
-                                  }`}
-                                >
-                                  {top6CutoffPoints} pts
-                                </p>
-                              </div>
-
-                              <div
-                                className={`rounded-[14px] border px-2.5 py-2 text-right ${
-                                  isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white/80"
-                                }`}
-                              >
-                                <p
-                                  className={`text-[8px] font-bold uppercase tracking-[0.16em] ${
-                                    isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                                  }`}
-                                >
-                                  Pilotos
-                                </p>
-                                <p
-                                  className={`mt-1 text-[13px] font-extrabold ${
-                                    isDarkMode ? "text-white" : "text-zinc-950"
-                                  }`}
-                                >
-                                  {top6Ranking.length}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-2 p-2.5">
-                          {top6Ranking.map((item, index) => {
-                            const styles = getTop6RowStyles(index + 1);
-                            const trendStatus =
-                              pilotTrendMap[item.pilotoId || normalizePilotName(item.piloto)] ||
-                              "stable";
-                            const trendVisual = getTrendVisual(trendStatus, isDarkMode);
-                            const TrendIcon = trendVisual.Icon;
-                            const gapLabel = getGapToLeader(leader?.pontos || 0, item.pontos);
-                            const warName = getPilotWarNameDisplay(item);
-                            const isLeaderCard = index === 0;
-
-                            const lightCardClass = isLeaderCard
-                              ? `${theme.heroBorder} bg-white/92 ${theme.leaderGlow}`
-                              : `${styles.row || "border-black/5 bg-white"}`;
-
-                            const darkCardClass =
-                              index === 0
-                                ? `${theme.darkLeaderRow} ${theme.darkAccentBorder}`
-                                : index === 1
-                                  ? `${theme.darkSecondRow} border-white/10`
-                                  : index === 2
-                                    ? `${theme.darkThirdRow} border-white/10`
-                                    : index === 3
-                                      ? "border-white/10 bg-gradient-to-r from-sky-500/10 via-[#161e2b] to-[#111827]"
-                                      : index === 4
-                                        ? "border-white/10 bg-gradient-to-r from-violet-500/10 via-[#161e2b] to-[#111827]"
-                                        : "border-white/10 bg-gradient-to-r from-emerald-500/10 via-[#161e2b] to-[#111827]";
-
-                            return (
-                              <button
-                                key={`top6-card-${item.pilotoId || item.piloto}-${index}`}
-                                type="button"
-                                onClick={() => handleSelectPilot(item)}
-                                className={`overflow-hidden rounded-[18px] border p-2.5 text-left transition hover:scale-[0.995] active:scale-[0.985] ${
-                                  isDarkMode ? darkCardClass : lightCardClass
-                                }`}
-                              >
-                                <div className="flex items-start justify-between gap-2">
-                                  <div className="flex min-w-0 items-center gap-2">
-                                    <div
-                                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[13px] text-[13px] font-extrabold ${
-                                        isDarkMode
-                                          ? index === 0
-                                            ? theme.darkTopBadge
-                                            : index === 1
-                                              ? "bg-white/10 text-white"
-                                              : index === 2
-                                                ? "bg-amber-500/15 text-amber-300"
-                                                : "bg-white/10 text-white"
-                                          : styles.badge
-                                      }`}
-                                    >
-                                      {index + 1}
-                                    </div>
-
-                                    <div className="min-w-0">
-                                      <p
-                                        className={`truncate text-[12px] font-extrabold leading-none tracking-tight ${
-                                          isDarkMode ? "text-white" : styles.name
-                                        }`}
-                                      >
-                                        {getPilotFirstAndLastName(item.piloto)}
-                                      </p>
-
-                                      {warName ? (
-                                        <p
-                                          className={`mt-1 truncate text-[9px] italic ${
-                                            isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                                          }`}
-                                        >
-                                          {warName}
-                                        </p>
-                                      ) : null}
-                                    </div>
-                                  </div>
-
-                                  <span
-                                    className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.08em] ${trendVisual.className}`}
-                                  >
-                                    <TrendIcon className="h-2.5 w-2.5" />
-                                    {trendVisual.label}
-                                  </span>
-                                </div>
-
-                                <div className="mt-2 grid grid-cols-3 gap-1.5">
-                                  <div
-                                    className={`rounded-[12px] border px-2 py-1.5 ${
-                                      isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white/90"
-                                    }`}
-                                  >
-                                    <p
-                                      className={`text-[8px] font-bold uppercase tracking-[0.14em] ${
-                                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                                      }`}
-                                    >
-                                      PTS
-                                    </p>
-                                    <p
-                                      className={`mt-0.5 text-[13px] font-extrabold ${
-                                        isDarkMode
-                                          ? index === 0
-                                            ? theme.darkAccentText
-                                            : "text-white"
-                                          : styles.points
-                                      }`}
-                                    >
-                                      {item.pontos}
-                                    </p>
-                                  </div>
-
-                                  <div
-                                    className={`rounded-[12px] border px-2 py-1.5 ${
-                                      isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white/90"
-                                    }`}
-                                  >
-                                    <p
-                                      className={`text-[8px] font-bold uppercase tracking-[0.14em] ${
-                                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                                      }`}
-                                    >
-                                      VIT
-                                    </p>
-                                    <p
-                                      className={`mt-0.5 text-[13px] font-extrabold ${
-                                        isDarkMode ? "text-white" : "text-zinc-950"
-                                      }`}
-                                    >
-                                      {item.vitorias}
-                                    </p>
-                                  </div>
-
-                                  <div
-                                    className={`rounded-[12px] border px-2 py-1.5 ${
-                                      isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white/90"
-                                    }`}
-                                  >
-                                    <p
-                                      className={`text-[8px] font-bold uppercase tracking-[0.14em] ${
-                                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                                      }`}
-                                    >
-                                      PDS
-                                    </p>
-                                    <p
-                                      className={`mt-0.5 text-[13px] font-extrabold ${
-                                        isDarkMode ? "text-white" : "text-zinc-950"
-                                      }`}
-                                    >
-                                      {item.podios}
-                                    </p>
-                                  </div>
-                                </div>
-
-                                <div className="mt-2 flex items-center justify-between gap-2">
-                                  <span
-                                    className={`inline-flex rounded-full border px-2 py-1 text-[8px] font-bold uppercase tracking-[0.08em] ${
-                                      isDarkMode
-                                        ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                                        : isLeaderCard
-                                          ? theme.heroChip
-                                          : "border-zinc-200 bg-white text-zinc-600"
-                                    }`}
-                                  >
-                                    {gapLabel}
-                                  </span>
-
-                                  <span
-                                    className={`text-[9px] font-semibold ${
-                                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                                    }`}
-                                  >
-                                    toque para abrir
-                                  </span>
-                                </div>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </div>
-                  ) : null}
-
-                  <div className="max-h-[500px] overflow-y-auto">
+                  <div className="max-h-[560px] overflow-y-auto">
                     <table className="w-full table-fixed">
                       <colgroup>
                         <col className="w-[42px]" />
@@ -4724,9 +4431,7 @@ const duelSummary = useMemo(() => {
 <TabsContent value="comparador" className="mt-0 space-y-4 pt-0">
   <Card
     className={`overflow-hidden rounded-[24px] shadow-sm ${
-      isDarkMode
-        ? `border ${theme.darkAccentBorder} bg-gradient-to-br ${theme.darkAccentCard}`
-        : `${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow}`
+      isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
     }`}
   >
     <CardContent className="p-0">
@@ -4762,7 +4467,7 @@ const duelSummary = useMemo(() => {
                   isDarkMode ? "text-white" : "text-zinc-950"
                 }`}
               >
-                Duelo premium entre pilotos
+                Comparador premium entre pilotos
               </h2>
             </div>
           </div>
@@ -4876,82 +4581,79 @@ const duelSummary = useMemo(() => {
                 : `${theme.primaryBorder} bg-gradient-to-br ${theme.heroBg}`
             }`}
           >
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 py-3">
-              {[comparePilotA, comparePilotB].map((pilot, index) => {
-                const side = index === 0 ? "a" : "b";
-                const pilotPosition =
-                  pilot.pos ||
-                  filteredRanking.findIndex(
-                    (item) =>
-                      (item.pilotoId || item.piloto) ===
-                      (pilot.pilotoId || pilot.piloto)
-                  ) +
-                    1;
-                const isWinner = duelSummary?.overallWinner === side;
-                const pilotScore =
-                  side === "a" ? duelSummary?.scoreA || 0 : duelSummary?.scoreB || 0;
+            <div className="relative px-3 py-3 sm:px-4 sm:py-4">
+              <div
+                className={`absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
+              />
 
-                return (
-                  <div
-                    key={`${side}-${pilot.pilotoId || pilot.piloto}`}
-                    className={`rounded-[22px] border p-3 ${
-                      isDarkMode
-                        ? isWinner
-                          ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft}`
-                          : "border-white/10 bg-[#0f172a]"
-                        : isWinner
-                          ? `${theme.heroBorder} bg-white/90`
-                          : "border-black/5 bg-white/80"
-                    }`}
-                  >
-                    <div className="mx-auto mb-3 h-24 w-24 overflow-hidden rounded-[22px] border border-black/5">
-                      <PilotPhotoSlot
-                        pilot={pilot}
-                        alt={getPilotFirstAndLastName(pilot.piloto)}
-                        isDark={isDarkMode}
-                      />
-                    </div>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto_1fr] sm:items-stretch">
+                {[comparePilotA, comparePilotB].map((pilot, index) => {
+                  const side = index === 0 ? "a" : "b";
+                  const pilotPosition =
+                    pilot.pos ||
+                    filteredRanking.findIndex(
+                      (item) =>
+                        (item.pilotoId || item.piloto) ===
+                        (pilot.pilotoId || pilot.piloto)
+                    ) +
+                      1;
+                  const isWinner = duelSummary?.overallWinner === side;
+                  const pilotScore =
+                    side === "a" ? duelSummary?.scoreA || 0 : duelSummary?.scoreB || 0;
+                  const trendStatus =
+                    pilotTrendMap[pilot.pilotoId || normalizePilotName(pilot.piloto)] ||
+                    "stable";
+                  const trendVisual = getTrendVisual(trendStatus, isDarkMode);
+                  const TrendIcon = trendVisual.Icon;
+                  const gapVsLeader = leader
+                    ? getGapToLeader(leader.pontos, pilot.pontos)
+                    : "-";
 
-                    <div className="text-center">
-                      <p
-                        className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
-                          isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                        }`}
-                      >
-                        Piloto {side.toUpperCase()}
-                      </p>
-
-                      <p
-                        className={`mt-1 text-[13px] font-extrabold tracking-tight ${
-                          isDarkMode ? "text-white" : "text-zinc-950"
-                        }`}
-                      >
-                        {getPilotFirstAndLastName(pilot.piloto)}
-                      </p>
-
-                      {getPilotWarNameDisplay(pilot) ? (
-                        <p
-                          className={`mt-1 text-[10px] italic ${
-                            isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                          }`}
-                        >
-                          {getPilotWarNameDisplay(pilot)}
-                        </p>
-                      ) : null}
-
-                      <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
-                        <span
-                          className={`rounded-full border px-2.5 py-1 text-[10px] font-bold ${
-                            isDarkMode
-                              ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                              : theme.heroChip
-                          }`}
-                        >
-                          {pilotPosition}º lugar
-                        </span>
+                  return (
+                    <div
+                      key={`${side}-${pilot.pilotoId || pilot.piloto}`}
+                      className={`rounded-[24px] border p-3 sm:p-4 ${
+                        isDarkMode
+                          ? isWinner
+                            ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft} shadow-[0_10px_28px_rgba(0,0,0,0.32)]`
+                            : "border-white/10 bg-[#0f172a]"
+                          : isWinner
+                            ? `${theme.heroBorder} bg-white/95 shadow-[0_14px_30px_rgba(15,23,42,0.08)]`
+                            : "border-black/5 bg-white/85 shadow-[0_10px_24px_rgba(15,23,42,0.04)]"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <p
+                            className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                              isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                            }`}
+                          >
+                            Piloto {side.toUpperCase()}
+                          </p>
+                          <div className="mt-1 flex flex-wrap items-center gap-2">
+                            <span
+                              className={`rounded-full border px-2.5 py-1 text-[10px] font-bold ${
+                                isDarkMode
+                                  ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                                  : theme.heroChip
+                              }`}
+                            >
+                              {pilotPosition}º lugar
+                            </span>
+                            <span
+                              className={`rounded-full border px-2.5 py-1 text-[10px] font-bold ${trendVisual.className}`}
+                            >
+                              <span className="inline-flex items-center gap-1">
+                                <TrendIcon className="h-3 w-3" />
+                                {trendVisual.label}
+                              </span>
+                            </span>
+                          </div>
+                        </div>
 
                         <span
-                          className={`rounded-full border px-2.5 py-1 text-[10px] font-bold ${
+                          className={`rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${
                             isDarkMode
                               ? isWinner
                                 ? `${theme.darkAccentBorder} bg-white/10 text-white`
@@ -4961,91 +4663,152 @@ const duelSummary = useMemo(() => {
                                 : "border-zinc-200 bg-zinc-50 text-zinc-600"
                           }`}
                         >
-                          {pilotScore} métricas
+                          {pilotScore} pts téc.
                         </span>
                       </div>
+
+                      <div className="mt-3 grid grid-cols-[92px_1fr] items-center gap-3">
+                        <div className="h-[92px] w-[92px] overflow-hidden rounded-[24px] border border-black/5">
+                          <PilotPhotoSlot
+                            pilot={pilot}
+                            alt={getPilotFirstAndLastName(pilot.piloto)}
+                            isDark={isDarkMode}
+                          />
+                        </div>
+
+                        <div className="min-w-0">
+                          <p
+                            className={`text-[16px] font-black leading-[1.05] tracking-tight ${
+                              isDarkMode ? "text-white" : "text-zinc-950"
+                            }`}
+                          >
+                            {getPilotFirstAndLastName(pilot.piloto)}
+                          </p>
+
+                          {getPilotWarNameDisplay(pilot) ? (
+                            <p
+                              className={`mt-1 text-[11px] italic ${
+                                isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                              }`}
+                            >
+                              {getPilotWarNameDisplay(pilot)}
+                            </p>
+                          ) : null}
+
+                          <div className="mt-3 grid grid-cols-2 gap-2">
+                            <div
+                              className={`rounded-[18px] border px-3 py-2 ${
+                                isDarkMode
+                                  ? "border-white/10 bg-[#111827]"
+                                  : "border-black/5 bg-zinc-50/70"
+                              }`}
+                            >
+                              <p className={`text-[9px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                                Pontos
+                              </p>
+                              <p className={`mt-1 text-[19px] font-black leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                {pilot.pontos}
+                              </p>
+                            </div>
+
+                            <div
+                              className={`rounded-[18px] border px-3 py-2 ${
+                                isDarkMode
+                                  ? "border-white/10 bg-[#111827]"
+                                  : "border-black/5 bg-zinc-50/70"
+                              }`}
+                            >
+                              <p className={`text-[9px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                                Gap líder
+                              </p>
+                              <p className={`mt-1 text-[12px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                {gapVsLeader}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-3 grid grid-cols-3 gap-2">
+                        {[
+                          { label: "VIT", value: pilot.vitorias },
+                          { label: "POL", value: pilot.poles },
+                          { label: "PDS", value: pilot.podios },
+                        ].map((stat) => (
+                          <div
+                            key={`${side}-${stat.label}`}
+                            className={`rounded-[18px] border px-2.5 py-2 text-center ${
+                              isDarkMode
+                                ? "border-white/10 bg-[#111827]"
+                                : "border-black/5 bg-zinc-50/70"
+                            }`}
+                          >
+                            <p className={`text-[9px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                              {stat.label}
+                            </p>
+                            <p className={`mt-1 text-[17px] font-black leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                              {stat.value}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
                     </div>
+                  );
+                })}
+
+                <div className="flex flex-col items-center justify-center gap-2 px-1 py-1 sm:px-0">
+                  <div
+                    className={`flex h-16 w-16 items-center justify-center rounded-full border text-[18px] font-black tracking-[0.14em] ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft} text-white`
+                        : `${theme.primaryBorder} bg-white text-zinc-950`
+                    }`}
+                  >
+                    VS
                   </div>
-                );
-              })}
 
-              <div className="flex flex-col items-center justify-center gap-2 px-1">
-                <div
-                  className={`flex h-14 w-14 items-center justify-center rounded-full border text-sm font-black tracking-[0.14em] ${
-                    isDarkMode
-                      ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                      : `${theme.primaryBorder} bg-white text-zinc-950`
-                  }`}
-                >
-                  VS
+                  <div
+                    className={`rounded-[22px] border px-4 py-3 text-center ${
+                      isDarkMode
+                        ? "border-white/10 bg-[#0f172a]"
+                        : "border-black/5 bg-white/90"
+                    }`}
+                  >
+                    <p className={`text-[9px] font-bold uppercase tracking-[0.18em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                      Placar técnico
+                    </p>
+                    <p className={`mt-1 text-[26px] font-black leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                      {duelSummary?.scoreA || 0}
+                      <span className={`${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}> x </span>
+                      {duelSummary?.scoreB || 0}
+                    </p>
+                    <p className={`mt-2 text-[11px] font-semibold leading-snug ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                      {duelSummary?.narrative}
+                    </p>
+                  </div>
+
+                  <div
+                    className={`rounded-full border px-3 py-1 text-[9px] font-black uppercase tracking-[0.16em] ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                        : theme.searchBadge
+                    }`}
+                  >
+                    {duelSummary?.profileLabel}
+                  </div>
                 </div>
-
-                <span
-                  className={`rounded-full border px-2.5 py-1 text-center text-[9px] font-bold uppercase tracking-[0.14em] ${
-                    isDarkMode
-                      ? "border-white/10 bg-white/5 text-zinc-300"
-                      : "border-zinc-200 bg-white text-zinc-600"
-                  }`}
-                >
-                  {duelSummary?.narrative}
-                </span>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <CompactStatCard
-              title="Placar técnico"
-              value={`${duelSummary?.scoreA || 0} x ${duelSummary?.scoreB || 0}`}
-              subtitle="vitórias por critério no duelo"
-              icon={Swords}
-              accent
-              categoryTheme={theme}
-              isDark={isDarkMode}
-            />
-            <CompactStatCard
-              title="Vantagem em pontos"
-              value={`${duelSummary?.pointsDiff || 0} pts`}
-              subtitle={
-                duelSummary?.pointsWinner === "tie"
-                  ? "pontuação empatada"
-                  : duelSummary?.pointsWinner === "a"
-                    ? "Piloto A pontua melhor"
-                    : "Piloto B pontua melhor"
-              }
-              icon={Trophy}
-              categoryTheme={theme}
-              isDark={isDarkMode}
-            />
-            <CompactStatCard
-              title="Disciplina do duelo"
-              value={getDuelWinnerLabel(duelSummary?.advWinner || "tie")}
-              subtitle="menor ADV leva vantagem"
-              icon={Flag}
-              categoryTheme={theme}
-              isDark={isDarkMode}
-            />
-            <CompactStatCard
-              title="Leitura final"
-              value={duelSummary?.profileLabel || "Sem leitura"}
-              subtitle="resumo oficial do confronto"
-              icon={Gauge}
-              accent
-              categoryTheme={theme}
-              isDark={isDarkMode}
-            />
-          </div>
-
-          <Card
-            className={`rounded-[24px] shadow-sm ${
-              isDarkMode
-                ? `${theme.darkAccentBorder} bg-[#111827]`
-                : `${theme.titleBorder} bg-gradient-to-br from-white via-white to-zinc-50/70`
-            }`}
-          >
-            <CardContent className="p-4">
-              <div className="mb-4 flex items-center justify-between gap-3">
-                <div className="flex min-w-0 items-center gap-3">
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+            <Card
+              className={`rounded-[24px] shadow-sm ${
+                isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
+              }`}
+            >
+              <CardContent className="p-4">
+                <div className="mb-4 flex items-center gap-3">
                   <div
                     className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${
                       isDarkMode ? theme.darkAccentIconWrap : theme.statsIconWrap
@@ -5058,146 +4821,338 @@ const duelSummary = useMemo(() => {
                     />
                   </div>
 
-                  <div className="min-w-0">
+                  <div>
                     <p
                       className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
                         isDarkMode ? "text-zinc-500" : "text-zinc-400"
                       }`}
                     >
-                      Leitura comparativa
+                      Métrica por métrica
                     </p>
                     <h3
                       className={`text-[16px] font-extrabold tracking-tight ${
                         isDarkMode ? "text-white" : "text-zinc-950"
                       }`}
                     >
-                      Quem vence em cada critério
+                      Leitura visual do confronto
                     </h3>
                   </div>
                 </div>
 
-                <span
-                  className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
-                    isDarkMode
-                      ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                      : theme.headerChip
-                  }`}
-                >
-                  {duelSummary?.narrative}
-                </span>
-              </div>
+                <div className="space-y-3">
+                  {duelMetrics.map((metric) => {
+                    const winner = getComparisonWinner(
+                      metric.a,
+                      metric.b,
+                      metric.lowerIsBetter
+                    );
+                    const maxValue = Math.max(metric.a, metric.b, 1);
+                    const aPct = Math.max(10, Math.round((metric.a / maxValue) * 100));
+                    const bPct = Math.max(10, Math.round((metric.b / maxValue) * 100));
 
-              <div className="grid grid-cols-1 gap-3">
-                {duelMetrics.map((metric) => {
-                  const winner = getComparisonWinner(
-                    metric.a,
-                    metric.b,
-                    metric.lowerIsBetter
-                  );
+                    return (
+                      <div
+                        key={metric.label}
+                        className={`rounded-[22px] border p-3 ${
+                          isDarkMode
+                            ? "border-white/10 bg-[#0f172a]"
+                            : "border-black/5 bg-zinc-50/70"
+                        }`}
+                      >
+                        <div className="mb-3 flex items-center justify-between gap-2">
+                          <div className="min-w-0">
+                            <p
+                              className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                                isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                              }`}
+                            >
+                              {metric.label}
+                            </p>
+                            <p
+                              className={`mt-0.5 text-[11px] font-medium ${
+                                isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                              }`}
+                            >
+                              {metric.description}
+                            </p>
+                          </div>
 
-                  return (
+                          <span
+                            className={`shrink-0 rounded-full border px-2 py-1 text-[8px] font-bold uppercase tracking-[0.12em] ${
+                              winner === "tie"
+                                ? isDarkMode
+                                  ? "border-white/10 bg-white/5 text-zinc-300"
+                                  : "border-zinc-200 bg-white text-zinc-600"
+                                : isDarkMode
+                                  ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                                  : theme.searchBadge
+                            }`}
+                          >
+                            {winner === "tie"
+                              ? "Empate"
+                              : winner === "a"
+                                ? "Vantagem A"
+                                : "Vantagem B"}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-[56px_1fr_56px] items-center gap-3">
+                          <div className="text-left">
+                            <p className={`text-[10px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                              A
+                            </p>
+                            <p className={`mt-1 text-[22px] font-black leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                              {metric.a}
+                            </p>
+                          </div>
+
+                          <div className="space-y-2">
+                            <div>
+                              <div className="mb-1 flex items-center justify-between text-[9px] font-bold uppercase tracking-[0.12em]">
+                                <span className={isDarkMode ? "text-zinc-500" : "text-zinc-400"}>
+                                  {getPilotNameParts(comparePilotA.piloto).firstName}
+                                </span>
+                                <span className={isDarkMode ? "text-zinc-500" : "text-zinc-400"}>
+                                  {aPct}%
+                                </span>
+                              </div>
+                              <div className={`h-2.5 overflow-hidden rounded-full ${isDarkMode ? "bg-white/10" : "bg-zinc-200/80"}`}>
+                                <div
+                                  className={`h-full rounded-full ${
+                                    winner === "a"
+                                      ? isDarkMode
+                                        ? "bg-white"
+                                        : "bg-zinc-950"
+                                      : isDarkMode
+                                        ? "bg-zinc-500"
+                                        : "bg-zinc-400"
+                                  }`}
+                                  style={{ width: `${aPct}%` }}
+                                />
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="mb-1 flex items-center justify-between text-[9px] font-bold uppercase tracking-[0.12em]">
+                                <span className={isDarkMode ? "text-zinc-500" : "text-zinc-400"}>
+                                  {getPilotNameParts(comparePilotB.piloto).firstName}
+                                </span>
+                                <span className={isDarkMode ? "text-zinc-500" : "text-zinc-400"}>
+                                  {bPct}%
+                                </span>
+                              </div>
+                              <div className={`h-2.5 overflow-hidden rounded-full ${isDarkMode ? "bg-white/10" : "bg-zinc-200/80"}`}>
+                                <div
+                                  className={`ml-auto h-full rounded-full ${
+                                    winner === "b"
+                                      ? isDarkMode
+                                        ? "bg-white"
+                                        : "bg-zinc-950"
+                                      : isDarkMode
+                                        ? "bg-zinc-500"
+                                        : "bg-zinc-400"
+                                  }`}
+                                  style={{ width: `${bPct}%` }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="text-right">
+                            <p className={`text-[10px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                              B
+                            </p>
+                            <p className={`mt-1 text-[22px] font-black leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                              {metric.b}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="space-y-4">
+              <Card
+                className={`rounded-[24px] shadow-sm ${
+                  isDarkMode
+                    ? `${theme.darkAccentBorder} bg-[#111827]`
+                    : `${theme.titleBorder} bg-gradient-to-br from-white via-white to-zinc-50/70`
+                }`}
+              >
+                <CardContent className="p-4">
+                  <div className="mb-4 flex items-center gap-3">
                     <div
-                      key={metric.label}
-                      className={`rounded-[22px] border p-3 ${
-                        isDarkMode
-                          ? "border-white/10 bg-[#0f172a]"
-                          : "border-black/5 bg-zinc-50/70"
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${
+                        isDarkMode ? theme.darkAccentIconWrap : theme.statsIconWrap
                       }`}
                     >
-                      <div className="mb-3 flex items-center justify-between gap-2">
-                        <div className="min-w-0">
-                          <p
-                            className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
-                              isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                            }`}
-                          >
-                            {metric.label}
-                          </p>
-                          <p
-                            className={`mt-0.5 text-[11px] font-medium ${
-                              isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                            }`}
-                          >
-                            {metric.description}
-                          </p>
-                        </div>
-
-                        <span
-                          className={`shrink-0 rounded-full border px-2 py-1 text-[8px] font-bold uppercase tracking-[0.12em] ${
-                            winner === "tie"
-                              ? isDarkMode
-                                ? "border-white/10 bg-white/5 text-zinc-300"
-                                : "border-zinc-200 bg-white text-zinc-600"
-                              : isDarkMode
-                                ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                                : theme.searchBadge
-                          }`}
-                        >
-                          {winner === "tie"
-                            ? "Empate"
-                            : winner === "a"
-                              ? "Vantagem A"
-                              : "Vantagem B"}
-                        </span>
-                      </div>
-
-                      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-                        <div
-                          className={`rounded-2xl border px-3 py-3 text-center ${getComparisonCardTone({
-                            winner,
-                            side: "a",
-                            isDark: isDarkMode,
-                            theme,
-                          })}`}
-                        >
-                          <p
-                            className={`text-[10px] font-bold uppercase tracking-[0.12em] ${
-                              isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                            }`}
-                          >
-                            Piloto A
-                          </p>
-                          <p className="mt-1 text-[24px] font-extrabold leading-none tracking-tight">
-                            {metric.a}
-                          </p>
-                        </div>
-
-                        <div
-                          className={`rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] ${
-                            isDarkMode
-                              ? "border-white/10 bg-white/5 text-zinc-300"
-                              : "border-zinc-200 bg-white text-zinc-600"
-                          }`}
-                        >
-                          {metric.shortLabel}
-                        </div>
-
-                        <div
-                          className={`rounded-2xl border px-3 py-3 text-center ${getComparisonCardTone({
-                            winner,
-                            side: "b",
-                            isDark: isDarkMode,
-                            theme,
-                          })}`}
-                        >
-                          <p
-                            className={`text-[10px] font-bold uppercase tracking-[0.12em] ${
-                              isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                            }`}
-                          >
-                            Piloto B
-                          </p>
-                          <p className="mt-1 text-[24px] font-extrabold leading-none tracking-tight">
-                            {metric.b}
-                          </p>
-                        </div>
-                      </div>
+                      <Gauge
+                        className={`h-4.5 w-4.5 ${
+                          isDarkMode ? theme.darkAccentText : theme.statsIcon
+                        }`}
+                      />
                     </div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
+
+                    <div>
+                      <p
+                        className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                          isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                        }`}
+                      >
+                        Síntese oficial do duelo
+                      </p>
+                      <h3
+                        className={`text-[16px] font-extrabold tracking-tight ${
+                          isDarkMode ? "text-white" : "text-zinc-950"
+                        }`}
+                      >
+                        Desempenho + disciplina
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div
+                    className={`rounded-[22px] border p-4 ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft}`
+                        : `${theme.primaryBorder} bg-gradient-to-br ${theme.heroBg}`
+                    }`}
+                  >
+                    <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                      Selo do confronto
+                    </p>
+                    <p className={`mt-2 text-[22px] font-black leading-tight tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                      {duelSummary?.narrative}
+                    </p>
+                    <p className={`mt-2 text-[12px] leading-relaxed ${isDarkMode ? "text-zinc-300" : "text-zinc-600"}`}>
+                      {duelSummary?.profileLabel}. {duelSummary?.pointsWinner === "tie"
+                        ? "No placar de pontos, os dois seguem empatados."
+                        : duelSummary?.pointsWinner === "a"
+                          ? `${getPilotFirstAndLastName(comparePilotA.piloto)} leva vantagem pontual no campeonato.`
+                          : `${getPilotFirstAndLastName(comparePilotB.piloto)} leva vantagem pontual no campeonato.`}
+                    </p>
+                  </div>
+
+                  <div className="mt-3 grid grid-cols-2 gap-3">
+                    <CompactStatCard
+                      title="Placar técnico"
+                      value={`${duelSummary?.scoreA || 0} x ${duelSummary?.scoreB || 0}`}
+                      subtitle={getDuelWinnerLabel(duelSummary?.overallWinner || "tie")}
+                      icon={Swords}
+                      accent
+                      isDark={isDarkMode}
+                      categoryTheme={theme}
+                    />
+                    <CompactStatCard
+                      title="Gap em pontos"
+                      value={`${duelSummary?.pointsDiff || 0} pts`}
+                      subtitle={
+                        duelSummary?.pointsWinner === "tie"
+                          ? "duelo empatado"
+                          : duelSummary?.pointsWinner === "a"
+                            ? `${getPilotNameParts(comparePilotA.piloto).firstName} na frente`
+                            : `${getPilotNameParts(comparePilotB.piloto).firstName} na frente`
+                      }
+                      icon={BarChart3}
+                      isDark={isDarkMode}
+                      categoryTheme={theme}
+                    />
+                    <CompactStatCard
+                      title="Disciplina"
+                      value={getDuelWinnerLabel(duelSummary?.advWinner || "tie")}
+                      subtitle="menor número de advertências"
+                      icon={Flag}
+                      isDark={isDarkMode}
+                      categoryTheme={theme}
+                    />
+                    <CompactStatCard
+                      title="Leitura geral"
+                      value={duelSummary?.profileLabel || "Sem leitura"}
+                      subtitle="visão consolidada do confronto"
+                      icon={Gauge}
+                      isDark={isDarkMode}
+                      categoryTheme={theme}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card
+                className={`rounded-[24px] shadow-sm ${
+                  isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
+                }`}
+              >
+                <CardContent className="p-4">
+                  <div className="mb-4 flex items-center gap-3">
+                    <div
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${
+                        isDarkMode ? theme.darkAccentIconWrap : theme.statsIconWrap
+                      }`}
+                    >
+                      <Trophy
+                        className={`h-4.5 w-4.5 ${
+                          isDarkMode ? theme.darkAccentText : theme.statsIcon
+                        }`}
+                      />
+                    </div>
+                    <div>
+                      <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                        Leitura editorial
+                      </p>
+                      <h3 className={`text-[16px] font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                        Quem leva cada frente
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div
+                      className={`rounded-[20px] border p-3 ${
+                        isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50/70"
+                      }`}
+                    >
+                      <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                        Performance
+                      </p>
+                      <p className={`mt-1 text-[14px] font-extrabold leading-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                        {duelSummary?.pointsWinner === "tie"
+                          ? "Empate em desempenho"
+                          : duelSummary?.pointsWinner === "a"
+                            ? `${getPilotNameParts(comparePilotA.piloto).firstName} na frente`
+                            : `${getPilotNameParts(comparePilotB.piloto).firstName} na frente`}
+                      </p>
+                      <p className={`mt-1 text-[11px] leading-relaxed ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                        leitura com base em pontos totais e volume geral de resultado.
+                      </p>
+                    </div>
+
+                    <div
+                      className={`rounded-[20px] border p-3 ${
+                        isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50/70"
+                      }`}
+                    >
+                      <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                        Disciplina
+                      </p>
+                      <p className={`mt-1 text-[14px] font-extrabold leading-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                        {duelSummary?.advWinner === "tie"
+                          ? "Empate disciplinar"
+                          : duelSummary?.advWinner === "a"
+                            ? `${getPilotNameParts(comparePilotA.piloto).firstName} mais limpo`
+                            : `${getPilotNameParts(comparePilotB.piloto).firstName} mais limpo`}
+                      </p>
+                      <p className={`mt-1 text-[11px] leading-relaxed ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                        leitura com base em advertências dentro do campeonato selecionado.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </>
       )}
     </CardContent>
