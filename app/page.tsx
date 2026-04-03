@@ -14,6 +14,7 @@ import RankingStatsSummaryGrid from "@/components/ranking/ranking-stats-summary-
 import RankingStatsRadarCard from "@/components/ranking/ranking-stats-radar-card";
 import RankingStatsTopPointsChartCard from "@/components/ranking/ranking-stats-top-points-chart-card";
 import RankingStatsMetricCardsGrid from "@/components/ranking/ranking-stats-metric-cards-grid";
+import RankingPilotEmptyState from "@/components/ranking/ranking-pilot-empty-state";
 import Image from "next/image";
 import * as htmlToImage from "html-to-image";
 import {
@@ -2980,39 +2981,11 @@ const duelWinnerPilot = useMemo(() => {
 
           <TabsContent value="piloto" className="mt-0 space-y-4 pt-0">
             {!selectedPilot ? (
-              <Card
-                className={`rounded-[20px] shadow-sm ${
-                  isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
-                }`}
-              >
-                <CardContent className="p-8 text-center">
-                  <div
-                    className={`mx-auto flex h-14 w-14 items-center justify-center rounded-3xl ${
-                      isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
-                    }`}
-                  >
-                    <User
-                      className={`h-7 w-7 ${
-                        isDarkMode ? theme.darkAccentText : "text-zinc-500"
-                      }`}
-                    />
-                  </div>
-                  <p
-                    className={`mt-4 text-base font-semibold ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
-                    }`}
-                  >
-                    Nenhum piloto selecionado
-                  </p>
-                  <p
-                    className={`mt-2 text-sm ${
-                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                    }`}
-                  >
-                    Toque em um piloto na classificação para abrir o perfil.
-                  </p>
-                </CardContent>
-              </Card>
+              <RankingPilotEmptyState
+                isDarkMode={isDarkMode}
+                theme={theme}
+                UserIcon={User}
+              />
             ) : (
               <div className="space-y-3">
                 <Card
