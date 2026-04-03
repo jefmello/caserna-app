@@ -5563,30 +5563,43 @@ const duelSummary = useMemo(() => {
               </div>
             </div>
 
-          <div className="fixed bottom-2 left-1/2 z-30 w-[calc(100%-24px)] max-w-md -translate-x-1/2">
+          <div className="fixed bottom-2 left-1/2 z-30 w-[calc(100%-22px)] max-w-md -translate-x-1/2">
             <Card
-              className={`overflow-hidden rounded-[20px] shadow-[0_12px_24px_rgba(15,23,42,0.10)] backdrop-blur-xl ${
+              className={`relative overflow-hidden rounded-[18px] shadow-[0_16px_34px_rgba(15,23,42,0.16)] backdrop-blur-2xl ${
                 isDarkMode
-                  ? "border border-white/10 bg-[rgba(15,23,42,0.88)]"
-                  : "border border-black/5 bg-[rgba(255,255,255,0.94)]"
+                  ? "border border-white/12 bg-[linear-gradient(180deg,rgba(37,52,88,0.82),rgba(21,31,56,0.90))]"
+                  : "border border-white/60 bg-[linear-gradient(180deg,rgba(255,255,255,0.52),rgba(244,247,255,0.66))]"
               }`}
             >
-              <CardContent className="px-1.5 pb-1 pt-1">
-                <div className="mb-0.5 px-0.5">
-                  <p className={`text-[8px] font-bold uppercase leading-none tracking-[0.18em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+              <div className={`pointer-events-none absolute inset-0 ${
+                isDarkMode
+                  ? "bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.10),transparent_48%),linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent)]"
+                  : "bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.72),transparent_42%),linear-gradient(90deg,transparent,rgba(255,255,255,0.26),transparent)]"
+              }`} />
+              <CardContent className="relative px-1.5 pb-[4px] pt-[3px]">
+                <div className="mb-[3px] flex justify-center">
+                  <p className={`text-center text-[7px] font-bold uppercase tracking-[0.18em] ${isDarkMode ? "text-zinc-200/90" : "text-slate-600"}`}>
                     Patrocinadores oficiais
                   </p>
                 </div>
 
-                <div className="relative overflow-hidden rounded-[18px]">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-5 bg-gradient-to-r from-[rgba(255,255,255,0.97)] to-transparent dark:from-[rgba(15,23,42,0.97)]" />
-                  <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-5 bg-gradient-to-l from-[rgba(255,255,255,0.97)] to-transparent dark:from-[rgba(15,23,42,0.97)]" />
+                <div className="relative overflow-hidden rounded-[16px]">
+                  <div className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-4 ${
+                    isDarkMode
+                      ? "bg-gradient-to-r from-[rgba(22,32,58,0.95)] to-transparent"
+                      : "bg-gradient-to-r from-[rgba(247,249,255,0.98)] to-transparent"
+                  }`} />
+                  <div className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-4 ${
+                    isDarkMode
+                      ? "bg-gradient-to-l from-[rgba(22,32,58,0.95)] to-transparent"
+                      : "bg-gradient-to-l from-[rgba(247,249,255,0.98)] to-transparent"
+                  }`} />
 
                   <div className="sponsor-marquee-track flex w-max items-center gap-1.5">
                     {sponsorTrack.map((sponsor, index) => (
                       <div
                         key={`fixed-sponsor-${sponsor.name}-${index}`}
-                        className={`flex h-[54px] w-[108px] shrink-0 items-center justify-center overflow-hidden rounded-[16px] border shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${sponsor.wrapper} ${
+                        className={`flex h-[50px] w-[104px] shrink-0 items-center justify-center overflow-hidden rounded-[15px] border shadow-[inset_0_1px_0_rgba(255,255,255,0.14),0_8px_16px_rgba(15,23,42,0.10)] ${sponsor.wrapper} ${
                           isDarkMode ? sponsor.surfaceDark : sponsor.surfaceLight
                         }`}
                       >
