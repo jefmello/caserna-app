@@ -661,6 +661,72 @@ function getTitleFightStatus(top3: RankingItem[]) {
   };
 }
 
+function getSpotlightCategoryStyles(category: string, isDark: boolean) {
+  if (isDark) {
+    if (category === "Base") {
+      return {
+        leftCard: "border-orange-500/30 bg-[linear-gradient(180deg,#1f1b16_0%,#151922_48%,#111827_100%)]",
+        leftSubcard: "border-orange-500/30 bg-[linear-gradient(180deg,rgba(249,115,22,0.12),rgba(17,24,39,0.96))]",
+        badge: "border-orange-400/35 bg-[linear-gradient(180deg,rgba(251,146,60,0.32),rgba(124,45,18,0.92))] text-white shadow-[0_14px_26px_rgba(249,115,22,0.24)]",
+        statCard: "border-orange-500/30 bg-[linear-gradient(135deg,#7c2d12_0%,#9a3412_48%,#7c2d12_100%)]",
+        label: "text-orange-300",
+        iconBubble: "border border-white/10 bg-white/10 text-white",
+      };
+    }
+
+    if (category === "Graduados") {
+      return {
+        leftCard: "border-blue-500/30 bg-[linear-gradient(180deg,#14233d_0%,#151922_48%,#111827_100%)]",
+        leftSubcard: "border-blue-500/30 bg-[linear-gradient(180deg,rgba(59,130,246,0.14),rgba(17,24,39,0.96))]",
+        badge: "border-blue-300/35 bg-[linear-gradient(180deg,rgba(96,165,250,0.34),rgba(30,64,175,0.92))] text-white shadow-[0_14px_26px_rgba(59,130,246,0.22)]",
+        statCard: "border-blue-500/30 bg-[linear-gradient(135deg,#274a9b_0%,#4169c6_52%,#274a9b_100%)]",
+        label: "text-blue-300",
+        iconBubble: "border border-white/10 bg-white/10 text-white",
+      };
+    }
+
+    return {
+      leftCard: "border-yellow-500/30 bg-[linear-gradient(180deg,#2a2412_0%,#151922_48%,#111827_100%)]",
+      leftSubcard: "border-yellow-500/30 bg-[linear-gradient(180deg,rgba(234,179,8,0.14),rgba(17,24,39,0.96))]",
+      badge: "border-yellow-300/35 bg-[linear-gradient(180deg,rgba(250,204,21,0.34),rgba(161,98,7,0.94))] text-white shadow-[0_14px_26px_rgba(234,179,8,0.22)]",
+      statCard: "border-yellow-500/30 bg-[linear-gradient(135deg,#8a6a08_0%,#b88a10_52%,#8a6a08_100%)]",
+      label: "text-yellow-300",
+      iconBubble: "border border-white/10 bg-white/10 text-white",
+    };
+  }
+
+  if (category === "Base") {
+    return {
+      leftCard: "border-orange-200 bg-[linear-gradient(180deg,#fff7ed_0%,#ffedd5_46%,#fed7aa_100%)]",
+      leftSubcard: "border-orange-200 bg-[linear-gradient(180deg,#fff7ed_0%,#ffffff_100%)]",
+      badge: "border-orange-300 bg-[linear-gradient(180deg,#fb923c_0%,#ea580c_100%)] text-white shadow-[0_14px_24px_rgba(249,115,22,0.20)]",
+      statCard: "border-orange-200 bg-[linear-gradient(135deg,#f97316_0%,#fb923c_50%,#ea580c_100%)]",
+      label: "text-orange-600",
+      iconBubble: "border border-white/20 bg-white/18 text-white",
+    };
+  }
+
+  if (category === "Graduados") {
+    return {
+      leftCard: "border-blue-200 bg-[linear-gradient(180deg,#eff6ff_0%,#dbeafe_46%,#bfdbfe_100%)]",
+      leftSubcard: "border-blue-200 bg-[linear-gradient(180deg,#eff6ff_0%,#ffffff_100%)]",
+      badge: "border-blue-300 bg-[linear-gradient(180deg,#6ea0ff_0%,#3b82f6_100%)] text-white shadow-[0_14px_24px_rgba(59,130,246,0.20)]",
+      statCard: "border-blue-200 bg-[linear-gradient(135deg,#4f7fdb_0%,#6e9bf1_52%,#456fc3_100%)]",
+      label: "text-blue-600",
+      iconBubble: "border border-white/20 bg-white/18 text-white",
+    };
+  }
+
+  return {
+    leftCard: "border-yellow-200 bg-[linear-gradient(180deg,#fefce8_0%,#fef3c7_46%,#fde68a_100%)]",
+    leftSubcard: "border-yellow-200 bg-[linear-gradient(180deg,#fefce8_0%,#ffffff_100%)]",
+    badge: "border-yellow-300 bg-[linear-gradient(180deg,#f5cd3a_0%,#d4a614_100%)] text-white shadow-[0_14px_24px_rgba(234,179,8,0.20)]",
+    statCard: "border-yellow-200 bg-[linear-gradient(135deg,#b88a10_0%,#d4a614_52%,#9a7410_100%)]",
+    label: "text-yellow-700",
+    iconBubble: "border border-white/20 bg-white/18 text-white",
+  };
+}
+
 function CompactStatCard({
   title,
   value,
@@ -889,14 +955,14 @@ function PilotPhotoSlot({
           <img
             src={src}
             alt={alt}
-            className="absolute inset-0 h-full w-full scale-[1.12] object-cover object-center opacity-28 blur-2xl"
+            className="absolute inset-0 h-full w-full scale-[1.18] object-cover object-center opacity-24 blur-2xl"
             onError={() => setHasError(true)}
           />
-          <div className={`absolute inset-0 ${isDark ? "bg-slate-950/20" : "bg-white/10"}`} />
+          <div className={`absolute inset-0 ${isDark ? "bg-slate-950/18" : "bg-white/8"}`} />
           <img
             src={src}
             alt={alt}
-            className="relative z-[1] h-full w-full scale-[1.08] object-contain object-bottom"
+            className="relative z-[1] h-full w-full object-contain object-center"
             onError={() => setHasError(true)}
           />
         </>
@@ -1329,6 +1395,10 @@ export default function CasernaKartAppModerno() {
   const leader = filteredRanking[0];
   const leaderName = useMemo(() => getPilotNameParts(leader?.piloto), [leader]);
   const theme = useMemo(() => getCategoryTheme(category), [category]);
+  const spotlightStyles = useMemo(
+    () => getSpotlightCategoryStyles(category, isDarkMode),
+    [category, isDarkMode]
+  );
   const sponsorTrack = useMemo(() => [...sponsorLogos, ...sponsorLogos], []);
 
   const comparePilotA = useMemo(
@@ -2147,9 +2217,7 @@ const duelWinnerPilot = useMemo(() => {
             <div className="flex min-h-[288px] flex-col gap-2.5">
               <Card
                 className={`h-[162px] overflow-hidden rounded-[24px] shadow-none ${
-                  isDarkMode
-                    ? `border ${theme.darkAccentBorder} bg-[#111827]`
-                    : `${theme.heroBorder} bg-gradient-to-br ${theme.heroBg}`
+                  isDarkMode ? spotlightStyles.leftCard : spotlightStyles.leftCard
                 }`}
               >
                 <CardContent className="h-full p-0">
@@ -2160,12 +2228,11 @@ const duelWinnerPilot = useMemo(() => {
                       isDark={isDarkMode}
                     />
 
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/38 via-black/8 to-transparent" />
-                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/30 to-transparent" />
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/34 via-black/8 to-transparent" />
 
-                    <div className="absolute inset-x-0 bottom-2 px-3">
-                      <div className="mx-auto flex max-w-[66%] items-center justify-center rounded-[16px] border border-white/22 bg-[linear-gradient(180deg,rgba(59,88,145,0.86),rgba(39,56,92,0.96))] px-2.5 py-1.5 shadow-[0_12px_22px_rgba(0,0,0,0.28)] backdrop-blur-md">
-                        <p className="truncate whitespace-nowrap text-[10px] font-black uppercase tracking-[0.12em] text-white">
+                    <div className="absolute inset-x-0 bottom-2 z-20 px-3">
+                      <div className={`mx-auto flex max-w-[74%] items-center justify-center rounded-[15px] border px-2.5 py-1.5 backdrop-blur-md ${spotlightStyles.badge}`}>
+                        <p className="truncate whitespace-nowrap text-[9.5px] font-black uppercase tracking-[0.12em]">
                           {getPilotWarName(leader) ? getPilotWarName(leader).toUpperCase() : getPilotHighlightName(leader?.piloto)}
                         </p>
                       </div>
@@ -2175,58 +2242,31 @@ const duelWinnerPilot = useMemo(() => {
               </Card>
 
               <Card
-                className={`h-[123px] overflow-hidden rounded-[24px] shadow-none ${
-                  isDarkMode
-                    ? `border ${theme.darkAccentBorder} bg-gradient-to-br from-[#111827] via-[#161e2b] to-[#111827]`
-                    : `${theme.heroBorder} bg-gradient-to-br ${theme.heroBg}`
-                }`}
+                className={`h-[123px] overflow-hidden rounded-[24px] shadow-none ${spotlightStyles.leftSubcard}`}
               >
-                <CardContent className="h-full px-3 py-2.5">
-                  <div className="grid h-full w-full grid-rows-[auto,1fr,auto] items-center justify-items-center text-center">
-                    <div className="flex items-center justify-center gap-1.5">
-                      <p
-                        className={`text-[8px] font-bold uppercase tracking-[0.22em] ${
-                          isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                        }`}
-                      >
+                <CardContent className="flex h-full items-center justify-center px-3 py-2.5">
+                  <div className="flex h-full w-full flex-col items-center justify-center text-center">
+                    <div className="mb-2 flex items-center justify-center gap-2">
+                      <p className={`text-[8px] font-bold uppercase tracking-[0.22em] ${spotlightStyles.label}`}>
                         Líder
                       </p>
-
-                      <div
-                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-[12px] ${
-                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                        }`}
-                      >
+                      <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-[12px] ${isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap}`}>
                         <Crown className={`h-3.5 w-3.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
                       </div>
                     </div>
 
                     <div className="flex flex-col items-center justify-center leading-none">
-                      <p
-                        className={`text-[19px] font-black tracking-tight ${
-                          isDarkMode ? "text-white" : "text-zinc-950"
-                        }`}
-                      >
+                      <p className={`text-[18px] font-black tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
                         {leaderName.firstName.toUpperCase()}
                       </p>
-                      <p
-                        className={`mt-1 text-[11px] font-semibold tracking-[0.04em] ${
-                          isDarkMode ? "text-zinc-300" : "text-zinc-800"
-                        }`}
-                      >
+                      <p className={`mt-1 text-[10.5px] font-semibold tracking-[0.08em] ${isDarkMode ? "text-zinc-300" : "text-zinc-800"}`}>
                         {leaderName.lastName ? leaderName.lastName.toUpperCase() : ""}
                       </p>
                     </div>
 
-                    <div className="flex w-full justify-center">
-                      <div
-                        className={`inline-flex items-center rounded-full border px-4 py-1.5 shadow-[0_10px_24px_rgba(0,0,0,0.12)] ${
-                          isDarkMode
-                            ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                            : theme.heroChip
-                        }`}
-                      >
-                        <p className="text-[11px] font-black leading-none">
+                    <div className="mt-3 flex justify-center">
+                      <div className={`inline-flex items-center rounded-full border px-4 py-1.5 ${spotlightStyles.badge}`}>
+                        <p className="text-[10.5px] font-black leading-none">
                           {leader?.pontos || 0} pontos
                         </p>
                       </div>
@@ -2262,16 +2302,12 @@ const duelWinnerPilot = useMemo(() => {
                 return (
                   <Card
                     key={item.title}
-                    className={`h-[92px] overflow-hidden rounded-[22px] shadow-none ${
-                      isDarkMode
-                        ? `border ${theme.darkAccentBorder} bg-[#111827]`
-                        : "border border-black/5 bg-[linear-gradient(180deg,#243457,#223250)]"
-                    }`}
+                    className={`h-[92px] overflow-hidden rounded-[22px] shadow-none ${spotlightStyles.statCard}`}
                   >
                     <CardContent className="relative h-full p-3">
                       <div className="flex h-full items-center justify-between gap-2">
                         <div className="flex min-w-0 w-[40%] flex-col items-center justify-center text-center">
-                          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/90">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/92">
                             {item.title}
                           </p>
                           <p className="mt-2 text-[34px] font-black leading-none tracking-tight text-white">
@@ -2280,15 +2316,11 @@ const duelWinnerPilot = useMemo(() => {
                         </div>
 
                         <div className="flex min-w-0 w-[44%] flex-col items-end justify-center gap-2 pr-1">
-                          <div
-                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
-                              isDarkMode ? "bg-white/8 text-zinc-100" : "bg-white/12 text-white"
-                            }`}
-                          >
-                            <Icon className="h-4 w-4" />
+                          <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${spotlightStyles.iconBubble}`}>
+                            <Icon className="h-4.5 w-4.5" />
                           </div>
 
-                          <p className="max-w-[78px] text-right text-[8.5px] font-semibold uppercase leading-[1.15] tracking-[0.08em] text-white/78">
+                          <p className="max-w-[82px] text-right text-[8.5px] font-semibold uppercase leading-[1.15] tracking-[0.08em] text-white/86">
                             {item.subtitle}
                           </p>
                         </div>
