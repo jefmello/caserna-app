@@ -5266,8 +5266,8 @@ const duelSummary = useMemo(() => {
                     </div>
                   </div>
 
-                  <div className="mt-8 grid grid-cols-[300px_1fr] gap-6">
-                    <div className={`overflow-hidden rounded-[28px] border ${
+                  <div className="mt-8 grid grid-cols-[280px_1fr] items-start gap-6">
+                    <div className={`self-start overflow-hidden rounded-[28px] border ${
                       isDarkMode ? `${theme.darkAccentBorder} bg-[#0f172a]` : `${theme.heroBorder} bg-zinc-50`
                     }`}>
                       <div className="relative aspect-square w-full overflow-hidden">
@@ -5396,14 +5396,14 @@ const duelSummary = useMemo(() => {
                                 isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
                               }`}
                             >
-                              <div className="flex items-center justify-between gap-3">
-                                <p className={`text-[11px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                              <div className="flex items-start gap-3">
+                                <p className={`min-w-0 flex-1 pr-1 text-[11px] font-bold uppercase leading-tight tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
                                   {item.label}
                                 </p>
-                                <div className={`flex h-9 w-9 items-center justify-center rounded-[16px] ${
+                                <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[14px] ${
                                   isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                                 }`}>
-                                  <Icon className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                                  <Icon className={`h-3.5 w-3.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
                                 </div>
                               </div>
                               <p className={`mt-4 text-[28px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
