@@ -1328,6 +1328,10 @@ export default function CasernaKartAppModerno() {
 
   const leader = filteredRanking[0];
   const leaderName = useMemo(() => getPilotNameParts(leader?.piloto), [leader]);
+  const leaderWarName = useMemo(() => {
+    const war = getPilotWarName(leader);
+    return war ? war.toUpperCase() : getPilotHighlightName(leader?.piloto);
+  }, [leader]);
   const theme = useMemo(() => getCategoryTheme(category), [category]);
   const sponsorTrack = useMemo(() => [...sponsorLogos, ...sponsorLogos], []);
 
@@ -2146,97 +2150,105 @@ const duelWinnerPilot = useMemo(() => {
           <div className="grid grid-cols-2 gap-2.5">
             <div className="flex min-h-[288px] flex-col gap-2.5">
               <Card
-                className={`h-[162px] overflow-hidden rounded-[24px] shadow-none ${
+                className={`h-[170px] overflow-hidden rounded-[24px] shadow-none ${
                   isDarkMode
-                    ? `border ${theme.darkAccentBorder} bg-[#111827]`
-                    : `${theme.heroBorder} bg-gradient-to-br ${theme.heroBg}`
+                    ? `border ${theme.darkAccentBorder} bg-[#0f172a]`
+                    : "border border-[#31456f]/18 bg-[linear-gradient(180deg,#18233b_0%,#10192c_100%)] shadow-[0_16px_38px_rgba(15,23,42,0.14)]"
                 }`}
               >
-                <CardContent className="h-full p-0">
-                  <div className="relative h-full w-full overflow-hidden">
+                <CardContent className="relative h-full p-0">
+                  {getPilotPhotoPath(leader) ? (
+                    <>
+                      <img
+                        src={getPilotPhotoPath(leader) || ""}
+                        alt={getPilotHighlightName(leader?.piloto)}
+                        className="absolute inset-0 h-full w-full object-cover opacity-28 blur-[10px] scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0b1220] via-[#0b1220]/36 to-transparent" />
+                      <img
+                        src={getPilotPhotoPath(leader) || ""}
+                        alt={getPilotHighlightName(leader?.piloto)}
+                        className="absolute inset-0 h-full w-full object-contain object-center"
+                      />
+                    </>
+                  ) : (
                     <PilotPhotoSlot
                       pilot={leader}
                       alt={getPilotHighlightName(leader?.piloto)}
-                      isDark={isDarkMode}
+                      isDark={true}
                     />
+                  )}
 
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/14 to-transparent" />
-                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/45 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#0b1220] via-[#0b1220]/80 to-transparent" />
 
-                    <div className="absolute inset-x-0 bottom-3 px-3">
-                      <div className="mx-auto flex max-w-[86%] items-center justify-center rounded-[18px] border border-white/20 bg-[linear-gradient(180deg,rgba(30,41,59,0.72),rgba(15,23,42,0.94))] px-3 py-2.5 shadow-[0_14px_30px_rgba(0,0,0,0.34)] backdrop-blur-md">
-                        <p className="truncate whitespace-nowrap text-[11px] font-black uppercase tracking-[0.16em] text-white">
-                          {getPilotWarName(leader) ? getPilotWarName(leader).toUpperCase() : getPilotHighlightName(leader?.piloto)}
-                        </p>
-                      </div>
+                  <div className="absolute inset-x-0 bottom-3 px-3">
+                    <div className="mx-auto flex max-w-[88%] items-center justify-center rounded-full border border-white/14 bg-[linear-gradient(180deg,rgba(73,94,140,0.94),rgba(38,53,88,0.96))] px-4 py-2.5 shadow-[0_16px_32px_rgba(0,0,0,0.34),inset_0_1px_0_rgba(255,255,255,0.18)]">
+                      <p className="truncate whitespace-nowrap text-[11px] font-black uppercase tracking-[0.18em] text-white">
+                        {leaderWarName}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
               <Card
-                className={`h-[123px] overflow-hidden rounded-[24px] shadow-none ${
+                className={`h-[108px] overflow-hidden rounded-[24px] shadow-none ${
                   isDarkMode
-                    ? `border ${theme.darkAccentBorder} bg-gradient-to-br from-[#111827] via-[#161e2b] to-[#111827]`
-                    : `${theme.heroBorder} bg-gradient-to-br ${theme.heroBg}`
+                    ? `border ${theme.darkAccentBorder} bg-[linear-gradient(180deg,#111827_0%,#0f172a_100%)]`
+                    : "border border-[#31456f]/18 bg-[linear-gradient(180deg,#ffffff_0%,#f7f9ff_100%)] shadow-[0_14px_30px_rgba(15,23,42,0.08)]"
                 }`}
               >
-                <CardContent className="h-full px-3 py-2.5">
-                  <div className="grid h-full w-full grid-rows-[auto,1fr,auto] items-center justify-items-center text-center">
-                    <div className="flex items-center justify-center gap-1.5">
-                      <p
-                        className={`text-[8px] font-bold uppercase tracking-[0.22em] ${
-                          isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                        }`}
-                      >
-                        Líder
-                      </p>
-
-                      <div
-                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-[12px] ${
-                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                        }`}
-                      >
-                        <Crown className={`h-3.5 w-3.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
-                      </div>
+                <CardContent className="flex h-full flex-col items-center justify-center px-3 py-2 text-center">
+                  <div className="mb-1.5 flex items-center gap-1.5">
+                    <p
+                      className={`text-[8px] font-bold uppercase tracking-[0.24em] ${
+                        isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                      }`}
+                    >
+                      Líder
+                    </p>
+                    <div
+                      className={`flex h-5.5 w-5.5 items-center justify-center rounded-full ${
+                        isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                      }`}
+                    >
+                      <Crown className={`h-3.5 w-3.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
                     </div>
+                  </div>
 
-                    <div className="flex flex-col items-center justify-center leading-none">
-                      <p
-                        className={`text-[19px] font-black tracking-tight ${
-                          isDarkMode ? "text-white" : "text-zinc-950"
-                        }`}
-                      >
-                        {leaderName.firstName.toUpperCase()}
-                      </p>
-                      <p
-                        className={`mt-1 text-[11px] font-semibold tracking-[0.04em] ${
-                          isDarkMode ? "text-zinc-300" : "text-zinc-800"
-                        }`}
-                      >
-                        {leaderName.lastName ? leaderName.lastName.toUpperCase() : ""}
-                      </p>
-                    </div>
+                  <div className="flex flex-col items-center justify-center leading-none">
+                    <p
+                      className={`text-[17px] font-black tracking-tight ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}
+                    >
+                      {leaderName.firstName.toUpperCase()}
+                    </p>
+                    <p
+                      className={`mt-1 text-[10px] font-semibold tracking-[0.12em] ${
+                        isDarkMode ? "text-zinc-300" : "text-zinc-700"
+                      }`}
+                    >
+                      {leaderName.lastName ? leaderName.lastName.toUpperCase() : ""}
+                    </p>
+                  </div>
 
-                    <div className="flex w-full justify-center">
-                      <div
-                        className={`inline-flex items-center rounded-full border px-4 py-1.5 shadow-[0_10px_24px_rgba(0,0,0,0.12)] ${
-                          isDarkMode
-                            ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                            : theme.heroChip
-                        }`}
-                      >
-                        <p className="text-[11px] font-black leading-none">
-                          {leader?.pontos || 0} pontos
-                        </p>
-                      </div>
-                    </div>
+                  <div
+                    className={`mt-2 inline-flex items-center rounded-full border px-3 py-1 ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                        : "border-orange-200 bg-orange-50 text-orange-700"
+                    }`}
+                  >
+                    <p className="text-[11px] font-black leading-none">
+                      {leader?.pontos || 0} pontos
+                    </p>
                   </div>
                 </CardContent>
               </Card>
             </div>
 
-            <div className="flex min-h-[288px] flex-col gap-2">
+            <div className="flex min-h-[288px] flex-col gap-2.5">
               {[
                 {
                   title: "Vitórias",
@@ -2262,16 +2274,17 @@ const duelWinnerPilot = useMemo(() => {
                 return (
                   <Card
                     key={item.title}
-                    className={`h-[92px] overflow-hidden rounded-[22px] shadow-none ${
+                    className={`h-[91px] overflow-hidden rounded-[22px] shadow-none ${
                       isDarkMode
-                        ? `border ${theme.darkAccentBorder} bg-[#111827]`
-                        : "border border-black/5 bg-[linear-gradient(180deg,#243457,#223250)]"
+                        ? `border ${theme.darkAccentBorder} bg-[linear-gradient(180deg,#1c2842_0%,#13203a_100%)]`
+                        : "border border-[#31456f]/12 bg-[linear-gradient(180deg,#4d689f_0%,#3a558f_100%)] shadow-[0_14px_28px_rgba(30,58,138,0.16)]"
                     }`}
                   >
                     <CardContent className="relative h-full p-3">
-                      <div className="flex h-full items-center justify-between gap-2.5">
-                        <div className="flex min-w-0 flex-1 flex-col items-center justify-center text-center">
-                          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/90">
+                      <div className="absolute inset-x-0 top-0 h-px bg-white/18" />
+                      <div className="flex h-full items-center gap-2.5">
+                        <div className="flex min-w-[74px] flex-col items-center justify-center text-center">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/88">
                             {item.title}
                           </p>
                           <p className="mt-2 text-[34px] font-black leading-none tracking-tight text-white">
@@ -2279,18 +2292,13 @@ const duelWinnerPilot = useMemo(() => {
                           </p>
                         </div>
 
-                        <div className="flex flex-col items-end justify-between self-stretch">
-                          <div
-                            className={`flex h-9 w-9 items-center justify-center rounded-[16px] ${
-                              isDarkMode ? "bg-white/8 text-zinc-100" : "bg-white/12 text-white"
-                            }`}
-                          >
-                            <Icon className="h-4.5 w-4.5" />
-                          </div>
-
-                          <p className="max-w-[74px] text-right text-[9px] font-medium uppercase tracking-[0.08em] text-white/72">
+                        <div className="flex flex-1 items-center justify-end gap-2">
+                          <p className="max-w-[78px] text-right text-[9px] font-semibold uppercase leading-[1.25] tracking-[0.12em] text-white/90">
                             {item.subtitle}
                           </p>
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/12 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]">
+                            <Icon className="h-4.5 w-4.5 text-white" />
+                          </div>
                         </div>
                       </div>
                     </CardContent>
