@@ -125,44 +125,56 @@ const sponsorLogos = [
   {
     name: "Lumine",
     src: "/patrocinadores/lumine.png",
-    wrapper: "px-2 py-1.5",
-    image: "h-[36px] w-auto max-w-none scale-[1.22] object-contain",
-    shareImage: "max-h-[58px] w-auto max-w-none scale-[1.22] object-contain",
+    wrapper: "px-2 py-2",
+    image: "max-h-[42px] max-w-[102px] object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.18)]",
+    shareImage: "max-h-[56px] max-w-[148px] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.22)]",
+    surfaceLight: "border-zinc-800/90 bg-[#111827]",
+    surfaceDark: "border-white/10 bg-[#10151f]",
   },
   {
     name: "LazyKart",
     src: "/patrocinadores/lazykart.png",
-    wrapper: "px-2 py-1.5",
-    image: "h-[38px] w-auto max-w-none scale-[1.1] object-contain",
-    shareImage: "max-h-[60px] w-auto max-w-none scale-[1.1] object-contain",
+    wrapper: "px-3 py-2",
+    image: "max-h-[40px] max-w-[112px] object-contain",
+    shareImage: "max-h-[54px] max-w-[154px] object-contain",
+    surfaceLight: "border-black/10 bg-white",
+    surfaceDark: "border-white/10 bg-white",
   },
   {
     name: "Precision",
     src: "/patrocinadores/precision.png",
-    wrapper: "px-0 py-0.5",
-    image: "h-[48px] w-auto max-w-none scale-[2.05] object-contain",
-    shareImage: "max-h-[72px] w-auto max-w-none scale-[2.05] object-contain",
+    wrapper: "px-2 py-1.5",
+    image: "max-h-[48px] max-w-[108px] object-contain",
+    shareImage: "max-h-[62px] max-w-[148px] object-contain",
+    surfaceLight: "border-black/10 bg-white",
+    surfaceDark: "border-white/10 bg-white",
   },
   {
     name: "Vits",
     src: "/patrocinadores/vits.png",
-    wrapper: "px-0 py-0.5",
-    image: "h-[46px] w-auto max-w-none scale-[1.95] object-contain",
-    shareImage: "max-h-[70px] w-auto max-w-none scale-[1.95] object-contain",
+    wrapper: "px-2 py-1.5",
+    image: "max-h-[44px] max-w-[100px] object-contain",
+    shareImage: "max-h-[58px] max-w-[138px] object-contain",
+    surfaceLight: "border-black/10 bg-white",
+    surfaceDark: "border-white/10 bg-white",
   },
   {
     name: "Skyflow",
     src: "/patrocinadores/skyflow.png",
-    wrapper: "px-0 py-0.5",
-    image: "h-[48px] w-auto max-w-none scale-[2.0] object-contain",
-    shareImage: "max-h-[72px] w-auto max-w-none scale-[2.0] object-contain",
+    wrapper: "px-2 py-1.5",
+    image: "max-h-[48px] max-w-[108px] object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.18)]",
+    shareImage: "max-h-[62px] max-w-[148px] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.22)]",
+    surfaceLight: "border-zinc-800/90 bg-[#111827]",
+    surfaceDark: "border-white/10 bg-[#0f172a]",
   },
   {
     name: "Astera",
     src: "/patrocinadores/astera.png",
-    wrapper: "px-2 py-1.5",
-    image: "h-[36px] w-auto max-w-none scale-[1.18] object-contain",
-    shareImage: "max-h-[58px] w-auto max-w-none scale-[1.18] object-contain",
+    wrapper: "px-2 py-2",
+    image: "max-h-[42px] max-w-[102px] object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.18)]",
+    shareImage: "max-h-[56px] max-w-[148px] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.22)]",
+    surfaceLight: "border-zinc-800/90 bg-[#111827]",
+    surfaceDark: "border-white/10 bg-[#10151f]",
   },
 ] as const;
 
@@ -5435,18 +5447,14 @@ const duelSummary = useMemo(() => {
                           {sponsorLogos.map((sponsor) => (
                             <div
                               key={`pilot-share-sponsor-${sponsor.name}`}
-                              className={`flex h-[74px] items-center justify-center overflow-hidden rounded-[18px] border ${sponsor.wrapper} ${
-                                isDarkMode
-                                  ? "border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.03]"
-                                  : "border-black/5 bg-gradient-to-b from-white to-zinc-50"
+                              className={`flex h-[74px] items-center justify-center overflow-hidden rounded-[18px] border shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${sponsor.wrapper} ${
+                                isDarkMode ? sponsor.surfaceDark : sponsor.surfaceLight
                               }`}
                             >
                               <img
                                 src={sponsor.src}
                                 alt={sponsor.name}
-                                className={`${sponsor.shareImage} ${
-                                  isDarkMode ? "brightness-[1.18] contrast-[1.14] saturate-[1.06]" : "brightness-[0.98] contrast-[1.12] saturate-[1.04]"
-                                }`}
+                                className={sponsor.shareImage}
                               />
                             </div>
                           ))}
@@ -5578,18 +5586,14 @@ const duelSummary = useMemo(() => {
                     {sponsorTrack.map((sponsor, index) => (
                       <div
                         key={`fixed-sponsor-${sponsor.name}-${index}`}
-                        className={`flex h-[64px] w-[124px] shrink-0 items-center justify-center overflow-hidden rounded-[18px] border ${sponsor.wrapper} ${
-                          isDarkMode
-                            ? "border-white/10 bg-gradient-to-b from-white/[0.1] to-white/[0.05]"
-                            : "border-black/5 bg-gradient-to-b from-white to-zinc-50"
+                        className={`flex h-[64px] w-[124px] shrink-0 items-center justify-center overflow-hidden rounded-[18px] border shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${sponsor.wrapper} ${
+                          isDarkMode ? sponsor.surfaceDark : sponsor.surfaceLight
                         }`}
                       >
                         <img
                           src={sponsor.src}
                           alt={sponsor.name}
-                          className={`${sponsor.image} ${
-                            isDarkMode ? "brightness-[1.22] contrast-[1.18] saturate-[1.08]" : "brightness-[0.99] contrast-[1.16] saturate-[1.05]"
-                          }`}
+                          className={sponsor.image}
                         />
                       </div>
                     ))}
