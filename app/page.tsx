@@ -955,10 +955,16 @@ function PilotPhotoSlot({
           <img
             src={src}
             alt={alt}
-            className="absolute inset-0 h-full w-full object-cover object-center"
+            className="absolute inset-0 h-full w-full scale-[1.18] object-cover object-center opacity-24 blur-2xl"
             onError={() => setHasError(true)}
           />
-          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+          <div className={`absolute inset-0 ${isDark ? "bg-slate-950/18" : "bg-white/8"}`} />
+          <img
+            src={src}
+            alt={alt}
+            className="relative z-[1] h-full w-full object-contain object-center"
+            onError={() => setHasError(true)}
+          />
         </>
       ) : (
         <div
@@ -983,13 +989,18 @@ function PilotPhotoSlot({
             >
               Espaço foto
             </p>
+            <p
+              className={`mt-1 text-[10px] font-medium ${
+                isDark ? "text-zinc-500" : "text-zinc-500"
+              }`}
+            >
+              piloto 1:1
+            </p>
           </div>
         </div>
       )}
     </div>
   );
-}
-}
 
 function StatRankingCard({
   title,
@@ -2364,26 +2375,26 @@ const duelWinnerPilot = useMemo(() => {
               const activeSurface =
                 category === "Base"
                   ? isDarkMode
-                    ? "border-orange-400/80 bg-[radial-gradient(circle_at_top,rgba(251,146,60,0.34),transparent_48%),linear-gradient(180deg,#1f2937_0%,#111827_58%,#0b1220_100%)] text-white"
+                    ? "border-orange-500/40 bg-gradient-to-b from-orange-500/12 to-[#161e2b] text-white"
                     : "border-orange-300 bg-gradient-to-b from-orange-50 to-white text-zinc-950"
                   : category === "Graduados"
                     ? isDarkMode
-                      ? "border-blue-400/80 bg-[radial-gradient(circle_at_top,rgba(96,165,250,0.34),transparent_48%),linear-gradient(180deg,#1e293b_0%,#111827_58%,#0b1220_100%)] text-white"
+                      ? "border-blue-500/40 bg-gradient-to-b from-blue-500/12 to-[#161e2b] text-white"
                       : "border-blue-300 bg-gradient-to-b from-blue-50 to-white text-zinc-950"
                     : isDarkMode
-                      ? "border-yellow-400/80 bg-[radial-gradient(circle_at_top,rgba(250,204,21,0.30),transparent_48%),linear-gradient(180deg,#2a2412_0%,#151922_56%,#0b1220_100%)] text-white"
+                      ? "border-yellow-500/40 bg-gradient-to-b from-yellow-500/12 to-[#161e2b] text-white"
                       : "border-yellow-300 bg-gradient-to-b from-yellow-50 to-white text-zinc-950";
 
               return (
                 <TabsTrigger
                   key={tabItem.value}
                   value={tabItem.value}
-                  className={`relative h-[64px] rounded-[18px] px-2 py-1.5 overflow-hidden transition-all duration-300 ${
+                  className={`h-[64px] rounded-[18px] px-2 py-1.5 shadow-sm transition-all duration-300 ${
                     isActive
-                      ? `${activeSurface} ${activeGlow} scale-[1.02] shadow-[0_16px_34px_rgba(0,0,0,0.48),inset_0_1px_0_rgba(255,255,255,0.10)]`
+                      ? `${activeSurface} ${activeGlow} scale-[1.01]`
                       : isDarkMode
-                        ? "border border-white/8 bg-[#081121] text-zinc-300 shadow-[0_10px_24px_rgba(0,0,0,0.36),inset_0_1px_0_rgba(255,255,255,0.03)] hover:border-white/14 hover:bg-[#0d1728] hover:text-white"
-                        : "border border-zinc-200 bg-white text-zinc-500 shadow-sm hover:border-zinc-300 hover:bg-zinc-50"
+                        ? "border border-white/10 bg-[#111827] text-zinc-400 hover:border-white/15 hover:bg-[#161e2b]"
+                        : "border border-zinc-200 bg-white text-zinc-500 hover:border-zinc-300 hover:bg-zinc-50"
                   }`}
                 >
                   <div className="flex h-full flex-col items-center justify-center gap-1">
@@ -2392,17 +2403,17 @@ const duelWinnerPilot = useMemo(() => {
                         isActive
                           ? category === "Base"
                             ? isDarkMode
-                              ? "bg-orange-400/18 text-orange-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_8px_16px_rgba(249,115,22,0.18)]"
+                              ? "bg-orange-500/15 text-orange-300"
                               : "bg-orange-100 text-orange-700"
                             : category === "Graduados"
                               ? isDarkMode
-                                ? "bg-blue-400/18 text-blue-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_8px_16px_rgba(59,130,246,0.18)]"
+                                ? "bg-blue-500/15 text-blue-300"
                                 : "bg-blue-100 text-blue-700"
                               : isDarkMode
-                                ? "bg-yellow-400/18 text-yellow-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_8px_16px_rgba(234,179,8,0.18)]"
+                                ? "bg-yellow-500/15 text-yellow-300"
                                 : "bg-yellow-100 text-yellow-700"
                           : isDarkMode
-                            ? "bg-white/[0.04] text-zinc-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+                            ? "bg-white/5 text-zinc-300"
                             : "bg-zinc-50 text-zinc-500"
                       }`}
                     >
