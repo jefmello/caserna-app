@@ -5799,36 +5799,59 @@ const duelWinnerPilot = useMemo(() => {
                         }`}>
                           Perfil oficial do piloto
                         </p>
-                        <h2 className="mt-2 text-[40px] font-extrabold leading-none tracking-tight">
-                          {selectedPilotShortName || "Piloto"}
-                        </h2>
-                        <p className={`mt-3 text-[20px] font-semibold ${
-                          isDarkMode ? "text-zinc-300" : "text-zinc-700"
-                        }`}>
-                          {category} · {competitionLabels[competition] || competition}
-                        </p>
+                        <div className="mt-2 flex items-center gap-3">
+                          <h2 className="text-[40px] font-extrabold leading-none tracking-tight">
+                            {selectedPilotShortName || "Piloto"}
+                          </h2>
+                          {selectedPilotWarName ? (
+                            <div
+                              className={`rounded-full border px-4 py-1.5 text-[14px] font-bold tracking-[0.04em] ${
+                                isDarkMode
+                                  ? `${theme.darkAccentBorder} bg-white/5 text-zinc-100`
+                                  : `${theme.heroBorder} bg-white text-zinc-700`
+                              }`}
+                            >
+                              {selectedPilotWarName}
+                            </div>
+                          ) : null}
+                        </div>
                       </div>
                     </div>
 
-                    <div className="flex flex-col items-end gap-3">
-                      <div
-                        className={`rounded-full border px-5 py-2 text-[16px] font-bold uppercase tracking-[0.14em] ${
-                          isDarkMode
+                    <div className="flex flex-wrap items-center justify-end gap-3 max-w-[440px]">
+                      {[
+                        {
+                          label: selectedPilot ? `${safeSelectedPilot.pos}º lugar` : "Sem posição",
+                          tone: isDarkMode
                             ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                            : theme.searchBadge
-                        }`}
-                      >
-                        {selectedPilot ? `${safeSelectedPilot.pos}º lugar` : "Sem posição"}
-                      </div>
-                      <div
-                        className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${
-                          isDarkMode
+                            : theme.searchBadge,
+                        },
+                        {
+                          label: selectedPilot ? `${safeSelectedPilot.pontos} pontos` : "0 pontos",
+                          tone: isDarkMode
                             ? "border-white/10 bg-white/5 text-zinc-200"
-                            : "border-zinc-200 bg-zinc-50 text-zinc-700"
-                        }`}
-                      >
-                        {selectedPilot ? `${safeSelectedPilot.pontos} pontos` : "0 pontos"}
-                      </div>
+                            : "border-zinc-200 bg-zinc-50 text-zinc-700",
+                        },
+                        {
+                          label: category,
+                          tone: isDarkMode
+                            ? `${theme.darkAccentBorder} bg-white/5 text-zinc-200`
+                            : `${theme.heroBorder} bg-white text-zinc-700`,
+                        },
+                        {
+                          label: competitionLabels[competition] || competition,
+                          tone: isDarkMode
+                            ? `${theme.darkAccentBorder} bg-white/5 text-zinc-200`
+                            : `${theme.heroBorder} bg-white text-zinc-700`,
+                        },
+                      ].map((item) => (
+                        <div
+                          key={item.label}
+                          className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${item.tone}`}
+                        >
+                          {item.label}
+                        </div>
+                      ))}
                     </div>
                   </div>
 
@@ -5863,59 +5886,45 @@ const duelWinnerPilot = useMemo(() => {
                           </div>
                         )}
 
-                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
-                        <div className="absolute inset-x-0 bottom-0 p-5">
-                          <div className={`rounded-[22px] border px-4 py-4 backdrop-blur-md ${
-                            isDarkMode ? "border-white/10 bg-black/30" : "border-white/70 bg-white/78"
-                          }`}>
-                            <p className={`text-[24px] font-extrabold leading-none tracking-tight ${
-                              isDarkMode ? "text-white" : "text-zinc-950"
-                            }`}>
-                              {selectedPilotShortName || "Piloto"}
-                            </p>
-                            {selectedPilotWarName ? (
-                              <p className={`mt-2 text-[15px] font-semibold italic ${
-                                isDarkMode ? "text-zinc-300" : "text-zinc-600"
-                              }`}>
-                                {selectedPilotWarName}
-                              </p>
-                            ) : null}
-                          </div>
-                        </div>
+                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
                       </div>
                     </div>
 
                       <div className={`rounded-[24px] border px-4 py-4 ${
                         isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white/90"
                       }`}>
-                        <div className="mb-3 flex items-center justify-between gap-3">
-                          <p className={`text-[10px] font-bold uppercase tracking-[0.18em] ${
-                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                          }`}>
-                            Patrocinadores oficiais
-                          </p>
-                          <div className={`rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] ${
+                        <div className="mb-3 flex items-center justify-start">
+                          <div className={`rounded-full border px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] ${
                             isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}` : theme.heroChip
                           }`}>
-                            parceiros
+                            Patrocinadores oficiais
                           </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-2">
-                          {sponsorLogos.map((sponsor) => (
-                            <div
-                              key={`pilot-share-sponsor-${sponsor.name}`}
-                              className={`flex h-[74px] items-center justify-center overflow-hidden rounded-[18px] border shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${sponsor.wrapper} ${
-                                isDarkMode ? sponsor.surfaceDark : sponsor.surfaceLight
-                              }`}
-                            >
-                              <img
-                                src={sponsor.src}
-                                alt={sponsor.name}
-                                className={sponsor.shareImage}
-                              />
-                            </div>
-                          ))}
+                          {sponsorLogos.map((sponsor) => {
+                            const shareLogoClass =
+                              sponsor.name === "LazyKart"
+                                ? "max-h-[42px] max-w-[118px] object-contain"
+                                : sponsor.name === "Astera"
+                                  ? "max-h-[40px] max-w-[118px] object-contain"
+                                  : sponsor.shareImage;
+
+                            return (
+                              <div
+                                key={`pilot-share-sponsor-${sponsor.name}`}
+                                className={`flex h-[74px] items-center justify-center overflow-hidden rounded-[18px] border shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${sponsor.wrapper} ${
+                                  isDarkMode ? sponsor.surfaceDark : sponsor.surfaceLight
+                                }`}
+                              >
+                                <img
+                                  src={sponsor.src}
+                                  alt={sponsor.name}
+                                  className={shareLogoClass}
+                                />
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>
