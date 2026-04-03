@@ -123,15 +123,6 @@ const competitionLabels: Record<string, string> = {
 
 const sponsorLogos = [
   {
-    name: "Lumine",
-    src: "/patrocinadores/lumine.png",
-    wrapper: "px-1.5 py-1.5",
-    image: "max-h-[40px] max-w-[98px] object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.18)]",
-    shareImage: "max-h-[52px] max-w-[140px] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.22)]",
-    surfaceLight: "border-zinc-800/90 bg-[#111827]",
-    surfaceDark: "border-white/10 bg-[#10151f]",
-  },
-  {
     name: "LazyKart",
     src: "/patrocinadores/lazykart.png",
     wrapper: "px-2 py-1.5",
@@ -139,6 +130,15 @@ const sponsorLogos = [
     shareImage: "max-h-[48px] max-w-[132px] object-contain",
     surfaceLight: "border-black/10 bg-white",
     surfaceDark: "border-white/10 bg-white",
+  },
+  {
+    name: "Lumine",
+    src: "/patrocinadores/lumine.png",
+    wrapper: "px-1.5 py-1.5",
+    image: "max-h-[40px] max-w-[98px] object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.18)]",
+    shareImage: "max-h-[52px] max-w-[140px] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.22)]",
+    surfaceLight: "border-zinc-800/90 bg-[#111827]",
+    surfaceDark: "border-white/10 bg-[#10151f]",
   },
   {
     name: "Precision",
@@ -150,15 +150,6 @@ const sponsorLogos = [
     surfaceDark: "border-white/10 bg-white",
   },
   {
-    name: "Vits",
-    src: "/patrocinadores/vits.png",
-    wrapper: "px-0.5 py-0.5",
-    image: "h-[46px] w-[104px] scale-[1.95] object-contain",
-    shareImage: "h-[60px] w-[142px] scale-[1.95] object-contain",
-    surfaceLight: "border-black/10 bg-white",
-    surfaceDark: "border-white/10 bg-white",
-  },
-  {
     name: "Skyflow",
     src: "/patrocinadores/skyflow.png",
     wrapper: "px-0.5 py-0.5",
@@ -166,6 +157,15 @@ const sponsorLogos = [
     shareImage: "h-[62px] w-[148px] scale-[1.65] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.22)]",
     surfaceLight: "border-zinc-800/90 bg-[#111827]",
     surfaceDark: "border-white/10 bg-[#0f172a]",
+  },
+  {
+    name: "Vits",
+    src: "/patrocinadores/vits.png",
+    wrapper: "px-0.5 py-0.5",
+    image: "h-[46px] w-[104px] scale-[1.95] object-contain",
+    shareImage: "h-[60px] w-[142px] scale-[1.95] object-contain",
+    surfaceLight: "border-black/10 bg-white",
+    surfaceDark: "border-white/10 bg-white",
   },
   {
     name: "Astera",
