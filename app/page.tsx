@@ -1131,7 +1131,9 @@ export default function CasernaKartAppModerno() {
   const [comparePilotBId, setComparePilotBId] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
   const shareCardRef = useRef<HTMLDivElement | null>(null);
+  const pilotShareCardRef = useRef<HTMLDivElement | null>(null);
   const [isSharingImage, setIsSharingImage] = useState(false);
+  const [isSharingPilotImage, setIsSharingPilotImage] = useState(false);
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("caserna-theme");
@@ -1624,6 +1626,35 @@ const duelSummary = useMemo(() => {
       window.alert("Não foi possível gerar a imagem da classificação.");
     } finally {
       setIsSharingImage(false);
+    }
+  }
+
+  async function handleSharePilotCard() {
+    if (!selectedPilot || !pilotShareCardRef.current || isSharingPilotImage) return;
+
+    try {
+      setIsSharingPilotImage(true);
+      const dataUrl = await htmlToImage.toPng(pilotShareCardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
+      });
+
+      const safePilotName = getPilotFirstAndLastName(selectedPilot.piloto)
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[̀-ͯ]/g, "")
+        .replace(/\s+/g, "-");
+
+      const link = document.createElement("a");
+      link.download = `piloto-${safePilotName}-${category.toLowerCase()}-${competition.toLowerCase()}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error(err);
+      window.alert("Não foi possível gerar a imagem do piloto.");
+    } finally {
+      setIsSharingPilotImage(false);
     }
   }
 
@@ -2282,401 +2313,476 @@ const duelSummary = useMemo(() => {
             </Card>
 
             <Card
-              className={`overflow-hidden rounded-[24px] shadow-sm ${
+              className={`overflow-hidden rounded-[22px] shadow-sm ${
                 isDarkMode
                   ? `border ${theme.darkAccentBorder} bg-[#111827]`
-                  : `border ${theme.searchBorder} bg-gradient-to-br from-white via-white to-zinc-50/80`
+                  : `border ${theme.searchBorder} bg-gradient-to-br from-white via-white to-zinc-50/70`
               }`}
             >
               <CardContent className="p-3">
-                <div
-                  className={`overflow-hidden rounded-[20px] border ${
-                    isDarkMode
-                      ? `${theme.darkAccentBorder} bg-gradient-to-br from-[#111827] via-[#161e2b] to-[#0f172a]`
-                      : `border-black/5 bg-gradient-to-br ${theme.shellGlow}`
-                  }`}
-                >
-                  <div className="relative px-3 pb-3 pt-3">
-                    <div
-                      className={`absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
+                <div className="mb-3 flex items-center gap-2.5">
+                  <div
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
+                      isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                    }`}
+                  >
+                    <Gauge
+                      className={`h-4.5 w-4.5 ${
+                        isDarkMode ? theme.darkAccentText : theme.searchIcon
+                      }`}
                     />
+                  </div>
 
-                    <div className="flex items-start gap-2.5">
-                      <div
-                        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
-                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                        }`}
-                      >
-                        <Gauge
-                          className={`h-4.5 w-4.5 ${
-                            isDarkMode ? theme.darkAccentText : theme.searchIcon
-                          }`}
-                        />
-                      </div>
+                  <div className="min-w-0 flex-1">
+                    <p
+                      className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-400"
+                      }`}
+                    >
+                      Contexto competitivo
+                    </p>
+                    <p
+                      className={`mt-0.5 text-[12px] font-semibold leading-tight ${
+                        isDarkMode ? "text-white" : "text-zinc-900"
+                      }`}
+                    >
+                      Leitura rápida oficial do campeonato selecionado
+                    </p>
+                  </div>
 
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p
-                            className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
-                              isDarkMode ? "text-zinc-400" : "text-zinc-400"
-                            }`}
-                          >
-                            Contexto competitivo
-                          </p>
+                  <div
+                    className={`shrink-0 rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] ${
+                      isDarkMode
+                        ? titleFightStatus.label === "BRIGA ACIRRADA"
+                          ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                          : titleFightStatus.label === "DISPUTA CONTROLADA"
+                            ? "border-yellow-500/30 bg-yellow-500/10 text-yellow-300"
+                            : "border-white/10 bg-white/5 text-zinc-300"
+                        : titleFightStatus.tone
+                    }`}
+                  >
+                    {titleFightStatus.label}
+                  </div>
+                </div>
 
-                          <div
-                            className={`rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] ${
-                              isDarkMode
-                                ? titleFightStatus.label === "BRIGA ACIRRADA"
-                                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
-                                  : titleFightStatus.label === "DISPUTA CONTROLADA"
-                                    ? "border-yellow-500/30 bg-yellow-500/10 text-yellow-300"
-                                    : "border-white/10 bg-white/5 text-zinc-300"
-                                : titleFightStatus.tone
-                            }`}
-                          >
-                            {titleFightStatus.label}
-                          </div>
-                        </div>
-
+                <div className="grid grid-cols-2 gap-2.5">
+                  <div
+                    className={`rounded-[18px] border px-3 py-3 ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} bg-[#0f172a]`
+                        : "border-black/5 bg-white/80"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
                         <p
-                          className={`mt-1 text-[13px] font-extrabold leading-tight ${
+                          className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                          }`}
+                        >
+                          Título
+                        </p>
+                        <p
+                          className={`mt-1 text-[15px] font-extrabold leading-tight ${
                             isDarkMode ? "text-white" : "text-zinc-950"
                           }`}
                         >
-                          Leitura premium do momento atual do campeonato
+                          {statsRadar.titleHeat}
                         </p>
-                        <p
-                          className={`mt-1 text-[11px] leading-snug ${
-                            isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      </div>
+
+                      <div
+                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl ${
+                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                        }`}
+                      >
+                        <Crown
+                          className={`h-4 w-4 ${
+                            isDarkMode ? theme.darkAccentText : theme.primaryIcon
                           }`}
-                        >
-                          {statsSummary.totalPilots > 1
-                            ? `${statsSummary.leaderAdvantage} pts separam líder e vice, com corte do Top 6 em ${statsSummary.top6CutPoints} pts.`
-                            : "Ainda não há pilotos suficientes para uma leitura competitiva completa."}
-                        </p>
+                        />
                       </div>
                     </div>
 
-                    <div className="mt-3 grid grid-cols-2 gap-2.5">
-                      <div
-                        className={`rounded-[18px] border px-3 py-3 ${
-                          isDarkMode
-                            ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                            : `${theme.heroBorder} bg-white/90`
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0">
-                            <p
-                              className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
-                                isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                              }`}
-                            >
-                              Temperatura do título
-                            </p>
-                            <p
-                              className={`mt-1 text-[16px] font-extrabold leading-tight ${
-                                isDarkMode ? "text-white" : "text-zinc-950"
-                              }`}
-                            >
-                              {statsRadar.titleHeat}
-                            </p>
-                          </div>
+                    <p
+                      className={`mt-2 text-[11px] leading-snug ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}
+                    >
+                      {statsSummary.totalPilots > 1
+                        ? `${statsSummary.leaderAdvantage} pts entre líder e vice nesta leitura oficial.`
+                        : "Ainda não há confronto consolidado pela liderança."}
+                    </p>
+                  </div>
 
-                          <div
-                            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl ${
-                              isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                            }`}
-                          >
-                            <Crown
-                              className={`h-4.5 w-4.5 ${
-                                isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                              }`}
-                            />
-                          </div>
-                        </div>
-
-                        <div
-                          className={`mt-3 flex items-end justify-between gap-2 rounded-[14px] border px-2.5 py-2 ${
-                            isDarkMode
-                              ? "border-white/10 bg-white/5"
-                              : "border-black/5 bg-zinc-50/80"
-                          }`}
-                        >
-                          <div>
-                            <p
-                              className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
-                                isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                              }`}
-                            >
-                              Vantagem atual
-                            </p>
-                            <p
-                              className={`mt-1 text-[22px] font-extrabold leading-none ${
-                                isDarkMode ? "text-white" : "text-zinc-950"
-                              }`}
-                            >
-                              {statsSummary.leaderAdvantage}
-                              <span
-                                className={`ml-1 text-[11px] font-bold uppercase tracking-[0.12em] ${
-                                  isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                                }`}
-                              >
-                                pts
-                              </span>
-                            </p>
-                          </div>
-
-                          <p
-                            className={`max-w-[86px] text-right text-[10px] leading-snug ${
-                              isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                            }`}
-                          >
-                            {statsSummary.totalPilots > 1
-                              ? "entre líder e vice"
-                              : "grid em formação"}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div
-                        className={`rounded-[18px] border px-3 py-3 ${
-                          isDarkMode
-                            ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                            : `${theme.heroBorder} bg-white/90`
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0">
-                            <p
-                              className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
-                                isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                              }`}
-                            >
-                              Linha de corte
-                            </p>
-                            <p
-                              className={`mt-1 text-[16px] font-extrabold leading-tight ${
-                                isDarkMode ? "text-white" : "text-zinc-950"
-                              }`}
-                            >
-                              Top 6 oficial
-                            </p>
-                          </div>
-
-                          <div
-                            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl ${
-                              isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                            }`}
-                          >
-                            <Trophy
-                              className={`h-4.5 w-4.5 ${
-                                isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                              }`}
-                            />
-                          </div>
-                        </div>
-
-                        <div
-                          className={`mt-3 flex items-end justify-between gap-2 rounded-[14px] border px-2.5 py-2 ${
-                            isDarkMode
-                              ? "border-white/10 bg-white/5"
-                              : "border-black/5 bg-zinc-50/80"
-                          }`}
-                        >
-                          <div>
-                            <p
-                              className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
-                                isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                              }`}
-                            >
-                              Corte atual
-                            </p>
-                            <p
-                              className={`mt-1 text-[22px] font-extrabold leading-none ${
-                                isDarkMode ? "text-white" : "text-zinc-950"
-                              }`}
-                            >
-                              {statsSummary.top6CutPoints}
-                              <span
-                                className={`ml-1 text-[11px] font-bold uppercase tracking-[0.12em] ${
-                                  isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                                }`}
-                              >
-                                pts
-                              </span>
-                            </p>
-                          </div>
-
-                          <p
-                            className={`max-w-[86px] text-right text-[10px] leading-snug ${
-                              isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                            }`}
-                          >
-                            {statsSummary.totalPilots >= 6
-                              ? `${statsRadar.podiumPressure} pts entre 3º e 6º`
-                              : "leitura adaptada ao grid"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-2.5 grid grid-cols-2 gap-2.5">
-                      <div
-                        className={`rounded-[18px] border px-3 py-3 ${
-                          isDarkMode
-                            ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                            : "border-black/5 bg-white/80"
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0">
-                            <p
-                              className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
-                                isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                              }`}
-                            >
-                              Momento do grid
-                            </p>
-                            <p
-                              className={`mt-1 text-[15px] font-extrabold leading-tight ${
-                                isDarkMode ? "text-white" : "text-zinc-950"
-                              }`}
-                            >
-                              {statsRadar.hottestLabel}
-                            </p>
-                          </div>
-
-                          <div
-                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl ${
-                              isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                            }`}
-                          >
-                            <TrendingUp
-                              className={`h-4 w-4 ${
-                                isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                              }`}
-                            />
-                          </div>
-                        </div>
-
+                  <div
+                    className={`rounded-[18px] border px-3 py-3 ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} bg-[#0f172a]`
+                        : "border-black/5 bg-white/80"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
                         <p
-                          className={`mt-2 text-[11px] leading-snug ${
-                            isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                          className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
                           }`}
                         >
-                          {statsRadar.hottestPilot
-                            ? `${getPilotFirstAndLastName(statsRadar.hottestPilot.piloto)} lidera o impacto competitivo atual.`
-                            : "Sem piloto destacado nesta seleção."}
+                          Corte Top 6
+                        </p>
+                        <p
+                          className={`mt-1 text-[15px] font-extrabold leading-tight ${
+                            isDarkMode ? "text-white" : "text-zinc-950"
+                          }`}
+                        >
+                          {statsSummary.top6CutPoints} pts
                         </p>
                       </div>
 
                       <div
-                        className={`rounded-[18px] border px-3 py-3 ${
-                          isDarkMode
-                            ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                            : "border-black/5 bg-white/80"
+                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl ${
+                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                         }`}
                       >
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0">
-                            <p
-                              className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
-                                isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                              }`}
-                            >
-                              Eficiência premium
-                            </p>
-                            <p
-                              className={`mt-1 text-[15px] font-extrabold leading-tight ${
-                                isDarkMode ? "text-white" : "text-zinc-950"
-                              }`}
-                            >
-                              {bestEfficiencyPilot
-                                ? getPilotFirstAndLastName(bestEfficiencyPilot.piloto)
-                                : "Sem leitura"}
-                            </p>
-                          </div>
+                        <Trophy
+                          className={`h-4 w-4 ${
+                            isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                          }`}
+                        />
+                      </div>
+                    </div>
 
-                          <div
-                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl ${
-                              isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                            }`}
-                          >
-                            <Users
-                              className={`h-4 w-4 ${
-                                isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                              }`}
-                            />
-                          </div>
-                        </div>
+                    <p
+                      className={`mt-2 text-[11px] leading-snug ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}
+                    >
+                      {statsSummary.totalPilots >= 6
+                        ? `${statsRadar.podiumPressure} pts separam o 3º do 6º colocado.`
+                        : "Leitura adaptada ao número atual de pilotos pontuando."}
+                    </p>
+                  </div>
 
+                  <div
+                    className={`rounded-[18px] border px-3 py-3 ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} bg-[#0f172a]`
+                        : "border-black/5 bg-white/80"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
                         <p
-                          className={`mt-2 text-[11px] leading-snug ${
-                            isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                          className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                          }`}
+                        >
+                          Momento do grid
+                        </p>
+                        <p
+                          className={`mt-1 text-[15px] font-extrabold leading-tight ${
+                            isDarkMode ? "text-white" : "text-zinc-950"
+                          }`}
+                        >
+                          {statsRadar.hottestLabel}
+                        </p>
+                      </div>
+
+                      <div
+                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl ${
+                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                        }`}
+                      >
+                        <TrendingUp
+                          className={`h-4 w-4 ${
+                            isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                          }`}
+                        />
+                      </div>
+                    </div>
+
+                    <p
+                      className={`mt-2 text-[11px] leading-snug ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}
+                    >
+                      {statsRadar.hottestPilot
+                        ? `${getPilotFirstAndLastName(statsRadar.hottestPilot.piloto)} lidera o impacto competitivo atual.`
+                        : "Sem piloto destacado nesta seleção."}
+                    </p>
+                  </div>
+
+                  <div
+                    className={`rounded-[18px] border px-3 py-3 ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} bg-[#0f172a]`
+                        : "border-black/5 bg-white/80"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p
+                          className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                          }`}
+                        >
+                          Eficiência premium
+                        </p>
+                        <p
+                          className={`mt-1 text-[15px] font-extrabold leading-tight ${
+                            isDarkMode ? "text-white" : "text-zinc-950"
                           }`}
                         >
                           {bestEfficiencyPilot
-                            ? `${(bestEfficiencyPilot.pontos / Math.max(bestEfficiencyPilot.participacoes, 1)).toFixed(1)} pts por participação.`
-                            : "Nenhuma participação registrada para calcular eficiência."}
+                            ? getPilotFirstAndLastName(bestEfficiencyPilot.piloto)
+                            : "Sem leitura"}
                         </p>
                       </div>
-                    </div>
 
-                    <div
-                      className={`mt-2.5 rounded-[18px] border px-3 py-3 ${
-                        isDarkMode
-                          ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                          : "border-black/5 bg-white/80"
-                      }`}
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="min-w-0">
-                          <p
-                            className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
-                              isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                            }`}
-                          >
-                            Resumo oficial
-                          </p>
-                          <p
-                            className={`mt-1 text-[13px] font-extrabold leading-tight ${
-                              isDarkMode ? "text-white" : "text-zinc-950"
-                            }`}
-                          >
-                            Panorama premium da disputa atual
-                          </p>
-                        </div>
-
-                        <div
-                          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl ${
-                            isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                          }`}
-                        >
-                          <Flag
-                            className={`h-4 w-4 ${
-                              isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                            }`}
-                          />
-                        </div>
-                      </div>
-
-                      <p
-                        className={`mt-2 text-[11px] leading-relaxed ${
-                          isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      <div
+                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl ${
+                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                         }`}
                       >
-                        {statsSummary.totalPilots > 1
-                          ? `${leader ? getPilotFirstAndLastName(leader.piloto) : "O líder"} comanda a leitura atual, ${titleFightStatus.label === "BRIGA ACIRRADA" ? "mas a disputa segue muito apertada" : titleFightStatus.label === "DISPUTA CONTROLADA" ? "com vantagem administrável no topo" : "com liderança mais sólida no momento"}. O Top 6 fecha em ${statsSummary.top6CutPoints} pontos e ${statsRadar.hottestPilot ? `${getPilotFirstAndLastName(statsRadar.hottestPilot.piloto)} vive o melhor momento do grid.` : "o grid ainda busca um nome dominante em momento competitivo."}`
-                          : "A leitura oficial será refinada assim que houver mais pilotos pontuando no campeonato selecionado."}
-                      </p>
+                        <Users
+                          className={`h-4 w-4 ${
+                            isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                          }`}
+                        />
+                      </div>
                     </div>
+
+                    <p
+                      className={`mt-2 text-[11px] leading-snug ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}
+                    >
+                      {bestEfficiencyPilot
+                        ? `${(bestEfficiencyPilot.pontos / Math.max(bestEfficiencyPilot.participacoes, 1)).toFixed(1)} pts por participação.`
+                        : "Nenhuma participação registrada para calcular eficiência."}
+                    </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
+            <div className="pointer-events-none fixed -left-[9999px] top-0 z-[-1] opacity-0">
+              <div
+                ref={pilotShareCardRef}
+                className={`w-[1080px] overflow-hidden rounded-[40px] border p-10 ${
+                  isDarkMode
+                    ? `border-white/10 bg-gradient-to-br ${theme.darkAccentCard} text-white`
+                    : `${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow} text-zinc-950`
+                }`}
+              >
+                <div
+                  className={`rounded-[30px] border p-8 ${
+                    isDarkMode
+                      ? `${theme.darkAccentBorder} bg-[#111827]`
+                      : `${theme.heroBorder} bg-white/92`
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-6">
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`flex h-16 w-16 items-center justify-center rounded-[22px] ${
+                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                        }`}
+                      >
+                        <User className={`h-8 w-8 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                      </div>
+                      <div>
+                        <p className={`text-[14px] font-bold uppercase tracking-[0.2em] ${
+                          isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                        }`}>
+                          Perfil oficial do piloto
+                        </p>
+                        <h2 className="mt-2 text-[40px] font-extrabold leading-none tracking-tight">
+                          {selectedPilotShortName || "Piloto"}
+                        </h2>
+                        <p className={`mt-3 text-[20px] font-semibold ${
+                          isDarkMode ? "text-zinc-300" : "text-zinc-700"
+                        }`}>
+                          {category} · {competitionLabels[competition] || competition}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col items-end gap-3">
+                      <div
+                        className={`rounded-full border px-5 py-2 text-[16px] font-bold uppercase tracking-[0.14em] ${
+                          isDarkMode
+                            ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                            : theme.searchBadge
+                        }`}
+                      >
+                        {selectedPilot ? `${selectedPilot.pos}º lugar` : "Sem posição"}
+                      </div>
+                      <div
+                        className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${
+                          isDarkMode
+                            ? "border-white/10 bg-white/5 text-zinc-200"
+                            : "border-zinc-200 bg-zinc-50 text-zinc-700"
+                        }`}
+                      >
+                        {selectedPilot ? `${selectedPilot.pontos} pontos` : "0 pontos"}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 grid grid-cols-[300px_1fr] gap-6">
+                    <div className={`overflow-hidden rounded-[28px] border ${
+                      isDarkMode ? `${theme.darkAccentBorder} bg-[#0f172a]` : `${theme.heroBorder} bg-zinc-50`
+                    }`}>
+                      <div className="relative aspect-square w-full overflow-hidden">
+                        {selectedPilot && getPilotPhotoPath(selectedPilot) ? (
+                          <img
+                            src={getPilotPhotoPath(selectedPilot) || ""}
+                            alt={selectedPilotShortName || "Piloto"}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className={`flex h-full w-full items-center justify-center ${
+                            isDarkMode ? "bg-gradient-to-b from-[#0f172a] to-[#111827]" : "bg-gradient-to-b from-zinc-50 to-zinc-100"
+                          }`}>
+                            <div className="text-center">
+                              <div className={`mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-[22px] ${
+                                isDarkMode ? "bg-white/5" : "bg-white"
+                              }`}>
+                                <Camera className={`h-7 w-7 ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`} />
+                              </div>
+                              <p className={`text-[13px] font-bold uppercase tracking-[0.14em] ${
+                                isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                              }`}>
+                                Espaço da foto
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
+                        <div className="absolute inset-x-0 bottom-0 p-5">
+                          <div className={`rounded-[22px] border px-4 py-4 backdrop-blur-md ${
+                            isDarkMode ? "border-white/10 bg-black/30" : "border-white/70 bg-white/78"
+                          }`}>
+                            <p className={`text-[24px] font-extrabold leading-none tracking-tight ${
+                              isDarkMode ? "text-white" : "text-zinc-950"
+                            }`}>
+                              {selectedPilotShortName || "Piloto"}
+                            </p>
+                            {selectedPilotWarName ? (
+                              <p className={`mt-2 text-[15px] font-semibold italic ${
+                                isDarkMode ? "text-zinc-300" : "text-zinc-600"
+                              }`}>
+                                {selectedPilotWarName}
+                              </p>
+                            ) : null}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-5">
+                      <div className="grid grid-cols-4 gap-4">
+                        <div className={`rounded-[24px] border px-5 py-5 ${
+                          isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft}` : `${theme.heroBorder} bg-gradient-to-b ${theme.heroBg}`
+                        }`}>
+                          <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}>Posição</p>
+                          <p className={`mt-2 text-[34px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilot?.pos || 0}º</p>
+                          <p className={`mt-2 text-[13px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>{selectedPilotGap}</p>
+                        </div>
+                        <div className={`rounded-[24px] border px-5 py-5 ${
+                          isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50/80"
+                        }`}>
+                          <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}>Eficiência</p>
+                          <p className={`mt-2 text-[34px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilotAverage.toFixed(1)}</p>
+                          <p className={`mt-2 text-[13px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>média por participação</p>
+                        </div>
+                        <div className={`rounded-[24px] border px-5 py-5 ${
+                          isDarkMode ? `${theme.darkAccentBorder} bg-[#0f172a]` : `${theme.primaryBorder} bg-white`
+                        }`}>
+                          <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}>Vitórias</p>
+                          <p className={`mt-2 text-[34px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilot?.vitorias || 0}</p>
+                          <p className={`mt-2 text-[13px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>{selectedPilotWinRate}% de conversão</p>
+                        </div>
+                        <div className={`rounded-[24px] border px-5 py-5 ${
+                          isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg}` : theme.heroChip
+                        }`}>
+                          <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? theme.darkAccentText : "text-zinc-700"}`}>Top 6</p>
+                          <p className={`mt-2 text-[34px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilot?.podios || 0}</p>
+                          <p className={`mt-2 text-[13px] ${isDarkMode ? "text-zinc-300" : "text-zinc-700"}`}>{selectedPilotPodiumRate}% de presença</p>
+                        </div>
+                      </div>
+
+                      <div className={`rounded-[26px] border px-6 py-6 ${
+                        isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50/70"
+                      }`}>
+                        <div className="flex items-center justify-between gap-4">
+                          <div>
+                            <p className={`text-[11px] font-bold uppercase tracking-[0.18em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                              Resumo oficial
+                            </p>
+                            <p className={`mt-2 text-[25px] font-extrabold leading-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                              {selectedPilotConsistency}
+                            </p>
+                            <p className={`mt-3 text-[15px] leading-relaxed ${isDarkMode ? "text-zinc-300" : "text-zinc-600"}`}>
+                              Momento: <span className="font-semibold">{selectedPilotMomentum}</span> · destaque principal em <span className="font-semibold">{selectedPilotBestAttribute.label.toLowerCase()}</span> ({selectedPilotBestAttribute.value}).
+                            </p>
+                            <p className={`mt-2 text-[15px] leading-relaxed ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                              {selectedPilotRivalAhead
+                                ? `${selectedPilotRivalAhead.pontos - selectedPilot.pontos} ponto(s) para alcançar ${getPilotFirstAndLastName(selectedPilotRivalAhead.piloto)}.`
+                                : "Piloto já ocupa a liderança desta leitura oficial."}
+                            </p>
+                          </div>
+
+                          <div className={`rounded-[22px] border px-5 py-4 text-center ${
+                            isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft}` : `${theme.heroBorder} bg-white`
+                          }`}>
+                            <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>Disciplina</p>
+                            <p className={`mt-2 text-[30px] font-extrabold leading-none ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilotDiscipline}%</p>
+                            <p className={`mt-2 text-[13px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>{selectedPilot.adv} ADV</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-4 gap-4">
+                        {[
+                          { label: "Poles", value: selectedPilot?.poles || 0, icon: Flag },
+                          { label: "VMR", value: selectedPilot?.mv || 0, icon: Timer },
+                          { label: "Participações", value: selectedPilot?.participacoes || 0, icon: Users },
+                          { label: "Descarte", value: selectedPilot?.descarte || 0, icon: Gauge },
+                        ].map((item) => {
+                          const Icon = item.icon;
+                          return (
+                            <div
+                              key={item.label}
+                              className={`rounded-[22px] border px-4 py-4 ${
+                                isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between gap-3">
+                                <p className={`text-[11px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                                  {item.label}
+                                </p>
+                                <div className={`flex h-9 w-9 items-center justify-center rounded-[16px] ${
+                                  isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                                }`}>
+                                  <Icon className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                                </div>
+                              </div>
+                              <p className={`mt-4 text-[28px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                                {item.value}
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div className="pointer-events-none fixed -left-[9999px] top-0 z-[-1] opacity-0">
               <div
                 ref={shareCardRef}
@@ -3695,7 +3801,21 @@ const duelSummary = useMemo(() => {
                               Voltar
                             </button>
 
-                            <div className="flex flex-wrap justify-end gap-2">
+                            <div className="flex flex-wrap items-center justify-end gap-2">
+                              <button
+                                type="button"
+                                onClick={handleSharePilotCard}
+                                disabled={isSharingPilotImage}
+                                className={`inline-flex items-center gap-2 rounded-2xl px-3 py-2 text-sm font-medium transition disabled:opacity-50 ${
+                                  isDarkMode
+                                    ? `border ${theme.darkAccentBorder} ${theme.darkAccentBg} text-zinc-100 hover:opacity-90`
+                                    : "border border-black/5 bg-zinc-50 text-zinc-800 hover:bg-zinc-100"
+                                }`}
+                              >
+                                <Share2 className="h-4 w-4" />
+                                {isSharingPilotImage ? "Gerando..." : "Compartilhar piloto"}
+                              </button>
+
                               <Badge
                                 variant="outline"
                                 className={
