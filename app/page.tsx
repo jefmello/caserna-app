@@ -1197,6 +1197,15 @@ export default function CasernaKartAppModerno() {
     setComparePilotBId("");
   }, [category, competition]);
 
+  useEffect(() => {
+    if (activeTab === "piloto") {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  }, [activeTab]);
+
   const currentCompetitionList = useMemo(() => {
     return rankingData[category]?.[competition] || [];
   }, [rankingData, category, competition]);
