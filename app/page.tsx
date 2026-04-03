@@ -5563,30 +5563,30 @@ const duelSummary = useMemo(() => {
               </div>
             </div>
 
-          <div className="fixed bottom-2.5 left-1/2 z-30 w-[calc(100%-24px)] max-w-md -translate-x-1/2">
+          <div className="fixed bottom-2 left-1/2 z-30 w-[calc(100%-24px)] max-w-md -translate-x-1/2">
             <Card
-              className={`overflow-hidden rounded-[18px] shadow-[0_10px_20px_rgba(15,23,42,0.09)] backdrop-blur-xl ${
+              className={`overflow-hidden rounded-[20px] shadow-[0_12px_24px_rgba(15,23,42,0.10)] backdrop-blur-xl ${
                 isDarkMode
                   ? "border border-white/10 bg-[rgba(15,23,42,0.88)]"
                   : "border border-black/5 bg-[rgba(255,255,255,0.94)]"
               }`}
             >
-              <CardContent className="px-1.5 pb-1.5 pt-1">
+              <CardContent className="px-1.5 pb-1 pt-1">
                 <div className="mb-0.5 px-0.5">
-                  <p className={`text-[7px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                  <p className={`text-[8px] font-bold uppercase leading-none tracking-[0.18em] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                     Patrocinadores oficiais
                   </p>
                 </div>
 
-                <div className="relative overflow-hidden rounded-[16px]">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-4 bg-gradient-to-r from-[rgba(255,255,255,0.97)] to-transparent dark:from-[rgba(15,23,42,0.97)]" />
-                  <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-4 bg-gradient-to-l from-[rgba(255,255,255,0.97)] to-transparent dark:from-[rgba(15,23,42,0.97)]" />
+                <div className="relative overflow-hidden rounded-[18px]">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-5 bg-gradient-to-r from-[rgba(255,255,255,0.97)] to-transparent dark:from-[rgba(15,23,42,0.97)]" />
+                  <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-5 bg-gradient-to-l from-[rgba(255,255,255,0.97)] to-transparent dark:from-[rgba(15,23,42,0.97)]" />
 
                   <div className="sponsor-marquee-track flex w-max items-center gap-1.5">
                     {sponsorTrack.map((sponsor, index) => (
                       <div
                         key={`fixed-sponsor-${sponsor.name}-${index}`}
-                        className={`flex h-[50px] w-[104px] shrink-0 items-center justify-center overflow-hidden rounded-[15px] border shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${sponsor.wrapper} ${
+                        className={`flex h-[54px] w-[108px] shrink-0 items-center justify-center overflow-hidden rounded-[16px] border shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ${sponsor.wrapper} ${
                           isDarkMode ? sponsor.surfaceDark : sponsor.surfaceLight
                         }`}
                       >
