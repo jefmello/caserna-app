@@ -26,6 +26,7 @@ import {
   TrendingUp,
   TrendingDown,
   Minus,
+  AlertTriangle,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -1686,6 +1687,29 @@ const duelWinnerPilot = useMemo(() => {
     if (pilotIndex <= 0) return null;
     return filteredRanking[pilotIndex - 1] || null;
   }, [filteredRanking, selectedPilot]);
+
+  const selectedPilotRivalDirect = useMemo(() => {
+    if (!selectedPilot || filteredRanking.length <= 1) return null;
+
+    const currentIndex = filteredRanking.findIndex(
+      (item) =>
+        item.pilotoId === safeSelectedPilot.pilotoId &&
+        item.competicao === safeSelectedPilot.competicao
+    );
+
+    if (currentIndex === -1) return null;
+
+    const previousPilot = currentIndex > 0 ? filteredRanking[currentIndex - 1] : null;
+    const nextPilot = currentIndex < filteredRanking.length - 1 ? filteredRanking[currentIndex + 1] : null;
+
+    if (!previousPilot) return nextPilot;
+    if (!nextPilot) return previousPilot;
+
+    const diffAbove = Math.abs(previousPilot.pontos - safeSelectedPilot.pontos);
+    const diffBelow = Math.abs(safeSelectedPilot.pontos - nextPilot.pontos);
+
+    return diffAbove <= diffBelow ? previousPilot : nextPilot;
+  }, [filteredRanking, selectedPilot, safeSelectedPilot]);
 
   const top3TitleFight = useMemo(() => filteredRanking.slice(0, 3), [filteredRanking]);
 
@@ -5818,40 +5842,48 @@ const duelWinnerPilot = useMemo(() => {
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-end gap-3 max-w-[440px]">
-                      {[
-                        {
-                          label: selectedPilot ? `${safeSelectedPilot.pos}º lugar` : "Sem posição",
-                          tone: isDarkMode
-                            ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                            : theme.searchBadge,
-                        },
-                        {
-                          label: selectedPilot ? `${safeSelectedPilot.pontos} pontos` : "0 pontos",
-                          tone: isDarkMode
-                            ? "border-white/10 bg-white/5 text-zinc-200"
-                            : "border-zinc-200 bg-zinc-50 text-zinc-700",
-                        },
-                        {
-                          label: category,
-                          tone: isDarkMode
-                            ? `${theme.darkAccentBorder} bg-white/5 text-zinc-200`
-                            : `${theme.heroBorder} bg-white text-zinc-700`,
-                        },
-                        {
-                          label: competitionLabels[competition] || competition,
-                          tone: isDarkMode
-                            ? `${theme.darkAccentBorder} bg-white/5 text-zinc-200`
-                            : `${theme.heroBorder} bg-white text-zinc-700`,
-                        },
-                      ].map((item) => (
+                    <div className="flex items-start justify-end gap-3 max-w-[440px]">
+                      <div className="flex flex-col items-end gap-3">
                         <div
-                          key={item.label}
-                          className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${item.tone}`}
+                          className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${
+                            isDarkMode
+                              ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                              : theme.searchBadge
+                          }`}
                         >
-                          {item.label}
+                          {selectedPilot ? `${safeSelectedPilot.pos}º lugar` : "Sem posição"}
                         </div>
-                      ))}
+                        <div
+                          className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${
+                            isDarkMode
+                              ? "border-white/10 bg-white/5 text-zinc-200"
+                              : "border-zinc-200 bg-zinc-50 text-zinc-700"
+                          }`}
+                        >
+                          {selectedPilot ? `${safeSelectedPilot.pontos} pontos` : "0 pontos"}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col items-end gap-3">
+                        <div
+                          className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${
+                            isDarkMode
+                              ? `${theme.darkAccentBorder} bg-white/5 text-zinc-200`
+                              : `${theme.heroBorder} bg-white text-zinc-700`
+                          }`}
+                        >
+                          {category}
+                        </div>
+                        <div
+                          className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${
+                            isDarkMode
+                              ? `${theme.darkAccentBorder} bg-white/5 text-zinc-200`
+                              : `${theme.heroBorder} bg-white text-zinc-700`
+                          }`}
+                        >
+                          {competitionLabels[competition] || competition}
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -5893,7 +5925,7 @@ const duelWinnerPilot = useMemo(() => {
                       <div className={`rounded-[24px] border px-4 py-4 ${
                         isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white/90"
                       }`}>
-                        <div className="mb-3 flex items-center justify-start">
+                        <div className="mb-3 flex items-center justify-center">
                           <div className={`rounded-full border px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] ${
                             isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}` : theme.heroChip
                           }`}>
@@ -5991,15 +6023,64 @@ const duelWinnerPilot = useMemo(() => {
                           </div>
                         </div>
                       </div>
-
                       <div className="grid grid-cols-4 gap-4">
                         {[
-                          { label: "Poles", value: selectedPilot?.poles || 0, icon: Flag },
-                          { label: "VMR", value: selectedPilot?.mv || 0, icon: Timer },
-                          { label: "Participações", value: selectedPilot?.participacoes || 0, icon: Users },
-                          { label: "Descarte", value: selectedPilot?.descarte || 0, icon: Gauge },
+                          {
+                            label: "Poles",
+                            value: selectedPilot?.poles || 0,
+                            subtext: "classificações vencidas",
+                            icon: Flag,
+                          },
+                          {
+                            label: "VMR",
+                            value: selectedPilot?.mv || 0,
+                            subtext: "voltas mais rápidas",
+                            icon: Timer,
+                          },
+                          {
+                            label: "Participações",
+                            value: selectedPilot?.participacoes || 0,
+                            subtext: "presenças oficiais",
+                            icon: Users,
+                          },
+                          {
+                            label: "Distância do líder",
+                            value: selectedPilotLeaderGapValue,
+                            subtext: selectedPilotLeaderGapValue === 0 ? "na liderança" : "pontos para alcançar",
+                            icon: Gauge,
+                          },
+                          {
+                            label: "Pódios",
+                            value: selectedPilot?.podios || 0,
+                            subtext: "chegadas no top 6",
+                            icon: Trophy,
+                          },
+                          {
+                            label: "Média de pontos",
+                            value: selectedPilotAverage.toFixed(1),
+                            subtext: "por participação",
+                            icon: BarChart3,
+                          },
+                          {
+                            label: "Rival direto",
+                            value: selectedPilotRivalDirect
+                              ? getPilotFirstAndLastName(selectedPilotRivalDirect.piloto)
+                              : "Sem rival",
+                            subtext: selectedPilotRivalDirect
+                              ? `${Math.abs(selectedPilotRivalDirect.pontos - safeSelectedPilot.pontos)} pt(s) de diferença`
+                              : "vantagem isolada",
+                            icon: Swords,
+                          },
+                          {
+                            label: "Advertências",
+                            value: safeSelectedPilot.adv,
+                            subtext: safeSelectedPilot.adv === 0 ? "sem punições" : "advertências recebidas",
+                            icon: AlertTriangle,
+                          },
                         ].map((item) => {
                           const Icon = item.icon;
+                          const isTextValue = typeof item.value === "string";
+
                           return (
                             <div
                               key={item.label}
@@ -6017,8 +6098,11 @@ const duelWinnerPilot = useMemo(() => {
                                   <Icon className={`h-3.5 w-3.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
                                 </div>
                               </div>
-                              <p className={`mt-4 text-[28px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                              <p className={`mt-4 ${isTextValue ? "text-[18px] leading-tight" : "text-[28px] leading-none tracking-tight"} font-extrabold ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
                                 {item.value}
+                              </p>
+                              <p className={`mt-2 text-[12px] leading-snug ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                                {item.subtext}
                               </p>
                             </div>
                           );
