@@ -888,7 +888,7 @@ function PilotPhotoSlot({
         <img
           src={src}
           alt={alt}
-          className="h-full w-full object-cover"
+          className="h-full w-full scale-[1.14] object-cover object-center"
           onError={() => setHasError(true)}
         />
       ) : (
@@ -2165,13 +2165,13 @@ const duelWinnerPilot = useMemo(() => {
               </Card>
 
               <Card
-                className={`h-[118px] overflow-hidden rounded-[24px] shadow-none ${
+                className={`min-h-[156px] overflow-hidden rounded-[24px] shadow-none ${
                   isDarkMode
                     ? `border ${theme.darkAccentBorder} bg-gradient-to-br from-[#111827] via-[#161e2b] to-[#111827]`
                     : `${theme.heroBorder} bg-gradient-to-br ${theme.heroBg}`
                 }`}
               >
-                <CardContent className="relative flex h-full items-center justify-center p-3">
+                <CardContent className="flex h-full min-h-[156px] items-center justify-center px-4 py-4">
                   <div className="flex w-full flex-col items-center justify-center text-center">
                     <div className="flex w-full items-center justify-center gap-2">
                       <p
@@ -2191,16 +2191,16 @@ const duelWinnerPilot = useMemo(() => {
                       </div>
                     </div>
 
-                    <div className="mt-2 flex flex-col items-center justify-center">
+                    <div className="mt-4 flex flex-col items-center justify-center">
                       <p
-                        className={`text-[25px] font-black leading-none tracking-tight ${
+                        className={`text-[26px] font-black leading-[0.92] tracking-tight ${
                           isDarkMode ? "text-white" : "text-zinc-950"
                         }`}
                       >
                         {leaderName.firstName.toUpperCase()}
                       </p>
                       <p
-                        className={`mt-1 text-[15px] font-semibold leading-none tracking-tight ${
+                        className={`mt-2 text-[15px] font-semibold leading-none tracking-tight ${
                           isDarkMode ? "text-zinc-300" : "text-zinc-800"
                         }`}
                       >
@@ -2208,7 +2208,7 @@ const duelWinnerPilot = useMemo(() => {
                       </p>
                     </div>
 
-                    <div className="mt-4 flex w-full justify-center px-3 pb-1">
+                    <div className="mt-5 flex w-full justify-center px-4 pb-2">
                       <div
                         className={`inline-flex items-center rounded-full border px-5 py-2.5 shadow-[0_10px_24px_rgba(0,0,0,0.12)] ${
                           isDarkMode
