@@ -883,14 +883,23 @@ function PilotPhotoSlot({
   const showImage = !!src && !hasError;
 
   return (
-    <div className={`h-full w-full ${isDark ? "bg-[#0f172a]" : "bg-zinc-50"}`}>
+    <div className={`relative h-full w-full overflow-hidden ${isDark ? "bg-[#0f172a]" : "bg-zinc-50"}`}>
       {showImage ? (
-        <img
-          src={src}
-          alt={alt}
-          className="h-full w-full object-contain object-center"
-          onError={() => setHasError(true)}
-        />
+        <>
+          <img
+            src={src}
+            alt={alt}
+            className="absolute inset-0 h-full w-full scale-[1.08] object-cover object-center opacity-35 blur-xl"
+            onError={() => setHasError(true)}
+          />
+          <div className={`absolute inset-0 ${isDark ? "bg-slate-950/26" : "bg-white/16"}`} />
+          <img
+            src={src}
+            alt={alt}
+            className="relative z-[1] h-full w-full object-contain object-center"
+            onError={() => setHasError(true)}
+          />
+        </>
       ) : (
         <div
           className={`flex h-full w-full items-center justify-center ${
@@ -2151,10 +2160,11 @@ const duelWinnerPilot = useMemo(() => {
                       isDark={isDarkMode}
                     />
 
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/58 via-black/12 to-transparent" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/14 to-transparent" />
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/45 to-transparent" />
 
                     <div className="absolute inset-x-0 bottom-3 px-3">
-                      <div className="mx-auto flex max-w-full items-center justify-center rounded-[18px] border border-white/20 bg-[linear-gradient(180deg,rgba(15,23,42,0.2),rgba(15,23,42,0.52))] px-3 py-2.5 shadow-[0_14px_30px_rgba(0,0,0,0.34)] backdrop-blur-md">
+                      <div className="mx-auto flex max-w-[86%] items-center justify-center rounded-[18px] border border-white/20 bg-[linear-gradient(180deg,rgba(30,41,59,0.72),rgba(15,23,42,0.94))] px-3 py-2.5 shadow-[0_14px_30px_rgba(0,0,0,0.34)] backdrop-blur-md">
                         <p className="truncate whitespace-nowrap text-[11px] font-black uppercase tracking-[0.16em] text-white">
                           {getPilotWarName(leader) ? getPilotWarName(leader).toUpperCase() : getPilotHighlightName(leader?.piloto)}
                         </p>
@@ -2171,11 +2181,11 @@ const duelWinnerPilot = useMemo(() => {
                     : `${theme.heroBorder} bg-gradient-to-br ${theme.heroBg}`
                 }`}
               >
-                <CardContent className="flex h-full items-center justify-center px-3 py-2.5">
-                  <div className="flex h-full w-full flex-col items-center justify-between text-center">
+                <CardContent className="h-full px-3 py-2.5">
+                  <div className="grid h-full w-full grid-rows-[auto,1fr,auto] items-center justify-items-center text-center">
                     <div className="flex items-center justify-center gap-1.5">
                       <p
-                        className={`text-[9px] font-bold uppercase tracking-[0.16em] ${
+                        className={`text-[8px] font-bold uppercase tracking-[0.22em] ${
                           isDarkMode ? theme.darkAccentText : theme.primaryIcon
                         }`}
                       >
@@ -2183,7 +2193,7 @@ const duelWinnerPilot = useMemo(() => {
                       </p>
 
                       <div
-                        className={`flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-[12px] ${
+                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-[12px] ${
                           isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                         }`}
                       >
@@ -2191,16 +2201,16 @@ const duelWinnerPilot = useMemo(() => {
                       </div>
                     </div>
 
-                    <div className="flex flex-1 flex-col items-center justify-center leading-none">
+                    <div className="flex flex-col items-center justify-center leading-none">
                       <p
-                        className={`text-[22px] font-black tracking-tight ${
+                        className={`text-[19px] font-black tracking-tight ${
                           isDarkMode ? "text-white" : "text-zinc-950"
                         }`}
                       >
                         {leaderName.firstName.toUpperCase()}
                       </p>
                       <p
-                        className={`mt-1 text-[13px] font-semibold tracking-tight ${
+                        className={`mt-1 text-[11px] font-semibold tracking-[0.04em] ${
                           isDarkMode ? "text-zinc-300" : "text-zinc-800"
                         }`}
                       >
@@ -2208,7 +2218,7 @@ const duelWinnerPilot = useMemo(() => {
                       </p>
                     </div>
 
-                    <div className="flex w-full justify-center pb-1">
+                    <div className="flex w-full justify-center">
                       <div
                         className={`inline-flex items-center rounded-full border px-4 py-1.5 shadow-[0_10px_24px_rgba(0,0,0,0.12)] ${
                           isDarkMode
@@ -2216,7 +2226,7 @@ const duelWinnerPilot = useMemo(() => {
                             : theme.heroChip
                         }`}
                       >
-                        <p className="text-[13px] font-black leading-none">
+                        <p className="text-[11px] font-black leading-none">
                           {leader?.pontos || 0} pontos
                         </p>
                       </div>
