@@ -5572,7 +5572,6 @@ const duelSummary = useMemo(() => {
             </Card>
           </div>
 
-        </Tabs>
         <style jsx global>{`
           @keyframes sponsor-marquee {
             from { transform: translateX(0); }
