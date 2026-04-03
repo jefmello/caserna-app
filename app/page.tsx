@@ -9,6 +9,8 @@ import RankingSearchCard from "@/components/ranking/ranking-search-card";
 import RankingClassificationSection from "@/components/ranking/ranking-classification-section";
 import RankingClassificationShareCard from "@/components/ranking/ranking-classification-share-card";
 import RankingTitleFightCard from "@/components/ranking/ranking-title-fight-card";
+import RankingStatsHeader from "@/components/ranking/ranking-stats-header";
+import RankingStatsSummaryGrid from "@/components/ranking/ranking-stats-summary-grid";
 import Image from "next/image";
 import * as htmlToImage from "html-to-image";
 import {
@@ -4585,106 +4587,24 @@ const duelWinnerPilot = useMemo(() => {
 </TabsContent>
 
           <TabsContent value="stats" className="mt-0 space-y-4 pt-0">
-            <div
-              className={`overflow-hidden rounded-[22px] shadow-sm ${
-                isDarkMode
-                  ? `border ${theme.darkAccentBorder} bg-[#111827]`
-                  : `border ${theme.titleBorder} bg-gradient-to-br ${theme.statsSoft}`
-              }`}
-            >
-              <div className="relative px-4 py-4">
-                <div
-                  className={`absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
-                />
+            <RankingStatsHeader
+              isDarkMode={isDarkMode}
+              theme={theme}
+              category={category}
+              competition={competition}
+              competitionLabels={competitionLabels}
+            />
 
-                <div className="flex items-center justify-between gap-2.5">
-                  <div className="flex min-w-0 items-center gap-2.5">
-                    <div
-                      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${
-                        isDarkMode ? theme.darkAccentIconWrap : theme.statsIconWrap
-                      }`}
-                    >
-                      <BarChart3
-                        className={`h-5 w-5 ${
-                          isDarkMode ? theme.darkAccentText : theme.statsIcon
-                        }`}
-                      />
-                    </div>
-
-                    <div className="min-w-0">
-                      <p
-                        className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
-                          isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                        }`}
-                      >
-                        Central de estatísticas
-                      </p>
-                      <h2
-                        className={`text-[17px] font-extrabold tracking-tight ${
-                          isDarkMode ? "text-white" : "text-zinc-950"
-                        }`}
-                      >
-                        Stats da classificação
-                      </h2>
-                      <p
-                        className={`text-[11px] font-semibold ${
-                          isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                        }`}
-                      >
-                        {category} · {competitionLabels[competition] || competition}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div
-                    className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
-                      isDarkMode
-                        ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                        : theme.headerChip
-                    }`}
-                  >
-                    Painel premium
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <CompactStatCard
-                title="Pilotos ativos"
-                value={statsSummary.totalPilots}
-                subtitle="com pontuação na seleção atual"
-                icon={Users}
-                categoryTheme={theme}
-                isDark={isDarkMode}
-              />
-              <CompactStatCard
-                title="Vantagem do líder"
-                value={`${statsSummary.leaderAdvantage} pts`}
-                subtitle="sobre o 2º colocado"
-                icon={Crown}
-                accent
-                categoryTheme={theme}
-                isDark={isDarkMode}
-              />
-              <CompactStatCard
-                title="Média geral"
-                value={statsSummary.totalPilots ? statsSummary.avgPoints.toFixed(1) : "0.0"}
-                subtitle="pontos por piloto nesta leitura"
-                icon={Gauge}
-                categoryTheme={theme}
-                isDark={isDarkMode}
-              />
-              <CompactStatCard
-                title="Corte Top 6"
-                value={`${statsSummary.top6CutPoints} pts`}
-                subtitle="pontuação mínima da zona de troféu"
-                icon={Medal}
-                accent
-                categoryTheme={theme}
-                isDark={isDarkMode}
-              />
-            </div>
+            <RankingStatsSummaryGrid
+              statsSummary={statsSummary}
+              theme={theme}
+              isDarkMode={isDarkMode}
+              CompactStatCard={CompactStatCard}
+              UsersIcon={Users}
+              CrownIcon={Crown}
+              GaugeIcon={Gauge}
+              MedalIcon={Medal}
+            />
 
             <div className="grid grid-cols-1 gap-3">
               <HighlightCard
