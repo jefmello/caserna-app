@@ -5563,7 +5563,7 @@ const duelSummary = useMemo(() => {
               </div>
             </div>
 
-          <div className="fixed bottom-1.5 left-1/2 z-30 w-[calc(100%-22px)] max-w-md -translate-x-1/2">
+          <div className="fixed bottom-1 left-1/2 z-30 w-[calc(100%-22px)] max-w-md -translate-x-1/2">
             <Card
               className={`relative overflow-hidden rounded-[18px] shadow-[0_16px_34px_rgba(15,23,42,0.16)] backdrop-blur-2xl ${
                 isDarkMode
@@ -5576,8 +5576,8 @@ const duelSummary = useMemo(() => {
                   ? "bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.10),transparent_48%),linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent)]"
                   : "bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.72),transparent_42%),linear-gradient(90deg,transparent,rgba(255,255,255,0.26),transparent)]"
               }`} />
-              <CardContent className="relative px-1.5 pb-[2px] pt-[1px]">
-                <div className="mb-[1px] flex justify-center">
+              <CardContent className="relative px-1.5 pb-[1px] pt-0">
+                <div className="mb-0 flex justify-center">
                   <p className={`text-center text-[8.5px] font-bold uppercase tracking-[0.19em] leading-none ${isDarkMode ? "text-zinc-100/95" : "text-slate-700"}`}>
                     Patrocinadores oficiais
                   </p>
