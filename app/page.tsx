@@ -125,16 +125,50 @@ const competitionLabels: Record<string, string> = {
 type SponsorItem = {
   name: string;
   src: string;
+  altBg: "light" | "dark";
+  objectClassName?: string;
 };
 
-const sponsorItems: SponsorItem[] = [
-  { name: "Lumine", src: "/patrocinadores/lumine.png" },
-  { name: "Lazy Kart", src: "/patrocinadores/lazykart.png" },
-  { name: "Precision", src: "/patrocinadores/precision.png" },
-  { name: "Vit's Burger", src: "/patrocinadores/vits.png" },
-  { name: "Sky Flow", src: "/patrocinadores/skyflow.png" },
-  { name: "Astera", src: "/patrocinadores/astera.png" },
+const sponsors: SponsorItem[] = [
+  {
+    name: "Lumine",
+    src: "/patrocinadores/lumine.png",
+    altBg: "dark",
+    objectClassName: "object-contain p-2.5",
+  },
+  {
+    name: "Lazy Kart",
+    src: "/patrocinadores/lazykart.png",
+    altBg: "light",
+    objectClassName: "object-contain p-2",
+  },
+  {
+    name: "Precision",
+    src: "/patrocinadores/precision.png",
+    altBg: "light",
+    objectClassName: "object-contain p-2.5",
+  },
+  {
+    name: "Vit's Burger",
+    src: "/patrocinadores/vits.png",
+    altBg: "light",
+    objectClassName: "object-contain p-2.5",
+  },
+  {
+    name: "Sky Flow",
+    src: "/patrocinadores/skyflow.png",
+    altBg: "light",
+    objectClassName: "object-contain p-2.5",
+  },
+  {
+    name: "Astera",
+    src: "/patrocinadores/astera.png",
+    altBg: "dark",
+    objectClassName: "object-contain p-2.5",
+  },
 ];
+
+const sponsorRows = [sponsors.slice(0, 3), sponsors.slice(3, 6)];
 
 function sortRanking(list: RankingItem[]) {
   return [...list].sort((a, b) => {
@@ -1134,44 +1168,72 @@ function getDuelProfileLabel({
 
 
 
-function SponsorGrid({
+function SponsorLogoCard({
+  sponsor,
   isDark = false,
-  variant = "fixed",
+  compact = false,
 }: {
+  sponsor: SponsorItem;
   isDark?: boolean;
-  variant?: "fixed" | "share";
+  compact?: boolean;
 }) {
-  const isShare = variant === "share";
+  const preferDarkSurface = sponsor.altBg === "dark";
+
+  const surfaceClassName = preferDarkSurface
+    ? isDark
+      ? "border-white/10 bg-[#0f172a]"
+      : "border-zinc-200 bg-[#0f172a]"
+    : isDark
+      ? "border-white/10 bg-white"
+      : "border-zinc-200 bg-white";
 
   return (
     <div
-      className={isShare ? "grid grid-cols-2 gap-3" : "grid grid-cols-3 gap-2"}
+      className={`group relative overflow-hidden rounded-[18px] border transition-all duration-300 ${surfaceClassName} ${
+        compact ? "h-[62px] px-2 py-2" : "h-[74px] px-2.5 py-2.5"
+      }`}
     >
-      {sponsorItems.map((sponsor) => (
-        <div
-          key={sponsor.name}
-          className={`group flex items-center justify-center overflow-hidden rounded-[16px] border ${
-            isShare
-              ? `h-[84px] px-3 py-3 ${
-                  isDark
-                    ? "border-white/10 bg-[#0f172a]"
-                    : "border-black/5 bg-white"
-                }`
-              : `h-[54px] px-2.5 py-2 ${
-                  isDark
-                    ? "border-white/10 bg-[#111827]/95 backdrop-blur-md"
-                    : "border-black/5 bg-white/95 backdrop-blur-md"
-                }`
-          }`}
-        >
-          <img
-            src={sponsor.src}
-            alt={sponsor.name}
-            className={`w-full object-contain ${isShare ? "h-12" : "h-7"}`}
-            loading="lazy"
-          />
-        </div>
-      ))}
+      <div
+        className={`pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 ${
+          preferDarkSurface
+            ? "bg-gradient-to-br from-white/5 via-transparent to-white/5"
+            : "bg-gradient-to-br from-black/[0.03] via-transparent to-black/[0.04]"
+        }`}
+      />
+      <div className="relative flex h-full w-full items-center justify-center">
+        <img
+          src={sponsor.src}
+          alt={sponsor.name}
+          className={`h-full w-full ${sponsor.objectClassName || "object-contain p-2"}`}
+          loading="lazy"
+        />
+      </div>
+    </div>
+  );
+}
+
+function SponsorMarqueeRow({
+  items,
+  reverse = false,
+  isDark = false,
+}: {
+  items: SponsorItem[];
+  reverse?: boolean;
+  isDark?: boolean;
+}) {
+  const marqueeClassName = reverse
+    ? "sponsor-marquee sponsor-marquee--reverse"
+    : "sponsor-marquee";
+
+  return (
+    <div className="overflow-hidden">
+      <div className={marqueeClassName}>
+        {[...items, ...items].map((sponsor, index) => (
+          <div key={`${sponsor.name}-${index}`} className="w-[30%] min-w-[106px] max-w-[132px] flex-shrink-0">
+            <SponsorLogoCard sponsor={sponsor} isDark={isDark} compact />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -1853,7 +1915,26 @@ const duelSummary = useMemo(() => {
         isDarkMode ? "bg-[#0b1220] text-white" : "bg-[#f3f4f6] text-zinc-950"
       }`}
     >
-      <div className="mx-auto max-w-md px-3 pb-40 pt-2">
+      <div className="mx-auto max-w-md px-3 pb-48 pt-2">
+      <style jsx global>{`
+        @keyframes sponsor-marquee-scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+
+        .sponsor-marquee {
+          display: flex;
+          width: max-content;
+          gap: 12px;
+          animation: sponsor-marquee-scroll 24s linear infinite;
+          will-change: transform;
+        }
+
+        .sponsor-marquee--reverse {
+          animation-direction: reverse;
+          animation-duration: 28s;
+        }
+      `}</style>
         <header
           className={`sticky top-0 z-20 mb-2 overflow-hidden rounded-[22px] shadow-[0_10px_25px_rgba(15,23,42,0.06)] ${
             isDarkMode
@@ -5376,7 +5457,7 @@ const duelSummary = useMemo(() => {
                   </div>
 
                   <div className="mt-8 grid grid-cols-[280px_1fr] items-start gap-6">
-                    <div className="self-start space-y-4">
+                    <div className="space-y-4 self-start">
                       <div className={`overflow-hidden rounded-[28px] border ${
                         isDarkMode ? `${theme.darkAccentBorder} bg-[#0f172a]` : `${theme.heroBorder} bg-zinc-50`
                       }`}>
@@ -5428,23 +5509,26 @@ const duelSummary = useMemo(() => {
                         </div>
                       </div>
 
-                      <div className={`rounded-[24px] border px-4 py-4 ${
-                        isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                      <div className={`rounded-[24px] border p-4 ${
+                        isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50/80"
                       }`}>
                         <div className="mb-3 flex items-center justify-between gap-2">
-                          <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
-                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                          }`}>
+                          <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
                             Patrocinadores oficiais
                           </p>
-                          <div className={`h-px flex-1 ${
-                            isDarkMode
-                              ? "bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                              : "bg-gradient-to-r from-transparent via-zinc-200 to-transparent"
-                          }`} />
+                          <div className={`h-px flex-1 ${isDarkMode ? "bg-white/10" : "bg-zinc-200"}`} />
                         </div>
 
-                        <SponsorGrid isDark={isDarkMode} variant="share" />
+                        <div className="grid grid-cols-2 gap-2.5">
+                          {sponsors.map((sponsor) => (
+                            <SponsorLogoCard
+                              key={`pilot-share-${sponsor.name}`}
+                              sponsor={sponsor}
+                              isDark={isDarkMode}
+                              compact
+                            />
+                          ))}
+                        </div>
                       </div>
                     </div>
 
@@ -5548,40 +5632,31 @@ const duelSummary = useMemo(() => {
                 </div>
               </div>
             </div>
+          </TabsContent>
 
-
-        <div className="pointer-events-none fixed inset-x-0 bottom-3 z-30 flex justify-center px-3">
-          <div className="pointer-events-auto w-full max-w-md">
+          <div className="fixed bottom-3 left-1/2 z-30 w-[calc(100%-24px)] max-w-md -translate-x-1/2">
             <Card
-              className={`overflow-hidden rounded-[22px] shadow-[0_14px_28px_rgba(15,23,42,0.12)] ${
+              className={`overflow-hidden rounded-[24px] shadow-[0_18px_40px_rgba(15,23,42,0.14)] backdrop-blur-xl ${
                 isDarkMode
-                  ? "border border-white/10 bg-[#0b1220]/96"
-                  : "border border-black/5 bg-white/96"
+                  ? "border border-white/10 bg-[rgba(10,16,28,0.92)]"
+                  : "border border-black/5 bg-[rgba(255,255,255,0.96)]"
               }`}
             >
-              <CardContent className="p-2.5">
-                <div className="mb-2 flex items-center justify-between gap-2 px-0.5">
-                  <p
-                    className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
-                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                    }`}
-                  >
+              <CardContent className="px-3 py-3">
+                <div className="mb-2 flex items-center gap-2">
+                  <p className={`text-[9px] font-bold uppercase tracking-[0.22em] ${isDarkMode ? "text-zinc-400" : "text-zinc-400"}`}>
                     Patrocinadores oficiais
                   </p>
-                  <div
-                    className={`h-px flex-1 ${
-                      isDarkMode
-                        ? "bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                        : "bg-gradient-to-r from-transparent via-zinc-200 to-transparent"
-                    }`}
-                  />
+                  <div className={`h-px flex-1 ${isDarkMode ? "bg-gradient-to-r from-white/0 via-white/10 to-white/0" : "bg-gradient-to-r from-zinc-200/0 via-zinc-200 to-zinc-200/0"}`} />
                 </div>
 
-                <SponsorGrid isDark={isDarkMode} variant="fixed" />
+                <div className="space-y-2">
+                  <SponsorMarqueeRow items={sponsorRows[0]} isDark={isDarkMode} />
+                  <SponsorMarqueeRow items={sponsorRows[1]} isDark={isDarkMode} reverse />
+                </div>
               </CardContent>
             </Card>
           </div>
-        </div>
 
         </Tabs>
       </div>
