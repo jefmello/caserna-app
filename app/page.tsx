@@ -18,14 +18,7 @@ import RankingPilotEmptyState from "@/components/ranking/ranking-pilot-empty-sta
 import RankingPilotHeroCard from "@/components/ranking/ranking-pilot-hero-card";
 import RankingPilotComparisonCard from "@/components/ranking/ranking-pilot-comparison-card";
 import RankingPilotPerformanceBlocksCard from "@/components/ranking/ranking-pilot-performance-blocks-card";
-import useRankingData, {
-  type RankingByCompetition,
-  type RankingCompetitionMeta,
-  type RankingData,
-  type RankingItem,
-  type RankingMetaData,
-  type RankingMetaPilot,
-} from "@/lib/hooks/useRankingData";
+import useRankingData from "@/lib/hooks/useRankingData";
 import Image from "next/image";
 import * as htmlToImage from "html-to-image";
 import {
@@ -70,6 +63,68 @@ import {
   BarChart,
   Bar,
 } from "recharts";
+
+type RankingItem = {
+  pos: number;
+  pilotoId: string;
+  piloto: string;
+  nomeGuerra: string;
+  pontos: number;
+  adv: number;
+  participacoes: number;
+  vitorias: number;
+  poles: number;
+  mv: number;
+  podios: number;
+  descarte: number;
+  categoriaAtual: string;
+  competicao: string;
+  categoria: string;
+};
+
+type RankingByCompetition = Record<string, RankingItem[]>;
+type RankingData = Record<string, RankingByCompetition>;
+
+type RankingMetaPilot = {
+  pos: number;
+  pilotoId: string;
+  piloto: string;
+  nomeGuerra: string;
+  pontos: number;
+  adv: number;
+  participacoes: number;
+  vitorias: number;
+  poles: number;
+  mv: number;
+  podios: number;
+  descarte: number;
+};
+
+type RankingCompetitionMeta = {
+  summary: {
+    totalPilots: number;
+    leaderPoints: number;
+    vicePoints: number;
+    leaderAdvantage: number;
+    top6CutPoints: number;
+    avgPoints: number;
+    totalVictories: number;
+    totalPodiums: number;
+  };
+  radar: {
+    hottestPilot: RankingMetaPilot | null;
+    hottestLabel: string;
+    podiumPressure: number;
+    titleHeat: string;
+  };
+  titleFight: {
+    label: string;
+    tone: string;
+  };
+  bestEfficiencyPilot: RankingMetaPilot | null;
+};
+
+type RankingMetaData = Record<string, Record<string, RankingCompetitionMeta>>;
 
 const categoryColors: Record<string, string> = {
   Base: "bg-orange-50 text-orange-700 border-orange-200",
@@ -1213,11 +1268,16 @@ function getDuelProfileLabel({
 }
 
 export default function CasernaKartAppModerno() {
+  const {
+    rankingData,
+    rankingMeta,
+    categories,
+    loading,
+    error,
+    retry,
+  } = useRankingData();
+
   const [category, setCategory] = useState("Base");
-  const { rankingData, rankingMeta, categories, loading, error, retry } = useRankingData({
-    initialCategory: "Base",
-    timeoutMs: 8000,
-  });
   const [competition, setCompetition] = useState("T1");
   const [search, setSearch] = useState("");
   const [selectedPilot, setSelectedPilot] = useState<RankingItem | null>(null);
@@ -1286,16 +1346,15 @@ export default function CasernaKartAppModerno() {
     return () => window.cancelAnimationFrame(firstFrame);
   }, [activeTab, scrollPageToTop]);
 
-
-  const availableCompetitions = useMemo(() => {
-    return Object.keys(rankingData[category] || {});
-  }, [rankingData, category]);
-
   useEffect(() => {
     if (categories.length === 0) return;
 
     setCategory((prev) => (categories.includes(prev) ? prev : categories[0]));
   }, [categories]);
+
+  const availableCompetitions = useMemo(() => {
+    return Object.keys(rankingData[category] || {});
+  }, [rankingData, category]);
 
   useEffect(() => {
     if (availableCompetitions.length === 0) return;
@@ -1816,6 +1875,10 @@ const duelWinnerPilot = useMemo(() => {
     setIsDarkMode((prev) => !prev);
   }
 
+  function handleRetry() {
+    retry();
+  }
+
   async function handleShareClassification() {
     if (!shareCardRef.current || isSharingImage) return;
 
@@ -1916,12 +1979,23 @@ const duelWinnerPilot = useMemo(() => {
             >
               {error}
             </p>
+            <button
+              onClick={handleRetry}
+              className={`mt-5 w-full rounded-2xl px-4 py-3 text-sm font-semibold transition ${
+                isDarkMode
+                  ? "bg-white/10 text-white hover:bg-white/20"
+                  : "bg-zinc-900 text-white hover:bg-zinc-800"
+              }`}
+            >
+              Tentar novamente
+            </button>
+
             <p
               className={`mt-4 text-sm ${
                 isDarkMode ? "text-zinc-400" : "text-zinc-500"
               }`}
             >
-              Abra <strong>/api/ranking</strong> no navegador para testar.
+              Ou abra <strong>/api/ranking</strong> no navegador para testar.
             </p>
           </div>
         </div>
