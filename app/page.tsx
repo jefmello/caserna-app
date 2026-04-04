@@ -18,6 +18,14 @@ import RankingPilotEmptyState from "@/components/ranking/ranking-pilot-empty-sta
 import RankingPilotHeroCard from "@/components/ranking/ranking-pilot-hero-card";
 import RankingPilotComparisonCard from "@/components/ranking/ranking-pilot-comparison-card";
 import RankingPilotPerformanceBlocksCard from "@/components/ranking/ranking-pilot-performance-blocks-card";
+import useRankingData, {
+  type RankingByCompetition,
+  type RankingCompetitionMeta,
+  type RankingData,
+  type RankingItem,
+  type RankingMetaData,
+  type RankingMetaPilot,
+} from "@/lib/hooks/useRankingData";
 import Image from "next/image";
 import * as htmlToImage from "html-to-image";
 import {
@@ -62,68 +70,6 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-
-type RankingItem = {
-  pos: number;
-  pilotoId: string;
-  piloto: string;
-  nomeGuerra: string;
-  pontos: number;
-  adv: number;
-  participacoes: number;
-  vitorias: number;
-  poles: number;
-  mv: number;
-  podios: number;
-  descarte: number;
-  categoriaAtual: string;
-  competicao: string;
-  categoria: string;
-};
-
-type RankingByCompetition = Record<string, RankingItem[]>;
-type RankingData = Record<string, RankingByCompetition>;
-
-type RankingMetaPilot = {
-  pos: number;
-  pilotoId: string;
-  piloto: string;
-  nomeGuerra: string;
-  pontos: number;
-  adv: number;
-  participacoes: number;
-  vitorias: number;
-  poles: number;
-  mv: number;
-  podios: number;
-  descarte: number;
-};
-
-type RankingCompetitionMeta = {
-  summary: {
-    totalPilots: number;
-    leaderPoints: number;
-    vicePoints: number;
-    leaderAdvantage: number;
-    top6CutPoints: number;
-    avgPoints: number;
-    totalVictories: number;
-    totalPodiums: number;
-  };
-  radar: {
-    hottestPilot: RankingMetaPilot | null;
-    hottestLabel: string;
-    podiumPressure: number;
-    titleHeat: string;
-  };
-  titleFight: {
-    label: string;
-    tone: string;
-  };
-  bestEfficiencyPilot: RankingMetaPilot | null;
-};
-
-type RankingMetaData = Record<string, Record<string, RankingCompetitionMeta>>;
 
 const categoryColors: Record<string, string> = {
   Base: "bg-orange-50 text-orange-700 border-orange-200",
@@ -1267,12 +1213,11 @@ function getDuelProfileLabel({
 }
 
 export default function CasernaKartAppModerno() {
-  const [rankingData, setRankingData] = useState<RankingData>({});
-  const [rankingMeta, setRankingMeta] = useState<RankingMetaData>({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [retryCount, setRetryCount] = useState(0);
   const [category, setCategory] = useState("Base");
+  const { rankingData, rankingMeta, categories, loading, error, retry } = useRankingData({
+    initialCategory: "Base",
+    timeoutMs: 8000,
+  });
   const [competition, setCompetition] = useState("T1");
   const [search, setSearch] = useState("");
   const [selectedPilot, setSelectedPilot] = useState<RankingItem | null>(null);
@@ -1341,42 +1286,16 @@ export default function CasernaKartAppModerno() {
     return () => window.cancelAnimationFrame(firstFrame);
   }, [activeTab, scrollPageToTop]);
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        setLoading(true);
-        setError("");
-
-        const response = await fetch("/api/ranking", { cache: "no-store" });
-        const json = await response.json();
-
-        if (!response.ok) {
-          throw new Error(json?.error || "Erro ao carregar os dados.");
-        }
-
-        setRankingData(json.data || {});
-        setRankingMeta(json.meta || {});
-
-        const cats = json.categories || [];
-        if (cats.length > 0) {
-          setCategory((prev: string) => (cats.includes(prev) ? prev : cats[0]));
-        }
-      } catch (err) {
-        console.error(err);
-        setError(err instanceof Error ? err.message : "Erro desconhecido.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadData();
-  }, []);
-
-  const categories = useMemo(() => Object.keys(rankingData), [rankingData]);
 
   const availableCompetitions = useMemo(() => {
     return Object.keys(rankingData[category] || {});
   }, [rankingData, category]);
+
+  useEffect(() => {
+    if (categories.length === 0) return;
+
+    setCategory((prev) => (categories.includes(prev) ? prev : categories[0]));
+  }, [categories]);
 
   useEffect(() => {
     if (availableCompetitions.length === 0) return;
@@ -1974,10 +1893,6 @@ const duelWinnerPilot = useMemo(() => {
     );
   }
 
-  function handleRetry() {
-  setRetryCount((prev) => prev + 1);
-}
-
   if (error) {
     return (
       <div
@@ -2006,24 +1921,7 @@ const duelWinnerPilot = useMemo(() => {
                 isDarkMode ? "text-zinc-400" : "text-zinc-500"
               }`}
             >
-              <button
-            onClick={handleRetry}
-            className={`mt-5 w-full rounded-2xl px-4 py-3 text-sm font-semibold transition ${
-              isDarkMode
-                ? "bg-white/10 hover:bg-white/20"
-                : "bg-zinc-900 text-white hover:bg-zinc-800"
-            }`}
-          >
-            Tentar novamente
-          </button>
-
-          <p
-            className={`mt-4 text-xs ${
-              isDarkMode ? "text-zinc-500" : "text-zinc-400"
-            }`}
-          >
-            Ou acesse <strong>/api/ranking</strong> para validar o feed
-          </p>
+              Abra <strong>/api/ranking</strong> no navegador para testar.
             </p>
           </div>
         </div>
