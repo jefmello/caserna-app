@@ -1271,6 +1271,7 @@ export default function CasernaKartAppModerno() {
   const [rankingMeta, setRankingMeta] = useState<RankingMetaData>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [retryCount, setRetryCount] = useState(0);
   const [category, setCategory] = useState("Base");
   const [competition, setCompetition] = useState("T1");
   const [search, setSearch] = useState("");
@@ -1973,6 +1974,10 @@ const duelWinnerPilot = useMemo(() => {
     );
   }
 
+  function handleRetry() {
+  setRetryCount((prev) => prev + 1);
+}
+
   if (error) {
     return (
       <div
@@ -2001,7 +2006,24 @@ const duelWinnerPilot = useMemo(() => {
                 isDarkMode ? "text-zinc-400" : "text-zinc-500"
               }`}
             >
-              Abra <strong>/api/ranking</strong> no navegador para testar.
+              <button
+            onClick={handleRetry}
+            className={`mt-5 w-full rounded-2xl px-4 py-3 text-sm font-semibold transition ${
+              isDarkMode
+                ? "bg-white/10 hover:bg-white/20"
+                : "bg-zinc-900 text-white hover:bg-zinc-800"
+            }`}
+          >
+            Tentar novamente
+          </button>
+
+          <p
+            className={`mt-4 text-xs ${
+              isDarkMode ? "text-zinc-500" : "text-zinc-400"
+            }`}
+          >
+            Ou acesse <strong>/api/ranking</strong> para validar o feed
+          </p>
             </p>
           </div>
         </div>
