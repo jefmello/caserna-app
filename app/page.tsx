@@ -19,6 +19,14 @@ import RankingPilotHeroCard from "@/components/ranking/ranking-pilot-hero-card";
 import RankingPilotComparisonCard from "@/components/ranking/ranking-pilot-comparison-card";
 import RankingPilotPerformanceBlocksCard from "@/components/ranking/ranking-pilot-performance-blocks-card";
 import useRankingData from "@/lib/hooks/useRankingData";
+import type {
+  RankingByCompetition,
+  RankingCompetitionMeta,
+  RankingData,
+  RankingItem,
+  RankingMetaData,
+  RankingMetaPilot,
+} from "@/types/ranking";
 import Image from "next/image";
 import * as htmlToImage from "html-to-image";
 import {
@@ -63,68 +71,6 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-
-type RankingItem = {
-  pos: number;
-  pilotoId: string;
-  piloto: string;
-  nomeGuerra: string;
-  pontos: number;
-  adv: number;
-  participacoes: number;
-  vitorias: number;
-  poles: number;
-  mv: number;
-  podios: number;
-  descarte: number;
-  categoriaAtual: string;
-  competicao: string;
-  categoria: string;
-};
-
-type RankingByCompetition = Record<string, RankingItem[]>;
-type RankingData = Record<string, RankingByCompetition>;
-
-type RankingMetaPilot = {
-  pos: number;
-  pilotoId: string;
-  piloto: string;
-  nomeGuerra: string;
-  pontos: number;
-  adv: number;
-  participacoes: number;
-  vitorias: number;
-  poles: number;
-  mv: number;
-  podios: number;
-  descarte: number;
-};
-
-type RankingCompetitionMeta = {
-  summary: {
-    totalPilots: number;
-    leaderPoints: number;
-    vicePoints: number;
-    leaderAdvantage: number;
-    top6CutPoints: number;
-    avgPoints: number;
-    totalVictories: number;
-    totalPodiums: number;
-  };
-  radar: {
-    hottestPilot: RankingMetaPilot | null;
-    hottestLabel: string;
-    podiumPressure: number;
-    titleHeat: string;
-  };
-  titleFight: {
-    label: string;
-    tone: string;
-  };
-  bestEfficiencyPilot: RankingMetaPilot | null;
-};
-
-type RankingMetaData = Record<string, Record<string, RankingCompetitionMeta>>;
 
 const categoryColors: Record<string, string> = {
   Base: "bg-orange-50 text-orange-700 border-orange-200",

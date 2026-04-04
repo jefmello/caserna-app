@@ -17,6 +17,7 @@ export type RankingItem = {
 };
 
 export type RankingByCompetition = Record<string, RankingItem[]>;
+
 export type RankingData = Record<string, RankingByCompetition>;
 
 export type RankingMetaPilot = {
