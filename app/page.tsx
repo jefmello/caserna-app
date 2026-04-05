@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import RankingShell from "@/components/ranking/ranking-shell";
 import RankingHeader from "@/components/ranking/ranking-header";
 import RankingSpotlight from "@/components/ranking/ranking-spotlight";
@@ -22,7 +22,6 @@ import RankingPilotDuelCard from "@/components/ranking/ranking-pilot-duel-card";
 import useRankingData from "@/lib/hooks/useRankingData";
 import useRankingFilters from "@/lib/hooks/useRankingFilters";
 import usePilotAnalysis from "@/lib/hooks/usePilotAnalysis";
-import useShare from "@/lib/hooks/useShare";
 import {
   categoryColors,
   competitionLabels,
@@ -66,6 +65,7 @@ import type {
   RankingMetaPilot,
 } from "@/types/ranking";
 import Image from "next/image";
+import * as htmlToImage from "html-to-image";
 import {
   Trophy,
   Medal,
@@ -591,6 +591,10 @@ export default function CasernaKartAppModerno() {
   const [comparePilotAId, setComparePilotAId] = useState("");
   const [comparePilotBId, setComparePilotBId] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const shareCardRef = useRef<HTMLDivElement | null>(null);
+  const pilotShareCardRef = useRef<HTMLDivElement | null>(null);
+  const [isSharingImage, setIsSharingImage] = useState(false);
+  const [isSharingPilotImage, setIsSharingPilotImage] = useState(false);
   const scrollPageToTop = React.useCallback((behavior: ScrollBehavior = "smooth") => {
     if (typeof window === "undefined") return;
 
@@ -864,21 +868,6 @@ const duelWinnerPilot = useMemo(() => {
     competition,
   });
 
-  const {
-    shareCardRef,
-    pilotShareCardRef,
-    isSharingImage,
-    isSharingPilotImage,
-    handleShareClassification,
-    handleSharePilotCard,
-  } = useShare({
-    selectedPilot,
-    safeSelectedPilot,
-    category,
-    competition,
-    isDarkMode,
-  });
-
   const selectedPilotShortName = useMemo(
     () => getPilotFirstAndLastName(selectedPilot?.piloto),
     [selectedPilot]
@@ -1072,6 +1061,57 @@ const duelWinnerPilot = useMemo(() => {
     retry();
   }
 
+  async function handleShareClassification() {
+    if (!shareCardRef.current || isSharingImage) return;
+
+    try {
+      setIsSharingImage(true);
+      const dataUrl = await htmlToImage.toPng(shareCardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
+      });
+
+      const link = document.createElement("a");
+      link.download = `classificacao-${category.toLowerCase()}-${competition.toLowerCase()}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error(err);
+      window.alert("Não foi possível gerar a imagem da classificação.");
+    } finally {
+      setIsSharingImage(false);
+    }
+  }
+
+  async function handleSharePilotCard() {
+    if (!selectedPilot || !pilotShareCardRef.current || isSharingPilotImage) return;
+
+    try {
+      setIsSharingPilotImage(true);
+      const dataUrl = await htmlToImage.toPng(pilotShareCardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
+      });
+
+      const safePilotName = getPilotFirstAndLastName(safeSelectedPilot.piloto)
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[̀-ͯ]/g, "")
+        .replace(/\s+/g, "-");
+
+      const link = document.createElement("a");
+      link.download = `piloto-${safePilotName}-${category.toLowerCase()}-${competition.toLowerCase()}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error(err);
+      window.alert("Não foi possível gerar a imagem do piloto.");
+    } finally {
+      setIsSharingPilotImage(false);
+    }
+  }
 
   const getSpotlightPilotWarName = (pilot: unknown) => {
     if (!pilot || typeof pilot !== "object") return "";
@@ -1157,7 +1197,7 @@ const duelWinnerPilot = useMemo(() => {
         isDarkMode ? "bg-[#0b1220] text-white" : "bg-[#f3f4f6] text-zinc-950"
       }`}
     >
-      <div className="mx-auto max-w-md px-2.5 pb-32 pt-1.5">
+      <div className="mx-auto w-full max-w-md px-2.5 pb-32 pt-1.5 sm:max-w-2xl sm:px-4 lg:max-w-5xl lg:px-6 xl:max-w-[1320px] xl:px-8">
         <RankingHeader
           isDarkMode={isDarkMode}
           theme={theme}
@@ -2466,65 +2506,73 @@ const duelWinnerPilot = useMemo(() => {
   </Card>
 </TabsContent>
 
-          <TabsContent value="stats" className="mt-0 space-y-4 pt-0">
-            <RankingStatsHeader
-              isDarkMode={isDarkMode}
-              theme={theme}
-              category={category}
-              competition={competition}
-              competitionLabels={competitionLabels}
-            />
+          <TabsContent value="stats" className="mt-0 space-y-4 pt-0 xl:space-y-5">
+            <div className="space-y-4 xl:grid xl:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] xl:items-start xl:gap-5 xl:space-y-0">
+              <div className="space-y-4">
+                <RankingStatsHeader
+                  isDarkMode={isDarkMode}
+                  theme={theme}
+                  category={category}
+                  competition={competition}
+                  competitionLabels={competitionLabels}
+                />
 
-            <RankingStatsSummaryGrid
-              statsSummary={statsSummary}
-              theme={theme}
-              isDarkMode={isDarkMode}
-              CompactStatCard={CompactStatCard}
-              UsersIcon={Users}
-              CrownIcon={Crown}
-              GaugeIcon={Gauge}
-              MedalIcon={Medal}
-            />
+                <RankingStatsTopPointsChartCard
+                  topPointsChartData={topPointsChartData}
+                  theme={theme}
+                  isDarkMode={isDarkMode}
+                  BarChart3Icon={BarChart3}
+                  ResponsiveContainerComponent={ResponsiveContainer}
+                  CartesianGridComponent={CartesianGrid}
+                  XAxisComponent={XAxis}
+                  YAxisComponent={YAxis}
+                  TooltipComponent={Tooltip}
+                  BarChartComponent={BarChart}
+                  BarComponent={Bar}
+                />
+              </div>
 
-            <RankingStatsRadarCard
-              statsRadar={statsRadar}
-              statsSummary={statsSummary}
-              bestEfficiencyPilot={bestEfficiencyPilot}
-              theme={theme}
-              category={category}
-              isDarkMode={isDarkMode}
-              HighlightCard={HighlightCard}
-              StarIcon={Star}
-              getPilotFirstAndLastName={getPilotFirstAndLastName}
-            />
+              <div className="space-y-4 xl:sticky xl:top-6">
+                <RankingStatsSummaryGrid
+                  statsSummary={statsSummary}
+                  theme={theme}
+                  isDarkMode={isDarkMode}
+                  CompactStatCard={CompactStatCard}
+                  UsersIcon={Users}
+                  CrownIcon={Crown}
+                  GaugeIcon={Gauge}
+                  MedalIcon={Medal}
+                />
 
-            <RankingStatsTopPointsChartCard
-              topPointsChartData={topPointsChartData}
-              theme={theme}
-              isDarkMode={isDarkMode}
-              BarChart3Icon={BarChart3}
-              ResponsiveContainerComponent={ResponsiveContainer}
-              CartesianGridComponent={CartesianGrid}
-              XAxisComponent={XAxis}
-              YAxisComponent={YAxis}
-              TooltipComponent={Tooltip}
-              BarChartComponent={BarChart}
-              BarComponent={Bar}
-            />
+                <RankingStatsRadarCard
+                  statsRadar={statsRadar}
+                  statsSummary={statsSummary}
+                  bestEfficiencyPilot={bestEfficiencyPilot}
+                  theme={theme}
+                  category={category}
+                  isDarkMode={isDarkMode}
+                  HighlightCard={HighlightCard}
+                  StarIcon={Star}
+                  getPilotFirstAndLastName={getPilotFirstAndLastName}
+                />
+              </div>
+            </div>
 
-            <RankingStatsMetricCardsGrid
-              StatRankingCardComponent={StatRankingCard}
-              topVitorias={topVitorias}
-              topPoles={topPoles}
-              topMv={topMv}
-              topPodios={topPodios}
-              theme={theme}
-              isDarkMode={isDarkMode}
-              TrophyIcon={Trophy}
-              FlagIcon={Flag}
-              TimerIcon={Timer}
-              MedalIcon={Medal}
-            />
+            <div className="xl:pt-1">
+              <RankingStatsMetricCardsGrid
+                StatRankingCardComponent={StatRankingCard}
+                topVitorias={topVitorias}
+                topPoles={topPoles}
+                topMv={topMv}
+                topPodios={topPodios}
+                theme={theme}
+                isDarkMode={isDarkMode}
+                TrophyIcon={Trophy}
+                FlagIcon={Flag}
+                TimerIcon={Timer}
+                MedalIcon={Medal}
+              />
+            </div>
           </TabsContent>
             <div className="pointer-events-none fixed -left-[9999px] top-0 z-[-1] opacity-0">
               <div
@@ -2779,7 +2827,7 @@ const duelWinnerPilot = useMemo(() => {
               </div>
             </div>
 
-          <div className="fixed bottom-1 left-1/2 z-30 w-[calc(100%-22px)] max-w-md -translate-x-1/2">
+          <div className="fixed bottom-1 left-1/2 z-30 w-[calc(100%-22px)] max-w-md -translate-x-1/2 sm:max-w-2xl lg:max-w-5xl xl:max-w-[1320px]">
             <Card
               className={`relative overflow-hidden rounded-[18px] shadow-[0_16px_34px_rgba(15,23,42,0.16)] backdrop-blur-2xl ${
                 isDarkMode
