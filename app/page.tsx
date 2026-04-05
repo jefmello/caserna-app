@@ -105,6 +105,17 @@ import {
   Bar,
 } from "recharts";
 
+
+type CategoryThemeLike = ReturnType<typeof getCategoryTheme>;
+
+function resolveCategoryTheme(categoryTheme: unknown): CategoryThemeLike {
+  if (categoryTheme && typeof categoryTheme === "object") {
+    return categoryTheme as CategoryThemeLike;
+  }
+
+  return getCategoryTheme("Base");
+}
+
 function CompactStatCard({
   title,
   value,
@@ -120,14 +131,16 @@ function CompactStatCard({
   icon: React.ElementType;
   accent?: boolean;
   isDark?: boolean;
-  categoryTheme: ReturnType<typeof getCategoryTheme>;
+  categoryTheme: unknown;
 }) {
+  const resolvedCategoryTheme = resolveCategoryTheme(categoryTheme);
+
   return (
     <Card
       className={`rounded-[18px] border shadow-none ${
         isDark
           ? accent
-            ? `${categoryTheme.darkAccentBorder} ${categoryTheme.darkAccentBgSoft}`
+            ? `${resolvedCategoryTheme.darkAccentBorder} ${resolvedCategoryTheme.darkAccentBgSoft}`
             : "border-white/10 bg-[#111827]"
           : accent
             ? "border-yellow-300/80 bg-yellow-50/70"
@@ -147,7 +160,7 @@ function CompactStatCard({
             className={`flex h-7 w-7 items-center justify-center rounded-2xl ${
               isDark
                 ? accent
-                  ? categoryTheme.darkAccentIconWrap
+                  ? resolvedCategoryTheme.darkAccentIconWrap
                   : "bg-white/5"
                 : accent
                   ? "bg-yellow-100"
@@ -158,7 +171,7 @@ function CompactStatCard({
               className={`h-3.5 w-3.5 ${
                 isDark
                   ? accent
-                    ? categoryTheme.darkAccentText
+                    ? resolvedCategoryTheme.darkAccentText
                     : "text-zinc-300"
                   : accent
                     ? "text-yellow-700"
@@ -212,8 +225,9 @@ function HighlightCard({
   };
   compact?: boolean;
   isDark?: boolean;
-  categoryTheme: ReturnType<typeof getCategoryTheme>;
+  categoryTheme: unknown;
 }) {
+  const resolvedCategoryTheme = resolveCategoryTheme(categoryTheme);
   const defaultAccent = {
     border: "border-yellow-300",
     bg: "bg-gradient-to-b from-yellow-50 to-white",
@@ -232,7 +246,7 @@ function HighlightCard({
       } ${
         isDark
           ? accent
-            ? `${categoryTheme.darkAccentBorder} bg-gradient-to-b ${categoryTheme.darkAccentCard}`
+            ? `${resolvedCategoryTheme.darkAccentBorder} bg-gradient-to-b ${categoryTheme.darkAccentCard}`
             : "border-white/10 bg-[#111827]"
           : accent
             ? `${appliedAccent.border} ${appliedAccent.bg}`
@@ -253,7 +267,7 @@ function HighlightCard({
             } ${
               isDark
                 ? accent
-                  ? categoryTheme.darkAccentText
+                  ? resolvedCategoryTheme.darkAccentText
                   : "text-zinc-400"
                 : accent
                   ? appliedAccent.text
@@ -269,7 +283,7 @@ function HighlightCard({
             } ${
               isDark
                 ? accent
-                  ? categoryTheme.darkAccentIconWrap
+                  ? resolvedCategoryTheme.darkAccentIconWrap
                   : "bg-white/5"
                 : accent
                   ? appliedAccent.iconWrap
@@ -280,7 +294,7 @@ function HighlightCard({
               className={`${compact ? "h-2.5 w-2.5" : "h-3 w-3"} ${
                 isDark
                   ? accent
-                    ? categoryTheme.darkAccentText
+                    ? resolvedCategoryTheme.darkAccentText
                     : "text-zinc-300"
                   : accent
                     ? appliedAccent.icon
@@ -313,16 +327,11 @@ function PilotPhotoSlot({
   alt,
   isDark = false,
 }: {
-  pilot?: unknown;
+  pilot?: RankingItem | null;
   alt: string;
   isDark?: boolean;
 }) {
-  const pilotoId =
-    pilot && typeof pilot === "object" && "pilotoId" in pilot
-      ? (pilot as { pilotoId?: string | null }).pilotoId
-      : null;
-
-  const src = pilotoId ? `/pilotos/${pilotoId}.jpg` : null;
+  const src = getPilotPhotoPath(pilot);
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
@@ -1231,11 +1240,6 @@ const duelWinnerPilot = useMemo(() => {
     );
   }
 
-  const getSpotlightPilotWarName = (pilot: unknown) => {
-    if (!pilot || typeof pilot !== "object") return "";
-    return getPilotWarName(pilot as RankingItem | null | undefined);
-  };
-
   if (error) {
     return (
       <div
@@ -1312,7 +1316,7 @@ const duelWinnerPilot = useMemo(() => {
           leaderName={leaderName}
           PilotPhotoSlot={PilotPhotoSlot}
           getPilotHighlightName={getPilotHighlightName}
-          getPilotWarName={getSpotlightPilotWarName}
+          getPilotWarName={getPilotWarName}
         />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-3">
