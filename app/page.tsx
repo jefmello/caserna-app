@@ -246,7 +246,7 @@ function HighlightCard({
       } ${
         isDark
           ? accent
-            ? `${resolvedCategoryTheme.darkAccentBorder} bg-gradient-to-b ${categoryTheme.darkAccentCard}`
+            ? `${resolvedCategoryTheme.darkAccentBorder} bg-gradient-to-b ${resolvedCategoryTheme.darkAccentCard}`
             : "border-white/10 bg-[#111827]"
           : accent
             ? `${appliedAccent.border} ${appliedAccent.bg}`
@@ -308,7 +308,7 @@ function HighlightCard({
           className={`mb-1 h-px w-full ${
             isDark
               ? accent
-                ? categoryTheme.darkAccentDivider
+                ? resolvedCategoryTheme.darkAccentDivider
                 : "bg-white/10"
               : accent
                 ? appliedAccent.divider
