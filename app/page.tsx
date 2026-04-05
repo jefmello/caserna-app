@@ -139,7 +139,7 @@ function CompactStatCard({
 
   return (
     <Card
-      className={`rounded-[18px] border shadow-none ${
+      className={`rounded-[18px] border shadow-none transition-all duration-200 hover:-translate-y-[1px] ${
         isDark
           ? accent
             ? `${resolvedCategoryTheme.darkAccentBorder} ${resolvedCategoryTheme.darkAccentBgSoft}`
@@ -184,7 +184,7 @@ function CompactStatCard({
         </div>
 
         <p
-          className={`text-[22px] font-bold leading-none tracking-tight ${
+          className={`text-[22px] font-bold leading-none tracking-tight tabular-nums ${
             isDark ? "text-white" : "text-zinc-950"
           }`}
         >
@@ -243,7 +243,7 @@ function HighlightCard({
 
   return (
     <Card
-      className={`rounded-[22px] border shadow-none ${
+      className={`rounded-[22px] border shadow-none transition-all duration-200 hover:-translate-y-[1px] ${
         compact ? "h-[144px]" : "h-auto min-h-[168px]"
       } ${
         isDark
@@ -375,7 +375,7 @@ function PilotPhotoSlot({
         >
           <div className="text-center">
             <div
-              className={`mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-2xl shadow-sm ${
+              className={`mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-2xl shadow-sm transition-all duration-200 hover:-translate-y-[1px] ${
                 isDark ? "bg-white/5" : "bg-white"
               }`}
             >
@@ -421,7 +421,7 @@ function StatRankingCard({
 }) {
   return (
     <Card
-      className={`overflow-hidden rounded-[22px] shadow-sm ${
+      className={`overflow-hidden rounded-[22px] shadow-sm transition-all duration-200 hover:-translate-y-[1px] ${
         isDark ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"
       }`}
     >
@@ -453,7 +453,7 @@ function StatRankingCard({
               Ranking estatístico
             </p>
             <p
-              className={`text-[14px] font-extrabold tracking-tight ${
+              className={`text-[14px] font-extrabold tracking-[0.01em] ${
                 isDark ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -1152,7 +1152,7 @@ const duelWinnerPilot = useMemo(() => {
       >
         <div className="flex min-h-screen items-center justify-center px-6">
           <div
-            className={`max-w-md rounded-3xl p-6 text-center shadow-sm ${
+            className={`max-w-md rounded-3xl p-6 text-center shadow-sm transition-all duration-200 hover:-translate-y-[1px] ${
               isDarkMode
                 ? "border border-red-500/30 bg-[#111827]"
                 : "border border-red-300 bg-white"
@@ -1197,7 +1197,7 @@ const duelWinnerPilot = useMemo(() => {
         isDarkMode ? "bg-[#0b1220] text-white" : "bg-[#f3f4f6] text-zinc-950"
       }`}
     >
-      <div className="mx-auto w-full max-w-md px-2.5 pb-32 pt-1.5 sm:max-w-2xl sm:px-4 lg:max-w-5xl lg:px-6 xl:max-w-[1320px] xl:px-8">
+      <div className="mx-auto w-full max-w-md px-2.5 pb-36 pt-2 sm:max-w-2xl sm:px-4 sm:pb-40 sm:pt-2.5 lg:max-w-5xl lg:px-6 lg:pb-44 lg:pt-3 xl:max-w-[1320px] xl:px-8 xl:pb-48 xl:pt-4">
         <RankingHeader
           isDarkMode={isDarkMode}
           theme={theme}
@@ -1222,14 +1222,14 @@ const duelWinnerPilot = useMemo(() => {
           getPilotWarName={getSpotlightPilotWarName}
         />
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-3">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-3 sm:mt-4 lg:mt-5 xl:mt-6">
           <RankingTabs
             activeTab={activeTab}
             category={category}
             isDarkMode={isDarkMode}
           />
 
-          <TabsContent value="classificacao" className="mt-0 space-y-3 pt-0.5">
+          <TabsContent value="classificacao" className="mt-0 space-y-3 pt-0.5 lg:space-y-4 xl:space-y-5">
             <RankingSearchCard
               isDarkMode={isDarkMode}
               theme={theme}
@@ -1249,7 +1249,7 @@ const duelWinnerPilot = useMemo(() => {
             />
 
             <Card
-              className={`overflow-hidden rounded-[22px] shadow-sm ${
+              className={`overflow-hidden rounded-[22px] shadow-sm transition-all duration-200 hover:-translate-y-[1px] ${
                 isDarkMode
                   ? `border ${theme.darkAccentBorder} bg-[#111827]`
                   : `border ${theme.searchBorder} bg-gradient-to-br from-white via-white to-zinc-50/70`
@@ -1567,7 +1567,7 @@ const duelWinnerPilot = useMemo(() => {
                       <p className={`text-[14px] font-bold uppercase tracking-[0.16em] ${
                         isDarkMode ? "text-zinc-500" : "text-zinc-400"
                       }`}>Líder</p>
-                      <p className="mt-2 text-[26px] font-extrabold">{leader ? getPilotFirstAndLastName(leader.piloto) : "-"}</p>
+                      <p className="mt-2 text-[26px] font-extrabold tabular-nums">{leader ? getPilotFirstAndLastName(leader.piloto) : "-"}</p>
                       <p className={`mt-1 text-[18px] font-semibold ${
                         isDarkMode ? theme.darkAccentText : "text-zinc-700"
                       }`}>{leader?.pontos || 0} pontos</p>
@@ -1578,7 +1578,7 @@ const duelWinnerPilot = useMemo(() => {
                       <p className={`text-[14px] font-bold uppercase tracking-[0.16em] ${
                         isDarkMode ? "text-zinc-500" : "text-zinc-400"
                       }`}>Pilotos</p>
-                      <p className="mt-2 text-[26px] font-extrabold">{filteredRanking.length}</p>
+                      <p className="mt-2 text-[26px] font-extrabold tabular-nums">{filteredRanking.length}</p>
                       <p className={`mt-1 text-[18px] font-semibold ${
                         isDarkMode ? "text-zinc-300" : "text-zinc-700"
                       }`}>na classificação atual</p>
@@ -1589,7 +1589,7 @@ const duelWinnerPilot = useMemo(() => {
                       <p className={`text-[14px] font-bold uppercase tracking-[0.16em] ${
                         isDarkMode ? "text-zinc-500" : "text-zinc-400"
                       }`}>Vantagem</p>
-                      <p className="mt-2 text-[26px] font-extrabold">{filteredRanking[1] ? Math.max((leader?.pontos || 0) - filteredRanking[1].pontos, 0) : 0} pts</p>
+                      <p className="mt-2 text-[26px] font-extrabold tabular-nums">{filteredRanking[1] ? Math.max((leader?.pontos || 0) - filteredRanking[1].pontos, 0) : 0} pts</p>
                       <p className={`mt-1 text-[18px] font-semibold ${
                         isDarkMode ? "text-zinc-300" : "text-zinc-700"
                       }`}>do líder para o vice</p>
@@ -1639,7 +1639,7 @@ const duelWinnerPilot = useMemo(() => {
                           </div>
 
                           <div className="min-w-0">
-                            <p className="truncate text-[26px] font-extrabold tracking-tight">
+                            <p className="truncate text-[26px] font-extrabold tabular-nums tracking-tight">
                               {getPilotFirstAndLastName(item.piloto)}
                             </p>
                             <div className="mt-2 flex items-center gap-2">
@@ -1679,7 +1679,7 @@ const duelWinnerPilot = useMemo(() => {
                               }`}>
                                 {stat.label}
                               </p>
-                              <p className="mt-1 text-[22px] font-extrabold leading-none">{stat.value}</p>
+                              <p className="mt-1 text-[22px] font-extrabold leading-none tabular-nums">{stat.value}</p>
                             </div>
                           ))}
                         </div>
@@ -1703,7 +1703,7 @@ const duelWinnerPilot = useMemo(() => {
             />
             <section className="space-y-3">
               <div
-                className={`overflow-hidden rounded-[22px] shadow-sm ${
+                className={`overflow-hidden rounded-[22px] shadow-sm transition-all duration-200 hover:-translate-y-[1px] ${
                   isDarkMode
                     ? `border ${theme.darkAccentBorder} bg-[#111827]`
                     : `border ${theme.titleBorder} bg-gradient-to-br ${theme.titleBg}`
@@ -1725,7 +1725,7 @@ const duelWinnerPilot = useMemo(() => {
                           }`}
                         >
                           <h2
-                            className={`truncate text-[17px] font-extrabold uppercase leading-none tracking-[0.05em] ${
+                            className={`truncate text-[17px] font-extrabold uppercase leading-none tracking-[0.08em] ${
                               isDarkMode ? "text-white" : theme.titlePillText
                             }`}
                           >
@@ -1761,7 +1761,7 @@ const duelWinnerPilot = useMemo(() => {
               </div>
 
               <Card
-                className={`overflow-hidden rounded-[22px] shadow-sm ${
+                className={`overflow-hidden rounded-[22px] shadow-sm transition-all duration-200 hover:-translate-y-[1px] ${
                   isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
                 }`}
               >
@@ -1776,7 +1776,7 @@ const duelWinnerPilot = useMemo(() => {
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex min-w-0 items-center gap-2.5">
                         <div
-                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl shadow-sm ${
+                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl shadow-sm transition-all duration-200 hover:-translate-y-[1px] ${
                             isDarkMode ? theme.darkAccentIconWrap : theme.titleIconWrap
                           }`}
                         >
@@ -1796,7 +1796,7 @@ const duelWinnerPilot = useMemo(() => {
                             Painel oficial
                           </p>
                           <p
-                            className={`text-[14px] font-extrabold tracking-tight ${
+                            className={`text-[14px] font-extrabold tracking-[0.01em] ${
                               isDarkMode ? "text-white" : "text-zinc-950"
                             }`}
                           >
@@ -1982,17 +1982,17 @@ const duelWinnerPilot = useMemo(() => {
                                     : index === 4
                                       ? "bg-gradient-to-r from-violet-500/10 via-[#161e2b] to-[#111827] border-l-[4px] border-l-violet-400 shadow-[0_0_0_1px_rgba(168,85,247,0.12),0_10px_22px_rgba(0,0,0,0.2)]"
                                       : "bg-gradient-to-r from-emerald-500/10 via-[#161e2b] to-[#111827] border-l-[4px] border-l-emerald-400 shadow-[0_0_0_1px_rgba(52,211,153,0.12),0_10px_22px_rgba(0,0,0,0.2)]"
-                            : `${index % 2 === 0 ? "bg-[#111827]" : "bg-[#0f172a]"} hover:bg-[#161e2b]`;
+                            : `${index % 2 === 0 ? "bg-[#111827]" : "bg-[#0f172a]"} hover:bg-[#161e2b] hover:shadow-[inset_4px_0_0_rgba(250,204,21,0.18)]`;
 
                           return (
                             <tr
                               key={`${category}-${competition}-table-${item.pos}-${item.piloto}`}
-                              className={`group transition ${
+                              className={`group transition-all duration-200 ${
                                 isDarkMode
                                   ? darkRow
                                   : isTop6
                                     ? styles.row
-                                    : `${index % 2 === 0 ? "bg-white" : "bg-zinc-50/40"} hover:bg-zinc-50`
+                                    : `${index % 2 === 0 ? "bg-white" : "bg-zinc-50/40"} hover:bg-zinc-50 hover:shadow-[inset_4px_0_0_rgba(161,161,170,0.28)]`
                               }`}
                             >
                               <td className="px-1 py-2.5 text-center align-middle">
@@ -2163,7 +2163,7 @@ const duelWinnerPilot = useMemo(() => {
             </RankingClassificationSection>
           </TabsContent>
 
-          <TabsContent value="piloto" className="mt-0 space-y-4 pt-0">
+          <TabsContent value="piloto" className="mt-0 space-y-4 pt-0 lg:space-y-5 xl:space-y-6">
             {!selectedPilot ? (
               <RankingPilotEmptyState
                 isDarkMode={isDarkMode}
@@ -2226,7 +2226,7 @@ const duelWinnerPilot = useMemo(() => {
                 />
 
                 <Card
-                  className={`rounded-[24px] shadow-sm ${
+                  className={`rounded-[24px] shadow-sm transition-all duration-200 hover:-translate-y-[1px] ${
                     isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
                   }`}
                 >
@@ -2350,9 +2350,9 @@ const duelWinnerPilot = useMemo(() => {
           </TabsContent>
 
 
-<TabsContent value="comparador" className="mt-0 space-y-4 pt-0">
+<TabsContent value="comparador" className="mt-0 space-y-4 pt-0 lg:space-y-5 xl:space-y-6">
   <Card
-    className={`overflow-hidden rounded-[24px] shadow-sm ${
+    className={`overflow-hidden rounded-[24px] shadow-sm transition-all duration-200 hover:-translate-y-[1px] ${
       isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
     }`}
   >
@@ -2409,7 +2409,7 @@ const duelWinnerPilot = useMemo(() => {
   </Card>
 
   <Card
-    className={`rounded-[24px] shadow-sm ${
+    className={`rounded-[24px] shadow-sm transition-all duration-200 hover:-translate-y-[1px] ${
       isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
     }`}
   >
@@ -2506,7 +2506,7 @@ const duelWinnerPilot = useMemo(() => {
   </Card>
 </TabsContent>
 
-          <TabsContent value="stats" className="mt-0 space-y-4 pt-0 xl:space-y-5">
+          <TabsContent value="stats" className="mt-0 space-y-4 pt-0 lg:space-y-5 xl:space-y-6">
             <div className="space-y-4 xl:grid xl:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] xl:items-start xl:gap-5 xl:space-y-0">
               <div className="space-y-4">
                 <RankingStatsHeader
@@ -2732,28 +2732,28 @@ const duelWinnerPilot = useMemo(() => {
                           isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft}` : `${theme.heroBorder} bg-gradient-to-b ${theme.heroBg}`
                         }`}>
                           <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}>Posição</p>
-                          <p className={`mt-2 text-[34px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilot?.pos || 0}º</p>
+                          <p className={`mt-2 text-[34px] font-extrabold leading-none tracking-tight tabular-nums ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilot?.pos || 0}º</p>
                           <p className={`mt-2 text-[13px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>{selectedPilotGap}</p>
                         </div>
                         <div className={`rounded-[24px] border px-5 py-5 ${
                           isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50/80"
                         }`}>
                           <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}>Eficiência</p>
-                          <p className={`mt-2 text-[34px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilotAverage.toFixed(1)}</p>
+                          <p className={`mt-2 text-[34px] font-extrabold leading-none tracking-tight tabular-nums ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilotAverage.toFixed(1)}</p>
                           <p className={`mt-2 text-[13px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>média por participação</p>
                         </div>
                         <div className={`rounded-[24px] border px-5 py-5 ${
                           isDarkMode ? `${theme.darkAccentBorder} bg-[#0f172a]` : `${theme.primaryBorder} bg-white`
                         }`}>
                           <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}>Vitórias</p>
-                          <p className={`mt-2 text-[34px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilot?.vitorias || 0}</p>
+                          <p className={`mt-2 text-[34px] font-extrabold leading-none tracking-tight tabular-nums ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilot?.vitorias || 0}</p>
                           <p className={`mt-2 text-[13px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>{selectedPilotWinRate}% de conversão</p>
                         </div>
                         <div className={`rounded-[24px] border px-5 py-5 ${
                           isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg}` : theme.heroChip
                         }`}>
                           <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? theme.darkAccentText : "text-zinc-700"}`}>Top 6</p>
-                          <p className={`mt-2 text-[34px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilot?.podios || 0}</p>
+                          <p className={`mt-2 text-[34px] font-extrabold leading-none tracking-tight tabular-nums ${isDarkMode ? "text-white" : "text-zinc-950"}`}>{selectedPilot?.podios || 0}</p>
                           <p className={`mt-2 text-[13px] ${isDarkMode ? "text-zinc-300" : "text-zinc-700"}`}>{selectedPilotPodiumRate}% de presença</p>
                         </div>
                       </div>
@@ -2827,7 +2827,7 @@ const duelWinnerPilot = useMemo(() => {
               </div>
             </div>
 
-          <div className="fixed bottom-1 left-1/2 z-30 w-[calc(100%-22px)] max-w-md -translate-x-1/2 sm:max-w-2xl lg:max-w-5xl xl:max-w-[1320px]">
+          <div className="fixed bottom-2 left-1/2 z-30 w-[calc(100%-22px)] max-w-md -translate-x-1/2 sm:max-w-2xl lg:bottom-3 lg:max-w-5xl xl:bottom-4 lg:bottom-5 xl:bottom-6 xl:max-w-[1320px]">
             <Card
               className={`relative overflow-hidden rounded-[18px] shadow-[0_16px_34px_rgba(15,23,42,0.16)] backdrop-blur-2xl ${
                 isDarkMode
