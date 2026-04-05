@@ -327,11 +327,16 @@ function PilotPhotoSlot({
   alt,
   isDark = false,
 }: {
-  pilot?: RankingItem | null;
+  pilot?: unknown;
   alt: string;
   isDark?: boolean;
 }) {
-  const src = getPilotPhotoPath(pilot);
+  const pilotoId =
+    pilot && typeof pilot === "object" && "pilotoId" in pilot
+      ? (pilot as { pilotoId?: string | null }).pilotoId
+      : null;
+
+  const src = pilotoId ? `/pilotos/${pilotoId}.jpg` : null;
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
@@ -1215,6 +1220,11 @@ const duelWinnerPilot = useMemo(() => {
     }
   }
 
+  const getSpotlightPilotWarName = (pilot: unknown) => {
+    if (!pilot || typeof pilot !== "object") return "";
+    return getPilotWarName(pilot as RankingItem | null | undefined);
+  };
+
   if (loading) {
     return (
       <div
@@ -1316,7 +1326,7 @@ const duelWinnerPilot = useMemo(() => {
           leaderName={leaderName}
           PilotPhotoSlot={PilotPhotoSlot}
           getPilotHighlightName={getPilotHighlightName}
-          getPilotWarName={getPilotWarName}
+          getPilotWarName={getSpotlightPilotWarName}
         />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-3">
