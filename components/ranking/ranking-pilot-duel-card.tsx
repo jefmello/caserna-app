@@ -6,7 +6,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   getCategoryTheme,
   getComparisonWinner,
-  getDuelWinnerLabel,
   getDuelNarrative,
   getDuelProfileLabel,
   getPilotFirstAndLastName,
@@ -618,7 +617,11 @@ export default function RankingPilotDuelCard({
                               : theme.primaryBadge
                         }`}
                       >
-                        {winner === "tie" ? "Empate" : getDuelWinnerLabel(winner)}
+                        {winner === "tie"
+                          ? "Empate"
+                          : winner === "a"
+                            ? `${(getPilotWarNameDisplay(pilotA) || getPilotNameParts(pilotA.piloto).firstName).toUpperCase()} NA FRENTE`
+                            : `${(getPilotWarNameDisplay(pilotB) || getPilotNameParts(pilotB.piloto).firstName).toUpperCase()} NA FRENTE`}
                       </div>
                     </div>
 
