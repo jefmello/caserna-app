@@ -23,6 +23,7 @@ type RankingStatsRadarCardProps = {
     heroBg: string;
     primaryIconWrap: string;
     primaryIcon: string;
+    darkAccentBorder?: string;
   };
   category: string;
   isDarkMode: boolean;
@@ -42,6 +43,10 @@ export default function RankingStatsRadarCard({
   StarIcon,
   getPilotFirstAndLastName,
 }: RankingStatsRadarCardProps) {
+  const darkCardClass = theme.darkAccentBorder
+    ? `${theme.darkAccentBorder} bg-[#0f172a]`
+    : "border-white/10 bg-[#0f172a]";
+
   return (
     <div className="grid grid-cols-1 gap-3">
       <HighlightCard
@@ -72,9 +77,7 @@ export default function RankingStatsRadarCard({
         <div className="grid grid-cols-2 gap-3 pt-1">
           <div
             className={`rounded-[16px] border px-2.5 py-2.5 ${
-              isDarkMode
-                ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                : "border-black/5 bg-white/80"
+              isDarkMode ? darkCardClass : "border-black/5 bg-white/80"
             }`}
           >
             <p
@@ -104,9 +107,7 @@ export default function RankingStatsRadarCard({
 
           <div
             className={`rounded-[16px] border px-2.5 py-2.5 ${
-              isDarkMode
-                ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                : "border-black/5 bg-white/80"
+              isDarkMode ? darkCardClass : "border-black/5 bg-white/80"
             }`}
           >
             <p
@@ -136,9 +137,7 @@ export default function RankingStatsRadarCard({
 
           <div
             className={`rounded-[16px] border px-2.5 py-2.5 ${
-              isDarkMode
-                ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                : "border-black/5 bg-white/80"
+              isDarkMode ? darkCardClass : "border-black/5 bg-white/80"
             }`}
           >
             <p
@@ -166,9 +165,7 @@ export default function RankingStatsRadarCard({
 
           <div
             className={`rounded-[16px] border px-2.5 py-2.5 ${
-              isDarkMode
-                ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                : "border-black/5 bg-white/80"
+              isDarkMode ? darkCardClass : "border-black/5 bg-white/80"
             }`}
           >
             <p
