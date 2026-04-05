@@ -1231,6 +1231,11 @@ const duelWinnerPilot = useMemo(() => {
     );
   }
 
+  const getSpotlightPilotWarName = (pilot: unknown) => {
+    if (!pilot || typeof pilot !== "object") return "";
+    return getPilotWarName(pilot as RankingItem | null | undefined);
+  };
+
   if (error) {
     return (
       <div
@@ -1307,7 +1312,7 @@ const duelWinnerPilot = useMemo(() => {
           leaderName={leaderName}
           PilotPhotoSlot={PilotPhotoSlot}
           getPilotHighlightName={getPilotHighlightName}
-          getPilotWarName={getPilotWarName}
+          getPilotWarName={getSpotlightPilotWarName}
         />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-3">
