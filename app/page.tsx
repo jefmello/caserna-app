@@ -19,9 +19,11 @@ import RankingPilotHeroCard from "@/components/ranking/ranking-pilot-hero-card";
 import RankingPilotComparisonCard from "@/components/ranking/ranking-pilot-comparison-card";
 import RankingPilotPerformanceBlocksCard from "@/components/ranking/ranking-pilot-performance-blocks-card";
 import RankingPilotDuelCard from "@/components/ranking/ranking-pilot-duel-card";
+import RankingChampionshipNarrativeCard from "@/components/ranking/ranking-championship-narrative-card";
 import useRankingData from "@/lib/hooks/useRankingData";
 import useRankingFilters from "@/lib/hooks/useRankingFilters";
 import usePilotAnalysis from "@/lib/hooks/usePilotAnalysis";
+import useChampionshipNarrative from "@/lib/hooks/useChampionshipNarrative";
 import {
   categoryColors,
   competitionLabels,
@@ -1039,6 +1041,17 @@ const duelWinnerPilot = useMemo(() => {
     })[0];
   }, [filteredRanking, currentCompetitionMeta]);
 
+
+  const championshipNarrative = useChampionshipNarrative({
+    category,
+    competitionLabel: competitionLabels[competition] || competition,
+    leader,
+    titleFightStatus,
+    statsSummary,
+    statsRadar,
+    bestEfficiencyPilot,
+  });
+
   function handleSelectPilot(pilot: RankingItem) {
     scrollPageToTop("auto");
     setSelectedPilot(pilot);
@@ -1503,6 +1516,15 @@ const duelWinnerPilot = useMemo(() => {
               </CardContent>
             </Card>
 
+
+
+            <RankingChampionshipNarrativeCard
+              isDarkMode={isDarkMode}
+              theme={theme}
+              category={category}
+              competitionLabel={competitionLabels[competition] || competition}
+              narrative={championshipNarrative}
+            />
             <div className="pointer-events-none fixed -left-[9999px] top-0 z-[-1] opacity-0">
               <div
                 ref={shareCardRef}
