@@ -176,8 +176,8 @@ export default function RankingPilotDuelCard({
         tone: isDarkMode
           ? "border-blue-500/30 bg-blue-500/10 text-blue-300"
           : "border-blue-200 bg-blue-50 text-blue-700",
-        description: "O duelo está equilibrado, mas com leve inclinação pontual.",
-      };
+          description: "O duelo está equilibrado, mas com leve inclinação pontual.",
+        };
     }
 
     if (duelSummary.scoreDiff >= 4) {
@@ -221,9 +221,9 @@ export default function RankingPilotDuelCard({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="w-full space-y-4 overflow-x-hidden">
       <div
-        className={`overflow-hidden rounded-[24px] border ${
+        className={`w-full overflow-hidden rounded-[24px] border ${
           isDarkMode
             ? `${theme.darkAccentBorder} bg-gradient-to-br ${theme.darkAccentCard}`
             : `${theme.primaryBorder} bg-gradient-to-br ${theme.heroBg}`
@@ -234,8 +234,8 @@ export default function RankingPilotDuelCard({
             className={`absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
           />
 
-          <div className="mb-3 flex items-center justify-between gap-2">
-            <div>
+          <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
+            <div className="min-w-0">
               <p
                 className={`text-[10px] font-bold uppercase tracking-[0.18em] ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
@@ -244,7 +244,7 @@ export default function RankingPilotDuelCard({
                 Arena do duelo
               </p>
               <h3
-                className={`text-[18px] font-extrabold tracking-tight ${
+                className={`max-w-[220px] text-[18px] font-extrabold tracking-tight ${
                   isDarkMode ? "text-white" : "text-zinc-950"
                 }`}
               >
@@ -252,14 +252,14 @@ export default function RankingPilotDuelCard({
               </h3>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <div
                 className={`rounded-full border px-3 py-1 text-[9px] font-black uppercase tracking-[0.16em] ${duelIntensity.tone}`}
               >
                 {duelIntensity.label}
               </div>
               <div
-                className={`hidden rounded-full border px-3 py-1 text-[9px] font-black uppercase tracking-[0.16em] sm:flex ${
+                className={`rounded-full border px-3 py-1 text-[9px] font-black uppercase tracking-[0.16em] ${
                   isDarkMode
                     ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                     : theme.heroChip
@@ -270,7 +270,7 @@ export default function RankingPilotDuelCard({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_170px_1fr] lg:items-stretch">
+          <div className="grid grid-cols-1 gap-3">
             {[pilotA, pilotB].map((pilot, index) => {
               const side = index === 0 ? "a" : "b";
               const isWinner = duelSummary.overallWinner === side;
@@ -278,11 +278,13 @@ export default function RankingPilotDuelCard({
               const performanceWins = duelMetrics.filter(
                 (metric) => getComparisonWinner(metric.a, metric.b, metric.lowerIsBetter) === side
               ).length;
+              const sideLabel =
+                getPilotWarNameDisplay(pilot) || getPilotNameParts(pilot.piloto).firstName;
 
               return (
                 <div
                   key={`${side}-${pilot.pilotoId || pilot.piloto}`}
-                  className={`relative rounded-[24px] border p-3 sm:p-4 ${
+                  className={`relative min-w-0 rounded-[24px] border p-3 sm:p-4 ${
                     isDarkMode
                       ? isWinner
                         ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft} shadow-[0_14px_32px_rgba(0,0,0,0.34)]`
@@ -308,13 +310,13 @@ export default function RankingPilotDuelCard({
                   ) : null}
 
                   <div className="mb-3 flex items-start justify-between gap-2">
-                    <div>
+                    <div className="min-w-0">
                       <p
-                        className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                        className={`truncate text-[10px] font-bold uppercase tracking-[0.16em] ${
                           isDarkMode ? "text-zinc-500" : "text-zinc-400"
                         }`}
                       >
-                        Piloto {side.toUpperCase()}
+                        {sideLabel}
                       </p>
                       <div className="mt-1 flex flex-wrap items-center gap-2">
                         <span
@@ -329,7 +331,7 @@ export default function RankingPilotDuelCard({
                       </div>
                     </div>
 
-                    <div className="text-right">
+                    <div className="shrink-0 text-right">
                       <p
                         className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
                           isDarkMode ? "text-zinc-500" : "text-zinc-400"
@@ -419,16 +421,16 @@ export default function RankingPilotDuelCard({
                       return (
                         <div
                           key={`${pilot.pilotoId || pilot.piloto}-${stat.label}`}
-                          className={`rounded-[18px] border px-2.5 py-2 ${
+                          className={`min-w-0 rounded-[18px] border px-2.5 py-2 ${
                             isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50/70"
                           }`}
                         >
                           <div className="flex items-center gap-1.5">
                             <Icon
-                              className={`h-3.5 w-3.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
+                              className={`h-3.5 w-3.5 shrink-0 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
                             />
                             <p
-                              className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+                              className={`truncate text-[9px] font-bold uppercase tracking-[0.14em] ${
                                 isDarkMode ? "text-zinc-500" : "text-zinc-400"
                               }`}
                             >
@@ -450,9 +452,9 @@ export default function RankingPilotDuelCard({
               );
             })}
 
-            <div className="flex flex-col items-center justify-center gap-2 px-1 py-1 sm:px-0">
+            <div className="flex flex-col items-center justify-center gap-2 px-1 py-1">
               <div
-                className={`rounded-[28px] border px-4 py-3 text-center ${
+                className={`w-full max-w-[220px] rounded-[28px] border px-4 py-3 text-center ${
                   isDarkMode
                     ? `${theme.darkAccentBorder} bg-[#0f172a] shadow-[0_10px_28px_rgba(0,0,0,0.26)]`
                     : `${theme.primaryBorder} bg-white shadow-[0_14px_28px_rgba(15,23,42,0.06)]`
@@ -495,7 +497,7 @@ export default function RankingPilotDuelCard({
               </div>
 
               <div
-                className={`rounded-[22px] border px-3 py-2 text-center ${
+                className={`w-full max-w-[220px] rounded-[22px] border px-3 py-2 text-center ${
                   isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg}` : theme.searchBadge
                 }`}
               >
@@ -509,7 +511,7 @@ export default function RankingPilotDuelCard({
               </div>
 
               <div
-                className={`rounded-[22px] border px-3 py-3 text-center ${
+                className={`w-full max-w-[220px] rounded-[22px] border px-3 py-3 text-center ${
                   isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white/90"
                 }`}
               >
@@ -540,7 +542,7 @@ export default function RankingPilotDuelCard({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+      <div className="grid grid-cols-1 gap-4">
         <Card
           className={`rounded-[24px] shadow-sm ${
             isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
@@ -555,7 +557,7 @@ export default function RankingPilotDuelCard({
               >
                 <BarChart3 className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.statsIcon}`} />
               </div>
-              <div>
+              <div className="min-w-0">
                 <p
                   className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
                     isDarkMode ? "text-zinc-500" : "text-zinc-400"
@@ -587,8 +589,8 @@ export default function RankingPilotDuelCard({
                       isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50/70"
                     }`}
                   >
-                    <div className="mb-3 flex items-start justify-between gap-2">
-                      <div>
+                    <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
+                      <div className="min-w-0">
                         <p
                           className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
                             isDarkMode ? "text-zinc-500" : "text-zinc-400"
@@ -696,7 +698,7 @@ export default function RankingPilotDuelCard({
               >
                 <Trophy className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.statsIcon}`} />
               </div>
-              <div>
+              <div className="min-w-0">
                 <p
                   className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
                     isDarkMode ? "text-zinc-500" : "text-zinc-400"
