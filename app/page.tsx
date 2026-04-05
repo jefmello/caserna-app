@@ -20,8 +20,7 @@ import RankingPilotComparisonCard from "@/components/ranking/ranking-pilot-compa
 import RankingPilotPerformanceBlocksCard from "@/components/ranking/ranking-pilot-performance-blocks-card";
 import RankingPilotDuelCard from "@/components/ranking/ranking-pilot-duel-card";
 import useRankingData from "@/lib/hooks/useRankingData";
-import useRankingFilters from "@/lib/hooks/useRankingFilters";
-import usePilotAnalysis from "@/lib/hooks/usePilotAnalysis";
+import usePilotComparison from "@/lib/hooks/usePilotComparison";
 import {
   categoryColors,
   competitionLabels,
@@ -568,24 +567,9 @@ export default function CasernaKartAppModerno() {
     retry,
   } = useRankingData();
 
-  const {
-    category,
-    setCategory,
-    competition,
-    setCompetition,
-    search,
-    setSearch,
-    availableCompetitions,
-    currentCompetitionList,
-    currentCompetitionMeta,
-    filteredRanking,
-    leader,
-  } = useRankingFilters({
-    rankingData,
-    rankingMeta,
-    categories,
-  });
-
+  const [category, setCategory] = useState("Base");
+  const [competition, setCompetition] = useState("T1");
+  const [search, setSearch] = useState("");
   const [selectedPilot, setSelectedPilot] = useState<RankingItem | null>(null);
   const [activeTab, setActiveTab] = useState("classificacao");
   const [comparePilotAId, setComparePilotAId] = useState("");
@@ -653,10 +637,48 @@ export default function CasernaKartAppModerno() {
   }, [activeTab, scrollPageToTop]);
 
   useEffect(() => {
+    if (categories.length === 0) return;
+
+    setCategory((prev) => (categories.includes(prev) ? prev : categories[0]));
+  }, [categories]);
+
+  const availableCompetitions = useMemo(() => {
+    return Object.keys(rankingData[category] || {});
+  }, [rankingData, category]);
+
+  useEffect(() => {
+    if (availableCompetitions.length === 0) return;
+
+    setCompetition((prev) =>
+      availableCompetitions.includes(prev) ? prev : availableCompetitions[0]
+    );
+  }, [availableCompetitions]);
+
+  useEffect(() => {
     setSelectedPilot(null);
     setComparePilotAId("");
     setComparePilotBId("");
   }, [category, competition]);
+
+  const currentCompetitionList = useMemo(() => {
+    return rankingData[category]?.[competition] || [];
+  }, [rankingData, category, competition]);
+
+  const currentCompetitionMeta = useMemo(() => {
+    return rankingMeta[category]?.[competition] || null;
+  }, [rankingMeta, category, competition]);
+
+  const filteredRanking = useMemo(() => {
+    return currentCompetitionList.filter(
+      (item) =>
+        item.pontos > 0 &&
+        normalizePilotName(item.piloto)
+          .toLowerCase()
+          .includes(search.toLowerCase())
+    );
+  }, [currentCompetitionList, search]);
+
+  const leader = filteredRanking[0];
   const leaderName = useMemo(() => getPilotNameParts(leader?.piloto), [leader]);
   const theme = useMemo(() => getCategoryTheme(category), [category]);
   const spotlightStyles = useMemo(
@@ -665,207 +687,18 @@ export default function CasernaKartAppModerno() {
   );
   const sponsorTrack = useMemo(() => [...sponsorLogos, ...sponsorLogos], []);
 
-  const comparePilotA = useMemo(
-    () => filteredRanking.find((item) => (item.pilotoId || item.piloto) === comparePilotAId) || null,
-    [filteredRanking, comparePilotAId]
-  );
-
-  const comparePilotB = useMemo(
-    () => filteredRanking.find((item) => (item.pilotoId || item.piloto) === comparePilotBId) || null,
-    [filteredRanking, comparePilotBId]
-  );
-
-
-const duelMetrics = useMemo(() => {
-  if (!comparePilotA || !comparePilotB) return [];
-
-  return [
-    {
-      label: "Pontos",
-      shortLabel: "PTS",
-      a: comparePilotA.pontos,
-      b: comparePilotB.pontos,
-      lowerIsBetter: false,
-      description: "força no campeonato atual",
-    },
-    {
-      label: "Vitórias",
-      shortLabel: "VIT",
-      a: comparePilotA.vitorias,
-      b: comparePilotB.vitorias,
-      lowerIsBetter: false,
-      description: "capacidade de decidir corridas",
-    },
-    {
-      label: "Poles",
-      shortLabel: "POL",
-      a: comparePilotA.poles,
-      b: comparePilotB.poles,
-      lowerIsBetter: false,
-      description: "arrancada de classificação",
-    },
-    {
-      label: "VMR",
-      shortLabel: "VMR",
-      a: comparePilotA.mv,
-      b: comparePilotB.mv,
-      lowerIsBetter: false,
-      description: "ritmo de volta rápida",
-    },
-    {
-      label: "Pódios",
-      shortLabel: "PDS",
-      a: comparePilotA.podios,
-      b: comparePilotB.podios,
-      lowerIsBetter: false,
-      description: "presença no top 6",
-    },
-    {
-      label: "Participações",
-      shortLabel: "PART",
-      a: comparePilotA.participacoes,
-      b: comparePilotB.participacoes,
-      lowerIsBetter: false,
-      description: "volume competitivo",
-    },
-    {
-      label: "ADV",
-      shortLabel: "ADV",
-      a: comparePilotA.adv,
-      b: comparePilotB.adv,
-      lowerIsBetter: true,
-      description: "disciplina na pista",
-    },
-  ];
-}, [comparePilotA, comparePilotB]);
-
-const duelSummary = useMemo(() => {
-  if (!comparePilotA || !comparePilotB || duelMetrics.length === 0) {
-    return null;
-  }
-
-  let scoreA = 0;
-  let scoreB = 0;
-
-  duelMetrics.forEach((metric) => {
-    const winner = getComparisonWinner(metric.a, metric.b, metric.lowerIsBetter);
-    if (winner === "a") scoreA += 1;
-    if (winner === "b") scoreB += 1;
-  });
-
-  const pointsWinner = getComparisonWinner(comparePilotA.pontos, comparePilotB.pontos, false);
-  const advWinner = getComparisonWinner(comparePilotA.adv, comparePilotB.adv, true);
-  const overallWinner = scoreA === scoreB ? pointsWinner : scoreA > scoreB ? "a" : "b";
-  const scoreDiff = Math.abs(scoreA - scoreB);
-  const pointsDiff = Math.abs(comparePilotA.pontos - comparePilotB.pontos);
-
-  return {
-    scoreA,
-    scoreB,
-    pointsWinner,
-    advWinner,
-    overallWinner,
-    scoreDiff,
-    pointsDiff,
-    narrative: getDuelNarrative({ scoreA, scoreB, pointsDiff }),
-    profileLabel: getDuelProfileLabel({
-      scoreA,
-      scoreB,
-      pointsWinner,
-      advWinner,
-    }),
-  };
-}, [comparePilotA, comparePilotB, duelMetrics]);
-
-const duelIntensity = useMemo(() => {
-  if (!duelSummary) {
-    return {
-      label: "SEM LEITURA",
-      tone: isDarkMode
-        ? "border-white/10 bg-white/5 text-zinc-300"
-        : "border-zinc-200 bg-zinc-50 text-zinc-600",
-      description: "Aguardando confronto válido.",
-    };
-  }
-
-  if (duelSummary.overallWinner === "tie") {
-    if (duelSummary.pointsDiff <= 3) {
-      return {
-        label: "EMPATE TÉCNICO",
-        tone: isDarkMode
-          ? "border-yellow-500/30 bg-yellow-500/10 text-yellow-300"
-          : "border-yellow-200 bg-yellow-50 text-yellow-700",
-        description: "Nenhum piloto conseguiu abrir vantagem clara.",
-      };
-    }
-
-    return {
-      label: "PRESSÃO NOS DETALHES",
-      tone: isDarkMode
-        ? "border-blue-500/30 bg-blue-500/10 text-blue-300"
-        : "border-blue-200 bg-blue-50 text-blue-700",
-      description: "O duelo está equilibrado, mas com leve inclinação pontual.",
-    };
-  }
-
-  if (duelSummary.scoreDiff >= 4) {
-    return {
-      label: "SUPERIORIDADE CLARA",
-      tone: isDarkMode
-        ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
-        : "border-emerald-200 bg-emerald-50 text-emerald-700",
-      description: "Um dos lados domina a maior parte dos territórios do confronto.",
-    };
-  }
-
-  if (duelSummary.scoreDiff >= 2) {
-    return {
-      label: "VANTAGEM CONSISTENTE",
-      tone: isDarkMode
-        ? "border-blue-500/30 bg-blue-500/10 text-blue-300"
-        : "border-blue-200 bg-blue-50 text-blue-700",
-      description: "Há superioridade real, mas ainda existe espaço para reação.",
-    };
-  }
-
-  return {
-    label: "DUELO APERTADO",
-    tone: isDarkMode
-      ? "border-orange-500/30 bg-orange-500/10 text-orange-300"
-      : "border-orange-200 bg-orange-50 text-orange-700",
-    description: "A disputa segue aberta e sensível a qualquer mudança de ritmo.",
-  };
-}, [duelSummary, isDarkMode]);
-
-const duelWinnerPilot = useMemo(() => {
-  if (!duelSummary || !comparePilotA || !comparePilotB) return null;
-  if (duelSummary.overallWinner === "a") return comparePilotA;
-  if (duelSummary.overallWinner === "b") return comparePilotB;
-  return null;
-}, [duelSummary, comparePilotA, comparePilotB]);
-
   const {
-    safeSelectedPilot,
-    selectedPilotGap,
-    selectedPilotAverage,
-    selectedPilotBestAttribute,
-    selectedPilotConsistency,
-    selectedPilotMomentum,
-    selectedPilotVsLeader,
-    selectedPilotPodiumRate,
-    selectedPilotWinRate,
-    selectedPilotDiscipline,
-    selectedPilotLeaderGapValue,
-    selectedPilotWinRateLabel,
-    selectedPilotPodiumRateLabel,
-    selectedPilotDisciplineLabel,
-    selectedPilotRivalAhead,
-  } = usePilotAnalysis({
-    selectedPilot,
+    comparePilotA,
+    comparePilotB,
+    duelMetrics,
+    duelSummary,
+    duelIntensity,
+    duelWinnerPilot,
+  } = usePilotComparison({
+    comparePilotAId,
+    comparePilotBId,
     filteredRanking,
-    leader,
-    category,
-    competition,
+    isDarkMode,
   });
 
   const selectedPilotShortName = useMemo(
@@ -877,6 +710,116 @@ const duelWinnerPilot = useMemo(() => {
     () => getPilotWarNameDisplay(selectedPilot),
     [selectedPilot]
   );
+
+  const safeSelectedPilot: RankingItem = selectedPilot ?? {
+    pos: 0,
+    pilotoId: "",
+    piloto: "",
+    nomeGuerra: "",
+    pontos: 0,
+    adv: 0,
+    participacoes: 0,
+    vitorias: 0,
+    poles: 0,
+    mv: 0,
+    podios: 0,
+    descarte: 0,
+    categoriaAtual: category,
+    competicao: competition,
+    categoria: category,
+  };
+
+
+  const selectedPilotGap = useMemo(() => {
+    if (!selectedPilot || !leader) return "-";
+    return getGapToLeader(leader.pontos, safeSelectedPilot.pontos);
+  }, [selectedPilot, leader]);
+
+  const selectedPilotAverage = useMemo(
+    () => getPilotEfficiency(selectedPilot),
+    [selectedPilot]
+  );
+
+  const selectedPilotBestAttribute = useMemo(
+    () => getSelectedPilotBestAttribute(selectedPilot),
+    [selectedPilot]
+  );
+
+  const selectedPilotConsistency = useMemo(
+    () => getPilotConsistencyLabel(selectedPilot),
+    [selectedPilot]
+  );
+
+  const selectedPilotMomentum = useMemo(
+    () => getPilotMomentumLabel(selectedPilot, leader),
+    [selectedPilot, leader]
+  );
+
+  const selectedPilotVsLeader = useMemo(() => {
+    if (!selectedPilot || !leader) return 0;
+    return getPerformancePercentage(
+      safeSelectedPilot.pontos,
+      leader.pontos || safeSelectedPilot.pontos || 1
+    );
+  }, [selectedPilot, leader]);
+
+  const selectedPilotPodiumRate = useMemo(() => {
+    if (!selectedPilot) return 0;
+    return getPerformancePercentage(safeSelectedPilot.podios, safeSelectedPilot.participacoes || 1);
+  }, [selectedPilot]);
+
+  const selectedPilotWinRate = useMemo(() => {
+    if (!selectedPilot) return 0;
+    return getPerformancePercentage(safeSelectedPilot.vitorias, safeSelectedPilot.participacoes || 1);
+  }, [selectedPilot]);
+
+  const selectedPilotDiscipline = useMemo(() => {
+    if (!selectedPilot || safeSelectedPilot.participacoes <= 0) return 100;
+    const penalty = getPerformancePercentage(safeSelectedPilot.adv, safeSelectedPilot.participacoes);
+    return Math.max(0, 100 - penalty);
+  }, [selectedPilot]);
+
+  const selectedPilotLeaderGapValue = useMemo(() => {
+    if (!selectedPilot || !leader) return 0;
+    return Math.max(0, leader.pontos - safeSelectedPilot.pontos);
+  }, [selectedPilot, leader]);
+
+  const selectedPilotWinRateLabel = useMemo(() => {
+    if (!selectedPilot || safeSelectedPilot.participacoes <= 0) return "sem leitura";
+    if (selectedPilotWinRate >= 40) return "índice vencedor";
+    if (selectedPilotWinRate >= 20) return "boa conversão";
+    if (selectedPilotWinRate > 0) return "ainda pode crescer";
+    return "busca a 1ª vitória";
+  }, [selectedPilot, selectedPilotWinRate]);
+
+  const selectedPilotPodiumRateLabel = useMemo(() => {
+    if (!selectedPilot || safeSelectedPilot.participacoes <= 0) return "sem leitura";
+    if (selectedPilotPodiumRate >= 70) return "top 6 muito forte";
+    if (selectedPilotPodiumRate >= 50) return "regularidade alta";
+    if (selectedPilotPodiumRate > 0) return "presença competitiva";
+    return "fora do top 6";
+  }, [selectedPilot, selectedPilotPodiumRate]);
+
+  const selectedPilotDisciplineLabel = useMemo(() => {
+    if (!selectedPilot || safeSelectedPilot.participacoes <= 0) return "sem leitura";
+    if (selectedPilotDiscipline >= 90) return "conduta exemplar";
+    if (selectedPilotDiscipline >= 75) return "controle estável";
+    if (selectedPilotDiscipline >= 60) return "atenção moderada";
+    return "risco disciplinar";
+  }, [selectedPilot, selectedPilotDiscipline]);
+
+  const selectedPilotRivalAhead = useMemo(() => {
+    if (!selectedPilot) return null;
+
+    const pilotIndex = filteredRanking.findIndex(
+      (item) =>
+        item.pilotoId === safeSelectedPilot.pilotoId &&
+        item.competicao === safeSelectedPilot.competicao
+    );
+
+    if (pilotIndex <= 0) return null;
+    return filteredRanking[pilotIndex - 1] || null;
+  }, [filteredRanking, selectedPilot]);
 
   const top3TitleFight = useMemo(() => filteredRanking.slice(0, 3), [filteredRanking]);
 
