@@ -308,20 +308,21 @@ function HighlightCard({
   );
 }
 
-type PilotPhotoSlotCompatiblePilot = {
-  pilotoId?: string | null;
-} | null;
-
 function PilotPhotoSlot({
   pilot,
   alt,
   isDark = false,
 }: {
-  pilot?: PilotPhotoSlotCompatiblePilot;
+  pilot?: unknown;
   alt: string;
   isDark?: boolean;
 }) {
-  const src = pilot?.pilotoId ? `/pilotos/${pilot.pilotoId}.jpg` : null;
+  const pilotoId =
+    pilot && typeof pilot === "object" && "pilotoId" in pilot
+      ? (pilot as { pilotoId?: string | null }).pilotoId
+      : null;
+
+  const src = pilotoId ? `/pilotos/${pilotoId}.jpg` : null;
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
