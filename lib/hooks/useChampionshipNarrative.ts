@@ -26,9 +26,18 @@ type StatsRadar = {
   titleHeat: string;
 };
 
+export type ChampionshipNarrativeBadge = {
+  label: string;
+  value: string;
+  tone: "hot" | "alert" | "stable" | "dominant" | "neutral";
+};
+
 export type ChampionshipNarrative = {
+  kicker: string;
   headline: string;
   body: string;
+  tone: "hot" | "alert" | "stable" | "dominant";
+  badges: ChampionshipNarrativeBadge[];
   highlights: Array<{ label: string; value: string }>;
 };
 
@@ -49,6 +58,10 @@ function firstLastName(name?: string | null) {
   return `${parts[0]} ${parts[parts.length - 1]}`;
 }
 
+function pluralizePoints(value: number) {
+  return `${value} ponto${value === 1 ? "" : "s"}`;
+}
+
 export default function useChampionshipNarrative({
   category,
   competitionLabel,
@@ -67,46 +80,104 @@ export default function useChampionshipNarrative({
       ? firstLastName(bestEfficiencyPilot.piloto)
       : "sem leitura";
 
-    let headline = "Leitura oficial do campeonato";
-    if (titleFightStatus.label === "BRIGA ACIRRADA") {
-      headline = "Briga acirrada pelo título";
-    } else if (titleFightStatus.label === "DISPUTA CONTROLADA") {
-      headline = "Liderança sob pressão";
-    } else if (titleFightStatus.label === "LIDERANÇA ISOLADA") {
-      headline = "Controle parcial do campeonato";
-    } else if (statsRadar.podiumPressure > 0) {
-      headline = "Zona de troféu em ebulição";
+    const leaderDiff = statsSummary.leaderAdvantage;
+    const top6Pressure = statsRadar.podiumPressure;
+    const hasTop6Battle = statsSummary.totalPilots >= 6;
+
+    let kicker = "Leitura editorial do campeonato";
+    let headline = "Campeonato em leitura oficial";
+    let tone: ChampionshipNarrative["tone"] = "stable";
+
+    if (leaderDiff <= 3) {
+      kicker = "Título em ebulição";
+      headline = "A liderança segue completamente sob pressão";
+      tone = "hot";
+    } else if (leaderDiff <= 8) {
+      kicker = "Pressão no topo";
+      headline = "O líder ainda controla, mas o campeonato segue vivo";
+      tone = "alert";
+    } else if (leaderDiff <= 15) {
+      kicker = "Controle parcial";
+      headline = "Há vantagem real no topo, mas sem definição total";
+      tone = "stable";
+    } else {
+      kicker = "Domínio no topo";
+      headline = "O campeonato entra em zona de controle do líder";
+      tone = "dominant";
     }
 
-    const leaderSentence = leader
-      ? `${leaderName} comanda a ${category} em ${competitionLabel} com ${leader.pontos} ponto${leader.pontos === 1 ? "" : "s"}.`
-      : `Ainda não existe liderança consolidada na ${category} em ${competitionLabel}.`;
+    const opening = leader
+      ? `${leaderName} comanda a ${category} em ${competitionLabel} com ${leader.pontos} pontos e estabelece o ritmo da disputa atual.`
+      : `A ${category} em ${competitionLabel} ainda não tem liderança consolidada para uma leitura editorial mais forte.`;
 
-    const titleSentence = statsSummary.totalPilots > 1
-      ? titleFightStatus.label === "BRIGA ACIRRADA"
-        ? `A vantagem para o vice é curta, apenas ${statsSummary.leaderAdvantage} ponto${statsSummary.leaderAdvantage === 1 ? "" : "s"}, e mantém a disputa totalmente aberta.`
-        : titleFightStatus.label === "DISPUTA CONTROLADA"
-          ? `Existe uma margem real de ${statsSummary.leaderAdvantage} ponto${statsSummary.leaderAdvantage === 1 ? "" : "s"}, mas ainda há pressão direta na briga pelo topo.`
-          : `O líder abriu ${statsSummary.leaderAdvantage} ponto${statsSummary.leaderAdvantage === 1 ? "" : "s"} de vantagem e sustenta um cenário de maior controle.`
-      : "Ainda não há massa crítica suficiente para uma leitura de título mais forte.";
+    const titleContext =
+      leaderDiff <= 3
+        ? `A vantagem para o vice é de apenas ${pluralizePoints(leaderDiff)}, cenário que mantém a briga pelo título totalmente aberta.`
+        : leaderDiff <= 8
+          ? `A margem de ${pluralizePoints(leaderDiff)} ainda não resolve o campeonato e mantém pressão direta sobre quem está no topo.`
+          : leaderDiff <= 15
+            ? `A diferença de ${pluralizePoints(leaderDiff)} dá um respiro estratégico ao líder, mas ainda não elimina reação dos adversários.`
+            : `Com ${pluralizePoints(leaderDiff)} de frente, o líder entra em uma faixa de controle mais clara do campeonato.`;
 
-    const top6Sentence = statsSummary.totalPilots >= 6
-      ? `A zona de troféu segue viva, com corte em ${statsSummary.top6CutPoints} pontos e ${statsRadar.podiumPressure} ponto${statsRadar.podiumPressure === 1 ? "" : "s"} separando o 3º do 6º colocado.`
-      : `O grid ainda está em formação, então a leitura do Top 6 segue adaptada ao número atual de pilotos pontuando.`;
+    const top6Context = hasTop6Battle
+      ? top6Pressure <= 3
+        ? `A zona de troféu vive pressão máxima: apenas ${pluralizePoints(top6Pressure)} separam o 3º do 6º colocado.`
+        : top6Pressure <= 6
+          ? `O Top 6 segue em zona quente, com ${pluralizePoints(top6Pressure)} entre o 3º e o 6º, mantendo a disputa muito viva.`
+          : top6Pressure <= 10
+            ? `A disputa pelo Top 6 continua aberta, com corte em ${statsSummary.top6CutPoints} pontos e margem administrável entre os blocos.`
+            : `O Top 6 apresenta cenário mais estável neste momento, embora o corte siga sendo referência central da categoria.`
+      : `O grid ainda não tem volume suficiente para uma leitura completa da zona de troféu, então o foco permanece no topo da classificação.`;
 
-    const momentumSentence = statsRadar.hottestPilot
-      ? `No momento, ${hottestPilotName} aparece como o nome mais quente do grid, sustentado pela leitura de ${statsRadar.hottestLabel.toLowerCase()}.`
-      : "No momento, o grid ainda não tem um piloto em alta claramente destacado.";
+    const heatContext = statsRadar.hottestPilot
+      ? `${hottestPilotName} aparece como o nome mais quente do grid, sustentado pela leitura de ${statsRadar.hottestLabel.toLowerCase()}.`
+      : `Ainda não existe um piloto em ascensão tão claro dentro da seleção atual.`;
 
-    const efficiencySentence = bestEfficiencyPilot
-      ? `${efficiencyPilotName} também lidera a eficiência da seleção atual, reforçando a consistência do campeonato.`
-      : "A leitura de eficiência ainda não encontrou um nome dominante nesta seleção.";
+    const efficiencyContext = bestEfficiencyPilot
+      ? `${efficiencyPilotName} também se destaca pela eficiência e reforça a camada técnica desta leitura oficial.`
+      : `A eficiência do grid segue sem um nome dominante nesta seleção.`;
 
-    const body = [leaderSentence, titleSentence, top6Sentence, momentumSentence, efficiencySentence].join(" ");
+    const body = [opening, titleContext, top6Context, heatContext, efficiencyContext].join(" ");
+
+    const badges: ChampionshipNarrativeBadge[] = [
+      {
+        label: "Título",
+        value:
+          leaderDiff <= 3
+            ? "Guerra total"
+            : leaderDiff <= 8
+              ? "Pressão direta"
+              : leaderDiff <= 15
+                ? "Controle parcial"
+                : "Domínio claro",
+        tone,
+      },
+      {
+        label: "Top 6",
+        value: hasTop6Battle
+          ? top6Pressure <= 3
+            ? "Pressão máxima"
+            : top6Pressure <= 6
+              ? "Zona quente"
+              : top6Pressure <= 10
+                ? "Disputa aberta"
+                : "Corte estável"
+          : "Grid em formação",
+        tone: hasTop6Battle ? (top6Pressure <= 6 ? "hot" : top6Pressure <= 10 ? "alert" : "stable") : "neutral",
+      },
+      {
+        label: "Momento",
+        value: statsRadar.hottestPilot ? hottestPilotName : "Sem leitura",
+        tone: statsRadar.hottestPilot ? "dominant" : "neutral",
+      },
+    ];
 
     return {
+      kicker,
       headline,
       body,
+      tone,
+      badges,
       highlights: [
         { label: "Líder", value: leaderName },
         { label: "Vantagem", value: `${statsSummary.leaderAdvantage} pts` },
