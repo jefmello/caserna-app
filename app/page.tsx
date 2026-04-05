@@ -20,6 +20,7 @@ import RankingPilotComparisonCard from "@/components/ranking/ranking-pilot-compa
 import RankingPilotPerformanceBlocksCard from "@/components/ranking/ranking-pilot-performance-blocks-card";
 import RankingPilotDuelCard from "@/components/ranking/ranking-pilot-duel-card";
 import useRankingData from "@/lib/hooks/useRankingData";
+import useRankingFilters from "@/lib/hooks/useRankingFilters";
 import {
   categoryColors,
   competitionLabels,
@@ -566,9 +567,23 @@ export default function CasernaKartAppModerno() {
     retry,
   } = useRankingData();
 
-  const [category, setCategory] = useState("Base");
-  const [competition, setCompetition] = useState("T1");
-  const [search, setSearch] = useState("");
+  const {
+    category,
+    setCategory,
+    competition,
+    setCompetition,
+    search,
+    setSearch,
+    availableCompetitions,
+    currentCompetitionList,
+    currentCompetitionMeta,
+    filteredRanking,
+    leader,
+  } = useRankingFilters({
+    rankingData,
+    rankingMeta,
+    categories,
+  });
   const [selectedPilot, setSelectedPilot] = useState<RankingItem | null>(null);
   const [activeTab, setActiveTab] = useState("classificacao");
   const [comparePilotAId, setComparePilotAId] = useState("");
@@ -636,48 +651,11 @@ export default function CasernaKartAppModerno() {
   }, [activeTab, scrollPageToTop]);
 
   useEffect(() => {
-    if (categories.length === 0) return;
-
-    setCategory((prev) => (categories.includes(prev) ? prev : categories[0]));
-  }, [categories]);
-
-  const availableCompetitions = useMemo(() => {
-    return Object.keys(rankingData[category] || {});
-  }, [rankingData, category]);
-
-  useEffect(() => {
-    if (availableCompetitions.length === 0) return;
-
-    setCompetition((prev) =>
-      availableCompetitions.includes(prev) ? prev : availableCompetitions[0]
-    );
-  }, [availableCompetitions]);
-
-  useEffect(() => {
     setSelectedPilot(null);
     setComparePilotAId("");
     setComparePilotBId("");
   }, [category, competition]);
 
-  const currentCompetitionList = useMemo(() => {
-    return rankingData[category]?.[competition] || [];
-  }, [rankingData, category, competition]);
-
-  const currentCompetitionMeta = useMemo(() => {
-    return rankingMeta[category]?.[competition] || null;
-  }, [rankingMeta, category, competition]);
-
-  const filteredRanking = useMemo(() => {
-    return currentCompetitionList.filter(
-      (item) =>
-        item.pontos > 0 &&
-        normalizePilotName(item.piloto)
-          .toLowerCase()
-          .includes(search.toLowerCase())
-    );
-  }, [currentCompetitionList, search]);
-
-  const leader = filteredRanking[0];
   const leaderName = useMemo(() => getPilotNameParts(leader?.piloto), [leader]);
   const theme = useMemo(() => getCategoryTheme(category), [category]);
   const spotlightStyles = useMemo(
