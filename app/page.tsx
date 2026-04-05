@@ -2629,6 +2629,8 @@ const duelWinnerPilot = useMemo(() => {
               CompactStatCard={CompactStatCard}
               UsersIcon={Users}
               CrownIcon={Crown}
+              GaugeIcon={Gauge}
+              MedalIcon={Medal}
             />
 
             <RankingStatsRadarCard
