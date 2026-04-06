@@ -597,8 +597,14 @@ export default function CasernaKartAppModerno() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const shareCardRef = useRef<HTMLDivElement | null>(null);
   const pilotShareCardRef = useRef<HTMLDivElement | null>(null);
+  const leaderShareCardRef = useRef<HTMLDivElement | null>(null);
+  const duelShareCardRef = useRef<HTMLDivElement | null>(null);
+  const narrativeShareCardRef = useRef<HTMLDivElement | null>(null);
   const [isSharingImage, setIsSharingImage] = useState(false);
   const [isSharingPilotImage, setIsSharingPilotImage] = useState(false);
+  const [isSharingLeaderImage, setIsSharingLeaderImage] = useState(false);
+  const [isSharingDuelImage, setIsSharingDuelImage] = useState(false);
+  const [isSharingNarrativeImage, setIsSharingNarrativeImage] = useState(false);
   const scrollPageToTop = React.useCallback((behavior: ScrollBehavior = "smooth") => {
     if (typeof window === "undefined") return;
 
@@ -1138,6 +1144,75 @@ const duelWinnerPilot = useMemo(() => {
     }
   }
 
+  async function handleShareLeaderCard() {
+    if (!leader || !leaderShareCardRef.current || isSharingLeaderImage) return;
+
+    try {
+      setIsSharingLeaderImage(true);
+      const dataUrl = await htmlToImage.toPng(leaderShareCardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
+      });
+
+      const link = document.createElement("a");
+      link.download = `lider-${category.toLowerCase()}-${competition.toLowerCase()}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error(err);
+      window.alert("Não foi possível gerar a imagem do líder.");
+    } finally {
+      setIsSharingLeaderImage(false);
+    }
+  }
+
+  async function handleShareDuelCard() {
+    if (!comparePilotA || !comparePilotB || !duelShareCardRef.current || isSharingDuelImage) return;
+
+    try {
+      setIsSharingDuelImage(true);
+      const dataUrl = await htmlToImage.toPng(duelShareCardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
+      });
+
+      const link = document.createElement("a");
+      link.download = `duelo-${category.toLowerCase()}-${competition.toLowerCase()}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error(err);
+      window.alert("Não foi possível gerar a imagem do duelo.");
+    } finally {
+      setIsSharingDuelImage(false);
+    }
+  }
+
+  async function handleShareNarrativeCard() {
+    if (!championshipNarrative || !narrativeShareCardRef.current || isSharingNarrativeImage) return;
+
+    try {
+      setIsSharingNarrativeImage(true);
+      const dataUrl = await htmlToImage.toPng(narrativeShareCardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
+      });
+
+      const link = document.createElement("a");
+      link.download = `narrativa-${category.toLowerCase()}-${competition.toLowerCase()}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error(err);
+      window.alert("Não foi possível gerar a imagem da narrativa.");
+    } finally {
+      setIsSharingNarrativeImage(false);
+    }
+  }
+
   const getSpotlightPilotWarName = (pilot: unknown) => {
     if (!pilot || typeof pilot !== "object") return "";
     return getPilotWarName(pilot as RankingItem | null | undefined);
@@ -1542,7 +1617,381 @@ const duelWinnerPilot = useMemo(() => {
               theme={theme}
               cards={editorialCards}
             />
+
+            <Card
+              className={`overflow-hidden rounded-[22px] shadow-sm transition-all duration-200 hover:-translate-y-[1px] ${
+                isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
+              }`}
+            >
+              <CardContent className="p-3 sm:p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0">
+                    <p className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
+                      isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                    }`}>
+                      Share premium
+                    </p>
+                    <h3 className={`mt-1 text-[16px] font-extrabold tracking-tight ${
+                      isDarkMode ? "text-white" : "text-zinc-950"
+                    }`}>
+                      Conteúdo oficial pronto para WhatsApp
+                    </h3>
+                    <p className={`mt-1 text-[12px] leading-snug ${
+                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                    }`}>
+                      Gere artes do líder, da narrativa oficial e do duelo da rodada com visual premium do campeonato.
+                    </p>
+                  </div>
+
+                  <div className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+                    isDarkMode
+                      ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                      : theme.searchBadge
+                  }`}>
+                    <Share2 className="h-3.5 w-3.5" />
+                    mídia oficial
+                  </div>
+                </div>
+
+                <div className="mt-3 grid grid-cols-1 gap-2.5 lg:grid-cols-3">
+                  <button
+                    type="button"
+                    onClick={handleShareLeaderCard}
+                    disabled={!leader || isSharingLeaderImage}
+                    className={`rounded-[18px] border px-3 py-3 text-left transition-all duration-200 ${
+                      isDarkMode
+                        ? `border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033] disabled:opacity-50`
+                        : "border-black/5 bg-zinc-50/80 hover:bg-white disabled:opacity-50"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className={`flex h-9 w-9 items-center justify-center rounded-2xl ${
+                        isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                      }`}>
+                        <Crown className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                      </div>
+                      <span className={`text-[10px] font-bold uppercase tracking-[0.12em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}>
+                        {isSharingLeaderImage ? "Gerando..." : "Líder"}
+                      </span>
+                    </div>
+                    <p className={`mt-2 text-[14px] font-extrabold tracking-tight ${
+                      isDarkMode ? "text-white" : "text-zinc-950"
+                    }`}>
+                      Arte do líder do campeonato
+                    </p>
+                    <p className={`mt-1 text-[11px] leading-snug ${
+                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                    }`}>
+                      Nome, pontuação, vantagem e contexto oficial da liderança.
+                    </p>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleShareNarrativeCard}
+                    disabled={!championshipNarrative || isSharingNarrativeImage}
+                    className={`rounded-[18px] border px-3 py-3 text-left transition-all duration-200 ${
+                      isDarkMode
+                        ? `border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033] disabled:opacity-50`
+                        : "border-black/5 bg-zinc-50/80 hover:bg-white disabled:opacity-50"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className={`flex h-9 w-9 items-center justify-center rounded-2xl ${
+                        isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                      }`}>
+                        <BarChart3 className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                      </div>
+                      <span className={`text-[10px] font-bold uppercase tracking-[0.12em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}>
+                        {isSharingNarrativeImage ? "Gerando..." : "Narrativa"}
+                      </span>
+                    </div>
+                    <p className={`mt-2 text-[14px] font-extrabold tracking-tight ${
+                      isDarkMode ? "text-white" : "text-zinc-950"
+                    }`}>
+                      Headline editorial oficial
+                    </p>
+                    <p className={`mt-1 text-[11px] leading-snug ${
+                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                    }`}>
+                      Headline, badges e leitura automática do cenário do campeonato.
+                    </p>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleShareDuelCard}
+                    disabled={!comparePilotA || !comparePilotB || isSharingDuelImage}
+                    className={`rounded-[18px] border px-3 py-3 text-left transition-all duration-200 ${
+                      isDarkMode
+                        ? `border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033] disabled:opacity-50`
+                        : "border-black/5 bg-zinc-50/80 hover:bg-white disabled:opacity-50"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className={`flex h-9 w-9 items-center justify-center rounded-2xl ${
+                        isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                      }`}>
+                        <Swords className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                      </div>
+                      <span className={`text-[10px] font-bold uppercase tracking-[0.12em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}>
+                        {isSharingDuelImage ? "Gerando..." : "Duelo"}
+                      </span>
+                    </div>
+                    <p className={`mt-2 text-[14px] font-extrabold tracking-tight ${
+                      isDarkMode ? "text-white" : "text-zinc-950"
+                    }`}>
+                      Confronto premium da rodada
+                    </p>
+                    <p className={`mt-1 text-[11px] leading-snug ${
+                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                    }`}>
+                      Comparativo visual entre dois pilotos com vencedor e contexto do duelo.
+                    </p>
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
+
             <div className="pointer-events-none fixed -left-[9999px] top-0 z-[-1] opacity-0">
+              <div
+                ref={leaderShareCardRef}
+                className={`w-[1080px] overflow-hidden rounded-[36px] border p-8 ${
+                  isDarkMode
+                    ? `border-white/10 bg-gradient-to-br ${theme.darkAccentCard} text-white`
+                    : `${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow} text-zinc-950`
+                }`}
+              >
+                <div className={`rounded-[28px] border p-7 ${
+                  isDarkMode
+                    ? `${theme.darkAccentBorder} bg-[#111827]`
+                    : `${theme.heroBorder} bg-white/92`
+                }`}>
+                  <div className="flex items-center justify-between gap-6">
+                    <div className="flex items-center gap-4">
+                      <div className={`flex h-16 w-16 items-center justify-center rounded-[22px] ${
+                        isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                      }`}>
+                        <Crown className={`h-8 w-8 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                      </div>
+                      <div>
+                        <p className={`text-[15px] font-bold uppercase tracking-[0.22em] ${
+                          isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                        }`}>
+                          Líder oficial do campeonato
+                        </p>
+                        <h2 className="mt-2 text-[40px] font-extrabold leading-none tracking-tight">
+                          {leader ? getPilotFirstAndLastName(leader.piloto) : "Sem líder"}
+                        </h2>
+                        <p className={`mt-3 text-[20px] font-semibold ${
+                          isDarkMode ? "text-zinc-300" : "text-zinc-700"
+                        }`}>
+                          {category} · {competitionLabels[competition] || competition}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                        : theme.searchBadge
+                    }`}>
+                      liderança oficial
+                    </div>
+                  </div>
+
+                  <div className="mt-7 grid grid-cols-4 gap-4">
+                    <div className={`rounded-[22px] border px-4 py-4 ${
+                      isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                    }`}>
+                      <p className={`text-[12px] font-bold uppercase tracking-[0.16em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}>Pontos</p>
+                      <p className="mt-2 text-[30px] font-extrabold tabular-nums">{leader?.pontos || 0}</p>
+                    </div>
+                    <div className={`rounded-[22px] border px-4 py-4 ${
+                      isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                    }`}>
+                      <p className={`text-[12px] font-bold uppercase tracking-[0.16em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}>Vantagem</p>
+                      <p className="mt-2 text-[30px] font-extrabold tabular-nums">{statsSummary.leaderAdvantage} pts</p>
+                    </div>
+                    <div className={`rounded-[22px] border px-4 py-4 ${
+                      isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                    }`}>
+                      <p className={`text-[12px] font-bold uppercase tracking-[0.16em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}>Vitórias</p>
+                      <p className="mt-2 text-[30px] font-extrabold tabular-nums">{leader?.vitorias || 0}</p>
+                    </div>
+                    <div className={`rounded-[22px] border px-4 py-4 ${
+                      isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                    }`}>
+                      <p className={`text-[12px] font-bold uppercase tracking-[0.16em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}>Pódios</p>
+                      <p className="mt-2 text-[30px] font-extrabold tabular-nums">{leader?.podios || 0}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                ref={narrativeShareCardRef}
+                className={`mt-6 w-[1080px] overflow-hidden rounded-[36px] border p-8 ${
+                  isDarkMode
+                    ? `border-white/10 bg-gradient-to-br ${theme.darkAccentCard} text-white`
+                    : `${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow} text-zinc-950`
+                }`}
+              >
+                <div className={`rounded-[28px] border p-7 ${
+                  isDarkMode
+                    ? `${theme.darkAccentBorder} bg-[#111827]`
+                    : `${theme.heroBorder} bg-white/92`
+                }`}>
+                  <div className="flex items-start justify-between gap-6">
+                    <div>
+                      <p className={`text-[15px] font-bold uppercase tracking-[0.22em] ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}>
+                        Narrativa oficial
+                      </p>
+                      <h2 className="mt-2 text-[40px] font-extrabold leading-tight tracking-tight">
+                        {championshipNarrative.headline}
+                      </h2>
+                      <p className={`mt-3 text-[20px] font-semibold ${
+                        isDarkMode ? "text-zinc-300" : "text-zinc-700"
+                      }`}>
+                        {category} · {competitionLabels[competition] || competition}
+                      </p>
+                    </div>
+
+                    <div className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                        : theme.searchBadge
+                    }`}>
+                      {championshipNarrative.kicker}
+                    </div>
+                  </div>
+
+                  <p className={`mt-6 text-[22px] leading-[1.5] ${
+                    isDarkMode ? "text-zinc-200" : "text-zinc-700"
+                  }`}>
+                    {championshipNarrative.body}
+                  </p>
+
+                  <div className="mt-6 grid grid-cols-3 gap-3">
+                    {championshipNarrative.badges.map((badge) => (
+                      <div
+                        key={`share-narrative-${badge.label}`}
+                        className={`rounded-[20px] border px-4 py-3 ${
+                          isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                        }`}
+                      >
+                        <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${
+                          isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                        }`}>
+                          {badge.label}
+                        </p>
+                        <p className="mt-2 text-[22px] font-extrabold tracking-tight">{badge.value}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div
+                ref={duelShareCardRef}
+                className={`mt-6 w-[1080px] overflow-hidden rounded-[36px] border p-8 ${
+                  isDarkMode
+                    ? `border-white/10 bg-gradient-to-br ${theme.darkAccentCard} text-white`
+                    : `${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow} text-zinc-950`
+                }`}
+              >
+                <div className={`rounded-[28px] border p-7 ${
+                  isDarkMode
+                    ? `${theme.darkAccentBorder} bg-[#111827]`
+                    : `${theme.heroBorder} bg-white/92`
+                }`}>
+                  <div className="flex items-start justify-between gap-6">
+                    <div>
+                      <p className={`text-[15px] font-bold uppercase tracking-[0.22em] ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}>
+                        Duelo premium
+                      </p>
+                      <h2 className="mt-2 text-[40px] font-extrabold leading-tight tracking-tight">
+                        {comparePilotA ? getPilotFirstAndLastName(comparePilotA.piloto) : "Piloto A"} vs {comparePilotB ? getPilotFirstAndLastName(comparePilotB.piloto) : "Piloto B"}
+                      </h2>
+                      <p className={`mt-3 text-[20px] font-semibold ${
+                        isDarkMode ? "text-zinc-300" : "text-zinc-700"
+                      }`}>
+                        {category} · {competitionLabels[competition] || competition}
+                      </p>
+                    </div>
+
+                    <div className={`rounded-full border px-5 py-2 text-[15px] font-bold uppercase tracking-[0.14em] ${
+                      isDarkMode
+                        ? duelIntensity.tone
+                        : duelIntensity.tone
+                    }`}>
+                      {duelIntensity.label}
+                    </div>
+                  </div>
+
+                  <div className="mt-7 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+                    <div className={`rounded-[24px] border px-5 py-5 ${
+                      isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                    }`}>
+                      <p className="text-[28px] font-extrabold tracking-tight">
+                        {comparePilotA ? getPilotFirstAndLastName(comparePilotA.piloto) : "Piloto A"}
+                      </p>
+                      <p className={`mt-2 text-[16px] ${isDarkMode ? "text-zinc-400" : "text-zinc-600"}`}>
+                        {comparePilotA ? `${comparePilotA.pontos} pts · ${comparePilotA.vitorias} vitórias` : "sem dados"}
+                      </p>
+                    </div>
+
+                    <div className={`rounded-[26px] border px-6 py-5 text-center ${
+                      isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft}` : `${theme.primaryBorder} bg-white`
+                    }`}>
+                      <p className={`text-[12px] font-bold uppercase tracking-[0.16em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}>
+                        Score
+                      </p>
+                      <p className="mt-2 text-[34px] font-extrabold tabular-nums">
+                        {duelSummary ? `${duelSummary.scoreA} x ${duelSummary.scoreB}` : "- x -"}
+                      </p>
+                    </div>
+
+                    <div className={`rounded-[24px] border px-5 py-5 ${
+                      isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                    }`}>
+                      <p className="text-[28px] font-extrabold tracking-tight">
+                        {comparePilotB ? getPilotFirstAndLastName(comparePilotB.piloto) : "Piloto B"}
+                      </p>
+                      <p className={`mt-2 text-[16px] ${isDarkMode ? "text-zinc-400" : "text-zinc-600"}`}>
+                        {comparePilotB ? `${comparePilotB.pontos} pts · ${comparePilotB.vitorias} vitórias` : "sem dados"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className={`mt-6 text-[20px] leading-[1.5] ${
+                    isDarkMode ? "text-zinc-200" : "text-zinc-700"
+                  }`}>
+                    {duelSummary ? duelSummary.narrative : "Selecione dois pilotos para gerar o confronto premium."}
+                  </p>
+                </div>
+              </div>
+
               <div
                 ref={shareCardRef}
                 className={`w-[1200px] overflow-hidden rounded-[36px] border p-10 ${
