@@ -1299,7 +1299,7 @@ const duelWinnerPilot = useMemo(() => {
       await shareDataUrlToWhatsApp({
         dataUrl,
         fileName: `narrativa-${category.toLowerCase()}-${competition.toLowerCase()}.png`,
-        text: `🧠 Narrativa oficial do campeonato\n${championshipNarrative.headline}\n${championshipNarrative.narrative}\n\n${category} - ${competitionLabels[competition] || competition}\nCaserna Kart Racing`,
+        text: `🧠 Narrativa oficial do campeonato\n${championshipNarrative.headline}\n${championshipNarrative.body}\n\n${category} - ${competitionLabels[competition] || competition}\nCaserna Kart Racing`,
       });
     } finally {
       setIsSharingNarrativeImage(false);
