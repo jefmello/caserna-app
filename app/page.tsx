@@ -91,6 +91,7 @@ import {
   Sun,
   Share2,
   TrendingUp,
+  MessageCircle,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -1213,6 +1214,123 @@ const duelWinnerPilot = useMemo(() => {
     }
   }
 
+  async function shareDataUrlToWhatsApp({
+    dataUrl,
+    fileName,
+    text,
+  }: {
+    dataUrl: string;
+    fileName: string;
+    text: string;
+  }) {
+    try {
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+      const file = new File([blob], fileName, { type: "image/png" });
+      const navigatorWithShare = navigator as Navigator & {
+        canShare?: (data: ShareData) => boolean;
+      };
+
+      if (
+        typeof navigator !== "undefined" &&
+        navigator.share &&
+        navigatorWithShare.canShare?.({ files: [file] })
+      ) {
+        await navigator.share({
+          files: [file],
+          title: "Caserna Kart Racing",
+          text,
+        });
+        return;
+      }
+
+      const link = document.createElement("a");
+      link.download = fileName;
+      link.href = dataUrl;
+      link.click();
+
+      window.open(
+        `https://wa.me/?text=${encodeURIComponent(text)}`,
+        "_blank",
+        "noopener,noreferrer"
+      );
+    } catch (err) {
+      console.error(err);
+      window.alert("Não foi possível compartilhar no WhatsApp.");
+    }
+  }
+
+  async function handleWhatsAppLeaderCard() {
+    if (!leader || !leaderShareCardRef.current || isSharingLeaderImage) return;
+
+    try {
+      setIsSharingLeaderImage(true);
+      const dataUrl = await htmlToImage.toPng(leaderShareCardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
+      });
+
+      const leaderDiff = filteredRanking[1]
+        ? Math.max((leader.pontos || 0) - filteredRanking[1].pontos, 0)
+        : 0;
+
+      await shareDataUrlToWhatsApp({
+        dataUrl,
+        fileName: `lider-${category.toLowerCase()}-${competition.toLowerCase()}.png`,
+        text: `🏁 Líder oficial do campeonato\n${getPilotFirstAndLastName(leader.piloto)} lidera ${category} - ${competitionLabels[competition] || competition} com ${leader.pontos} pts e vantagem de ${leaderDiff} pts.\n\nCaserna Kart Racing`,
+      });
+    } finally {
+      setIsSharingLeaderImage(false);
+    }
+  }
+
+  async function handleWhatsAppNarrativeCard() {
+    if (!championshipNarrative || !narrativeShareCardRef.current || isSharingNarrativeImage) return;
+
+    try {
+      setIsSharingNarrativeImage(true);
+      const dataUrl = await htmlToImage.toPng(narrativeShareCardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
+      });
+
+      await shareDataUrlToWhatsApp({
+        dataUrl,
+        fileName: `narrativa-${category.toLowerCase()}-${competition.toLowerCase()}.png`,
+        text: `🧠 Narrativa oficial do campeonato\n${championshipNarrative.headline}\n${championshipNarrative.narrative}\n\n${category} - ${competitionLabels[competition] || competition}\nCaserna Kart Racing`,
+      });
+    } finally {
+      setIsSharingNarrativeImage(false);
+    }
+  }
+
+  async function handleWhatsAppDuelCard() {
+    if (!comparePilotA || !comparePilotB || !duelShareCardRef.current || isSharingDuelImage) return;
+
+    try {
+      setIsSharingDuelImage(true);
+      const dataUrl = await htmlToImage.toPng(duelShareCardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
+      });
+
+      const duelText = duelSummary
+        ? `⚔️ Duelo oficial\n${getPilotFirstAndLastName(comparePilotA.piloto)} ${duelSummary.scoreA} x ${duelSummary.scoreB} ${getPilotFirstAndLastName(comparePilotB.piloto)}\n${duelSummary.narrative}\n\n${category} - ${competitionLabels[competition] || competition}\nCaserna Kart Racing`
+        : `⚔️ Duelo oficial\n${getPilotFirstAndLastName(comparePilotA.piloto)} x ${getPilotFirstAndLastName(comparePilotB.piloto)}\n${category} - ${competitionLabels[competition] || competition}\nCaserna Kart Racing`;
+
+      await shareDataUrlToWhatsApp({
+        dataUrl,
+        fileName: `duelo-${category.toLowerCase()}-${competition.toLowerCase()}.png`,
+        text: duelText,
+      });
+    } finally {
+      setIsSharingDuelImage(false);
+    }
+  }
+
   const getSpotlightPilotWarName = (pilot: unknown) => {
     if (!pilot || typeof pilot !== "object") return "";
     return getPilotWarName(pilot as RankingItem | null | undefined);
@@ -1754,6 +1872,50 @@ const duelWinnerPilot = useMemo(() => {
                     }`}>
                       Comparativo visual entre dois pilotos com vencedor e contexto do duelo.
                     </p>
+                  </button>
+                </div>
+
+                <div className="mt-2.5 grid grid-cols-1 gap-2.5 lg:grid-cols-3">
+                  <button
+                    type="button"
+                    onClick={handleWhatsAppLeaderCard}
+                    disabled={!leader || isSharingLeaderImage}
+                    className={`inline-flex items-center justify-center gap-2 rounded-[16px] border px-3 py-2.5 text-[12px] font-bold transition-all duration-200 ${
+                      isDarkMode
+                        ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/15 disabled:opacity-50"
+                        : "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 disabled:opacity-50"
+                    }`}
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    {isSharingLeaderImage ? "Gerando..." : "WhatsApp • líder"}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleWhatsAppNarrativeCard}
+                    disabled={!championshipNarrative || isSharingNarrativeImage}
+                    className={`inline-flex items-center justify-center gap-2 rounded-[16px] border px-3 py-2.5 text-[12px] font-bold transition-all duration-200 ${
+                      isDarkMode
+                        ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/15 disabled:opacity-50"
+                        : "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 disabled:opacity-50"
+                    }`}
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    {isSharingNarrativeImage ? "Gerando..." : "WhatsApp • narrativa"}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleWhatsAppDuelCard}
+                    disabled={!comparePilotA || !comparePilotB || isSharingDuelImage}
+                    className={`inline-flex items-center justify-center gap-2 rounded-[16px] border px-3 py-2.5 text-[12px] font-bold transition-all duration-200 ${
+                      isDarkMode
+                        ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/15 disabled:opacity-50"
+                        : "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 disabled:opacity-50"
+                    }`}
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    {isSharingDuelImage ? "Gerando..." : "WhatsApp • duelo"}
                   </button>
                 </div>
               </CardContent>
