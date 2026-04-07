@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import RankingShell from "@/components/ranking/ranking-shell";
 import RankingHeader from "@/components/ranking/ranking-header";
 import RankingSpotlight from "@/components/ranking/ranking-spotlight";
@@ -15,8 +16,6 @@ import RankingStatsRadarCard from "@/components/ranking/ranking-stats-radar-card
 import RankingStatsTopPointsChartCard from "@/components/ranking/ranking-stats-top-points-chart-card";
 import RankingStatsMetricCardsGrid from "@/components/ranking/ranking-stats-metric-cards-grid";
 import RankingCompetitionContext from "@/components/ranking/sections/ranking-competition-context";
-import RankingShareCanvas from "@/components/ranking/sections/ranking-share-canvas";
-import RankingSharePremiumSection from "@/components/ranking/sections/ranking-share-premium-section";
 import RankingPilotEmptyState from "@/components/ranking/ranking-pilot-empty-state";
 import RankingPilotHeroCard from "@/components/ranking/ranking-pilot-hero-card";
 import RankingPilotComparisonCard from "@/components/ranking/ranking-pilot-comparison-card";
@@ -91,6 +90,16 @@ import {
   BarChart,
   Bar,
 } from "recharts";
+
+const RankingShareCanvas = dynamic(
+  () => import("@/components/ranking/sections/ranking-share-canvas"),
+  { ssr: false }
+);
+
+const RankingSharePremiumSection = dynamic(
+  () => import("@/components/ranking/sections/ranking-share-premium-section"),
+  { ssr: false }
+);
 
 type CategoryThemeLike = ReturnType<typeof getCategoryTheme>;
 
@@ -585,7 +594,7 @@ export default function CasernaKartAppModerno() {
   const [isSharingLeaderImage, setIsSharingLeaderImage] = useState(false);
   const [isSharingDuelImage, setIsSharingDuelImage] = useState(false);
   const [isSharingNarrativeImage, setIsSharingNarrativeImage] = useState(false);
-  const scrollPageToTop = useCallback((behavior: ScrollBehavior = "smooth") => {
+  const scrollPageToTop = React.useCallback((behavior: ScrollBehavior = "smooth") => {
     if (typeof window === "undefined") return;
 
     const scrollTargets = [
@@ -1141,7 +1150,7 @@ export default function CasernaKartAppModerno() {
     bestEfficiencyPilot,
   });
 
-  const handleSelectPilot = useCallback((pilot: RankingItem) => {
+  function handleSelectPilot(pilot: RankingItem) {
     scrollPageToTop("auto");
     setSelectedPilot(pilot);
     setActiveTab("piloto");
@@ -1149,21 +1158,21 @@ export default function CasernaKartAppModerno() {
     window.setTimeout(() => {
       scrollPageToTop("smooth");
     }, 30);
-  }, [scrollPageToTop]);
+  }
 
-  const handleBackToRanking = useCallback(() => {
+  function handleBackToRanking() {
     setActiveTab("classificacao");
-  }, []);
+  }
 
-  const toggleDarkMode = useCallback(() => {
+  function toggleDarkMode() {
     setIsDarkMode((prev) => !prev);
-  }, []);
+  }
 
-  const handleRetry = useCallback(() => {
+  function handleRetry() {
     retry();
-  }, [retry]);
+  }
 
-  const handleShareClassification = useCallback(async () => {
+  async function handleShareClassification() {
     if (!shareCardRef.current || isSharingImage) return;
 
     try {
@@ -1181,9 +1190,9 @@ export default function CasernaKartAppModerno() {
     } finally {
       setIsSharingImage(false);
     }
-  }, [shareCardRef, isSharingImage, generateImage, download, category, competition]);
+  }
 
-  const handleSharePilotCard = useCallback(async () => {
+  async function handleSharePilotCard() {
     if (!selectedPilot || !pilotShareCardRef.current || isSharingPilotImage) return;
 
     try {
@@ -1207,9 +1216,9 @@ export default function CasernaKartAppModerno() {
     } finally {
       setIsSharingPilotImage(false);
     }
-  }, [selectedPilot, pilotShareCardRef, isSharingPilotImage, generateImage, download, safeSelectedPilot, getPilotFirstAndLastName, category, competition]);
+  }
 
-  const handleShareLeaderCard = useCallback(async () => {
+  async function handleShareLeaderCard() {
     if (!leader || !leaderShareCardRef.current || isSharingLeaderImage) return;
 
     try {
@@ -1227,9 +1236,9 @@ export default function CasernaKartAppModerno() {
     } finally {
       setIsSharingLeaderImage(false);
     }
-  }, [leader, leaderShareCardRef, isSharingLeaderImage, generateImage, download, category, competition]);
+  }
 
-  const handleShareDuelCard = useCallback(async () => {
+  async function handleShareDuelCard() {
     if (!comparePilotA || !comparePilotB || !duelShareCardRef.current || isSharingDuelImage) return;
 
     try {
@@ -1247,9 +1256,9 @@ export default function CasernaKartAppModerno() {
     } finally {
       setIsSharingDuelImage(false);
     }
-  }, [comparePilotA, comparePilotB, duelShareCardRef, isSharingDuelImage, generateImage, download, category, competition]);
+  }
 
-  const handleShareNarrativeCard = useCallback(async () => {
+  async function handleShareNarrativeCard() {
     if (!championshipNarrative || !narrativeShareCardRef.current || isSharingNarrativeImage) return;
 
     try {
@@ -1267,9 +1276,9 @@ export default function CasernaKartAppModerno() {
     } finally {
       setIsSharingNarrativeImage(false);
     }
-  }, [championshipNarrative, narrativeShareCardRef, isSharingNarrativeImage, generateImage, download, category, competition]);
+  }
 
-  const handleWhatsAppLeaderCard = useCallback(async () => {
+  async function handleWhatsAppLeaderCard() {
     if (!leader || !leaderShareCardRef.current || isSharingLeaderImage) return;
 
     try {
@@ -1292,9 +1301,9 @@ Caserna Kart Racing`,
     } finally {
       setIsSharingLeaderImage(false);
     }
-  }, [leader, leaderShareCardRef, isSharingLeaderImage, generateImage, filteredRanking, shareDataUrlToWhatsApp, category, competition, getPilotFirstAndLastName]);
+  }
 
-  const handleWhatsAppNarrativeCard = useCallback(async () => {
+  async function handleWhatsAppNarrativeCard() {
     if (!championshipNarrative || !narrativeShareCardRef.current || isSharingNarrativeImage) return;
 
     try {
@@ -1315,9 +1324,9 @@ Caserna Kart Racing`,
     } finally {
       setIsSharingNarrativeImage(false);
     }
-  }, [championshipNarrative, narrativeShareCardRef, isSharingNarrativeImage, generateImage, shareDataUrlToWhatsApp, category, competition]);
+  }
 
-  const handleWhatsAppDuelCard = useCallback(async () => {
+  async function handleWhatsAppDuelCard() {
     if (!comparePilotA || !comparePilotB || !duelShareCardRef.current || isSharingDuelImage) return;
 
     try {
@@ -1345,102 +1354,7 @@ Caserna Kart Racing`;
     } finally {
       setIsSharingDuelImage(false);
     }
-  }, [comparePilotA, comparePilotB, duelShareCardRef, isSharingDuelImage, generateImage, duelSummary, shareDataUrlToWhatsApp, category, competition, getPilotFirstAndLastName]);
-
-  const competitionContextProps = useMemo(() => ({
-    isDarkMode,
-    theme,
-    titleFightStatus,
-    statsSummary,
-    statsRadar,
-    bestEfficiencyPilot,
-    getPilotFirstAndLastName,
-  }), [
-    isDarkMode,
-    theme,
-    titleFightStatus,
-    statsSummary,
-    statsRadar,
-    bestEfficiencyPilot,
-    getPilotFirstAndLastName,
-  ]);
-
-  const sharePremiumProps = useMemo(() => ({
-    isDarkMode,
-    theme,
-    leader,
-    championshipNarrative,
-    comparePilotA,
-    comparePilotB,
-    isSharingLeaderImage,
-    isSharingNarrativeImage,
-    isSharingDuelImage,
-    onShareLeader: handleShareLeaderCard,
-    onShareNarrative: handleShareNarrativeCard,
-    onShareDuel: handleShareDuelCard,
-    onWhatsAppLeader: handleWhatsAppLeaderCard,
-    onWhatsAppNarrative: handleWhatsAppNarrativeCard,
-    onWhatsAppDuel: handleWhatsAppDuelCard,
-  }), [
-    isDarkMode,
-    theme,
-    leader,
-    championshipNarrative,
-    comparePilotA,
-    comparePilotB,
-    isSharingLeaderImage,
-    isSharingNarrativeImage,
-    isSharingDuelImage,
-    handleShareLeaderCard,
-    handleShareNarrativeCard,
-    handleShareDuelCard,
-    handleWhatsAppLeaderCard,
-    handleWhatsAppNarrativeCard,
-    handleWhatsAppDuelCard,
-  ]);
-
-  const shareCanvasProps = useMemo(() => ({
-    isDarkMode,
-    theme,
-    category,
-    competition,
-    competitionLabels,
-    leader,
-    statsSummary,
-    championshipNarrative,
-    comparePilotA,
-    comparePilotB,
-    duelSummary,
-    duelIntensity,
-    filteredRanking,
-    pilotTrendMap,
-    getPilotFirstAndLastName,
-    getPilotWarNameDisplay,
-    getTop6RowStyles,
-    getTrendVisual,
-    normalizePilotName,
-    refs: {
-      leaderShareCardRef,
-      narrativeShareCardRef,
-      duelShareCardRef,
-      shareCardRef,
-    },
-  }), [
-    isDarkMode,
-    theme,
-    category,
-    competition,
-    leader,
-    statsSummary,
-    championshipNarrative,
-    comparePilotA,
-    comparePilotB,
-    duelSummary,
-    duelIntensity,
-    filteredRanking,
-    pilotTrendMap,
-    getPilotFirstAndLastName,
-  ]);
+  }
 
   const getSpotlightPilotWarName = (pilot: unknown) => {
     if (!pilot || typeof pilot !== "object") return "";
@@ -1577,7 +1491,15 @@ Caserna Kart Racing`;
               onShare={handleShareClassification}
             />
 
-                        <RankingCompetitionContext {...competitionContextProps} />
+            <RankingCompetitionContext
+              isDarkMode={isDarkMode}
+              theme={theme}
+              titleFightStatus={titleFightStatus}
+              statsSummary={statsSummary}
+              statsRadar={statsRadar}
+              bestEfficiencyPilot={bestEfficiencyPilot}
+              getPilotFirstAndLastName={getPilotFirstAndLastName}
+            />
 
             <RankingChampionshipNarrativeCard
               isDarkMode={isDarkMode}
@@ -1591,9 +1513,51 @@ Caserna Kart Racing`;
               theme={theme}
               cards={editorialCards}
             />
-                        <RankingSharePremiumSection {...sharePremiumProps} />
+            <RankingSharePremiumSection
+              isDarkMode={isDarkMode}
+              theme={theme}
+              leader={leader}
+              championshipNarrative={championshipNarrative}
+              comparePilotA={comparePilotA}
+              comparePilotB={comparePilotB}
+              isSharingLeaderImage={isSharingLeaderImage}
+              isSharingNarrativeImage={isSharingNarrativeImage}
+              isSharingDuelImage={isSharingDuelImage}
+              onShareLeader={handleShareLeaderCard}
+              onShareNarrative={handleShareNarrativeCard}
+              onShareDuel={handleShareDuelCard}
+              onWhatsAppLeader={handleWhatsAppLeaderCard}
+              onWhatsAppNarrative={handleWhatsAppNarrativeCard}
+              onWhatsAppDuel={handleWhatsAppDuelCard}
+            />
 
-                        <RankingShareCanvas {...shareCanvasProps} />
+            <RankingShareCanvas
+              isDarkMode={isDarkMode}
+              theme={theme}
+              category={category}
+              competition={competition}
+              competitionLabels={competitionLabels}
+              leader={leader}
+              statsSummary={statsSummary}
+              championshipNarrative={championshipNarrative}
+              comparePilotA={comparePilotA}
+              comparePilotB={comparePilotB}
+              duelSummary={duelSummary}
+              duelIntensity={duelIntensity}
+              filteredRanking={filteredRanking}
+              pilotTrendMap={pilotTrendMap}
+              getPilotFirstAndLastName={getPilotFirstAndLastName}
+              getPilotWarNameDisplay={getPilotWarNameDisplay}
+              getTop6RowStyles={getTop6RowStyles}
+              getTrendVisual={getTrendVisual}
+              normalizePilotName={normalizePilotName}
+              refs={{
+                leaderShareCardRef,
+                narrativeShareCardRef,
+                duelShareCardRef,
+                shareCardRef,
+              }}
+            />
 
             <RankingTitleFightCard
               isDarkMode={isDarkMode}
