@@ -60,6 +60,21 @@ import {
   getDuelProfileLabel,
   type PilotTrendStatus,
 } from "@/lib/ranking/ranking-utils";
+import {
+  buildTitleProbabilityCandidates,
+  type TitleProbabilityCandidate,
+} from "@/lib/ranking/title-probability-engine";
+import {
+  DEFAULT_COMPLETED_STAGES,
+  getMaxPointsFromStages,
+  getRemainingChampionshipStages,
+  getStageMaxPoints,
+  getStagePodiumScenarioPoints,
+} from "@/lib/ranking/stage-points-engine";
+import {
+  buildNextStageScenarios,
+  type NextStageScenario,
+} from "@/lib/ranking/next-stage-simulator";
 import type {
   RankingByCompetition,
   RankingCompetitionMeta,
@@ -114,233 +129,6 @@ import {
 
 
 type CategoryThemeLike = ReturnType<typeof getCategoryTheme>;
-
-type TitleProbabilityCandidate = {
-  pilot: RankingItem;
-  probability: number;
-  projectedTotal: number;
-  titleReach: number;
-  pointsBehindLeader: number;
-  canStillReachLeader: boolean;
-  label: string;
-  tone: string;
-  scenarioLabel: string;
-};
-
-type NextStageScenario = {
-  pilot: RankingItem;
-  currentProbability: number;
-  winProbability: number;
-  podiumProbability: number;
-  zeroProbability: number;
-  winDelta: number;
-  podiumDelta: number;
-  zeroDelta: number;
-  swingLabel: string;
-  narrative: string;
-};
-
-const STAGE_POINTS_BY_POSITION: Record<number, number> = {
-  1: 35,
-  2: 32,
-  3: 30,
-  4: 28,
-  5: 26,
-  6: 24,
-  7: 22,
-  8: 21,
-  9: 20,
-  10: 19,
-  11: 18,
-  12: 17,
-  13: 16,
-  14: 15,
-  15: 14,
-  16: 13,
-  17: 12,
-  18: 11,
-  19: 10,
-  20: 9,
-  21: 8,
-  22: 7,
-  23: 6,
-  24: 5,
-  25: 4,
-  26: 3,
-  27: 2,
-  28: 1,
-};
-
-const NO_POLE_STAGES = [2, 5, 8];
-const CHAMPIONSHIP_STAGE_MAP: Record<string, number[]> = {
-  T1: [1, 2, 3],
-  T2: [4, 5, 6],
-  T3: [7, 8, 9],
-  GERAL: [4, 5, 6, 7, 8, 9],
-};
-const DEFAULT_COMPLETED_STAGES = [1];
-const MAX_STAGE_BASE_POINTS = STAGE_POINTS_BY_POSITION[1] || 35;
-
-function getRemainingChampionshipStages(competition: string, completedStages: number[]) {
-  const stages = CHAMPIONSHIP_STAGE_MAP[competition] || [];
-  return stages.filter((stage) => !completedStages.includes(stage));
-}
-
-function getStageMaxPoints(stage: number) {
-  const basePoints = MAX_STAGE_BASE_POINTS;
-  const fastestLapPoint = 1;
-  const polePoint = NO_POLE_STAGES.includes(stage) ? 0 : 1;
-
-  return basePoints + fastestLapPoint + polePoint;
-}
-
-function getMaxPointsFromStages(stages: number[]) {
-  return stages.reduce((total, stage) => total + getStageMaxPoints(stage), 0);
-}
-
-function getStagePodiumScenarioPoints(stage: number) {
-  const basePoints = STAGE_POINTS_BY_POSITION[3] || 30;
-  const fastestLapPoint = 1;
-
-  return basePoints + fastestLapPoint;
-}
-
-function getTitleProbabilityScenarioLabel(probability: number, pointsBehindLeader: number) {
-  if (probability >= 34) {
-    return pointsBehindLeader === 0
-      ? "controla a corrida pelo título"
-      : "segue pressionando forte o líder";
-  }
-
-  if (probability >= 22) {
-    return "mantém presença real na disputa";
-  }
-
-  if (probability >= 12) {
-    return "ainda tem rota competitiva";
-  }
-
-  if (probability >= 6) {
-    return "precisa combinar reação e tropeço rival";
-  }
-
-  return "vive de cenário extremo até o fim";
-}
-
-function getNextStageSwingLabel(delta: number) {
-  if (delta >= 10) return "vira o campeonato";
-  if (delta >= 6) return "acende a disputa";
-  if (delta >= 3) return "ganha pressão real";
-  if (delta > 0) return "sobe de forma controlada";
-  if (delta === 0) return "segura a mesma leitura";
-  return "perde força matemática";
-}
-
-function buildTitleProbabilityCandidates({
-  ranking,
-  competition,
-  titlePointsStillAvailable,
-  pointsOverrides,
-}: {
-  ranking: RankingItem[];
-  competition: string;
-  titlePointsStillAvailable: number;
-  pointsOverrides?: Record<string, number>;
-}): TitleProbabilityCandidate[] {
-  if (ranking.length === 0) return [];
-
-  const candidates = ranking.slice(0, 6);
-  const leaderPoints = Math.max(
-    ...candidates.map((pilot) => {
-      const key = pilot.pilotoId || pilot.piloto;
-      return pointsOverrides?.[key] ?? pilot.pontos;
-    })
-  );
-
-  const rawCandidates = candidates.map((pilot) => {
-    const key = pilot.pilotoId || pilot.piloto;
-    const adjustedPoints = pointsOverrides?.[key] ?? pilot.pontos;
-    const pointsBehindLeader = Math.max(leaderPoints - adjustedPoints, 0);
-    const projectedTotal = adjustedPoints + titlePointsStillAvailable;
-    const titleReach = projectedTotal - leaderPoints;
-    const canStillReachLeader = projectedTotal >= leaderPoints;
-    const reachFactor = Math.max(titleReach, 0);
-    const discardProtection = competition === "GERAL" ? Math.max(pilot.descarte || 0, 0) : 0;
-    const momentumBoost = pilot.vitorias * 3 + pilot.podios * 1.4 + pilot.poles * 0.9 + pilot.mv * 0.9;
-    const score =
-      projectedTotal * 0.58 +
-      adjustedPoints * 0.26 +
-      reachFactor * 0.12 +
-      discardProtection * 0.08 +
-      momentumBoost -
-      pointsBehindLeader * 0.1;
-
-    return {
-      pilot,
-      projectedTotal,
-      titleReach,
-      pointsBehindLeader,
-      canStillReachLeader,
-      rawScore: Math.max(score, canStillReachLeader ? 1 : 0.25),
-    };
-  });
-
-  const totalScore = rawCandidates.reduce((sum, candidate) => sum + candidate.rawScore, 0);
-
-  return rawCandidates
-    .map((candidate) => {
-      const probability = totalScore > 0 ? (candidate.rawScore / totalScore) * 100 : 0;
-      const { label, tone } = getTitleProbabilityLabel(probability);
-
-      return {
-        pilot: candidate.pilot,
-        probability,
-        projectedTotal: candidate.projectedTotal,
-        titleReach: candidate.titleReach,
-        pointsBehindLeader: candidate.pointsBehindLeader,
-        canStillReachLeader: candidate.canStillReachLeader,
-        label,
-        tone,
-        scenarioLabel: getTitleProbabilityScenarioLabel(probability, candidate.pointsBehindLeader),
-      };
-    })
-    .sort((a, b) => b.probability - a.probability);
-}
-
-function getTitleProbabilityLabel(probability: number) {
-  if (probability >= 34) {
-    return {
-      label: "FAVORITO",
-      tone: "border-emerald-300 bg-emerald-50 text-emerald-700",
-    };
-  }
-
-  if (probability >= 22) {
-    return {
-      label: "PERSEGUIDOR",
-      tone: "border-sky-300 bg-sky-50 text-sky-700",
-    };
-  }
-
-  if (probability >= 12) {
-    return {
-      label: "NA BRIGA",
-      tone: "border-violet-300 bg-violet-50 text-violet-700",
-    };
-  }
-
-  if (probability >= 6) {
-    return {
-      label: "DEPENDE",
-      tone: "border-amber-300 bg-amber-50 text-amber-700",
-    };
-  }
-
-  return {
-    label: "MILAGRE",
-    tone: "border-zinc-300 bg-zinc-100 text-zinc-700",
-  };
-}
 
 function resolveCategoryTheme(categoryTheme: unknown): CategoryThemeLike {
   if (categoryTheme && typeof categoryTheme === "object") {
@@ -1349,55 +1137,12 @@ const duelWinnerPilot = useMemo(() => {
   );
 
   const nextStageScenarios = useMemo<NextStageScenario[]>(() => {
-    if (!nextStageNumber || titleProbabilities.length === 0) return [];
-
-    return titleProbabilities.map((candidate) => {
-      const key = candidate.pilot.pilotoId || candidate.pilot.piloto;
-
-      const winProjection = buildTitleProbabilityCandidates({
-        ranking: filteredRanking,
-        competition,
-        titlePointsStillAvailable: Math.max(titlePointsStillAvailable - nextStageWinPoints, 0),
-        pointsOverrides: {
-          [key]: candidate.pilot.pontos + nextStageWinPoints,
-        },
-      }).find((item) => (item.pilot.pilotoId || item.pilot.piloto) === key);
-
-      const podiumProjection = buildTitleProbabilityCandidates({
-        ranking: filteredRanking,
-        competition,
-        titlePointsStillAvailable: Math.max(titlePointsStillAvailable - nextStagePodiumPoints, 0),
-        pointsOverrides: {
-          [key]: candidate.pilot.pontos + nextStagePodiumPoints,
-        },
-      }).find((item) => (item.pilot.pilotoId || item.pilot.piloto) === key);
-
-      const winProbability = winProjection?.probability ?? candidate.probability;
-      const podiumProbability = podiumProjection?.probability ?? candidate.probability;
-      const zeroProbability = Math.max(candidate.probability - Math.min(nextStageWinPoints * 0.12, 4.5), 0);
-      const winDelta = winProbability - candidate.probability;
-      const podiumDelta = podiumProbability - candidate.probability;
-      const zeroDelta = zeroProbability - candidate.probability;
-
-      return {
-        pilot: candidate.pilot,
-        currentProbability: candidate.probability,
-        winProbability,
-        podiumProbability,
-        zeroProbability,
-        winDelta,
-        podiumDelta,
-        zeroDelta,
-        swingLabel: getNextStageSwingLabel(Number(winDelta.toFixed(1))),
-        narrative:
-          winDelta >= 6
-            ? "vence e muda o eixo da disputa imediatamente"
-            : winDelta >= 3
-              ? "vence e aumenta a pressão sobre o bloco da frente"
-              : winDelta > 0
-                ? "vence e melhora a rota matemática"
-                : "mesmo vencendo, ainda depende de combinação de resultados",
-      };
+    return buildNextStageScenarios({
+      nextStageNumber,
+      titleProbabilities,
+      filteredRanking,
+      competition,
+      titlePointsStillAvailable,
     });
   }, [
     nextStageNumber,
@@ -1405,8 +1150,6 @@ const duelWinnerPilot = useMemo(() => {
     filteredRanking,
     competition,
     titlePointsStillAvailable,
-    nextStageWinPoints,
-    nextStagePodiumPoints,
   ]);
 
   const nextStageSummary = useMemo(() => {
