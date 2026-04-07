@@ -2,23 +2,20 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Crown, Gauge, TrendingUp, Trophy, Users } from "lucide-react";
-import type { RankingItem } from "@/types/ranking";
+import type { RankingItem, RankingMetaPilot } from "@/types/ranking";
 
 type CategoryThemeLike = {
   darkAccentBorder: string;
-  bgSoft: string;
-  darkAccentBgSoft: string;
+  darkAccentBgSoft?: string;
   darkAccentIconWrap: string;
   primaryIconWrap: string;
   darkAccentText: string;
   searchIcon: string;
   searchBorder: string;
-  titleBadge: string;
-  searchBadge: string;
   primaryIcon: string;
 };
 
-type StatsSummary = {
+type StatsSummaryLike = {
   totalPilots: number;
   leaderPoints: number;
   vicePoints: number;
@@ -29,14 +26,16 @@ type StatsSummary = {
   totalPodiums: number;
 };
 
-type StatsRadar = {
-  hottestPilot: RankingItem | null;
+type PilotLike = RankingItem | RankingMetaPilot;
+
+type StatsRadarLike = {
+  hottestPilot: PilotLike | null;
   hottestLabel: string;
   podiumPressure: number;
   titleHeat: string;
 };
 
-type TitleFightStatus = {
+type TitleFightStatusLike = {
   label: string;
   tone: string;
 };
@@ -44,11 +43,11 @@ type TitleFightStatus = {
 type RankingCompetitionContextProps = {
   isDarkMode: boolean;
   theme: CategoryThemeLike;
-  titleFightStatus: TitleFightStatus;
-  statsSummary: StatsSummary;
-  statsRadar: StatsRadar;
-  bestEfficiencyPilot: RankingItem | null;
-  getPilotFirstAndLastName: (pilotName?: string | null) => string;
+  titleFightStatus: TitleFightStatusLike;
+  statsSummary: StatsSummaryLike;
+  statsRadar: StatsRadarLike;
+  bestEfficiencyPilot: PilotLike | null;
+  getPilotFirstAndLastName: (pilotName?: string | undefined) => string;
 };
 
 export default function RankingCompetitionContext({
@@ -83,11 +82,7 @@ export default function RankingCompetitionContext({
           </div>
 
           <div className="min-w-0 flex-1">
-            <p
-              className={`text-[8px] font-bold uppercase tracking-[0.18em] ${
-                isDarkMode ? "text-zinc-400" : "text-zinc-400"
-              }`}
-            >
+            <p className="text-[8px] font-bold uppercase tracking-[0.18em] text-zinc-400">
               Contexto competitivo
             </p>
             <p
@@ -307,7 +302,7 @@ export default function RankingCompetitionContext({
                 isDarkMode ? "text-zinc-400" : "text-zinc-500"
               }`}
             >
-              {bestEfficiencyPilot
+              {bestEfficiencyPilot && "pontos" in bestEfficiencyPilot && "participacoes" in bestEfficiencyPilot
                 ? `${(
                     bestEfficiencyPilot.pontos /
                     Math.max(bestEfficiencyPilot.participacoes, 1)
