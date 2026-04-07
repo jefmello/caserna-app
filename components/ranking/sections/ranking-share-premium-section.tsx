@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { BarChart3, Crown, MessageCircle, Share2, Swords } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -13,7 +14,7 @@ type ThemeLike = {
   searchBadge?: string;
 };
 
-export default function RankingSharePremiumSection({
+function RankingSharePremiumSection({
   isDarkMode,
   theme,
   leader,
@@ -265,3 +266,5 @@ export default function RankingSharePremiumSection({
     </Card>
   );
 }
+
+export default React.memo(RankingSharePremiumSection);

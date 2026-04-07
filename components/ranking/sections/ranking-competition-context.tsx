@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Crown, Gauge, TrendingUp, Trophy, Users } from "lucide-react";
 import type { RankingItem, RankingMetaPilot } from "@/types/ranking";
@@ -50,7 +51,7 @@ type RankingCompetitionContextProps = {
   getPilotFirstAndLastName: (pilotName?: string | undefined) => string;
 };
 
-export default function RankingCompetitionContext({
+function RankingCompetitionContext({
   isDarkMode,
   theme,
   titleFightStatus,
@@ -315,3 +316,5 @@ export default function RankingCompetitionContext({
     </Card>
   );
 }
+
+export default React.memo(RankingCompetitionContext);

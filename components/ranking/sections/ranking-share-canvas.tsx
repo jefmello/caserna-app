@@ -1,6 +1,6 @@
 "use client";
 
-import type { RefObject } from "react";
+import React, { type RefObject } from "react";
 import {
   competitionLabels as defaultCompetitionLabels,
   getTop6RowStyles as defaultGetTop6RowStyles,
@@ -86,7 +86,7 @@ type RankingShareCanvasProps = {
   refs: ShareCanvasRefs;
 };
 
-export default function RankingShareCanvas({
+function RankingShareCanvas({
   isDarkMode,
   theme,
   category,
@@ -631,3 +631,5 @@ export default function RankingShareCanvas({
     </div>
   );
 }
+
+export default React.memo(RankingShareCanvas);
