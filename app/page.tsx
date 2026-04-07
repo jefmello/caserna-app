@@ -115,6 +115,233 @@ import {
 
 type CategoryThemeLike = ReturnType<typeof getCategoryTheme>;
 
+type TitleProbabilityCandidate = {
+  pilot: RankingItem;
+  probability: number;
+  projectedTotal: number;
+  titleReach: number;
+  pointsBehindLeader: number;
+  canStillReachLeader: boolean;
+  label: string;
+  tone: string;
+  scenarioLabel: string;
+};
+
+type NextStageScenario = {
+  pilot: RankingItem;
+  currentProbability: number;
+  winProbability: number;
+  podiumProbability: number;
+  zeroProbability: number;
+  winDelta: number;
+  podiumDelta: number;
+  zeroDelta: number;
+  swingLabel: string;
+  narrative: string;
+};
+
+const STAGE_POINTS_BY_POSITION: Record<number, number> = {
+  1: 35,
+  2: 32,
+  3: 30,
+  4: 28,
+  5: 26,
+  6: 24,
+  7: 22,
+  8: 21,
+  9: 20,
+  10: 19,
+  11: 18,
+  12: 17,
+  13: 16,
+  14: 15,
+  15: 14,
+  16: 13,
+  17: 12,
+  18: 11,
+  19: 10,
+  20: 9,
+  21: 8,
+  22: 7,
+  23: 6,
+  24: 5,
+  25: 4,
+  26: 3,
+  27: 2,
+  28: 1,
+};
+
+const NO_POLE_STAGES = [2, 5, 8];
+const CHAMPIONSHIP_STAGE_MAP: Record<string, number[]> = {
+  T1: [1, 2, 3],
+  T2: [4, 5, 6],
+  T3: [7, 8, 9],
+  GERAL: [4, 5, 6, 7, 8, 9],
+};
+const DEFAULT_COMPLETED_STAGES = [1];
+const MAX_STAGE_BASE_POINTS = STAGE_POINTS_BY_POSITION[1] || 35;
+
+function getRemainingChampionshipStages(competition: string, completedStages: number[]) {
+  const stages = CHAMPIONSHIP_STAGE_MAP[competition] || [];
+  return stages.filter((stage) => !completedStages.includes(stage));
+}
+
+function getStageMaxPoints(stage: number) {
+  const basePoints = MAX_STAGE_BASE_POINTS;
+  const fastestLapPoint = 1;
+  const polePoint = NO_POLE_STAGES.includes(stage) ? 0 : 1;
+
+  return basePoints + fastestLapPoint + polePoint;
+}
+
+function getMaxPointsFromStages(stages: number[]) {
+  return stages.reduce((total, stage) => total + getStageMaxPoints(stage), 0);
+}
+
+function getStagePodiumScenarioPoints(stage: number) {
+  const basePoints = STAGE_POINTS_BY_POSITION[3] || 30;
+  const fastestLapPoint = 1;
+
+  return basePoints + fastestLapPoint;
+}
+
+function getTitleProbabilityScenarioLabel(probability: number, pointsBehindLeader: number) {
+  if (probability >= 34) {
+    return pointsBehindLeader === 0
+      ? "controla a corrida pelo título"
+      : "segue pressionando forte o líder";
+  }
+
+  if (probability >= 22) {
+    return "mantém presença real na disputa";
+  }
+
+  if (probability >= 12) {
+    return "ainda tem rota competitiva";
+  }
+
+  if (probability >= 6) {
+    return "precisa combinar reação e tropeço rival";
+  }
+
+  return "vive de cenário extremo até o fim";
+}
+
+function getNextStageSwingLabel(delta: number) {
+  if (delta >= 10) return "vira o campeonato";
+  if (delta >= 6) return "acende a disputa";
+  if (delta >= 3) return "ganha pressão real";
+  if (delta > 0) return "sobe de forma controlada";
+  if (delta === 0) return "segura a mesma leitura";
+  return "perde força matemática";
+}
+
+function buildTitleProbabilityCandidates({
+  ranking,
+  competition,
+  titlePointsStillAvailable,
+  pointsOverrides,
+}: {
+  ranking: RankingItem[];
+  competition: string;
+  titlePointsStillAvailable: number;
+  pointsOverrides?: Record<string, number>;
+}): TitleProbabilityCandidate[] {
+  if (ranking.length === 0) return [];
+
+  const candidates = ranking.slice(0, 6);
+  const leaderPoints = Math.max(
+    ...candidates.map((pilot) => {
+      const key = pilot.pilotoId || pilot.piloto;
+      return pointsOverrides?.[key] ?? pilot.pontos;
+    })
+  );
+
+  const rawCandidates = candidates.map((pilot) => {
+    const key = pilot.pilotoId || pilot.piloto;
+    const adjustedPoints = pointsOverrides?.[key] ?? pilot.pontos;
+    const pointsBehindLeader = Math.max(leaderPoints - adjustedPoints, 0);
+    const projectedTotal = adjustedPoints + titlePointsStillAvailable;
+    const titleReach = projectedTotal - leaderPoints;
+    const canStillReachLeader = projectedTotal >= leaderPoints;
+    const reachFactor = Math.max(titleReach, 0);
+    const discardProtection = competition === "GERAL" ? Math.max(pilot.descarte || 0, 0) : 0;
+    const momentumBoost = pilot.vitorias * 3 + pilot.podios * 1.4 + pilot.poles * 0.9 + pilot.mv * 0.9;
+    const score =
+      projectedTotal * 0.58 +
+      adjustedPoints * 0.26 +
+      reachFactor * 0.12 +
+      discardProtection * 0.08 +
+      momentumBoost -
+      pointsBehindLeader * 0.1;
+
+    return {
+      pilot,
+      projectedTotal,
+      titleReach,
+      pointsBehindLeader,
+      canStillReachLeader,
+      rawScore: Math.max(score, canStillReachLeader ? 1 : 0.25),
+    };
+  });
+
+  const totalScore = rawCandidates.reduce((sum, candidate) => sum + candidate.rawScore, 0);
+
+  return rawCandidates
+    .map((candidate) => {
+      const probability = totalScore > 0 ? (candidate.rawScore / totalScore) * 100 : 0;
+      const { label, tone } = getTitleProbabilityLabel(probability);
+
+      return {
+        pilot: candidate.pilot,
+        probability,
+        projectedTotal: candidate.projectedTotal,
+        titleReach: candidate.titleReach,
+        pointsBehindLeader: candidate.pointsBehindLeader,
+        canStillReachLeader: candidate.canStillReachLeader,
+        label,
+        tone,
+        scenarioLabel: getTitleProbabilityScenarioLabel(probability, candidate.pointsBehindLeader),
+      };
+    })
+    .sort((a, b) => b.probability - a.probability);
+}
+
+function getTitleProbabilityLabel(probability: number) {
+  if (probability >= 34) {
+    return {
+      label: "FAVORITO",
+      tone: "border-emerald-300 bg-emerald-50 text-emerald-700",
+    };
+  }
+
+  if (probability >= 22) {
+    return {
+      label: "PERSEGUIDOR",
+      tone: "border-sky-300 bg-sky-50 text-sky-700",
+    };
+  }
+
+  if (probability >= 12) {
+    return {
+      label: "NA BRIGA",
+      tone: "border-violet-300 bg-violet-50 text-violet-700",
+    };
+  }
+
+  if (probability >= 6) {
+    return {
+      label: "DEPENDE",
+      tone: "border-amber-300 bg-amber-50 text-amber-700",
+    };
+  }
+
+  return {
+    label: "MILAGRE",
+    tone: "border-zinc-300 bg-zinc-100 text-zinc-700",
+  };
+}
+
 function resolveCategoryTheme(categoryTheme: unknown): CategoryThemeLike {
   if (categoryTheme && typeof categoryTheme === "object") {
     return categoryTheme as CategoryThemeLike;
@@ -1049,6 +1276,169 @@ const duelWinnerPilot = useMemo(() => {
       return b.pontos - a.pontos;
     })[0];
   }, [filteredRanking, currentCompetitionMeta]);
+
+
+  const completedStages = useMemo(() => DEFAULT_COMPLETED_STAGES, []);
+
+  const remainingStages = useMemo(
+    () => getRemainingChampionshipStages(competition, completedStages),
+    [competition, completedStages]
+  );
+
+  const titlePointsStillAvailable = useMemo(
+    () => getMaxPointsFromStages(remainingStages),
+    [remainingStages]
+  );
+
+  const titleProbabilities = useMemo<TitleProbabilityCandidate[]>(() => {
+    return buildTitleProbabilityCandidates({
+      ranking: filteredRanking,
+      competition,
+      titlePointsStillAvailable,
+    });
+  }, [filteredRanking, competition, titlePointsStillAvailable]);
+
+  const titleProbabilitySummary = useMemo(() => {
+    if (titleProbabilities.length === 0) {
+      return {
+        headline: "Sem leitura",
+        body: "Ainda não há pilotos suficientes para projetar a disputa pelo título.",
+      };
+    }
+
+    const favorite = titleProbabilities[0];
+    const realisticContenders = titleProbabilities.filter((candidate) => candidate.probability >= 12).length;
+
+    if (favorite.probability >= 42) {
+      return {
+        headline: "Favoritismo claro",
+        body: `${getPilotFirstAndLastName(favorite.pilot.piloto)} controla a matemática atual e lidera a projeção oficial do título.`,
+      };
+    }
+
+    if (realisticContenders >= 3) {
+      return {
+        headline: "Título em aberto",
+        body: `A leitura matemática mantém ${realisticContenders} pilotos com presença real na briga pelo campeonato.`,
+      };
+    }
+
+    if (realisticContenders === 2) {
+      return {
+        headline: "Disputa concentrada",
+        body: `A corrida pelo título está mais apertada entre ${getPilotFirstAndLastName(titleProbabilities[0].pilot.piloto)} e ${getPilotFirstAndLastName(titleProbabilities[1].pilot.piloto)}.`,
+      };
+    }
+
+    return {
+      headline: "Briga de perseguição",
+      body: `O pelotão ainda precisa recuperar ${favorite.pointsBehindLeader} pts para ameaçar o favorito matemático.`,
+    };
+  }, [titleProbabilities]);
+
+  const nextStageNumber = remainingStages[0] || null;
+
+  const nextStageWinPoints = useMemo(
+    () => (nextStageNumber ? getStageMaxPoints(nextStageNumber) : 0),
+    [nextStageNumber]
+  );
+
+  const nextStagePodiumPoints = useMemo(
+    () => (nextStageNumber ? getStagePodiumScenarioPoints(nextStageNumber) : 0),
+    [nextStageNumber]
+  );
+
+  const nextStageScenarios = useMemo<NextStageScenario[]>(() => {
+    if (!nextStageNumber || titleProbabilities.length === 0) return [];
+
+    return titleProbabilities.map((candidate) => {
+      const key = candidate.pilot.pilotoId || candidate.pilot.piloto;
+
+      const winProjection = buildTitleProbabilityCandidates({
+        ranking: filteredRanking,
+        competition,
+        titlePointsStillAvailable: Math.max(titlePointsStillAvailable - nextStageWinPoints, 0),
+        pointsOverrides: {
+          [key]: candidate.pilot.pontos + nextStageWinPoints,
+        },
+      }).find((item) => (item.pilot.pilotoId || item.pilot.piloto) === key);
+
+      const podiumProjection = buildTitleProbabilityCandidates({
+        ranking: filteredRanking,
+        competition,
+        titlePointsStillAvailable: Math.max(titlePointsStillAvailable - nextStagePodiumPoints, 0),
+        pointsOverrides: {
+          [key]: candidate.pilot.pontos + nextStagePodiumPoints,
+        },
+      }).find((item) => (item.pilot.pilotoId || item.pilot.piloto) === key);
+
+      const winProbability = winProjection?.probability ?? candidate.probability;
+      const podiumProbability = podiumProjection?.probability ?? candidate.probability;
+      const zeroProbability = Math.max(candidate.probability - Math.min(nextStageWinPoints * 0.12, 4.5), 0);
+      const winDelta = winProbability - candidate.probability;
+      const podiumDelta = podiumProbability - candidate.probability;
+      const zeroDelta = zeroProbability - candidate.probability;
+
+      return {
+        pilot: candidate.pilot,
+        currentProbability: candidate.probability,
+        winProbability,
+        podiumProbability,
+        zeroProbability,
+        winDelta,
+        podiumDelta,
+        zeroDelta,
+        swingLabel: getNextStageSwingLabel(Number(winDelta.toFixed(1))),
+        narrative:
+          winDelta >= 6
+            ? "vence e muda o eixo da disputa imediatamente"
+            : winDelta >= 3
+              ? "vence e aumenta a pressão sobre o bloco da frente"
+              : winDelta > 0
+                ? "vence e melhora a rota matemática"
+                : "mesmo vencendo, ainda depende de combinação de resultados",
+      };
+    });
+  }, [
+    nextStageNumber,
+    titleProbabilities,
+    filteredRanking,
+    competition,
+    titlePointsStillAvailable,
+    nextStageWinPoints,
+    nextStagePodiumPoints,
+  ]);
+
+  const nextStageSummary = useMemo(() => {
+    if (!nextStageNumber || nextStageScenarios.length === 0) {
+      return {
+        headline: "Sem próxima etapa projetada",
+        body: "O simulador volta a ficar disponível quando houver etapa restante no calendário.",
+      };
+    }
+
+    const biggestJump = [...nextStageScenarios].sort((a, b) => b.winDelta - a.winDelta)[0];
+    const aliveCount = nextStageScenarios.filter((candidate) => candidate.winProbability >= 12).length;
+
+    if (biggestJump && biggestJump.winDelta >= 6) {
+      return {
+        headline: `Etapa ${nextStageNumber} pode virar o campeonato`,
+        body: `${getPilotFirstAndLastName(biggestJump.pilot.piloto)} é quem mais cresce se vencer a próxima bateria máxima e pode reabrir o título com força real.`,
+      };
+    }
+
+    if (aliveCount >= 4) {
+      return {
+        headline: "Próxima etapa mantém a disputa aberta",
+        body: `A simulação ainda deixa ${aliveCount} pilotos vivos em cenário competitivo se a próxima etapa mexer no bloco da frente.`,
+      };
+    }
+
+    return {
+      headline: "Próxima etapa tende a consolidar o topo",
+      body: "Sem grande virada imediata, a próxima prova reforça mais o controle do pelotão principal do que uma ruptura matemática.",
+    };
+  }, [nextStageNumber, nextStageScenarios]);
 
 
   const championshipNarrative = useChampionshipNarrative({
@@ -3193,6 +3583,500 @@ const duelWinnerPilot = useMemo(() => {
                   GaugeIcon={Gauge}
                   MedalIcon={Medal}
                 />
+
+                <Card
+                  className={`overflow-hidden rounded-[22px] shadow-sm transition-all duration-200 hover:-translate-y-[1px] ${
+                    isDarkMode
+                      ? `border ${theme.darkAccentBorder} bg-[#111827]`
+                      : `border ${theme.searchBorder} bg-gradient-to-br from-white via-white to-zinc-50/70`
+                  }`}
+                >
+                  <CardContent className="p-3 sm:p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p
+                          className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
+                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                          }`}
+                        >
+                          Probabilidade de título
+                        </p>
+                        <h3
+                          className={`mt-1 text-[16px] font-extrabold tracking-tight ${
+                            isDarkMode ? "text-white" : "text-zinc-950"
+                          }`}
+                        >
+                          Leitura matemática oficial
+                        </h3>
+                        <p
+                          className={`mt-1 text-[11px] leading-snug ${
+                            isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                          }`}
+                        >
+                          Considera etapas restantes, ponto extra de melhor volta, pole position quando aplicável e o descarte no Geral.
+                        </p>
+                      </div>
+
+                      <div
+                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${
+                          isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                        }`}
+                      >
+                        <Crown
+                          className={`h-4.5 w-4.5 ${
+                            isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                          }`}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-3 grid grid-cols-3 gap-2">
+                      <div
+                        className={`rounded-[16px] border px-3 py-2.5 ${
+                          isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                        }`}
+                      >
+                        <p
+                          className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                          }`}
+                        >
+                          Etapas restantes
+                        </p>
+                        <p
+                          className={`mt-1 text-[16px] font-extrabold ${
+                            isDarkMode ? "text-white" : "text-zinc-950"
+                          }`}
+                        >
+                          {remainingStages.length}
+                        </p>
+                        <p
+                          className={`mt-1 text-[10px] ${
+                            isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                          }`}
+                        >
+                          {remainingStages.length > 0 ? `Etapas ${remainingStages.join(" • ")}` : "Calendário encerrado"}
+                        </p>
+                      </div>
+
+                      <div
+                        className={`rounded-[16px] border px-3 py-2.5 ${
+                          isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                        }`}
+                      >
+                        <p
+                          className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                          }`}
+                        >
+                          Pontos em jogo
+                        </p>
+                        <p
+                          className={`mt-1 text-[16px] font-extrabold ${
+                            isDarkMode ? "text-white" : "text-zinc-950"
+                          }`}
+                        >
+                          {titlePointsStillAvailable}
+                        </p>
+                        <p
+                          className={`mt-1 text-[10px] ${
+                            isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                          }`}
+                        >
+                          teto máximo possível até o fim
+                        </p>
+                      </div>
+
+                      <div
+                        className={`rounded-[16px] border px-3 py-2.5 ${
+                          isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
+                        }`}
+                      >
+                        <p
+                          className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                          }`}
+                        >
+                          Regra ativa
+                        </p>
+                        <p
+                          className={`mt-1 text-[16px] font-extrabold ${
+                            isDarkMode ? "text-white" : "text-zinc-950"
+                          }`}
+                        >
+                          {competition === "GERAL" ? "Com descarte" : "Pontuação pura"}
+                        </p>
+                        <p
+                          className={`mt-1 text-[10px] ${
+                            isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                          }`}
+                        >
+                          {competition === "GERAL" ? "T2 + T3 com pior etapa descartada" : "projeção baseada no calendário restante"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 space-y-2.5">
+                      {titleProbabilities.map((candidate, index) => {
+                        const probabilityWidth = Math.max(candidate.probability, 4);
+                        const darkTone =
+                          candidate.label === "FAVORITO"
+                            ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                            : candidate.label === "PERSEGUIDOR"
+                              ? "border-sky-500/30 bg-sky-500/10 text-sky-300"
+                              : candidate.label === "NA BRIGA"
+                                ? "border-violet-500/30 bg-violet-500/10 text-violet-300"
+                                : candidate.label === "DEPENDE"
+                                  ? "border-amber-500/30 bg-amber-500/10 text-amber-300"
+                                  : "border-white/10 bg-white/5 text-zinc-300";
+
+                        return (
+                          <div
+                            key={`title-probability-${candidate.pilot.pilotoId || candidate.pilot.piloto}-${index}`}
+                            className={`rounded-[18px] border px-3 py-3 ${
+                              isDarkMode
+                                ? index === 0
+                                  ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft}`
+                                  : "border-white/10 bg-[#0f172a]"
+                                : index === 0
+                                  ? "border-yellow-300/60 bg-yellow-50/70"
+                                  : "border-black/5 bg-white"
+                            }`}
+                          >
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <span
+                                    className={`inline-flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-extrabold ${
+                                      isDarkMode
+                                        ? index === 0
+                                          ? theme.darkTopBadge
+                                          : "bg-white/10 text-white"
+                                        : index === 0
+                                          ? theme.statAccentRank
+                                          : "bg-zinc-100 text-zinc-700"
+                                    }`}
+                                  >
+                                    {index + 1}
+                                  </span>
+                                  <p
+                                    className={`truncate text-[13px] font-extrabold tracking-tight ${
+                                      isDarkMode ? "text-white" : "text-zinc-950"
+                                    }`}
+                                  >
+                                    {getPilotFirstAndLastName(candidate.pilot.piloto)}
+                                  </p>
+                                </div>
+
+                                {getPilotWarNameDisplay(candidate.pilot) ? (
+                                  <p
+                                    className={`mt-1 truncate pl-9 text-[10px] italic ${
+                                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                                    }`}
+                                  >
+                                    {getPilotWarNameDisplay(candidate.pilot)}
+                                  </p>
+                                ) : null}
+
+                                <p
+                                  className={`mt-1 pl-9 text-[10px] font-medium ${
+                                    isDarkMode ? "text-zinc-500" : "text-zinc-500"
+                                  }`}
+                                >
+                                  {candidate.scenarioLabel}
+                                </p>
+                              </div>
+
+                              <div className="shrink-0 text-right">
+                                <p
+                                  className={`text-[22px] font-extrabold leading-none tabular-nums ${
+                                    isDarkMode ? "text-white" : "text-zinc-950"
+                                  }`}
+                                >
+                                  {candidate.probability.toFixed(0)}%
+                                </p>
+                                <span
+                                  className={`mt-1 inline-flex rounded-full border px-2 py-1 text-[9px] font-bold uppercase tracking-[0.12em] ${
+                                    isDarkMode ? darkTone : candidate.tone
+                                  }`}
+                                >
+                                  {candidate.label}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div
+                              className={`mt-2 h-2.5 overflow-hidden rounded-full ${
+                                isDarkMode ? "bg-white/8" : "bg-zinc-100"
+                              }`}
+                            >
+                              <div
+                                className={`h-full rounded-full ${
+                                  isDarkMode ? theme.darkAccentBg : theme.primaryBadge
+                                }`}
+                                style={{ width: `${probabilityWidth}%` }}
+                              />
+                            </div>
+
+                            <div className="mt-2 flex items-center justify-between gap-3 text-[10px]">
+                              <p className={isDarkMode ? "text-zinc-400" : "text-zinc-500"}>
+                                Teto: <span className={`font-bold ${isDarkMode ? "text-zinc-200" : "text-zinc-700"}`}>{candidate.projectedTotal} pts</span>
+                              </p>
+                              <p className={isDarkMode ? "text-zinc-400" : "text-zinc-500"}>
+                                {candidate.pointsBehindLeader === 0
+                                  ? "líder atual"
+                                  : `${candidate.pointsBehindLeader} pts atrás do líder`}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <div
+                      className={`mt-3 rounded-[18px] border px-3 py-3 ${
+                        isDarkMode
+                          ? `${theme.darkAccentBorder} bg-[#0f172a]`
+                          : "border-black/5 bg-zinc-50/80"
+                      }`}
+                    >
+                      <p
+                        className={`text-[9px] font-bold uppercase tracking-[0.16em] ${
+                          isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                        }`}
+                      >
+                        Diagnóstico oficial
+                      </p>
+                      <p
+                        className={`mt-1 text-[14px] font-extrabold tracking-tight ${
+                          isDarkMode ? "text-white" : "text-zinc-950"
+                        }`}
+                      >
+                        {titleProbabilitySummary.headline}
+                      </p>
+                      <p
+                        className={`mt-1 text-[11px] leading-snug ${
+                          isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                        }`}
+                      >
+                        {titleProbabilitySummary.body}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card
+                  className={`overflow-hidden rounded-[22px] shadow-sm transition-all duration-200 hover:-translate-y-[1px] ${
+                    isDarkMode ? `border ${theme.darkAccentBorder} bg-[#111827]` : `border ${theme.searchBorder} bg-gradient-to-br from-white via-white to-zinc-50/70`
+                  }`}
+                >
+                  <CardContent className="p-3 sm:p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
+                          isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                        }`}>
+                          Cenários da próxima etapa
+                        </p>
+                        <p className={`mt-1 text-[15px] font-extrabold tracking-tight ${
+                          isDarkMode ? "text-white" : "text-zinc-950"
+                        }`}>
+                          Simulador matemático da etapa {nextStageNumber ?? "-"}
+                        </p>
+                        <p className={`mt-1 text-[11px] leading-snug ${
+                          isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                        }`}>
+                          Vitória máxima = {nextStageWinPoints} pts · Top 3 forte = {nextStagePodiumPoints} pts · Zerando = 0 pt.
+                        </p>
+                      </div>
+
+                      <div className={`shrink-0 rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+                        isDarkMode
+                          ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                          : theme.searchBadge
+                      }`}>
+                        {nextStageNumber ? `etapa ${nextStageNumber}` : "sem etapa"}
+                      </div>
+                    </div>
+
+                    <div className="mt-3 space-y-2.5">
+                      {nextStageScenarios.length > 0 ? nextStageScenarios.map((scenario, index) => {
+                        const darkSwingTone =
+                          scenario.winDelta >= 6
+                            ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                            : scenario.winDelta >= 3
+                              ? "border-sky-500/30 bg-sky-500/10 text-sky-300"
+                              : scenario.winDelta > 0
+                                ? "border-amber-500/30 bg-amber-500/10 text-amber-300"
+                                : "border-white/10 bg-white/5 text-zinc-300";
+
+                        const lightSwingTone =
+                          scenario.winDelta >= 6
+                            ? "border-emerald-300 bg-emerald-50 text-emerald-700"
+                            : scenario.winDelta >= 3
+                              ? "border-sky-300 bg-sky-50 text-sky-700"
+                              : scenario.winDelta > 0
+                                ? "border-amber-300 bg-amber-50 text-amber-700"
+                                : "border-zinc-200 bg-zinc-50 text-zinc-600";
+
+                        return (
+                          <div
+                            key={`next-stage-scenario-${scenario.pilot.pilotoId || scenario.pilot.piloto}-${index}`}
+                            className={`rounded-[18px] border px-3 py-3 ${
+                              isDarkMode
+                                ? index === 0
+                                  ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft}`
+                                  : "border-white/10 bg-[#0f172a]"
+                                : index === 0
+                                  ? "border-yellow-300/60 bg-yellow-50/70"
+                                  : "border-black/5 bg-white"
+                            }`}
+                          >
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <span className={`inline-flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-extrabold ${
+                                    isDarkMode
+                                      ? index === 0
+                                        ? theme.darkTopBadge
+                                        : "bg-white/10 text-white"
+                                      : index === 0
+                                        ? theme.statAccentRank
+                                        : "bg-zinc-100 text-zinc-700"
+                                  }`}>
+                                    {index + 1}
+                                  </span>
+                                  <p className={`truncate text-[13px] font-extrabold tracking-tight ${
+                                    isDarkMode ? "text-white" : "text-zinc-950"
+                                  }`}>
+                                    {getPilotFirstAndLastName(scenario.pilot.piloto)}
+                                  </p>
+                                </div>
+                                <p className={`mt-1 pl-9 text-[10px] font-medium ${
+                                  isDarkMode ? "text-zinc-500" : "text-zinc-500"
+                                }`}>
+                                  {scenario.narrative}
+                                </p>
+                              </div>
+
+                              <span className={`inline-flex shrink-0 rounded-full border px-2 py-1 text-[9px] font-bold uppercase tracking-[0.12em] ${
+                                isDarkMode ? darkSwingTone : lightSwingTone
+                              }`}>
+                                {scenario.swingLabel}
+                              </span>
+                            </div>
+
+                            <div className="mt-3 grid grid-cols-3 gap-2">
+                              <div className={`rounded-[14px] border px-2.5 py-2 ${
+                                isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50/80"
+                              }`}>
+                                <p className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+                                  isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                                }`}>
+                                  Se vencer
+                                </p>
+                                <p className={`mt-1 text-[15px] font-extrabold tabular-nums ${
+                                  isDarkMode ? "text-white" : "text-zinc-950"
+                                }`}>
+                                  {scenario.winProbability.toFixed(0)}%
+                                </p>
+                                <p className={`mt-1 text-[10px] font-medium ${
+                                  scenario.winDelta > 0
+                                    ? isDarkMode
+                                      ? "text-emerald-300"
+                                      : "text-emerald-700"
+                                    : isDarkMode
+                                      ? "text-zinc-400"
+                                      : "text-zinc-500"
+                                }`}>
+                                  {scenario.winDelta >= 0 ? "+" : ""}{scenario.winDelta.toFixed(0)} pts percentuais
+                                </p>
+                              </div>
+
+                              <div className={`rounded-[14px] border px-2.5 py-2 ${
+                                isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50/80"
+                              }`}>
+                                <p className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+                                  isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                                }`}>
+                                  Se top 3
+                                </p>
+                                <p className={`mt-1 text-[15px] font-extrabold tabular-nums ${
+                                  isDarkMode ? "text-white" : "text-zinc-950"
+                                }`}>
+                                  {scenario.podiumProbability.toFixed(0)}%
+                                </p>
+                                <p className={`mt-1 text-[10px] font-medium ${
+                                  scenario.podiumDelta > 0
+                                    ? isDarkMode
+                                      ? "text-sky-300"
+                                      : "text-sky-700"
+                                    : isDarkMode
+                                      ? "text-zinc-400"
+                                      : "text-zinc-500"
+                                }`}>
+                                  {scenario.podiumDelta >= 0 ? "+" : ""}{scenario.podiumDelta.toFixed(0)} pts percentuais
+                                </p>
+                              </div>
+
+                              <div className={`rounded-[14px] border px-2.5 py-2 ${
+                                isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50/80"
+                              }`}>
+                                <p className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+                                  isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                                }`}>
+                                  Se zerar
+                                </p>
+                                <p className={`mt-1 text-[15px] font-extrabold tabular-nums ${
+                                  isDarkMode ? "text-white" : "text-zinc-950"
+                                }`}>
+                                  {scenario.zeroProbability.toFixed(0)}%
+                                </p>
+                                <p className={`mt-1 text-[10px] font-medium ${
+                                  scenario.zeroDelta < 0
+                                    ? isDarkMode
+                                      ? "text-red-300"
+                                      : "text-red-700"
+                                    : isDarkMode
+                                      ? "text-zinc-400"
+                                      : "text-zinc-500"
+                                }`}>
+                                  {scenario.zeroDelta >= 0 ? "+" : ""}{scenario.zeroDelta.toFixed(0)} pts percentuais
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }) : (
+                        <div className={`rounded-[18px] border px-3 py-4 text-center text-sm ${
+                          isDarkMode ? "border-white/10 bg-[#0f172a] text-zinc-400" : "border-black/5 bg-zinc-50 text-zinc-500"
+                        }`}>
+                          Nenhuma etapa restante disponível para simular no momento.
+                        </div>
+                      )}
+                    </div>
+
+                    <div className={`mt-3 rounded-[18px] border px-3 py-3 ${
+                      isDarkMode ? `${theme.darkAccentBorder} bg-[#0f172a]` : "border-black/5 bg-zinc-50/80"
+                    }`}>
+                      <p className={`text-[9px] font-bold uppercase tracking-[0.16em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}>
+                        Leitura da próxima etapa
+                      </p>
+                      <p className={`mt-1 text-[14px] font-extrabold tracking-tight ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}>
+                        {nextStageSummary.headline}
+                      </p>
+                      <p className={`mt-1 text-[11px] leading-snug ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}>
+                        {nextStageSummary.body}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
 
                 <RankingStatsRadarCard
                   statsRadar={statsRadar}
