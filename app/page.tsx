@@ -27,6 +27,7 @@ import usePilotAnalysis from "@/lib/hooks/usePilotAnalysis";
 import useChampionshipNarrative from "@/lib/hooks/useChampionshipNarrative";
 import useEditorialCards from "@/lib/hooks/useEditorialCards";
 import useRankingScreenController from "@/lib/hooks/useRankingScreenController";
+import useRankingShare from "@/lib/hooks/useRankingShare";
 import {
   categoryColors,
   competitionLabels,
@@ -85,7 +86,6 @@ import type {
   RankingMetaPilot,
 } from "@/types/ranking";
 import Image from "next/image";
-import * as htmlToImage from "html-to-image";
 import {
   Trophy,
   Medal,
@@ -708,6 +708,10 @@ export default function CasernaKartAppModerno() {
 
   const sponsorTrack = useMemo(() => [...sponsorLogos, ...sponsorLogos], []);
 
+  const { generateImage, download, shareDataUrlToWhatsApp } = useRankingShare({
+    isDarkMode,
+  });
+
 
   const comparePilotA = useMemo(
     () => filteredRanking.find((item) => (item.pilotoId || item.piloto) === comparePilotAId) || null,
@@ -1201,16 +1205,13 @@ export default function CasernaKartAppModerno() {
 
     try {
       setIsSharingImage(true);
-      const dataUrl = await htmlToImage.toPng(shareCardRef.current, {
-        cacheBust: true,
-        pixelRatio: 2,
-        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
-      });
+      const dataUrl = await generateImage(shareCardRef.current);
+      if (!dataUrl) return;
 
-      const link = document.createElement("a");
-      link.download = `classificacao-${category.toLowerCase()}-${competition.toLowerCase()}.png`;
-      link.href = dataUrl;
-      link.click();
+      download(
+        dataUrl,
+        `classificacao-${category.toLowerCase()}-${competition.toLowerCase()}.png`
+      );
     } catch (err) {
       console.error(err);
       window.alert("Não foi possível gerar a imagem da classificação.");
@@ -1224,11 +1225,8 @@ export default function CasernaKartAppModerno() {
 
     try {
       setIsSharingPilotImage(true);
-      const dataUrl = await htmlToImage.toPng(pilotShareCardRef.current, {
-        cacheBust: true,
-        pixelRatio: 2,
-        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
-      });
+      const dataUrl = await generateImage(pilotShareCardRef.current);
+      if (!dataUrl) return;
 
       const safePilotName = getPilotFirstAndLastName(safeSelectedPilot.piloto)
         .toLowerCase()
@@ -1236,10 +1234,10 @@ export default function CasernaKartAppModerno() {
         .replace(/[̀-ͯ]/g, "")
         .replace(/\s+/g, "-");
 
-      const link = document.createElement("a");
-      link.download = `piloto-${safePilotName}-${category.toLowerCase()}-${competition.toLowerCase()}.png`;
-      link.href = dataUrl;
-      link.click();
+      download(
+        dataUrl,
+        `piloto-${safePilotName}-${category.toLowerCase()}-${competition.toLowerCase()}.png`
+      );
     } catch (err) {
       console.error(err);
       window.alert("Não foi possível gerar a imagem do piloto.");
@@ -1253,16 +1251,13 @@ export default function CasernaKartAppModerno() {
 
     try {
       setIsSharingLeaderImage(true);
-      const dataUrl = await htmlToImage.toPng(leaderShareCardRef.current, {
-        cacheBust: true,
-        pixelRatio: 2,
-        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
-      });
+      const dataUrl = await generateImage(leaderShareCardRef.current);
+      if (!dataUrl) return;
 
-      const link = document.createElement("a");
-      link.download = `lider-${category.toLowerCase()}-${competition.toLowerCase()}.png`;
-      link.href = dataUrl;
-      link.click();
+      download(
+        dataUrl,
+        `lider-${category.toLowerCase()}-${competition.toLowerCase()}.png`
+      );
     } catch (err) {
       console.error(err);
       window.alert("Não foi possível gerar a imagem do líder.");
@@ -1276,16 +1271,13 @@ export default function CasernaKartAppModerno() {
 
     try {
       setIsSharingDuelImage(true);
-      const dataUrl = await htmlToImage.toPng(duelShareCardRef.current, {
-        cacheBust: true,
-        pixelRatio: 2,
-        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
-      });
+      const dataUrl = await generateImage(duelShareCardRef.current);
+      if (!dataUrl) return;
 
-      const link = document.createElement("a");
-      link.download = `duelo-${category.toLowerCase()}-${competition.toLowerCase()}.png`;
-      link.href = dataUrl;
-      link.click();
+      download(
+        dataUrl,
+        `duelo-${category.toLowerCase()}-${competition.toLowerCase()}.png`
+      );
     } catch (err) {
       console.error(err);
       window.alert("Não foi possível gerar a imagem do duelo.");
@@ -1299,16 +1291,13 @@ export default function CasernaKartAppModerno() {
 
     try {
       setIsSharingNarrativeImage(true);
-      const dataUrl = await htmlToImage.toPng(narrativeShareCardRef.current, {
-        cacheBust: true,
-        pixelRatio: 2,
-        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
-      });
+      const dataUrl = await generateImage(narrativeShareCardRef.current);
+      if (!dataUrl) return;
 
-      const link = document.createElement("a");
-      link.download = `narrativa-${category.toLowerCase()}-${competition.toLowerCase()}.png`;
-      link.href = dataUrl;
-      link.click();
+      download(
+        dataUrl,
+        `narrativa-${category.toLowerCase()}-${competition.toLowerCase()}.png`
+      );
     } catch (err) {
       console.error(err);
       window.alert("Não foi possível gerar a imagem da narrativa.");
@@ -1317,62 +1306,13 @@ export default function CasernaKartAppModerno() {
     }
   }
 
-  async function shareDataUrlToWhatsApp({
-    dataUrl,
-    fileName,
-    text,
-  }: {
-    dataUrl: string;
-    fileName: string;
-    text: string;
-  }) {
-    try {
-      const response = await fetch(dataUrl);
-      const blob = await response.blob();
-      const file = new File([blob], fileName, { type: "image/png" });
-      const navigatorWithShare = navigator as Navigator & {
-        canShare?: (data: ShareData) => boolean;
-      };
-
-      if (
-        typeof navigator !== "undefined" &&
-        navigator.share &&
-        navigatorWithShare.canShare?.({ files: [file] })
-      ) {
-        await navigator.share({
-          files: [file],
-          title: "Caserna Kart Racing",
-          text,
-        });
-        return;
-      }
-
-      const link = document.createElement("a");
-      link.download = fileName;
-      link.href = dataUrl;
-      link.click();
-
-      window.open(
-        `https://wa.me/?text=${encodeURIComponent(text)}`,
-        "_blank",
-        "noopener,noreferrer"
-      );
-    } catch (err) {
-      console.error(err);
-      window.alert("Não foi possível compartilhar no WhatsApp.");
-    }
-  }
-
   async function handleWhatsAppLeaderCard() {
     if (!leader || !leaderShareCardRef.current || isSharingLeaderImage) return;
 
     try {
       setIsSharingLeaderImage(true);
-      const dataUrl = await htmlToImage.toPng(leaderShareCardRef.current, {
-        cacheBust: true,
-        pixelRatio: 2,
-        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
-      });
+      const dataUrl = await generateImage(leaderShareCardRef.current);
+      if (!dataUrl) return;
 
       const leaderDiff = filteredRanking[1]
         ? Math.max((leader.pontos || 0) - filteredRanking[1].pontos, 0)
@@ -1381,7 +1321,10 @@ export default function CasernaKartAppModerno() {
       await shareDataUrlToWhatsApp({
         dataUrl,
         fileName: `lider-${category.toLowerCase()}-${competition.toLowerCase()}.png`,
-        text: `🏁 Líder oficial do campeonato\n${getPilotFirstAndLastName(leader.piloto)} lidera ${category} - ${competitionLabels[competition] || competition} com ${leader.pontos} pts e vantagem de ${leaderDiff} pts.\n\nCaserna Kart Racing`,
+        text: `🏁 Líder oficial do campeonato
+${getPilotFirstAndLastName(leader.piloto)} lidera ${category} - ${competitionLabels[competition] || competition} com ${leader.pontos} pts e vantagem de ${leaderDiff} pts.
+
+Caserna Kart Racing`,
       });
     } finally {
       setIsSharingLeaderImage(false);
@@ -1393,16 +1336,18 @@ export default function CasernaKartAppModerno() {
 
     try {
       setIsSharingNarrativeImage(true);
-      const dataUrl = await htmlToImage.toPng(narrativeShareCardRef.current, {
-        cacheBust: true,
-        pixelRatio: 2,
-        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
-      });
+      const dataUrl = await generateImage(narrativeShareCardRef.current);
+      if (!dataUrl) return;
 
       await shareDataUrlToWhatsApp({
         dataUrl,
         fileName: `narrativa-${category.toLowerCase()}-${competition.toLowerCase()}.png`,
-        text: `🧠 Narrativa oficial do campeonato\n${championshipNarrative.headline}\n${championshipNarrative.body}\n\n${category} - ${competitionLabels[competition] || competition}\nCaserna Kart Racing`,
+        text: `🧠 Narrativa oficial do campeonato
+${championshipNarrative.headline}
+${championshipNarrative.body}
+
+${category} - ${competitionLabels[competition] || competition}
+Caserna Kart Racing`,
       });
     } finally {
       setIsSharingNarrativeImage(false);
@@ -1414,15 +1359,20 @@ export default function CasernaKartAppModerno() {
 
     try {
       setIsSharingDuelImage(true);
-      const dataUrl = await htmlToImage.toPng(duelShareCardRef.current, {
-        cacheBust: true,
-        pixelRatio: 2,
-        backgroundColor: isDarkMode ? "#0b1220" : "#f4f4f5",
-      });
+      const dataUrl = await generateImage(duelShareCardRef.current);
+      if (!dataUrl) return;
 
       const duelText = duelSummary
-        ? `⚔️ Duelo oficial\n${getPilotFirstAndLastName(comparePilotA.piloto)} ${duelSummary.scoreA} x ${duelSummary.scoreB} ${getPilotFirstAndLastName(comparePilotB.piloto)}\n${duelSummary.narrative}\n\n${category} - ${competitionLabels[competition] || competition}\nCaserna Kart Racing`
-        : `⚔️ Duelo oficial\n${getPilotFirstAndLastName(comparePilotA.piloto)} x ${getPilotFirstAndLastName(comparePilotB.piloto)}\n${category} - ${competitionLabels[competition] || competition}\nCaserna Kart Racing`;
+        ? `⚔️ Duelo oficial
+${getPilotFirstAndLastName(comparePilotA.piloto)} ${duelSummary.scoreA} x ${duelSummary.scoreB} ${getPilotFirstAndLastName(comparePilotB.piloto)}
+${duelSummary.narrative}
+
+${category} - ${competitionLabels[competition] || competition}
+Caserna Kart Racing`
+        : `⚔️ Duelo oficial
+${getPilotFirstAndLastName(comparePilotA.piloto)} x ${getPilotFirstAndLastName(comparePilotB.piloto)}
+${category} - ${competitionLabels[competition] || competition}
+Caserna Kart Racing`;
 
       await shareDataUrlToWhatsApp({
         dataUrl,
