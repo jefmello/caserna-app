@@ -91,7 +91,6 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import build from "next/dist/build";
 
 type CategoryThemeLike = ReturnType<typeof getCategoryTheme>;
 
@@ -586,7 +585,7 @@ export default function CasernaKartAppModerno() {
   const [isSharingLeaderImage, setIsSharingLeaderImage] = useState(false);
   const [isSharingDuelImage, setIsSharingDuelImage] = useState(false);
   const [isSharingNarrativeImage, setIsSharingNarrativeImage] = useState(false);
-  const scrollPageToTop = React.useCallback((behavior: ScrollBehavior = "smooth") => {
+  const scrollPageToTop = useCallback((behavior: ScrollBehavior = "smooth") => {
     if (typeof window === "undefined") return;
 
     const scrollTargets = [
@@ -1208,7 +1207,7 @@ export default function CasernaKartAppModerno() {
     } finally {
       setIsSharingPilotImage(false);
     }
-  }, [selectedPilot, pilotShareCardRef, isSharingPilotImage, generateImage, download, safeSelectedPilot, category, competition]);
+  }, [selectedPilot, pilotShareCardRef, isSharingPilotImage, generateImage, download, safeSelectedPilot, getPilotFirstAndLastName, category, competition]);
 
   const handleShareLeaderCard = useCallback(async () => {
     if (!leader || !leaderShareCardRef.current || isSharingLeaderImage) return;
@@ -1293,7 +1292,7 @@ Caserna Kart Racing`,
     } finally {
       setIsSharingLeaderImage(false);
     }
-  }, [leader, leaderShareCardRef, isSharingLeaderImage, generateImage, shareDataUrlToWhatsApp, filteredRanking, category, competition]);
+  }, [leader, leaderShareCardRef, isSharingLeaderImage, generateImage, filteredRanking, shareDataUrlToWhatsApp, category, competition, getPilotFirstAndLastName]);
 
   const handleWhatsAppNarrativeCard = useCallback(async () => {
     if (!championshipNarrative || !narrativeShareCardRef.current || isSharingNarrativeImage) return;
@@ -1346,12 +1345,7 @@ Caserna Kart Racing`;
     } finally {
       setIsSharingDuelImage(false);
     }
-  }, [comparePilotA, comparePilotB, duelShareCardRef, isSharingDuelImage, generateImage, duelSummary, shareDataUrlToWhatsApp, category, competition]);
-
-  const getSpotlightPilotWarName = useCallback((pilot: unknown) => {
-    if (!pilot || typeof pilot !== "object") return "";
-    return getPilotWarName(pilot as RankingItem | null | undefined);
-  }, []);
+  }, [comparePilotA, comparePilotB, duelShareCardRef, isSharingDuelImage, generateImage, duelSummary, shareDataUrlToWhatsApp, category, competition, getPilotFirstAndLastName]);
 
   const competitionContextProps = useMemo(() => ({
     isDarkMode,
@@ -1371,7 +1365,7 @@ Caserna Kart Racing`;
     getPilotFirstAndLastName,
   ]);
 
-  const sharePremiumSectionProps = useMemo(() => ({
+  const sharePremiumProps = useMemo(() => ({
     isDarkMode,
     theme,
     leader,
@@ -1445,11 +1439,13 @@ Caserna Kart Racing`;
     duelIntensity,
     filteredRanking,
     pilotTrendMap,
-    leaderShareCardRef,
-    narrativeShareCardRef,
-    duelShareCardRef,
-    shareCardRef,
+    getPilotFirstAndLastName,
   ]);
+
+  const getSpotlightPilotWarName = (pilot: unknown) => {
+    if (!pilot || typeof pilot !== "object") return "";
+    return getPilotWarName(pilot as RankingItem | null | undefined);
+  };
 
   if (loading) {
     return (
@@ -1581,7 +1577,7 @@ Caserna Kart Racing`;
               onShare={handleShareClassification}
             />
 
-            <RankingCompetitionContext {...competitionContextProps} />
+                        <RankingCompetitionContext {...competitionContextProps} />
 
             <RankingChampionshipNarrativeCard
               isDarkMode={isDarkMode}
@@ -1595,9 +1591,9 @@ Caserna Kart Racing`;
               theme={theme}
               cards={editorialCards}
             />
-            <RankingSharePremiumSection {...sharePremiumSectionProps} />
+                        <RankingSharePremiumSection {...sharePremiumProps} />
 
-            <RankingShareCanvas {...shareCanvasProps} />
+                        <RankingShareCanvas {...shareCanvasProps} />
 
             <RankingTitleFightCard
               isDarkMode={isDarkMode}
