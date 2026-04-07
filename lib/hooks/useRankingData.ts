@@ -55,6 +55,7 @@ export function useRankingData({
   useEffect(() => {
     const controller = new AbortController();
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    let didTimeout = false;
 
     async function loadData() {
       try {
@@ -62,7 +63,8 @@ export function useRankingData({
         setError("");
 
         timeoutId = setTimeout(() => {
-          controller.abort();
+          didTimeout = true;
+          controller.abort("request-timeout");
         }, timeoutMs);
 
         const response = await fetch("/api/ranking", {
@@ -82,13 +84,14 @@ export function useRankingData({
         const nextCategories = json.categories || Object.keys(json.data || {});
         setCategories(nextCategories);
       } catch (err: unknown) {
-        console.error(err);
-
         if (err instanceof DOMException && err.name === "AbortError") {
-          setError("Tempo de resposta excedido. Verifique a conexão.");
+          if (didTimeout) {
+            setError("Tempo de resposta excedido. Verifique a conexão.");
+          }
           return;
         }
 
+        console.error(err);
         setError(err instanceof Error ? err.message : "Erro desconhecido.");
       } finally {
         if (timeoutId) {
@@ -106,7 +109,7 @@ export function useRankingData({
         clearTimeout(timeoutId);
       }
 
-      controller.abort();
+      controller.abort("effect-cleanup");
     };
   }, [retryCount, timeoutMs]);
 
