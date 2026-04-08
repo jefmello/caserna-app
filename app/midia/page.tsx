@@ -2,13 +2,13 @@
 
 import AppMainLayout from "@/components/navigation/app-main-layout";
 import AppSectionShell from "@/components/navigation/app-section-shell";
-import HomePageContent from "@/components/home/home-page-content";
+import MidiaPageContent from "@/components/midia/midia-page-content";
 
-export default function HomePage() {
+export default function MidiaPage() {
   return (
     <AppMainLayout>
-      <AppSectionShell section="home">
-        <HomePageContent />
+      <AppSectionShell>
+        <MidiaPageContent />
       </AppSectionShell>
     </AppMainLayout>
   );

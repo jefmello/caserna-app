@@ -2,13 +2,13 @@
 
 import AppMainLayout from "@/components/navigation/app-main-layout";
 import AppSectionShell from "@/components/navigation/app-section-shell";
-import HomePageContent from "@/components/home/home-page-content";
+import SimulacoesPageContent from "@/components/simulacoes/simulacoes-page-content";
 
-export default function HomePage() {
+export default function SimulacoesPage() {
   return (
     <AppMainLayout>
-      <AppSectionShell section="home">
-        <HomePageContent />
+      <AppSectionShell>
+        <SimulacoesPageContent />
       </AppSectionShell>
     </AppMainLayout>
   );

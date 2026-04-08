@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { RankingData, RankingMetaData } from "@/types/ranking";
 import { normalizePilotName } from "@/lib/ranking/ranking-utils";
+import { useChampionship } from "@/context/championship-context";
 
 type UseRankingFiltersProps = {
   rankingData: RankingData;
@@ -15,15 +16,21 @@ export default function useRankingFilters({
   rankingMeta,
   categories,
 }: UseRankingFiltersProps) {
-  const [category, setCategory] = useState("Base");
-  const [competition, setCompetition] = useState("T1");
+  const { categoria, campeonato, setCategoria, setCampeonato } =
+    useChampionship();
+
   const [search, setSearch] = useState("");
+
+  const category = categoria;
+  const competition = campeonato;
 
   useEffect(() => {
     if (categories.length === 0) return;
 
-    setCategory((prev) => (categories.includes(prev) ? prev : categories[0]));
-  }, [categories]);
+    setCategoria((prev: string) =>
+      categories.includes(prev) ? prev : categories[0]
+    );
+  }, [categories, setCategoria]);
 
   const availableCompetitions = useMemo(() => {
     return Object.keys(rankingData[category] || {});
@@ -32,10 +39,12 @@ export default function useRankingFilters({
   useEffect(() => {
     if (availableCompetitions.length === 0) return;
 
-    setCompetition((prev) =>
-      availableCompetitions.includes(prev) ? prev : availableCompetitions[0]
+    setCampeonato(
+      availableCompetitions.includes(competition)
+        ? competition
+        : availableCompetitions[0]
     );
-  }, [availableCompetitions]);
+  }, [availableCompetitions, competition, setCampeonato]);
 
   const currentCompetitionList = useMemo(() => {
     return rankingData[category]?.[competition] || [];
@@ -59,9 +68,9 @@ export default function useRankingFilters({
 
   return {
     category,
-    setCategory,
+    setCategory: setCategoria,
     competition,
-    setCompetition,
+    setCompetition: setCampeonato,
     search,
     setSearch,
     availableCompetitions,

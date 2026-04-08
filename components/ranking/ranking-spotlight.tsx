@@ -69,14 +69,14 @@ export default function RankingSpotlight({
     <section
       className={`overflow-hidden rounded-[24px] border px-3 py-3 shadow-sm ${
         isDarkMode
-          ? `border-white/10 bg-gradient-to-br ${theme.darkAccentCard}`
+          ? "border-white/8 bg-[linear-gradient(180deg,#0b0f16_0%,#0f172a_100%)]"
           : `${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow}`
       }`}
     >
       <div
-        className={`mb-3 rounded-[18px] border px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] ${
+        className={`mb-3 rounded-[18px] border px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] ${
           isDarkMode
-            ? `${theme.darkAccentBorder} bg-gradient-to-b from-[#111827] to-[#161e2b]`
+            ? `${theme.darkAccentBorder} bg-[linear-gradient(180deg,#111827_0%,#0f172a_100%)]`
             : `${theme.heroBorder} bg-gradient-to-b ${theme.heroBg}`
         }`}
       >
@@ -96,7 +96,7 @@ export default function RankingSpotlight({
 
             <div className="flex flex-col justify-center">
               <p
-                className={`text-[18px] font-extrabold uppercase tracking-[0.14em] leading-none ${
+                className={`text-[18px] font-extrabold uppercase leading-none tracking-[0.14em] ${
                   isDarkMode ? "text-white" : "text-zinc-950"
                 }`}
               >
@@ -117,7 +117,11 @@ export default function RankingSpotlight({
       <div className="grid grid-cols-2 gap-2.5">
         <div className="flex min-h-[288px] flex-col gap-2.5">
           <Card
-            className={`h-[162px] overflow-hidden rounded-[24px] shadow-none ${spotlightStyles.leftCard}`}
+            className={`h-[162px] overflow-hidden rounded-[24px] shadow-none ${
+              isDarkMode
+                ? "border border-white/8 bg-[linear-gradient(180deg,#111827_0%,#0f172a_100%)]"
+                : spotlightStyles.leftCard
+            }`}
           >
             <CardContent className="h-full p-0">
               <div className="relative h-full w-full overflow-hidden">
@@ -127,11 +131,15 @@ export default function RankingSpotlight({
                   isDark={isDarkMode}
                 />
 
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/34 via-black/8 to-transparent" />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/38 via-black/10 to-transparent" />
 
                 <div className="absolute inset-x-0 bottom-2 z-20 px-3">
                   <div
-                    className={`mx-auto flex max-w-[74%] items-center justify-center rounded-[15px] border px-2.5 py-1.5 backdrop-blur-md ${spotlightStyles.badge}`}
+                    className={`mx-auto flex max-w-[74%] items-center justify-center rounded-[15px] border px-2.5 py-1.5 backdrop-blur-md ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} bg-[#111827]/88 ${theme.darkAccentText}`
+                        : spotlightStyles.badge
+                    }`}
                   >
                     <p className="truncate whitespace-nowrap text-[9.5px] font-black uppercase tracking-[0.12em]">
                       {getPilotWarName(leader)
@@ -145,13 +153,19 @@ export default function RankingSpotlight({
           </Card>
 
           <Card
-            className={`h-[123px] overflow-hidden rounded-[24px] shadow-none ${spotlightStyles.leftSubcard}`}
+            className={`h-[123px] overflow-hidden rounded-[24px] shadow-none ${
+              isDarkMode
+                ? "border border-white/8 bg-[linear-gradient(180deg,#111827_0%,#0f172a_100%)]"
+                : spotlightStyles.leftSubcard
+            }`}
           >
             <CardContent className="flex h-full items-center justify-center px-3 py-2.5">
               <div className="flex h-full w-full flex-col items-center justify-center text-center">
                 <div className="mb-2 flex items-center justify-center gap-2">
                   <p
-                    className={`text-[8px] font-bold uppercase tracking-[0.22em] ${spotlightStyles.label}`}
+                    className={`text-[8px] font-bold uppercase tracking-[0.22em] ${
+                      isDarkMode ? "text-zinc-400" : spotlightStyles.label
+                    }`}
                   >
                     Líder
                   </p>
@@ -187,7 +201,11 @@ export default function RankingSpotlight({
 
                 <div className="mt-3 flex justify-center">
                   <div
-                    className={`inline-flex items-center rounded-full border px-4 py-1.5 ${spotlightStyles.badge}`}
+                    className={`inline-flex items-center rounded-full border px-4 py-1.5 ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} bg-[#111827] ${theme.darkAccentText}`
+                        : spotlightStyles.badge
+                    }`}
                   >
                     <p className="text-[10.5px] font-black leading-none">
                       {leader?.pontos || 0} pontos
@@ -225,27 +243,47 @@ export default function RankingSpotlight({
             return (
               <Card
                 key={item.title}
-                className={`h-[92px] overflow-hidden rounded-[22px] shadow-none ${spotlightStyles.statCard}`}
+                className={`h-[92px] overflow-hidden rounded-[22px] shadow-none ${
+                  isDarkMode
+                    ? "border border-white/8 bg-[linear-gradient(180deg,#111827_0%,#0f172a_100%)]"
+                    : spotlightStyles.statCard
+                }`}
               >
                 <CardContent className="relative h-full p-3">
                   <div className="flex h-full items-center justify-between gap-2">
                     <div className="flex min-w-0 w-[40%] flex-col items-center justify-center text-center">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/92">
+                      <p
+                        className={`text-[10px] font-bold uppercase tracking-[0.18em] ${
+                          isDarkMode ? "text-white/72" : "text-white/92"
+                        }`}
+                      >
                         {item.title}
                       </p>
-                      <p className="mt-2 text-[34px] font-black leading-none tracking-tight text-white">
+                      <p
+                        className={`mt-2 text-[34px] font-black leading-none tracking-tight ${
+                          isDarkMode ? "text-white" : "text-white"
+                        }`}
+                      >
                         {item.value}
                       </p>
                     </div>
 
                     <div className="flex min-w-0 w-[44%] flex-col items-end justify-center gap-2 pr-1">
                       <div
-                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${spotlightStyles.iconBubble}`}
+                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
+                          isDarkMode
+                            ? `${theme.darkAccentIconWrap} ${theme.darkAccentText}`
+                            : spotlightStyles.iconBubble
+                        }`}
                       >
                         <Icon className="h-4.5 w-4.5" />
                       </div>
 
-                      <p className="max-w-[82px] text-right text-[8.5px] font-semibold uppercase leading-[1.15] tracking-[0.08em] text-white/86">
+                      <p
+                        className={`max-w-[82px] text-right text-[8.5px] font-semibold uppercase leading-[1.15] tracking-[0.08em] ${
+                          isDarkMode ? "text-white/68" : "text-white/86"
+                        }`}
+                      >
                         {item.subtitle}
                       </p>
                     </div>

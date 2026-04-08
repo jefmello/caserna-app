@@ -56,15 +56,18 @@ export function useRankingData({
     const controller = new AbortController();
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
     let didTimeout = false;
+    let isMounted = true;
 
     async function loadData() {
       try {
+        if (!isMounted) return;
+
         setLoading(true);
         setError("");
 
         timeoutId = setTimeout(() => {
           didTimeout = true;
-          controller.abort("request-timeout");
+          controller.abort();
         }, timeoutMs);
 
         const response = await fetch("/api/ranking", {
@@ -78,38 +81,48 @@ export function useRankingData({
           throw new Error(json?.error || "Erro ao carregar os dados.");
         }
 
+        if (!isMounted) return;
+
         setRankingData(json.data || {});
         setRankingMeta(json.meta || {});
 
         const nextCategories = json.categories || Object.keys(json.data || {});
         setCategories(nextCategories);
       } catch (err: unknown) {
+        // 🔥 IGNORA abort normal (cleanup do React)
         if (err instanceof DOMException && err.name === "AbortError") {
-          if (didTimeout) {
+          if (didTimeout && isMounted) {
             setError("Tempo de resposta excedido. Verifique a conexão.");
           }
           return;
         }
 
         console.error(err);
-        setError(err instanceof Error ? err.message : "Erro desconhecido.");
+
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : "Erro desconhecido.");
+        }
       } finally {
         if (timeoutId) {
           clearTimeout(timeoutId);
         }
 
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     }
 
     loadData();
 
     return () => {
+      isMounted = false;
+
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
 
-      controller.abort("effect-cleanup");
+      controller.abort();
     };
   }, [retryCount, timeoutMs]);
 

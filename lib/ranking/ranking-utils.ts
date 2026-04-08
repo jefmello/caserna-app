@@ -21,56 +21,80 @@ export const sponsorLogos = [
   {
     name: "LazyKart",
     src: "/patrocinadores/lazykart.png",
-    wrapper: "px-2 py-1.5",
-    image: "max-h-[34px] max-w-[94px] object-contain",
-    shareImage: "max-h-[48px] max-w-[132px] object-contain",
-    surfaceLight: "border-black/10 bg-white",
-    surfaceDark: "border-white/10 bg-white",
+    wrapper: "px-3 py-2",
+    image:
+      "h-auto max-h-[54px] w-auto max-w-[97%] object-contain scale-[1.1] drop-shadow-[0_2px_6px_rgba(15,23,42,0.10)] md:max-h-[60px]",
+    shareImage:
+      "h-auto max-h-[70px] w-auto max-w-[97%] object-contain scale-[1.14] drop-shadow-[0_3px_8px_rgba(15,23,42,0.12)]",
+    surfaceLight:
+      "border-black/8 bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(250,250,252,0.995)_52%,rgba(241,245,249,0.985)_100%)]",
+    surfaceDark:
+      "border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0.03)_100%)]",
   },
   {
     name: "Lumine",
     src: "/patrocinadores/lumine.png",
-    wrapper: "px-1.5 py-1.5",
-    image: "max-h-[40px] max-w-[98px] object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.18)]",
-    shareImage: "max-h-[52px] max-w-[140px] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.22)]",
-    surfaceLight: "border-zinc-800/90 bg-[#111827]",
-    surfaceDark: "border-white/10 bg-[#10151f]",
+    wrapper: "px-3 py-2",
+    image:
+      "h-auto max-h-[58px] w-auto max-w-[97%] object-contain scale-[1.14] drop-shadow-[0_4px_12px_rgba(0,0,0,0.24)] md:max-h-[64px]",
+    shareImage:
+      "h-auto max-h-[76px] w-auto max-w-[98%] object-contain scale-[1.18] drop-shadow-[0_5px_14px_rgba(0,0,0,0.26)]",
+    surfaceLight:
+      "border-zinc-950/95 bg-[linear-gradient(180deg,rgba(17,24,39,1)_0%,rgba(12,18,31,1)_58%,rgba(8,13,25,1)_100%)]",
+    surfaceDark:
+      "border-white/10 bg-[linear-gradient(180deg,rgba(19,25,39,1)_0%,rgba(9,14,26,1)_100%)]",
   },
   {
     name: "Precision",
     src: "/patrocinadores/precision.png",
-    wrapper: "px-0.5 py-0.5",
-    image: "h-[48px] w-[108px] scale-[1.7] object-contain",
-    shareImage: "h-[62px] w-[148px] scale-[1.7] object-contain",
-    surfaceLight: "border-black/10 bg-white",
-    surfaceDark: "border-white/10 bg-white",
+    wrapper: "px-1.5 py-1",
+    image:
+      "h-[60px] w-[136px] scale-[1.9] object-contain drop-shadow-[0_2px_6px_rgba(15,23,42,0.10)] md:h-[66px] md:w-[148px]",
+    shareImage:
+      "h-[76px] w-[172px] scale-[1.96] object-contain drop-shadow-[0_3px_8px_rgba(15,23,42,0.12)]",
+    surfaceLight:
+      "border-black/8 bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(250,250,252,0.995)_52%,rgba(241,245,249,0.985)_100%)]",
+    surfaceDark:
+      "border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0.03)_100%)]",
   },
   {
     name: "Skyflow",
     src: "/patrocinadores/skyflow.png",
-    wrapper: "px-0.5 py-0.5",
-    image: "h-[48px] w-[108px] scale-[1.65] object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.18)]",
-    shareImage: "h-[62px] w-[148px] scale-[1.65] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.22)]",
-    surfaceLight: "border-zinc-800/90 bg-[#111827]",
-    surfaceDark: "border-white/10 bg-[#0f172a]",
+    wrapper: "px-1.5 py-1",
+    image:
+      "h-[60px] w-[136px] scale-[1.86] object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.24)] md:h-[66px] md:w-[148px]",
+    shareImage:
+      "h-[76px] w-[172px] scale-[1.92] object-contain drop-shadow-[0_5px_14px_rgba(0,0,0,0.26)]",
+    surfaceLight:
+      "border-zinc-950/95 bg-[linear-gradient(180deg,rgba(17,24,39,1)_0%,rgba(12,18,31,1)_58%,rgba(8,13,25,1)_100%)]",
+    surfaceDark:
+      "border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,1)_0%,rgba(8,12,24,1)_100%)]",
   },
   {
     name: "Vits",
     src: "/patrocinadores/vits.png",
-    wrapper: "px-0.5 py-0.5",
-    image: "h-[46px] w-[104px] scale-[1.95] object-contain",
-    shareImage: "h-[60px] w-[142px] scale-[1.95] object-contain",
-    surfaceLight: "border-black/10 bg-white",
-    surfaceDark: "border-white/10 bg-white",
+    wrapper: "px-1 py-1",
+    image:
+      "h-[58px] w-[130px] scale-[2.14] object-contain drop-shadow-[0_2px_6px_rgba(15,23,42,0.10)] md:h-[64px] md:w-[142px]",
+    shareImage:
+      "h-[74px] w-[166px] scale-[2.18] object-contain drop-shadow-[0_3px_8px_rgba(15,23,42,0.12)]",
+    surfaceLight:
+      "border-black/8 bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(250,250,252,0.995)_52%,rgba(241,245,249,0.985)_100%)]",
+    surfaceDark:
+      "border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0.03)_100%)]",
   },
   {
     name: "Astera",
     src: "/patrocinadores/astera.png",
-    wrapper: "px-1.5 py-1.5",
-    image: "max-h-[40px] max-w-[98px] object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.18)]",
-    shareImage: "max-h-[52px] max-w-[140px] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.22)]",
-    surfaceLight: "border-zinc-800/90 bg-[#111827]",
-    surfaceDark: "border-white/10 bg-[#10151f]",
+    wrapper: "px-3 py-2",
+    image:
+      "h-auto max-h-[58px] w-auto max-w-[97%] object-contain scale-[1.14] drop-shadow-[0_4px_12px_rgba(0,0,0,0.24)] md:max-h-[64px]",
+    shareImage:
+      "h-auto max-h-[76px] w-auto max-w-[98%] object-contain scale-[1.18] drop-shadow-[0_5px_14px_rgba(0,0,0,0.26)]",
+    surfaceLight:
+      "border-zinc-950/95 bg-[linear-gradient(180deg,rgba(17,24,39,1)_0%,rgba(12,18,31,1)_58%,rgba(8,13,25,1)_100%)]",
+    surfaceDark:
+      "border-white/10 bg-[linear-gradient(180deg,rgba(19,25,39,1)_0%,rgba(9,14,26,1)_100%)]",
   },
 ] as const;
 
@@ -394,11 +418,16 @@ export function getGapToLeader(leaderPoints: number, pilotPoints: number) {
   if (diff <= 0) return "líder";
   return `-${diff} pts do líder`;
 }
-export function getPilotPositionInList(list: RankingItem[], pilotoId: string, fallbackName: string) {
+export function getPilotPositionInList(
+  list: RankingItem[],
+  pilotoId: string,
+  fallbackName: string
+) {
   const index = list.findIndex(
     (item) =>
       (pilotoId && item.pilotoId === pilotoId) ||
-      (!pilotoId && normalizePilotName(item.piloto) === normalizePilotName(fallbackName))
+      (!pilotoId &&
+        normalizePilotName(item.piloto) === normalizePilotName(fallbackName))
   );
 
   return index >= 0 ? index + 1 : null;
@@ -416,12 +445,22 @@ export function getPilotTrendStatus({
   if (!categoryData) return "stable";
 
   const currentList = categoryData[competition] || [];
-  const currentPos = getPilotPositionInList(currentList, pilot.pilotoId, pilot.piloto);
+  const currentPos = getPilotPositionInList(
+    currentList,
+    pilot.pilotoId,
+    pilot.piloto
+  );
   if (!currentPos) return "stable";
 
   if (competition === "GERAL") {
     const turnoPositions = ["T1", "T2", "T3"]
-      .map((key) => getPilotPositionInList(categoryData[key] || [], pilot.pilotoId, pilot.piloto))
+      .map((key) =>
+        getPilotPositionInList(
+          categoryData[key] || [],
+          pilot.pilotoId,
+          pilot.piloto
+        )
+      )
       .filter((value): value is number => value !== null);
 
     if (turnoPositions.length === 0) return "stable";
@@ -432,11 +471,19 @@ export function getPilotTrendStatus({
     return "down";
   }
 
-  const geralPos = getPilotPositionInList(categoryData.GERAL || [], pilot.pilotoId, pilot.piloto);
+  const geralPos = getPilotPositionInList(
+    categoryData.GERAL || [],
+    pilot.pilotoId,
+    pilot.piloto
+  );
   if (!geralPos) return "stable";
 
   if (currentPos < geralPos) return "up";
-  if (currentPos === geralPos || currentPos === geralPos + 1 || currentPos + 1 === geralPos) {
+  if (
+    currentPos === geralPos ||
+    currentPos === geralPos + 1 ||
+    currentPos + 1 === geralPos
+  ) {
     return "stable";
   }
   return "down";
@@ -506,9 +553,13 @@ export function getPilotConsistencyLabel(pilot?: RankingItem | null) {
   return "Em evolução";
 }
 
-export function getPilotMomentumLabel(pilot?: RankingItem | null, leader?: RankingItem | null) {
+export function getPilotMomentumLabel(
+  pilot?: RankingItem | null,
+  leader?: RankingItem | null
+) {
   if (!pilot) return "Sem leitura";
-  if (!leader || pilot.pilotoId === leader.pilotoId) return "Referência da categoria";
+  if (!leader || pilot.pilotoId === leader.pilotoId)
+    return "Referência da categoria";
 
   const diff = Math.max(0, leader.pontos - pilot.pontos);
 
@@ -559,10 +610,14 @@ export function getSpotlightCategoryStyles(category: string, isDark: boolean) {
   if (isDark) {
     if (category === "Base") {
       return {
-        leftCard: "border-orange-500/30 bg-[linear-gradient(180deg,#1f1b16_0%,#151922_48%,#111827_100%)]",
-        leftSubcard: "border-orange-500/30 bg-[linear-gradient(180deg,rgba(249,115,22,0.12),rgba(17,24,39,0.96))]",
-        badge: "border-orange-400/35 bg-[linear-gradient(180deg,rgba(251,146,60,0.32),rgba(124,45,18,0.92))] text-white shadow-[0_14px_26px_rgba(249,115,22,0.24)]",
-        statCard: "border-orange-500/30 bg-[linear-gradient(135deg,#7c2d12_0%,#9a3412_48%,#7c2d12_100%)]",
+        leftCard:
+          "border-orange-500/30 bg-[linear-gradient(180deg,#1f1b16_0%,#151922_48%,#111827_100%)]",
+        leftSubcard:
+          "border-orange-500/30 bg-[linear-gradient(180deg,rgba(249,115,22,0.12),rgba(17,24,39,0.96))]",
+        badge:
+          "border-orange-400/35 bg-[linear-gradient(180deg,rgba(251,146,60,0.32),rgba(124,45,18,0.92))] text-white shadow-[0_14px_26px_rgba(249,115,22,0.24)]",
+        statCard:
+          "border-orange-500/30 bg-[linear-gradient(135deg,#7c2d12_0%,#9a3412_48%,#7c2d12_100%)]",
         label: "text-orange-300",
         iconBubble: "border border-white/10 bg-white/10 text-white",
       };
@@ -570,20 +625,28 @@ export function getSpotlightCategoryStyles(category: string, isDark: boolean) {
 
     if (category === "Graduados") {
       return {
-        leftCard: "border-blue-500/30 bg-[linear-gradient(180deg,#14233d_0%,#151922_48%,#111827_100%)]",
-        leftSubcard: "border-blue-500/30 bg-[linear-gradient(180deg,rgba(59,130,246,0.14),rgba(17,24,39,0.96))]",
-        badge: "border-blue-300/35 bg-[linear-gradient(180deg,rgba(96,165,250,0.34),rgba(30,64,175,0.92))] text-white shadow-[0_14px_26px_rgba(59,130,246,0.22)]",
-        statCard: "border-blue-500/30 bg-[linear-gradient(135deg,#274a9b_0%,#4169c6_52%,#274a9b_100%)]",
+        leftCard:
+          "border-blue-500/30 bg-[linear-gradient(180deg,#14233d_0%,#151922_48%,#111827_100%)]",
+        leftSubcard:
+          "border-blue-500/30 bg-[linear-gradient(180deg,rgba(59,130,246,0.14),rgba(17,24,39,0.96))]",
+        badge:
+          "border-blue-300/35 bg-[linear-gradient(180deg,rgba(96,165,250,0.34),rgba(30,64,175,0.92))] text-white shadow-[0_14px_26px_rgba(59,130,246,0.22)]",
+        statCard:
+          "border-blue-500/30 bg-[linear-gradient(135deg,#274a9b_0%,#4169c6_52%,#274a9b_100%)]",
         label: "text-blue-300",
         iconBubble: "border border-white/10 bg-white/10 text-white",
       };
     }
 
     return {
-      leftCard: "border-yellow-500/30 bg-[linear-gradient(180deg,#2a2412_0%,#151922_48%,#111827_100%)]",
-      leftSubcard: "border-yellow-500/30 bg-[linear-gradient(180deg,rgba(234,179,8,0.14),rgba(17,24,39,0.96))]",
-      badge: "border-yellow-300/35 bg-[linear-gradient(180deg,rgba(250,204,21,0.34),rgba(161,98,7,0.94))] text-white shadow-[0_14px_26px_rgba(234,179,8,0.22)]",
-      statCard: "border-yellow-500/30 bg-[linear-gradient(135deg,#8a6a08_0%,#b88a10_52%,#8a6a08_100%)]",
+      leftCard:
+        "border-yellow-500/30 bg-[linear-gradient(180deg,#2a2412_0%,#151922_48%,#111827_100%)]",
+      leftSubcard:
+        "border-yellow-500/30 bg-[linear-gradient(180deg,rgba(234,179,8,0.14),rgba(17,24,39,0.96))]",
+      badge:
+        "border-yellow-300/35 bg-[linear-gradient(180deg,rgba(250,204,21,0.34),rgba(161,98,7,0.94))] text-white shadow-[0_14px_26px_rgba(234,179,8,0.22)]",
+      statCard:
+        "border-yellow-500/30 bg-[linear-gradient(135deg,#8a6a08_0%,#b88a10_52%,#8a6a08_100%)]",
       label: "text-yellow-300",
       iconBubble: "border border-white/10 bg-white/10 text-white",
     };
@@ -591,10 +654,14 @@ export function getSpotlightCategoryStyles(category: string, isDark: boolean) {
 
   if (category === "Base") {
     return {
-      leftCard: "border-orange-200 bg-[linear-gradient(180deg,#fff7ed_0%,#ffedd5_46%,#fed7aa_100%)]",
-      leftSubcard: "border-orange-200 bg-[linear-gradient(180deg,#fff7ed_0%,#ffffff_100%)]",
-      badge: "border-orange-300 bg-[linear-gradient(180deg,#fb923c_0%,#ea580c_100%)] text-white shadow-[0_14px_24px_rgba(249,115,22,0.20)]",
-      statCard: "border-orange-200 bg-[linear-gradient(135deg,#f97316_0%,#fb923c_50%,#ea580c_100%)]",
+      leftCard:
+        "border-orange-200 bg-[linear-gradient(180deg,#fff7ed_0%,#ffedd5_46%,#fed7aa_100%)]",
+      leftSubcard:
+        "border-orange-200 bg-[linear-gradient(180deg,#fff7ed_0%,#ffffff_100%)]",
+      badge:
+        "border-orange-300 bg-[linear-gradient(180deg,#fb923c_0%,#ea580c_100%)] text-white shadow-[0_14px_24px_rgba(249,115,22,0.20)]",
+      statCard:
+        "border-orange-200 bg-[linear-gradient(135deg,#f97316_0%,#fb923c_50%,#ea580c_100%)]",
       label: "text-orange-600",
       iconBubble: "border border-white/20 bg-white/18 text-white",
     };
@@ -602,20 +669,28 @@ export function getSpotlightCategoryStyles(category: string, isDark: boolean) {
 
   if (category === "Graduados") {
     return {
-      leftCard: "border-blue-200 bg-[linear-gradient(180deg,#eff6ff_0%,#dbeafe_46%,#bfdbfe_100%)]",
-      leftSubcard: "border-blue-200 bg-[linear-gradient(180deg,#eff6ff_0%,#ffffff_100%)]",
-      badge: "border-blue-300 bg-[linear-gradient(180deg,#6ea0ff_0%,#3b82f6_100%)] text-white shadow-[0_14px_24px_rgba(59,130,246,0.20)]",
-      statCard: "border-blue-200 bg-[linear-gradient(135deg,#4f7fdb_0%,#6e9bf1_52%,#456fc3_100%)]",
+      leftCard:
+        "border-blue-200 bg-[linear-gradient(180deg,#eff6ff_0%,#dbeafe_46%,#bfdbfe_100%)]",
+      leftSubcard:
+        "border-blue-200 bg-[linear-gradient(180deg,#eff6ff_0%,#ffffff_100%)]",
+      badge:
+        "border-blue-300 bg-[linear-gradient(180deg,#6ea0ff_0%,#3b82f6_100%)] text-white shadow-[0_14px_24px_rgba(59,130,246,0.20)]",
+      statCard:
+        "border-blue-200 bg-[linear-gradient(135deg,#4f7fdb_0%,#6e9bf1_52%,#456fc3_100%)]",
       label: "text-blue-600",
       iconBubble: "border border-white/20 bg-white/18 text-white",
     };
   }
 
   return {
-    leftCard: "border-yellow-200 bg-[linear-gradient(180deg,#fefce8_0%,#fef3c7_46%,#fde68a_100%)]",
-    leftSubcard: "border-yellow-200 bg-[linear-gradient(180deg,#fefce8_0%,#ffffff_100%)]",
-    badge: "border-yellow-300 bg-[linear-gradient(180deg,#f5cd3a_0%,#d4a614_100%)] text-white shadow-[0_14px_24px_rgba(234,179,8,0.20)]",
-    statCard: "border-yellow-200 bg-[linear-gradient(135deg,#b88a10_0%,#d4a614_52%,#9a7410_100%)]",
+    leftCard:
+      "border-yellow-200 bg-[linear-gradient(180deg,#fefce8_0%,#fef3c7_46%,#fde68a_100%)]",
+    leftSubcard:
+      "border-yellow-200 bg-[linear-gradient(180deg,#fefce8_0%,#ffffff_100%)]",
+    badge:
+      "border-yellow-300 bg-[linear-gradient(180deg,#f5cd3a_0%,#d4a614_100%)] text-white shadow-[0_14px_24px_rgba(234,179,8,0.20)]",
+    statCard:
+      "border-yellow-200 bg-[linear-gradient(135deg,#b88a10_0%,#d4a614_52%,#9a7410_100%)]",
     label: "text-yellow-700",
     iconBubble: "border border-white/20 bg-white/18 text-white",
   };
@@ -727,4 +802,3 @@ export function getDuelProfileLabel({
     ? "A compensa na regularidade"
     : "B compensa na regularidade";
 }
-

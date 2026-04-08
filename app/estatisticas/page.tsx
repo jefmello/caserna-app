@@ -2,13 +2,13 @@
 
 import AppMainLayout from "@/components/navigation/app-main-layout";
 import AppSectionShell from "@/components/navigation/app-section-shell";
-import HomePageContent from "@/components/home/home-page-content";
+import EstatisticasPageContent from "@/components/estatisticas/estatisticas-page-content";
 
-export default function HomePage() {
+export default function EstatisticasPage() {
   return (
     <AppMainLayout>
-      <AppSectionShell section="home">
-        <HomePageContent />
+      <AppSectionShell>
+        <EstatisticasPageContent />
       </AppSectionShell>
     </AppMainLayout>
   );

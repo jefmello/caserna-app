@@ -121,10 +121,247 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
+
   html {
     @apply font-sans;
+    min-height: 100%;
+    width: 100%;
+    background: #f3f4f6;
   }
+
+  body {
+    @apply bg-background text-foreground;
+    min-height: 100vh;
+    min-width: 100%;
+    width: 100%;
+    background: #f3f4f6;
+    overflow-x: hidden;
+  }
+
+  #__next,
+  [data-nextjs-scroll-focus-boundary] {
+    min-height: 100%;
+    width: 100%;
+    background: inherit;
+  }
+
+  main {
+    min-width: 0;
+  }
+
+  .dark {
+    color-scheme: dark;
+  }
+
+  .dark html {
+    background: #05070a;
+  }
+
+  .dark body {
+    background:
+      radial-gradient(circle at top, rgba(255, 255, 255, 0.035), transparent 34%),
+      radial-gradient(circle at bottom, rgba(250, 204, 21, 0.045), transparent 26%),
+      linear-gradient(180deg, #05070a 0%, #070b11 42%, #05070a 100%);
+    color: #ffffff;
+  }
+
+  .dark #__next,
+  .dark [data-nextjs-scroll-focus-boundary] {
+    background:
+      radial-gradient(circle at top, rgba(255, 255, 255, 0.03), transparent 34%),
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.035), transparent 28%),
+      radial-gradient(circle at bottom right, rgba(250, 204, 21, 0.04), transparent 24%),
+      linear-gradient(180deg, #05070a 0%, #070b11 42%, #05070a 100%);
+  }
+}
+
+/* =========================================
+   🎨 DESIGN SYSTEM — SURFACES
+========================================= */
+
+.surface-primary {
+  background: var(--bg-primary);
+}
+
+.surface-secondary {
+  background: var(--bg-secondary);
+}
+
+.surface-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.surface-card-elevated {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glow-soft);
+}
+
+.dark .surface-primary {
+  background: #05070a;
+}
+
+.dark .surface-secondary {
+  background: #0b0f16;
+}
+
+.dark .surface-card {
+  background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 10px 24px rgba(0, 0, 0, 0.22);
+}
+
+.dark .surface-card-elevated {
+  background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 14px 30px rgba(0, 0, 0, 0.28);
+}
+
+/* =========================================
+   🔤 TEXT SYSTEM
+========================================= */
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-tertiary {
+  color: var(--text-tertiary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.dark .text-primary {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.dark .text-secondary {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.dark .text-tertiary {
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.dark .text-muted {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+/* =========================================
+   ✨ GLOW
+========================================= */
+
+.glow-soft {
+  box-shadow: var(--glow-soft);
+}
+
+.glow-strong {
+  box-shadow: var(--glow-strong);
+}
+
+.glow-gold {
+  box-shadow: var(--glow-gold);
+}
+
+.dark .glow-soft {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 10px 24px rgba(0, 0, 0, 0.24);
+}
+
+.dark .glow-strong {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 18px 36px rgba(0, 0, 0, 0.32);
+}
+
+.dark .glow-gold {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 0 0 1px rgba(250, 204, 21, 0.16),
+    0 18px 36px rgba(0, 0, 0, 0.28);
+}
+
+/* =========================================
+   🏷️ BADGES
+========================================= */
+
+.badge-live {
+  background: rgba(34, 197, 94, 0.12);
+  color: var(--accent-green);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 10px;
+}
+
+.badge-leader {
+  background: rgba(250, 204, 21, 0.12);
+  color: var(--accent-gold);
+  border: 1px solid rgba(250, 204, 21, 0.3);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 10px;
+}
+
+.dark .badge-live {
+  background: rgba(34, 197, 94, 0.14);
+  border-color: rgba(34, 197, 94, 0.28);
+}
+
+.dark .badge-leader {
+  background: rgba(250, 204, 21, 0.14);
+  border-color: rgba(250, 204, 21, 0.32);
+}
+
+/* =========================================
+   🔥 SCROLL PREMIUM SIDEBAR
+========================================= */
+
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(15, 23, 42, 0.14) transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(15, 23, 42, 0.14);
+  border-radius: 999px;
+  transition: all 0.2s ease;
+}
+
+.sidebar-scroll:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(15, 23, 42, 0.28);
+}
+
+.dark .sidebar-scroll {
+  scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+}
+
+.dark .sidebar-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.14);
+}
+
+.dark .sidebar-scroll:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.28);
 }
