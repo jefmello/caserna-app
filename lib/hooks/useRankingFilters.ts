@@ -27,10 +27,10 @@ export default function useRankingFilters({
   useEffect(() => {
     if (categories.length === 0) return;
 
-    setCategoria((prev: string) =>
-      categories.includes(prev) ? prev : categories[0]
-    );
-  }, [categories, setCategoria]);
+    if (!categories.includes(categoria)) {
+      setCategoria(categories[0]);
+    }
+  }, [categories, categoria, setCategoria]);
 
   const availableCompetitions = useMemo(() => {
     return Object.keys(rankingData[category] || {});
