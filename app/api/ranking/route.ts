@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+export const revalidate = 120;
+
 const CSV_RANKING =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vQfg1DPMuv2HVxhnx61PiF6tiowSwJl2baHvPXGaSzB9x7BF_ASJgxtqU2qRfUdgf0dRemQNnVGYNfh/pub?gid=214006946&single=true&output=csv";
 
@@ -238,10 +240,14 @@ function parsePilotosCsv(text: string) {
   }
 
   const separator = detectSeparator(nonEmptyLines[0]);
-  const parsedRows = nonEmptyLines.map((line) => parseDelimitedLine(line, separator));
+  const parsedRows = nonEmptyLines.map((line) =>
+    parseDelimitedLine(line, separator)
+  );
 
   const headerRowIndex = 2;
-  const headers = (parsedRows[headerRowIndex] || []).map((h) => normalizeText(h));
+  const headers = (parsedRows[headerRowIndex] || []).map((h) =>
+    normalizeText(h)
+  );
 
   const idxPilotoId = findHeaderIndex(headers, ["piloto id", "id piloto", "id"]);
   const idxPilotoNome = findHeaderIndex(headers, [
@@ -317,12 +323,18 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
   }
 
   const separator = detectSeparator(nonEmptyLines[0]);
-  const parsedRows = nonEmptyLines.map((line) => parseDelimitedLine(line, separator));
+  const parsedRows = nonEmptyLines.map((line) =>
+    parseDelimitedLine(line, separator)
+  );
 
   let headerRowIndex = -1;
   for (let i = 0; i < parsedRows.length; i++) {
     const row = parsedRows[i].map((c) => normalizeText(c));
-    if (row.includes("categoria") && row.includes("piloto") && row.includes("pontos")) {
+    if (
+      row.includes("categoria") &&
+      row.includes("piloto") &&
+      row.includes("pontos")
+    ) {
       headerRowIndex = i;
       break;
     }
@@ -399,7 +411,8 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
 
     const pilotoId = idxPilotoId >= 0 ? (cols[idxPilotoId] || "").trim() : "";
     const categoriaOriginal = idxCategoria >= 0 ? cols[idxCategoria] || "" : "";
-    const competicaoOriginal = idxCompeticao >= 0 ? cols[idxCompeticao] || "" : "";
+    const competicaoOriginal =
+      idxCompeticao >= 0 ? cols[idxCompeticao] || "" : "";
     const categoriaAtualOriginal =
       idxCategoriaAtual >= 0
         ? cols[idxCategoriaAtual] || categoriaOriginal
@@ -508,8 +521,9 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
   };
 }
 
-
-function toMetaPilot(item: RankingItem | null | undefined): RankingMetaPilot | null {
+function toMetaPilot(
+  item: RankingItem | null | undefined
+): RankingMetaPilot | null {
   if (!item) return null;
 
   return {
@@ -591,10 +605,20 @@ function buildCompetitionMeta(list: RankingItem[]): RankingCompetitionMeta {
 
     podiumPressure =
       filtered.length >= 6
-        ? Math.max((filtered[2]?.pontos || 0) - (filtered[5]?.pontos || 0), 0)
-        : Math.max((filtered[0]?.pontos || 0) - (filtered[filtered.length - 1]?.pontos || 0), 0);
+        ? Math.max(
+            (filtered[2]?.pontos || 0) - (filtered[5]?.pontos || 0),
+            0
+          )
+        : Math.max(
+            (filtered[0]?.pontos || 0) -
+              (filtered[filtered.length - 1]?.pontos || 0),
+            0
+          );
 
-    const titleDiff = Math.max((filtered[0]?.pontos || 0) - (filtered[1]?.pontos || 0), 0);
+    const titleDiff = Math.max(
+      (filtered[0]?.pontos || 0) - (filtered[1]?.pontos || 0),
+      0
+    );
 
     if (filtered.length < 2) {
       titleHeat = "Sem disputa";
@@ -611,7 +635,10 @@ function buildCompetitionMeta(list: RankingItem[]): RankingCompetitionMeta {
       hottestLabel = "Ataque dominante";
     } else if ((hottestPilot?.podios || 0) >= 4) {
       hottestLabel = "Consistência premium";
-    } else if ((hottestPilot?.poles || 0) >= 2 || (hottestPilot?.mv || 0) >= 2) {
+    } else if (
+      (hottestPilot?.poles || 0) >= 2 ||
+      (hottestPilot?.mv || 0) >= 2
+    ) {
       hottestLabel = "Velocidade em alta";
     }
   }
@@ -663,16 +690,15 @@ function buildRankingMeta(grouped: RankingData): RankingMetaData {
   return meta;
 }
 
-
 export async function GET() {
   try {
     const [rankingResponse, pilotosResponse] = await Promise.all([
       fetch(CSV_RANKING, {
-        cache: "no-store",
+        next: { revalidate: 120 },
         redirect: "follow",
       }),
       fetch(CSV_PILOTOS, {
-        cache: "no-store",
+        next: { revalidate: 120 },
         redirect: "follow",
       }),
     ]);

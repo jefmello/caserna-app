@@ -26,7 +26,7 @@ type UseRankingDataReturn = {
 
 export function useRankingData({
   initialCategory = "Base",
-  timeoutMs = 8000,
+  timeoutMs = 20000,
 }: UseRankingDataParams = {}): UseRankingDataReturn {
   const [rankingData, setRankingData] = useState<RankingData>({});
   const [rankingMeta, setRankingMeta] = useState<RankingMetaData>({});
@@ -78,7 +78,9 @@ export function useRankingData({
         const json: RankingApiResponse = await response.json();
 
         if (!response.ok) {
-          throw new Error(json?.error || "Erro ao carregar os dados.");
+          throw new Error(
+            json?.error || "Erro ao carregar os dados da classificação."
+          );
         }
 
         if (!isMounted) return;
@@ -89,10 +91,11 @@ export function useRankingData({
         const nextCategories = json.categories || Object.keys(json.data || {});
         setCategories(nextCategories);
       } catch (err: unknown) {
-        // 🔥 IGNORA abort normal (cleanup do React)
         if (err instanceof DOMException && err.name === "AbortError") {
           if (didTimeout && isMounted) {
-            setError("Tempo de resposta excedido. Verifique a conexão.");
+            setError(
+              "Tempo de resposta excedido ao carregar a classificação. Tente novamente em instantes."
+            );
           }
           return;
         }
@@ -100,7 +103,11 @@ export function useRankingData({
         console.error(err);
 
         if (isMounted) {
-          setError(err instanceof Error ? err.message : "Erro desconhecido.");
+          setError(
+            err instanceof Error
+              ? err.message
+              : "Erro desconhecido ao carregar a classificação."
+          );
         }
       } finally {
         if (timeoutId) {
