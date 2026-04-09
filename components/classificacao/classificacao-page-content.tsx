@@ -4,7 +4,6 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import RankingHeader from "@/components/ranking/ranking-header";
-import RankingSpotlight from "@/components/ranking/ranking-spotlight";
 import RankingSearchCard from "@/components/ranking/ranking-search-card";
 import useRankingData from "@/lib/hooks/useRankingData";
 import useRankingFilters from "@/lib/hooks/useRankingFilters";
@@ -15,18 +14,14 @@ import useRankingShare from "@/lib/hooks/useRankingShare";
 import {
   competitionLabels,
   getPilotFirstAndLastName,
-  getPilotHighlightName,
-  getPilotWarName,
   getPilotWarNameDisplay,
   getTop6RowStyles,
   getTrendVisual,
   normalizePilotName,
 } from "@/lib/ranking/ranking-utils";
 import type { RankingItem, RankingMetaPilot } from "@/types/ranking";
-import { Camera } from "lucide-react";
 import ClassificacaoHeroSection from "@/components/classificacao/classificacao-hero-section";
 import ClassificacaoMainTableSection from "@/components/classificacao/classificacao-main-table-section";
-import ClassificacaoTitleFightSection from "@/components/classificacao/classificacao-title-fight-section";
 import { useChampionship } from "@/context/championship-context";
 
 const RankingShareCanvas = dynamic(
@@ -48,96 +43,6 @@ function normalizeCategoryAccent(category?: string | null) {
   if (normalized === "elite") return "elite";
 
   return "neutral";
-}
-
-function PilotPhotoSlot({
-  pilot,
-  alt,
-  isDark = false,
-}: {
-  pilot?: unknown;
-  alt: string;
-  isDark?: boolean;
-}) {
-  const pilotoId =
-    pilot && typeof pilot === "object" && "pilotoId" in pilot
-      ? (pilot as { pilotoId?: string | null }).pilotoId
-      : null;
-
-  const src = pilotoId ? `/pilotos/${pilotoId}.jpg` : null;
-  const [hasError, setHasError] = useState(false);
-
-  useEffect(() => {
-    setHasError(false);
-  }, [src]);
-
-  const showImage = Boolean(src) && !hasError;
-
-  return (
-    <div
-      className={`relative h-full w-full overflow-hidden ${
-        isDark ? "bg-[#0b0f16]" : "bg-zinc-50"
-      }`}
-    >
-      {showImage ? (
-        <>
-          <img
-            src={src || ""}
-            alt={alt}
-            className="absolute inset-0 h-full w-full scale-[1.18] object-cover object-center opacity-24 blur-2xl"
-            onError={() => setHasError(true)}
-          />
-          <div
-            className={`absolute inset-0 ${
-              isDark ? "bg-black/24" : "bg-white/8"
-            }`}
-          />
-          <img
-            src={src || ""}
-            alt={alt}
-            className="relative z-[1] h-full w-full object-contain object-center"
-            onError={() => setHasError(true)}
-          />
-        </>
-      ) : (
-        <div
-          className={`flex h-full w-full items-center justify-center ${
-            isDark
-              ? "bg-gradient-to-b from-[#0b0f16] to-[#0f172a]"
-              : "bg-gradient-to-b from-zinc-50 to-zinc-100"
-          }`}
-        >
-          <div className="text-center">
-            <div
-              className={`mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-2xl shadow-sm ${
-                isDark ? "bg-white/5" : "bg-white"
-              }`}
-            >
-              <Camera
-                className={`h-5 w-5 ${
-                  isDark ? "text-zinc-400" : "text-zinc-500"
-                }`}
-              />
-            </div>
-            <p
-              className={`text-[11px] font-semibold uppercase tracking-[0.08em] ${
-                isDark ? "text-zinc-400" : "text-zinc-500"
-              }`}
-            >
-              Espaço foto
-            </p>
-            <p
-              className={`mt-1 text-[10px] font-medium ${
-                isDark ? "text-zinc-500" : "text-zinc-500"
-              }`}
-            >
-              piloto 1:1
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
 }
 
 export default function ClassificacaoPageContent() {
@@ -198,22 +103,16 @@ export default function ClassificacaoPageContent() {
     return;
   };
 
-  const {
-    leaderName,
-    theme,
-    spotlightStyles,
-    top3TitleFight,
-    pilotTrendMap,
-    titleFightStatus,
-  } = useRankingScreenController({
-    category,
-    competition,
-    isDarkMode,
-    filteredRanking,
-    rankingData,
-    leader,
-    currentCompetitionMeta,
-  });
+  const { theme, pilotTrendMap, titleFightStatus } =
+    useRankingScreenController({
+      category,
+      competition,
+      isDarkMode,
+      filteredRanking,
+      rankingData,
+      leader,
+      currentCompetitionMeta,
+    });
 
   const statsSummary = useMemo(() => {
     if (currentCompetitionMeta?.summary) {
@@ -395,11 +294,6 @@ export default function ClassificacaoPageContent() {
     }
   };
 
-  const getSpotlightPilotWarName = (pilot: unknown) => {
-    if (!pilot || typeof pilot !== "object") return "";
-    return getPilotWarName(pilot as RankingItem | null | undefined);
-  };
-
   if (loading) {
     return (
       <div className={`min-h-screen ${isDarkMode ? "bg-[#05070a]" : ""}`}>
@@ -502,17 +396,6 @@ export default function ClassificacaoPageContent() {
             toggleDarkMode={toggleTheme}
           />
 
-          <RankingSpotlight
-            isDarkMode={isDarkMode}
-            theme={theme}
-            spotlightStyles={spotlightStyles}
-            leader={leader}
-            leaderName={leaderName}
-            PilotPhotoSlot={PilotPhotoSlot}
-            getPilotHighlightName={getPilotHighlightName}
-            getPilotWarName={getSpotlightPilotWarName}
-          />
-
           <RankingSearchCard
             isDarkMode={isDarkMode}
             theme={theme}
@@ -520,6 +403,18 @@ export default function ClassificacaoPageContent() {
             competitionLabels={competitionLabels}
             search={search}
             onSearchChange={setSearch}
+          />
+
+          <ClassificacaoMainTableSection
+            isDarkMode={isDarkMode}
+            theme={theme}
+            category={category}
+            competition={competition}
+            filteredRanking={filteredRanking}
+            leader={leader}
+            titleFightStatus={titleFightStatus}
+            pilotTrendMap={pilotTrendMap}
+            onSelectPilot={handleSelectPilot}
           />
 
           <ClassificacaoHeroSection
@@ -536,27 +431,6 @@ export default function ClassificacaoPageContent() {
             editorialCards={editorialCards}
             isSharingImage={isSharingImage}
             onShareClassification={handleShareClassification}
-          />
-
-          <ClassificacaoTitleFightSection
-            isDarkMode={isDarkMode}
-            theme={theme}
-            titleFightStatus={titleFightStatus}
-            top3TitleFight={top3TitleFight}
-            category={category}
-            onSelectPilot={handleSelectPilot}
-          />
-
-          <ClassificacaoMainTableSection
-            isDarkMode={isDarkMode}
-            theme={theme}
-            category={category}
-            competition={competition}
-            filteredRanking={filteredRanking}
-            leader={leader}
-            titleFightStatus={titleFightStatus}
-            pilotTrendMap={pilotTrendMap}
-            onSelectPilot={handleSelectPilot}
           />
         </div>
 

@@ -7,7 +7,6 @@ import {
   competitionLabels,
   getPilotFirstAndLastName,
   getPilotWarNameDisplay,
-  getTop6RowStyles,
   getTrendVisual,
   normalizePilotName,
 } from "@/lib/ranking/ranking-utils";
@@ -319,38 +318,32 @@ export default function ClassificacaoMainTableSection({
                 {filteredRanking.map((item, index) => {
                   const nomeLinha1 = getPilotFirstAndLastName(item.piloto);
                   const nomeLinha2 = getPilotWarNameDisplay(item);
-                  const isTop6 = index < 6;
-                  const styles = getTop6RowStyles(index + 1);
+                  const isLeaderRow = index === 0;
                   const trendStatus =
                     pilotTrendMap[item.pilotoId || normalizePilotName(item.piloto)] ||
                     "stable";
-                  const trendVisual = getTrendVisual(trendStatus as never, isDarkMode);
+                  const trendVisual = getTrendVisual(
+                    trendStatus as never,
+                    isDarkMode
+                  );
                   const TrendIcon = trendVisual.Icon;
 
-                  const darkRow = isTop6
-                    ? index === 0
-                      ? "bg-[linear-gradient(90deg,rgba(250,204,21,0.14)_0%,#111827_18%,#0f172a_100%)] border-l-[4px] border-l-yellow-400 shadow-[0_0_0_1px_rgba(250,204,21,0.14),0_12px_28px_rgba(0,0,0,0.28)]"
-                      : index === 1
-                        ? "bg-[linear-gradient(90deg,rgba(212,212,216,0.10)_0%,#111827_18%,#0f172a_100%)] border-l-[4px] border-l-zinc-300 shadow-[0_0_0_1px_rgba(212,212,216,0.10),0_10px_24px_rgba(0,0,0,0.24)]"
-                        : index === 2
-                          ? "bg-[linear-gradient(90deg,rgba(251,191,36,0.10)_0%,#111827_18%,#0f172a_100%)] border-l-[4px] border-l-amber-400 shadow-[0_0_0_1px_rgba(251,191,36,0.10),0_10px_24px_rgba(0,0,0,0.24)]"
-                          : index === 3
-                            ? "bg-[linear-gradient(90deg,rgba(56,189,248,0.08)_0%,#111827_18%,#0f172a_100%)] border-l-[4px] border-l-sky-400 shadow-[0_0_0_1px_rgba(56,189,248,0.08),0_10px_22px_rgba(0,0,0,0.22)]"
-                            : index === 4
-                              ? "bg-[linear-gradient(90deg,rgba(168,85,247,0.08)_0%,#111827_18%,#0f172a_100%)] border-l-[4px] border-l-violet-400 shadow-[0_0_0_1px_rgba(168,85,247,0.08),0_10px_22px_rgba(0,0,0,0.22)]"
-                              : "bg-[linear-gradient(90deg,rgba(52,211,153,0.08)_0%,#111827_18%,#0f172a_100%)] border-l-[4px] border-l-emerald-400 shadow-[0_0_0_1px_rgba(52,211,153,0.08),0_10px_22px_rgba(0,0,0,0.22)]"
+                  const darkRow = isLeaderRow
+                    ? "bg-[linear-gradient(90deg,rgba(250,204,21,0.14)_0%,#111827_18%,#0f172a_100%)] border-l-[4px] border-l-yellow-400 shadow-[0_0_0_1px_rgba(250,204,21,0.14),0_12px_28px_rgba(0,0,0,0.28)]"
                     : `${
                         index % 2 === 0 ? "bg-[#0f172a]" : "bg-[#0b0f16]"
                       } hover:bg-[#161e2b] hover:brightness-[1.03] hover:scale-[1.002]`;
+
+                  const lightRow = isLeaderRow
+                    ? "bg-yellow-50 border-l-[4px] border-l-yellow-500"
+                    : `${index % 2 === 0 ? "bg-white" : "bg-zinc-50/50"} hover:bg-zinc-50`;
 
                   return (
                     <tr
                       key={`${category}-${competition}-table-${item.pos}-${item.piloto}`}
                       onClick={() => onSelectPilot(item)}
                       className={`group cursor-pointer transition-all duration-200 ${
-                        isDarkMode
-                          ? darkRow
-                          : `${styles.row || "bg-white"} hover:bg-zinc-50`
+                        isDarkMode ? darkRow : lightRow
                       }`}
                       title="Abrir piloto"
                     >
@@ -358,10 +351,12 @@ export default function ClassificacaoMainTableSection({
                         <div
                           className={`mx-auto flex h-8 w-8 items-center justify-center rounded-[14px] text-[11px] font-extrabold ${
                             isDarkMode
-                              ? index === 0
+                              ? isLeaderRow
                                 ? "bg-white/10 text-white"
                                 : "bg-white/5 text-zinc-200"
-                              : styles.badge
+                              : isLeaderRow
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-zinc-100 text-zinc-700"
                           }`}
                         >
                           {index + 1}

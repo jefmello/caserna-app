@@ -4,7 +4,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
-  BarChart3,
   Camera,
   ChevronRight,
   Clapperboard,
@@ -140,71 +139,6 @@ function PilotPhotoSlot({
         </div>
       )}
     </div>
-  );
-}
-
-function HomeShortcutCard({
-  href,
-  title,
-  subtitle,
-  icon: Icon,
-  isDarkMode,
-  theme,
-}: {
-  href: string;
-  title: string;
-  subtitle: string;
-  icon: React.ElementType;
-  isDarkMode: boolean;
-  theme: any;
-}) {
-  return (
-    <Link
-      href={href}
-      className={`group rounded-[22px] border shadow-sm transition-all duration-200 hover:-translate-y-[2px] ${
-        isDarkMode
-          ? "border-white/10 bg-[#111827] hover:border-white/20 hover:bg-[#162033]"
-          : "border-black/5 bg-white hover:bg-zinc-50"
-      }`}
-    >
-      <div className="p-4">
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <div
-            className={`flex h-11 w-11 items-center justify-center rounded-2xl ${
-              isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-            }`}
-          >
-            <Icon
-              className={`h-5 w-5 ${
-                isDarkMode ? theme.darkAccentText : theme.primaryIcon
-              }`}
-            />
-          </div>
-
-          <ChevronRight
-            className={`h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 ${
-              isDarkMode ? "text-zinc-500" : "text-zinc-400"
-            }`}
-          />
-        </div>
-
-        <p
-          className={`text-[16px] font-extrabold tracking-tight ${
-            isDarkMode ? "text-white" : "text-zinc-950"
-          }`}
-        >
-          {title}
-        </p>
-
-        <p
-          className={`mt-1 text-[12px] leading-snug ${
-            isDarkMode ? "text-zinc-400" : "text-zinc-500"
-          }`}
-        >
-          {subtitle}
-        </p>
-      </div>
-    </Link>
   );
 }
 
@@ -768,49 +702,6 @@ export default function HomePageContent() {
             theme={theme}
           />
         )}
-      </div>
-
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-5">
-        <HomeShortcutCard
-          href="/classificacao"
-          title="Classificação"
-          subtitle="Tabela oficial e Top 6"
-          icon={Trophy}
-          isDarkMode={isDarkMode}
-          theme={theme}
-        />
-        <HomeShortcutCard
-          href="/pilotos"
-          title="Pilotos"
-          subtitle="Análise individual"
-          icon={UserRound}
-          isDarkMode={isDarkMode}
-          theme={theme}
-        />
-        <HomeShortcutCard
-          href="/estatisticas"
-          title="Estatísticas"
-          subtitle="Leitura analítica"
-          icon={BarChart3}
-          isDarkMode={isDarkMode}
-          theme={theme}
-        />
-        <HomeShortcutCard
-          href="/simulacoes"
-          title="Simulações"
-          subtitle="Projeções e cenários"
-          icon={Sparkles}
-          isDarkMode={isDarkMode}
-          theme={theme}
-        />
-        <HomeShortcutCard
-          href="/midia"
-          title="Mídia"
-          subtitle="Cards e compartilhamento"
-          icon={Clapperboard}
-          isDarkMode={isDarkMode}
-          theme={theme}
-        />
       </div>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
