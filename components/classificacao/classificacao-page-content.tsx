@@ -167,6 +167,7 @@ export default function ClassificacaoPageContent() {
   const [isSharingImage, setIsSharingImage] = useState(false);
 
   const shareCardRef = useRef<HTMLDivElement | null>(null);
+  const fullClassificationShareCardRef = useRef<HTMLDivElement | null>(null);
   const leaderShareCardRef = useRef<HTMLDivElement | null>(null);
   const narrativeShareCardRef = useRef<HTMLDivElement | null>(null);
   const duelShareCardRef = useRef<HTMLDivElement | null>(null);
@@ -590,6 +591,7 @@ export default function ClassificacaoPageContent() {
               narrativeShareCardRef,
               duelShareCardRef,
               shareCardRef,
+              fullClassificationShareCardRef,
             }}
           />
         </div>
