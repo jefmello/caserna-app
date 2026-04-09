@@ -62,7 +62,7 @@ export default function RankingTitleFightCard({
             className={`absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
           />
 
-          <div className="mb-3 flex items-center justify-between gap-3">
+          <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex min-w-0 items-center gap-2.5">
               <div
                 className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
@@ -97,7 +97,7 @@ export default function RankingTitleFightCard({
             </div>
 
             <div
-              className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${titleFightStatus.tone}`}
+              className={`w-fit rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${titleFightStatus.tone}`}
             >
               {titleFightStatus.label}
             </div>
@@ -158,7 +158,7 @@ export default function RankingTitleFightCard({
                   const positionSize = isLeader
                     ? "h-14 w-14 text-[18px]"
                     : "h-11 w-11 text-sm";
-                  const nameSize = isLeader ? "text-[13px]" : "text-[13px]";
+                  const nameSize = isLeader ? "text-[13px] sm:text-[14px]" : "text-[13px]";
                   const pointsValueSize = isLeader ? "text-[28px]" : "text-[20px]";
                   const pointsLabelSize = isLeader ? "text-[11px]" : "text-[10px]";
 
@@ -222,118 +222,148 @@ export default function RankingTitleFightCard({
                             {index + 1}º
                           </div>
 
-                          <div className="min-w-0 flex-1 pr-1">
-                            <div className="flex items-center gap-2">
-                              <p
-                                className={`min-w-0 flex-1 whitespace-nowrap font-extrabold leading-none tracking-tight ${
-                                  isDarkMode ? "text-white" : "text-zinc-950"
-                                } ${nameSize}`}
-                              >
-                                {pilotName}
-                              </p>
-                            </div>
-
-                            <div className="mt-1.5 flex items-center gap-2">
-                              {warName ? (
-                                <p
-                                  className={`whitespace-nowrap text-[10px] italic ${
-                                    isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                                  }`}
-                                >
-                                  {warName}
-                                </p>
-                              ) : null}
-
-                              {!isLeader ? (
-                                <span
-                                  className={`inline-flex whitespace-nowrap rounded-full border px-2.5 py-1 text-[10px] font-semibold ${
-                                    isDarkMode
-                                      ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                                      : "border-zinc-200 bg-white text-zinc-600"
-                                  }`}
-                                >
-                                  {gapLabel}
-                                </span>
-                              ) : null}
-                            </div>
-                          </div>
-
-                          <div className="shrink-0">
-                            {isLeader ? (
-                              <div className="flex min-w-[88px] flex-col items-end gap-2">
-                                <span
-                                  className={`inline-flex rounded-full border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.1em] ${
-                                    isDarkMode
-                                      ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                                      : theme.heroChip
-                                  }`}
-                                >
-                                  líder
-                                </span>
-
+                          <div className="min-w-0 flex-1">
+                            <div
+                              className={`${
+                                isLeader
+                                  ? "flex items-center justify-between gap-3"
+                                  : "flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3"
+                              }`}
+                            >
+                              <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-2">
-                                  <div className="min-w-[62px] text-right">
-                                    <p
-                                      className={`font-bold uppercase tracking-[0.12em] ${
-                                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                                      } ${pointsLabelSize}`}
-                                    >
-                                      Pontos
-                                    </p>
-                                    <p
-                                      className={`font-extrabold leading-none tracking-tight ${
-                                        isDarkMode ? "text-white" : "text-zinc-950"
-                                      } ${pointsValueSize}`}
-                                    >
-                                      {pilot.pontos}
-                                    </p>
-                                  </div>
-
-                                  <div
-                                    className={`flex h-8 w-8 items-center justify-center rounded-[18px] ${
-                                      isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
-                                    }`}
-                                  >
-                                    <ChevronRight
-                                      className={`h-4 w-4 ${
-                                        isDarkMode ? theme.darkAccentText : "text-zinc-500"
-                                      }`}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="flex items-center gap-2">
-                                <div className="min-w-[62px] text-right">
                                   <p
-                                    className={`font-bold uppercase tracking-[0.12em] ${
-                                      isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                                    } ${pointsLabelSize}`}
-                                  >
-                                    Pontos
-                                  </p>
-                                  <p
-                                    className={`font-extrabold leading-none tracking-tight ${
+                                    className={`min-w-0 truncate font-extrabold leading-none tracking-tight ${
                                       isDarkMode ? "text-white" : "text-zinc-950"
-                                    } ${pointsValueSize}`}
+                                    } ${nameSize}`}
                                   >
-                                    {pilot.pontos}
+                                    {pilotName}
                                   </p>
                                 </div>
 
-                                <div
-                                  className={`flex h-8 w-8 items-center justify-center rounded-[18px] ${
-                                    isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
-                                  }`}
-                                >
-                                  <ChevronRight
-                                    className={`h-4 w-4 ${
-                                      isDarkMode ? theme.darkAccentText : "text-zinc-500"
-                                    }`}
-                                  />
-                                </div>
+                                {isLeader ? (
+                                  warName ? (
+                                    <div className="mt-1.5">
+                                      <p
+                                        className={`truncate text-[10px] italic ${
+                                          isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                                        }`}
+                                      >
+                                        {warName}
+                                      </p>
+                                    </div>
+                                  ) : null
+                                ) : (
+                                  <div className="mt-1.5 flex flex-col gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2">
+                                    {warName ? (
+                                      <p
+                                        className={`truncate text-[10px] italic ${
+                                          isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                                        }`}
+                                      >
+                                        {warName}
+                                      </p>
+                                    ) : null}
+
+                                    <span
+                                      className={`inline-flex w-fit max-w-full whitespace-nowrap rounded-full border px-2.5 py-1 text-[10px] font-semibold ${
+                                        isDarkMode
+                                          ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                                          : "border-zinc-200 bg-white text-zinc-600"
+                                      }`}
+                                    >
+                                      {gapLabel}
+                                    </span>
+                                  </div>
+                                )}
                               </div>
-                            )}
+
+                              <div className="shrink-0 self-end sm:self-center">
+                                {isLeader ? (
+                                  <div className="flex min-w-[88px] flex-col items-end gap-2">
+                                    <span
+                                      className={`inline-flex rounded-full border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.1em] ${
+                                        isDarkMode
+                                          ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                                          : theme.heroChip
+                                      }`}
+                                    >
+                                      líder
+                                    </span>
+
+                                    <div className="flex items-center gap-2">
+                                      <div className="min-w-[62px] text-right">
+                                        <p
+                                          className={`font-bold uppercase tracking-[0.12em] ${
+                                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                                          } ${pointsLabelSize}`}
+                                        >
+                                          Pontos
+                                        </p>
+                                        <p
+                                          className={`font-extrabold leading-none tracking-tight ${
+                                            isDarkMode ? "text-white" : "text-zinc-950"
+                                          } ${pointsValueSize}`}
+                                        >
+                                          {pilot.pontos}
+                                        </p>
+                                      </div>
+
+                                      <div
+                                        className={`flex h-8 w-8 items-center justify-center rounded-[18px] ${
+                                          isDarkMode
+                                            ? theme.darkAccentIconWrap
+                                            : "bg-zinc-100"
+                                        }`}
+                                      >
+                                        <ChevronRight
+                                          className={`h-4 w-4 ${
+                                            isDarkMode
+                                              ? theme.darkAccentText
+                                              : "text-zinc-500"
+                                          }`}
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center gap-2">
+                                    <div className="min-w-[62px] text-right">
+                                      <p
+                                        className={`font-bold uppercase tracking-[0.12em] ${
+                                          isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                                        } ${pointsLabelSize}`}
+                                      >
+                                        Pontos
+                                      </p>
+                                      <p
+                                        className={`font-extrabold leading-none tracking-tight ${
+                                          isDarkMode ? "text-white" : "text-zinc-950"
+                                        } ${pointsValueSize}`}
+                                      >
+                                        {pilot.pontos}
+                                      </p>
+                                    </div>
+
+                                    <div
+                                      className={`flex h-8 w-8 items-center justify-center rounded-[18px] ${
+                                        isDarkMode
+                                          ? theme.darkAccentIconWrap
+                                          : "bg-zinc-100"
+                                      }`}
+                                    >
+                                      <ChevronRight
+                                        className={`h-4 w-4 ${
+                                          isDarkMode
+                                            ? theme.darkAccentText
+                                            : "text-zinc-500"
+                                        }`}
+                                      />
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </button>
