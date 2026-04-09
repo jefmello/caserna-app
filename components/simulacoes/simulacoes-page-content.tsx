@@ -246,7 +246,7 @@ function ProbabilityRow({
               isDarkMode ? theme.darkAccentText : "text-zinc-950"
             }`}
           >
-            {candidate.probability}%
+            {Number(candidate.probability || 0).toFixed(2)}%
           </p>
           <p
             className={`mt-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
@@ -297,7 +297,7 @@ function ScenarioRow({
               isDarkMode ? "text-zinc-400" : "text-zinc-500"
             }`}
           >
-            Probabilidade se vencer a próxima etapa: {scenario.winProbability}%
+            Probabilidade se vencer a próxima etapa: {Number(scenario.winProbability || 0).toFixed(2)}%
           </p>
         </div>
 
@@ -914,7 +914,7 @@ export default function SimulacoesPageContent() {
                 }`}
               >
                 {titleProbabilities[0]
-                  ? `${titleProbabilities[0].probability}% de probabilidade de título neste momento.`
+                  ? `${Number(titleProbabilities[0].probability || 0).toFixed(2)}% de probabilidade de título neste momento.`
                   : "Ainda não há pilotos suficientes para projeção."}
               </p>
             </button>
