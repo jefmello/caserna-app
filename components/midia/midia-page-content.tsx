@@ -6,6 +6,7 @@ import {
   Camera,
   ChevronRight,
   Clapperboard,
+  ListOrdered,
   Share2,
   Swords,
 } from "lucide-react";
@@ -150,6 +151,7 @@ export default function MidiaPageContent() {
   const [comparePilotBId, setComparePilotBId] = useState("");
 
   const shareCardRef = useRef<HTMLDivElement | null>(null);
+  const fullClassificationShareCardRef = useRef<HTMLDivElement | null>(null);
   const leaderShareCardRef = useRef<HTMLDivElement | null>(null);
   const duelShareCardRef = useRef<HTMLDivElement | null>(null);
   const narrativeShareCardRef = useRef<HTMLDivElement | null>(null);
@@ -159,6 +161,8 @@ export default function MidiaPageContent() {
   const whatsappSectionRef = useRef<HTMLDivElement | null>(null);
 
   const [isSharingImage, setIsSharingImage] = useState(false);
+  const [isSharingFullClassificationImage, setIsSharingFullClassificationImage] =
+    useState(false);
   const [isSharingLeaderImage, setIsSharingLeaderImage] = useState(false);
   const [isSharingDuelImage, setIsSharingDuelImage] = useState(false);
   const [isSharingNarrativeImage, setIsSharingNarrativeImage] = useState(false);
@@ -174,31 +178,30 @@ export default function MidiaPageContent() {
     window.localStorage.setItem("caserna-theme", isDarkMode ? "dark" : "light");
   }, [isDarkMode]);
 
-  const {
-    theme,
-    pilotTrendMap,
-    titleFightStatus,
-  } = useRankingScreenController({
-    category,
-    competition,
-    isDarkMode,
-    filteredRanking,
-    rankingData,
-    leader,
-    currentCompetitionMeta,
-  });
+  const { theme, pilotTrendMap, titleFightStatus } =
+    useRankingScreenController({
+      category,
+      competition,
+      isDarkMode,
+      filteredRanking,
+      rankingData,
+      leader,
+      currentCompetitionMeta,
+    });
 
   const comparePilotA = useMemo(
     () =>
-      filteredRanking.find((item) => (item.pilotoId || item.piloto) === comparePilotAId) ||
-      null,
+      filteredRanking.find(
+        (item) => (item.pilotoId || item.piloto) === comparePilotAId
+      ) || null,
     [filteredRanking, comparePilotAId]
   );
 
   const comparePilotB = useMemo(
     () =>
-      filteredRanking.find((item) => (item.pilotoId || item.piloto) === comparePilotBId) ||
-      null,
+      filteredRanking.find(
+        (item) => (item.pilotoId || item.piloto) === comparePilotBId
+      ) || null,
     [filteredRanking, comparePilotBId]
   );
 
@@ -260,14 +263,27 @@ export default function MidiaPageContent() {
     let scoreB = 0;
 
     duelMetrics.forEach((metric) => {
-      const winner = getComparisonWinner(metric.a, metric.b, metric.lowerIsBetter);
+      const winner = getComparisonWinner(
+        metric.a,
+        metric.b,
+        metric.lowerIsBetter
+      );
       if (winner === "a") scoreA += 1;
       if (winner === "b") scoreB += 1;
     });
 
-    const pointsWinner = getComparisonWinner(comparePilotA.pontos, comparePilotB.pontos, false);
-    const advWinner = getComparisonWinner(comparePilotA.adv, comparePilotB.adv, true);
-    const overallWinner = scoreA === scoreB ? pointsWinner : scoreA > scoreB ? "a" : "b";
+    const pointsWinner = getComparisonWinner(
+      comparePilotA.pontos,
+      comparePilotB.pontos,
+      false
+    );
+    const advWinner = getComparisonWinner(
+      comparePilotA.adv,
+      comparePilotB.adv,
+      true
+    );
+    const overallWinner =
+      scoreA === scoreB ? pointsWinner : scoreA > scoreB ? "a" : "b";
     const scoreDiff = Math.abs(scoreA - scoreB);
     const pointsDiff = Math.abs(comparePilotA.pontos - comparePilotB.pontos);
 
@@ -316,7 +332,8 @@ export default function MidiaPageContent() {
         tone: isDarkMode
           ? "border-blue-500/30 bg-blue-500/10 text-blue-300"
           : "border-blue-200 bg-blue-50 text-blue-700",
-        description: "O duelo está equilibrado, mas com leve inclinação pontual.",
+        description:
+          "O duelo está equilibrado, mas com leve inclinação pontual.",
       };
     }
 
@@ -326,7 +343,8 @@ export default function MidiaPageContent() {
         tone: isDarkMode
           ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
           : "border-emerald-200 bg-emerald-50 text-emerald-700",
-        description: "Um dos lados domina a maior parte dos territórios do confronto.",
+        description:
+          "Um dos lados domina a maior parte dos territórios do confronto.",
       };
     }
 
@@ -345,7 +363,8 @@ export default function MidiaPageContent() {
       tone: isDarkMode
         ? "border-orange-500/30 bg-orange-500/10 text-orange-300"
         : "border-orange-200 bg-orange-50 text-orange-700",
-      description: "A disputa segue aberta e sensível a qualquer mudança de ritmo.",
+      description:
+        "A disputa segue aberta e sensível a qualquer mudança de ritmo.",
     };
   }, [duelSummary, isDarkMode]);
 
@@ -362,7 +381,10 @@ export default function MidiaPageContent() {
         ? filteredRanking[5]?.pontos || 0
         : filteredRanking[totalPilots - 1]?.pontos || 0;
 
-    const totalPoints = filteredRanking.reduce((sum, item) => sum + item.pontos, 0);
+    const totalPoints = filteredRanking.reduce(
+      (sum, item) => sum + item.pontos,
+      0
+    );
     const avgPoints = totalPilots > 0 ? totalPoints / totalPilots : 0;
 
     const totalVictories = filteredRanking.reduce(
@@ -410,7 +432,8 @@ export default function MidiaPageContent() {
     const podiumPressure =
       filteredRanking.length >= 6
         ? Math.max(
-            (filteredRanking[2]?.pontos || 0) - (filteredRanking[5]?.pontos || 0),
+            (filteredRanking[2]?.pontos || 0) -
+              (filteredRanking[5]?.pontos || 0),
             0
           )
         : Math.max(
@@ -440,7 +463,10 @@ export default function MidiaPageContent() {
       hottestLabel = "Ataque dominante";
     } else if ((hottestPilot?.podios || 0) >= 4) {
       hottestLabel = "Consistência premium";
-    } else if ((hottestPilot?.poles || 0) >= 2 || (hottestPilot?.mv || 0) >= 2) {
+    } else if (
+      (hottestPilot?.poles || 0) >= 2 ||
+      (hottestPilot?.mv || 0) >= 2
+    ) {
       hottestLabel = "Velocidade em alta";
     }
 
@@ -518,6 +544,30 @@ export default function MidiaPageContent() {
     }
   };
 
+  const handleShareFullClassification = async () => {
+    if (
+      !fullClassificationShareCardRef.current ||
+      isSharingFullClassificationImage
+    )
+      return;
+
+    try {
+      setIsSharingFullClassificationImage(true);
+      const dataUrl = await generateImage(fullClassificationShareCardRef.current);
+      if (!dataUrl) return;
+
+      download(
+        dataUrl,
+        `classificacao-completa-${category.toLowerCase()}-${competition.toLowerCase()}.png`
+      );
+    } catch (err) {
+      console.error(err);
+      window.alert("Não foi possível gerar a imagem da classificação completa.");
+    } finally {
+      setIsSharingFullClassificationImage(false);
+    }
+  };
+
   const handleShareLeaderCard = async () => {
     if (!leader || !leaderShareCardRef.current || isSharingLeaderImage) return;
 
@@ -539,7 +589,11 @@ export default function MidiaPageContent() {
   };
 
   const handleShareNarrativeCard = async () => {
-    if (!championshipNarrative || !narrativeShareCardRef.current || isSharingNarrativeImage) {
+    if (
+      !championshipNarrative ||
+      !narrativeShareCardRef.current ||
+      isSharingNarrativeImage
+    ) {
       return;
     }
 
@@ -561,7 +615,12 @@ export default function MidiaPageContent() {
   };
 
   const handleShareDuelCard = async () => {
-    if (!comparePilotA || !comparePilotB || !duelShareCardRef.current || isSharingDuelImage) {
+    if (
+      !comparePilotA ||
+      !comparePilotB ||
+      !duelShareCardRef.current ||
+      isSharingDuelImage
+    ) {
       return;
     }
 
@@ -610,7 +669,11 @@ Caserna Kart Racing`,
   };
 
   const handleWhatsAppNarrativeCard = async () => {
-    if (!championshipNarrative || !narrativeShareCardRef.current || isSharingNarrativeImage) {
+    if (
+      !championshipNarrative ||
+      !narrativeShareCardRef.current ||
+      isSharingNarrativeImage
+    ) {
       return;
     }
 
@@ -635,7 +698,12 @@ Caserna Kart Racing`,
   };
 
   const handleWhatsAppDuelCard = async () => {
-    if (!comparePilotA || !comparePilotB || !duelShareCardRef.current || isSharingDuelImage) {
+    if (
+      !comparePilotA ||
+      !comparePilotB ||
+      !duelShareCardRef.current ||
+      isSharingDuelImage
+    ) {
       return;
     }
 
@@ -729,7 +797,7 @@ Caserna Kart Racing`;
       <RankingHeader
         isDarkMode={isDarkMode}
         theme={theme}
-        categories={categories}
+        categories={[]}
         category={category}
         setCategory={setCategory}
         availableCompetitions={availableCompetitions}
@@ -790,7 +858,7 @@ Caserna Kart Racing`;
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <div className="space-y-4">
-          <div ref={classificationSectionRef}>
+          <div ref={classificationSectionRef} className="space-y-4">
             <RankingClassificationShareCard
               isDarkMode={isDarkMode}
               theme={theme}
@@ -798,6 +866,75 @@ Caserna Kart Racing`;
               filteredRankingLength={filteredRanking.length}
               onShare={handleShareClassification}
             />
+
+            <Card
+              className={`rounded-[24px] shadow-sm ${
+                isDarkMode
+                  ? "border border-white/10 bg-[#111827]"
+                  : "border-black/5 bg-white"
+              }`}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p
+                      className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}
+                    >
+                      Classificação completa
+                    </p>
+                    <h3
+                      className={`mt-1 text-[18px] font-extrabold tracking-tight ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}
+                    >
+                      Compartilhar a tabela inteira
+                    </h3>
+                    <p
+                      className={`mt-2 text-[12px] leading-snug ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}
+                    >
+                      Gera uma screen de toda a classificação oficial do recorte
+                      atual, com todos os pilotos com pontos.
+                    </p>
+                  </div>
+
+                  <div
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${
+                      isDarkMode
+                        ? theme.darkAccentIconWrap
+                        : theme.primaryIconWrap
+                    }`}
+                  >
+                    <ListOrdered
+                      className={`h-4.5 w-4.5 ${
+                        isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                      }`}
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleShareFullClassification}
+                  disabled={
+                    isSharingFullClassificationImage ||
+                    filteredRanking.length === 0
+                  }
+                  className={`mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-[18px] border px-4 py-3 text-sm font-semibold transition ${
+                    isDarkMode
+                      ? "border-white/10 bg-[#0f172a] text-white hover:bg-[#162033] disabled:opacity-50"
+                      : "border-black/5 bg-zinc-50 text-zinc-950 hover:bg-white disabled:opacity-50"
+                  }`}
+                >
+                  {isSharingFullClassificationImage
+                    ? "Gerando imagem completa..."
+                    : `Compartilhar classificação completa (${filteredRanking.length} pilotos)`}
+                </button>
+              </CardContent>
+            </Card>
           </div>
 
           <Card
@@ -921,9 +1058,9 @@ Caserna Kart Racing`;
                       }`}
                     >
                       {comparePilotA && comparePilotB
-                        ? `${getPilotFirstAndLastName(comparePilotA.piloto)} x ${getPilotFirstAndLastName(
-                            comparePilotB.piloto
-                          )}`
+                        ? `${getPilotFirstAndLastName(
+                            comparePilotA.piloto
+                          )} x ${getPilotFirstAndLastName(comparePilotB.piloto)}`
                         : "Selecione dois pilotos"}
                     </p>
                   </div>
@@ -1019,7 +1156,7 @@ Caserna Kart Racing`;
                       isDarkMode ? "text-zinc-400" : "text-zinc-500"
                     }`}
                   >
-                    Use para gerar a arte da grade oficial com Top 6 do recorte atual.
+                    Use para gerar a arte da grade oficial e também a classificação completa.
                   </p>
                 </div>
 
@@ -1130,6 +1267,7 @@ Caserna Kart Racing`;
             narrativeShareCardRef,
             duelShareCardRef,
             shareCardRef,
+            fullClassificationShareCardRef,
           }}
         />
       </div>
