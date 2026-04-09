@@ -695,47 +695,48 @@ function RankingShareCanvas({
 
       <div
         ref={fullClassificationShareCardRef}
-        className={`mt-6 w-[1320px] overflow-hidden rounded-[36px] border p-10 ${
+        className={`mt-6 w-[1260px] overflow-hidden rounded-[34px] border p-7 ${
           isDarkMode
             ? `border-white/10 bg-gradient-to-br ${theme.darkAccentCard} text-white`
             : `${theme.primaryBorder} bg-gradient-to-br ${theme.shellGlow} text-zinc-950`
         }`}
       >
         <div
-          className={`rounded-[28px] border px-8 py-7 ${
+          className={`rounded-[26px] border px-6 py-5 ${
             isDarkMode
               ? `${theme.darkAccentBorder} bg-[#111827]`
               : `${theme.heroBorder} bg-white/92`
           }`}
         >
-          <div className="flex items-center justify-between gap-6">
+          <div className="flex items-center justify-between gap-5">
             <div className="flex items-center gap-4">
               <div
-                className={`flex h-16 w-16 items-center justify-center rounded-[22px] ${
+                className={`flex h-14 w-14 items-center justify-center rounded-[20px] ${
                   isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                 }`}
               >
                 <span
-                  className={`text-3xl ${
+                  className={`text-[28px] ${
                     isDarkMode ? theme.darkAccentText : theme.primaryIcon
                   }`}
                 >
                   📋
                 </span>
               </div>
+
               <div>
                 <p
-                  className={`text-[16px] font-bold uppercase tracking-[0.22em] ${
+                  className={`text-[13px] font-bold uppercase tracking-[0.2em] ${
                     isDarkMode ? "text-zinc-400" : "text-zinc-500"
                   }`}
                 >
                   Classificação completa oficial
                 </p>
-                <h2 className="mt-2 text-[42px] font-extrabold leading-none tracking-[0.04em]">
+                <h2 className="mt-1.5 text-[34px] font-extrabold leading-none tracking-[0.03em]">
                   CASERNA KART RACING
                 </h2>
                 <p
-                  className={`mt-3 text-[22px] font-semibold ${
+                  className={`mt-2 text-[18px] font-semibold ${
                     isDarkMode ? "text-zinc-300" : "text-zinc-700"
                   }`}
                 >
@@ -745,7 +746,7 @@ function RankingShareCanvas({
             </div>
 
             <div
-              className={`rounded-full border px-5 py-2 text-[18px] font-bold uppercase tracking-[0.12em] ${
+              className={`rounded-full border px-4 py-1.5 text-[14px] font-bold uppercase tracking-[0.12em] ${
                 isDarkMode
                   ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                   : theme.searchBadge
@@ -755,73 +756,75 @@ function RankingShareCanvas({
             </div>
           </div>
 
-          <div className="mt-8 grid grid-cols-3 gap-4">
+          <div className="mt-5 grid grid-cols-3 gap-3">
             <div
-              className={`rounded-[22px] border px-5 py-4 ${
+              className={`rounded-[18px] border px-4 py-3 ${
                 isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
               }`}
             >
               <p
-                className={`text-[14px] font-bold uppercase tracking-[0.16em] ${
+                className={`text-[11px] font-bold uppercase tracking-[0.16em] ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >
                 Líder
               </p>
-              <p className="mt-2 text-[26px] font-extrabold tabular-nums">
+              <p className="mt-1.5 text-[21px] font-extrabold tracking-tight">
                 {leader ? getPilotFirstAndLastName(leader.piloto) : "-"}
               </p>
               <p
-                className={`mt-1 text-[18px] font-semibold ${
+                className={`mt-1 text-[14px] font-semibold ${
                   isDarkMode ? theme.darkAccentText : "text-zinc-700"
                 }`}
               >
                 {"pontos" in (leader || {}) ? leader?.pontos || 0 : 0} pontos
               </p>
             </div>
+
             <div
-              className={`rounded-[22px] border px-5 py-4 ${
+              className={`rounded-[18px] border px-4 py-3 ${
                 isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
               }`}
             >
               <p
-                className={`text-[14px] font-bold uppercase tracking-[0.16em] ${
+                className={`text-[11px] font-bold uppercase tracking-[0.16em] ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >
                 Pilotos
               </p>
-              <p className="mt-2 text-[26px] font-extrabold tabular-nums">
+              <p className="mt-1.5 text-[21px] font-extrabold tabular-nums">
                 {filteredRanking.length}
               </p>
               <p
-                className={`mt-1 text-[18px] font-semibold ${
+                className={`mt-1 text-[14px] font-semibold ${
                   isDarkMode ? "text-zinc-300" : "text-zinc-700"
                 }`}
               >
                 com pontos no recorte atual
               </p>
             </div>
+
             <div
-              className={`rounded-[22px] border px-5 py-4 ${
+              className={`rounded-[18px] border px-4 py-3 ${
                 isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
               }`}
             >
               <p
-                className={`text-[14px] font-bold uppercase tracking-[0.16em] ${
+                className={`text-[11px] font-bold uppercase tracking-[0.16em] ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >
                 Vantagem
               </p>
-              <p className="mt-2 text-[26px] font-extrabold tabular-nums">
+              <p className="mt-1.5 text-[21px] font-extrabold tabular-nums">
                 {filteredRanking[1] && leader && "pontos" in leader
                   ? Math.max((leader.pontos || 0) - filteredRanking[1].pontos, 0)
                   : 0}{" "}
                 pts
               </p>
               <p
-                className={`mt-1 text-[18px] font-semibold ${
+                className={`mt-1 text-[14px] font-semibold ${
                   isDarkMode ? "text-zinc-300" : "text-zinc-700"
                 }`}
               >
@@ -831,7 +834,7 @@ function RankingShareCanvas({
           </div>
         </div>
 
-        <div className="mt-6 space-y-3">
+        <div className="mt-4 space-y-2.5">
           {filteredRanking.map((item, index) => {
             const rank = index + 1;
             const styles = rank <= 6 ? getTop6RowStyles(rank) : null;
@@ -864,29 +867,29 @@ function RankingShareCanvas({
             return (
               <div
                 key={`share-full-${item.pilotoId || item.piloto}-${index}`}
-                className={`flex items-center justify-between rounded-[22px] border px-5 py-3 ${rowClass}`}
+                className={`flex items-center justify-between rounded-[20px] border px-4 py-2.5 ${rowClass}`}
               >
-                <div className="flex min-w-0 items-center gap-4">
+                <div className="flex min-w-0 items-center gap-3.5">
                   <div
-                    className={`flex h-12 w-12 items-center justify-center rounded-[16px] text-[20px] font-extrabold ${badgeClass}`}
+                    className={`flex h-10 w-10 items-center justify-center rounded-[14px] text-[17px] font-extrabold ${badgeClass}`}
                   >
                     {rank}
                   </div>
 
                   <div className="min-w-0">
-                    <p className="truncate text-[22px] font-extrabold tracking-tight">
+                    <p className="truncate text-[18px] font-extrabold tracking-tight">
                       {getPilotFirstAndLastName(item.piloto)}
                     </p>
-                    <div className="mt-1.5 flex items-center gap-2">
+                    <div className="mt-1 flex items-center gap-2">
                       <span
-                        className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[12px] font-semibold ${trendVisual.className}`}
+                        className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold ${trendVisual.className}`}
                       >
-                        <TrendIcon className="h-3.5 w-3.5" />
+                        <TrendIcon className="h-3 w-3" />
                         {trendVisual.label}
                       </span>
                       {getPilotWarNameDisplay(item) ? (
                         <span
-                          className={`text-[13px] italic ${
+                          className={`text-[12px] italic ${
                             isDarkMode ? "text-zinc-400" : "text-zinc-500"
                           }`}
                         >
@@ -897,7 +900,7 @@ function RankingShareCanvas({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-5 gap-3 text-center">
+                <div className="grid grid-cols-5 gap-2.5 text-center">
                   {[
                     { label: "PTS", value: item.pontos },
                     { label: "VIT", value: item.vitorias },
@@ -907,20 +910,20 @@ function RankingShareCanvas({
                   ].map((stat) => (
                     <div
                       key={`full-${item.pilotoId || item.piloto}-${stat.label}`}
-                      className={`min-w-[72px] rounded-[16px] border px-3 py-2 ${
+                      className={`min-w-[66px] rounded-[14px] border px-2.5 py-1.5 ${
                         isDarkMode
                           ? "border-white/10 bg-[#0f172a]"
                           : "border-black/5 bg-white/90"
                       }`}
                     >
                       <p
-                        className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                        className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
                           isDarkMode ? "text-zinc-500" : "text-zinc-400"
                         }`}
                       >
                         {stat.label}
                       </p>
-                      <p className="mt-1 text-[20px] font-extrabold leading-none tabular-nums">
+                      <p className="mt-1 text-[17px] font-extrabold leading-none tabular-nums">
                         {stat.value}
                       </p>
                     </div>
