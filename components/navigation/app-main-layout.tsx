@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Menu } from "lucide-react";
 import {
   ChampionshipProvider,
   useChampionship,
@@ -56,6 +57,7 @@ function AppMainLayoutContent({
   children: React.ReactNode;
 }) {
   const { themeMode, isDarkMode, setThemeMode } = useChampionship();
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -116,6 +118,17 @@ function AppMainLayoutContent({
     applyThemeToDocument(themeMode);
   }, [themeMode]);
 
+  useEffect(() => {
+    if (!isMobileSidebarOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isMobileSidebarOpen]);
+
   return (
     <div
       data-theme={themeMode}
@@ -174,9 +187,26 @@ function AppMainLayoutContent({
         } bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.02),transparent_42%)]`}
       />
 
-      <AppSidebar />
+      <button
+        type="button"
+        onClick={() => setIsMobileSidebarOpen(true)}
+        className={`fixed left-3 top-3 z-[70] inline-flex h-11 w-11 items-center justify-center rounded-2xl border shadow-[0_14px_28px_rgba(0,0,0,0.18)] backdrop-blur-xl transition-all duration-300 lg:hidden ${
+          isDarkMode
+            ? "border-white/10 bg-[#0f172a]/88 text-white hover:bg-[#131c2c]"
+            : "border-black/5 bg-white/90 text-zinc-900 hover:bg-white"
+        }`}
+        aria-label="Abrir menu"
+        title="Abrir menu"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
 
-      <main className="relative z-[1] min-h-screen w-full lg:pl-[288px]">
+      <AppSidebar
+        mobileOpen={isMobileSidebarOpen}
+        onCloseMobile={() => setIsMobileSidebarOpen(false)}
+      />
+
+      <main className="relative z-[1] min-h-screen w-full pt-16 lg:pt-0 lg:pl-[288px]">
         {children}
       </main>
     </div>
