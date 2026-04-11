@@ -9,6 +9,8 @@ import {
   ListOrdered,
   Share2,
   Swords,
+  Monitor,
+  Smartphone,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import RankingHeader from "@/components/ranking/ranking-header";
@@ -35,6 +37,11 @@ import PageTransition from "@/components/ui/page-transition";
 
 const RankingShareCanvas = dynamic(
   () => import("@/components/ranking/sections/ranking-share-canvas"),
+  { ssr: false }
+);
+
+const RankingShareStoriesCanvas = dynamic(
+  () => import("@/components/ranking/sections/ranking-share-stories-canvas"),
   { ssr: false }
 );
 
@@ -156,6 +163,13 @@ export default function MidiaPageContent() {
   const leaderShareCardRef = useRef<HTMLDivElement | null>(null);
   const duelShareCardRef = useRef<HTMLDivElement | null>(null);
   const narrativeShareCardRef = useRef<HTMLDivElement | null>(null);
+
+  // Stories refs
+  const storiesLeaderRef = useRef<HTMLDivElement | null>(null);
+  const storiesNarrativeRef = useRef<HTMLDivElement | null>(null);
+  const storiesClassificationRef = useRef<HTMLDivElement | null>(null);
+
+  const [shareFormat, setShareFormat] = useState<"landscape" | "stories">("landscape");
 
   const classificationSectionRef = useRef<HTMLDivElement | null>(null);
   const premiumSectionRef = useRef<HTMLDivElement | null>(null);
@@ -570,16 +584,19 @@ export default function MidiaPageContent() {
   };
 
   const handleShareLeaderCard = async () => {
-    if (!leader || !leaderShareCardRef.current || isSharingLeaderImage) return;
+    const ref = shareFormat === "stories" ? storiesLeaderRef.current : leaderShareCardRef.current;
+    if (!leader || !ref || isSharingLeaderImage) return;
 
     try {
       setIsSharingLeaderImage(true);
-      const dataUrl = await generateImage(leaderShareCardRef.current);
+      const dataUrl = await generateImage(ref);
       if (!dataUrl) return;
 
       download(
         dataUrl,
-        `lider-${category.toLowerCase()}-${competition.toLowerCase()}.png`
+        shareFormat === "stories"
+          ? `lider-stories-${category.toLowerCase()}-${competition.toLowerCase()}.png`
+          : `lider-${category.toLowerCase()}-${competition.toLowerCase()}.png`
       );
     } catch (err) {
       console.error(err);
@@ -590,9 +607,10 @@ export default function MidiaPageContent() {
   };
 
   const handleShareNarrativeCard = async () => {
+    const ref = shareFormat === "stories" ? storiesNarrativeRef.current : narrativeShareCardRef.current;
     if (
       !championshipNarrative ||
-      !narrativeShareCardRef.current ||
+      !ref ||
       isSharingNarrativeImage
     ) {
       return;
@@ -600,12 +618,14 @@ export default function MidiaPageContent() {
 
     try {
       setIsSharingNarrativeImage(true);
-      const dataUrl = await generateImage(narrativeShareCardRef.current);
+      const dataUrl = await generateImage(ref);
       if (!dataUrl) return;
 
       download(
         dataUrl,
-        `narrativa-${category.toLowerCase()}-${competition.toLowerCase()}.png`
+        shareFormat === "stories"
+          ? `narrativa-stories-${category.toLowerCase()}-${competition.toLowerCase()}.png`
+          : `narrativa-${category.toLowerCase()}-${competition.toLowerCase()}.png`
       );
     } catch (err) {
       console.error(err);
@@ -616,6 +636,7 @@ export default function MidiaPageContent() {
   };
 
   const handleShareDuelCard = async () => {
+    // Duelo não tem versão Stories — usa sempre landscape
     if (
       !comparePilotA ||
       !comparePilotB ||
@@ -857,6 +878,62 @@ Caserna Kart Racing`;
           </div>
         </CardContent>
       </Card>
+
+      {/* Format toggle: Landscape / Stories */}
+      <div className="flex items-center gap-3">
+        <span
+          className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+          }`}
+        >
+          Formato
+        </span>
+        <div
+          className={`flex overflow-hidden rounded-xl border ${
+            isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"
+          }`}
+        >
+          <button
+            type="button"
+            onClick={() => setShareFormat("landscape")}
+            className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold transition ${
+              shareFormat === "landscape"
+                ? isDarkMode
+                  ? `${theme.darkAccentBgSoft} ${theme.darkAccentText}`
+                  : `${theme.primaryIconWrap} ${theme.primaryIcon}`
+                : isDarkMode
+                  ? "text-zinc-500 hover:text-zinc-300"
+                  : "text-zinc-400 hover:text-zinc-600"
+            }`}
+          >
+            <Monitor className="h-3.5 w-3.5" />
+            Paisagem
+          </button>
+          <button
+            type="button"
+            onClick={() => setShareFormat("stories")}
+            className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold transition ${
+              shareFormat === "stories"
+                ? isDarkMode
+                  ? `${theme.darkAccentBgSoft} ${theme.darkAccentText}`
+                  : `${theme.primaryIconWrap} ${theme.primaryIcon}`
+                : isDarkMode
+                  ? "text-zinc-500 hover:text-zinc-300"
+                  : "text-zinc-400 hover:text-zinc-600"
+            }`}
+          >
+            <Smartphone className="h-3.5 w-3.5" />
+            Stories
+          </button>
+        </div>
+        <span
+          className={`text-[10px] ${
+            isDarkMode ? "text-zinc-600" : "text-zinc-400"
+          }`}
+        >
+          {shareFormat === "stories" ? "1080×1920 · Instagram" : "1080px · Feed"}
+        </span>
+      </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <div className="space-y-4">
@@ -1270,6 +1347,28 @@ Caserna Kart Racing`;
             duelShareCardRef,
             shareCardRef,
             fullClassificationShareCardRef,
+          }}
+        />
+        <RankingShareStoriesCanvas
+          isDarkMode={isDarkMode}
+          theme={theme}
+          category={category}
+          competition={competition}
+          competitionLabels={competitionLabels}
+          leader={leader}
+          statsSummary={statsSummary}
+          championshipNarrative={championshipNarrative}
+          filteredRanking={filteredRanking}
+          pilotTrendMap={pilotTrendMap}
+          getPilotFirstAndLastName={getPilotFirstAndLastName}
+          getPilotWarNameDisplay={getPilotWarNameDisplay}
+          getTop6RowStyles={getTop6RowStyles}
+          getTrendVisual={getTrendVisual}
+          normalizePilotName={normalizePilotName}
+          refs={{
+            storiesLeaderRef,
+            storiesNarrativeRef,
+            storiesClassificationRef,
           }}
         />
       </div>
