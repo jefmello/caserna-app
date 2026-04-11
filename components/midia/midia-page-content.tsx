@@ -880,60 +880,82 @@ Caserna Kart Racing`;
       </Card>
 
       {/* Format toggle: Landscape / Stories */}
-      <div className="flex items-center gap-3">
-        <span
-          className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
-            isDarkMode ? "text-zinc-500" : "text-zinc-400"
-          }`}
-        >
-          Formato
-        </span>
-        <div
-          className={`flex overflow-hidden rounded-xl border ${
-            isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"
-          }`}
-        >
-          <button
-            type="button"
-            onClick={() => setShareFormat("landscape")}
-            className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold transition ${
-              shareFormat === "landscape"
-                ? isDarkMode
-                  ? `${theme.darkAccentBgSoft} ${theme.darkAccentText}`
-                  : `${theme.primaryIconWrap} ${theme.primaryIcon}`
-                : isDarkMode
-                  ? "text-zinc-500 hover:text-zinc-300"
-                  : "text-zinc-400 hover:text-zinc-600"
+      <Card
+        className={`rounded-[24px] shadow-sm ${
+          isDarkMode
+            ? "border border-white/10 bg-[#111827]"
+            : "border-black/5 bg-white"
+        }`}
+      >
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p
+                className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                  isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                }`}
+              >
+                Formato do card
+              </p>
+              <h3
+                className={`mt-1 text-[16px] font-bold tracking-tight ${
+                  isDarkMode ? "text-white" : "text-zinc-950"
+                }`}
+              >
+                Escolha o formato de compartilhamento
+              </h3>
+            </div>
+
+            <div
+              className={`flex overflow-hidden rounded-xl border ${
+                isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50"
+              }`}
+            >
+              <button
+                type="button"
+                onClick={() => setShareFormat("landscape")}
+                className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold transition ${
+                  shareFormat === "landscape"
+                    ? isDarkMode
+                      ? `${theme.darkAccentBgSoft} ${theme.darkAccentText}`
+                      : `${theme.primaryIconWrap} ${theme.primaryIcon}`
+                    : isDarkMode
+                      ? "text-zinc-500 hover:text-zinc-300"
+                      : "text-zinc-400 hover:text-zinc-600"
+                }`}
+              >
+                <Monitor className="h-3.5 w-3.5" />
+                Paisagem
+              </button>
+              <button
+                type="button"
+                onClick={() => setShareFormat("stories")}
+                className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold transition ${
+                  shareFormat === "stories"
+                    ? isDarkMode
+                      ? `${theme.darkAccentBgSoft} ${theme.darkAccentText}`
+                      : `${theme.primaryIconWrap} ${theme.primaryIcon}`
+                    : isDarkMode
+                      ? "text-zinc-500 hover:text-zinc-300"
+                      : "text-zinc-400 hover:text-zinc-600"
+                }`}
+              >
+                <Smartphone className="h-3.5 w-3.5" />
+                Stories
+              </button>
+            </div>
+          </div>
+          <p
+            className={`mt-2 text-[11px] ${
+              isDarkMode ? "text-zinc-500" : "text-zinc-400"
             }`}
           >
-            <Monitor className="h-3.5 w-3.5" />
-            Paisagem
-          </button>
-          <button
-            type="button"
-            onClick={() => setShareFormat("stories")}
-            className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold transition ${
-              shareFormat === "stories"
-                ? isDarkMode
-                  ? `${theme.darkAccentBgSoft} ${theme.darkAccentText}`
-                  : `${theme.primaryIconWrap} ${theme.primaryIcon}`
-                : isDarkMode
-                  ? "text-zinc-500 hover:text-zinc-300"
-                  : "text-zinc-400 hover:text-zinc-600"
-            }`}
-          >
-            <Smartphone className="h-3.5 w-3.5" />
-            Stories
-          </button>
-        </div>
-        <span
-          className={`text-[10px] ${
-            isDarkMode ? "text-zinc-600" : "text-zinc-400"
-          }`}
-        >
-          {shareFormat === "stories" ? "1080×1920 · Instagram" : "1080px · Feed"}
-        </span>
-      </div>
+            {shareFormat === "stories"
+              ? "1080×1920 · Ideal para Instagram Stories"
+              : "1080px · Ideal para feed e grupos de WhatsApp"}
+          </p>
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <div className="space-y-4">
