@@ -31,6 +31,7 @@ import {
   getPilotHighlightName,
   getPilotWarName,
 } from "@/lib/ranking/ranking-utils";
+import HallOfFame from "@/components/ranking/hall-of-fame";
 import type { RankingItem, RankingMetaPilot } from "@/types/ranking";
 import { useChampionship } from "@/context/championship-context";
 
@@ -902,6 +903,23 @@ export default function HomePageContent() {
           theme={theme}
           cards={editorialCards.slice(0, 2)}
         />
+      </div>
+
+      {/* Hall da Fama */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <Trophy
+            className={`h-5 w-5 ${isDarkMode ? "text-yellow-400" : "text-yellow-600"}`}
+          />
+          <h2
+            className={`text-lg font-extrabold tracking-tight ${
+              isDarkMode ? "text-white" : "text-zinc-950"
+            }`}
+          >
+            Hall da Fama
+          </h2>
+        </div>
+        <HallOfFame isDarkMode={isDarkMode} category={category} />
       </div>
     </div>
   );
