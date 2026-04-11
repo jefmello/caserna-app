@@ -34,6 +34,7 @@ import {
 import HallOfFame from "@/components/ranking/hall-of-fame";
 import type { RankingItem, RankingMetaPilot } from "@/types/ranking";
 import { useChampionship } from "@/context/championship-context";
+import PageTransition, { StaggerContainer, StaggerItem } from "@/components/ui/page-transition";
 
 type CategoryAccent = "base" | "graduados" | "elite" | "neutral";
 
@@ -644,8 +645,9 @@ export default function HomePageContent() {
   }
 
   return (
-    <div className="mt-4 space-y-4 lg:space-y-5 xl:space-y-6">
-      <RankingHeader
+    <PageTransition>
+      <div className="mt-4 space-y-4 lg:space-y-5 xl:space-y-6">
+        <RankingHeader
         theme={theme}
         categories={categories}
         category={category}
@@ -705,7 +707,8 @@ export default function HomePageContent() {
         )}
       </div>
 
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+      <StaggerContainer className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <StaggerItem>
         <HomeSummaryCard
           title="Líder"
           value={leader ? getPilotFirstAndLastName(leader.piloto) : "-"}
@@ -715,6 +718,8 @@ export default function HomePageContent() {
           theme={theme}
           accent
         />
+        </StaggerItem>
+        <StaggerItem>
         <HomeSummaryCard
           title="Vantagem"
           value={`${statsSummary.leaderAdvantage} pts`}
@@ -723,6 +728,8 @@ export default function HomePageContent() {
           isDarkMode={isDarkMode}
           theme={theme}
         />
+        </StaggerItem>
+        <StaggerItem>
         <HomeSummaryCard
           title="Corte Top 6"
           value={`${statsSummary.top6CutPoints} pts`}
@@ -731,6 +738,8 @@ export default function HomePageContent() {
           isDarkMode={isDarkMode}
           theme={theme}
         />
+        </StaggerItem>
+        <StaggerItem>
         <HomeSummaryCard
           title="Calor da disputa"
           value={statsRadar.titleHeat}
@@ -739,7 +748,8 @@ export default function HomePageContent() {
           isDarkMode={isDarkMode}
           theme={theme}
         />
-      </div>
+        </StaggerItem>
+      </StaggerContainer>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
         <RankingCompetitionContext
@@ -922,5 +932,6 @@ export default function HomePageContent() {
         <HallOfFame isDarkMode={isDarkMode} category={category} />
       </div>
     </div>
+    </PageTransition>
   );
 }

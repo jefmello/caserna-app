@@ -23,6 +23,7 @@ import type { RankingItem, RankingMetaPilot } from "@/types/ranking";
 import ClassificacaoHeroSection from "@/components/classificacao/classificacao-hero-section";
 import ClassificacaoMainTableSection from "@/components/classificacao/classificacao-main-table-section";
 import { useChampionship } from "@/context/championship-context";
+import PageTransition from "@/components/ui/page-transition";
 
 const RankingShareCanvas = dynamic(
   () => import("@/components/ranking/sections/ranking-share-canvas"),
@@ -371,10 +372,11 @@ export default function ClassificacaoPageContent() {
   }
 
   return (
-    <div
-      className={`min-h-screen ${isDarkMode ? "bg-[#05070a] text-white" : ""}`}
-    >
-      <div className="relative mx-auto mt-4 w-full max-w-[1600px]">
+    <PageTransition>
+      <div
+        className={`min-h-screen ${isDarkMode ? "bg-[#05070a] text-white" : ""}`}
+      >
+        <div className="relative mx-auto mt-4 w-full max-w-[1600px]">
         {isDarkMode && (
           <>
             <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(180deg,#05070a_0%,#070b11_38%,#05070a_100%)]" />
@@ -471,5 +473,6 @@ export default function ClassificacaoPageContent() {
         </div>
       </div>
     </div>
+    </PageTransition>
   );
 }

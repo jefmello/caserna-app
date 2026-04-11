@@ -31,6 +31,7 @@ import {
   normalizePilotName,
 } from "@/lib/ranking/ranking-utils";
 import type { RankingItem, RankingMetaPilot } from "@/types/ranking";
+import PageTransition from "@/components/ui/page-transition";
 
 const RankingShareCanvas = dynamic(
   () => import("@/components/ranking/sections/ranking-share-canvas"),
@@ -793,8 +794,9 @@ Caserna Kart Racing`;
   }
 
   return (
-    <div className="mt-4 space-y-4 lg:space-y-5 xl:space-y-6">
-      <RankingHeader
+    <PageTransition>
+      <div className="mt-4 space-y-4 lg:space-y-5 xl:space-y-6">
+        <RankingHeader
         isDarkMode={isDarkMode}
         theme={theme}
         categories={[]}
@@ -1272,5 +1274,6 @@ Caserna Kart Racing`;
         />
       </div>
     </div>
+    </PageTransition>
   );
 }

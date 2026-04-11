@@ -32,6 +32,7 @@ import {
 } from "@/lib/ranking/ranking-utils";
 import type { RankingItem } from "@/types/ranking";
 import { useChampionship } from "@/context/championship-context";
+import PageTransition from "@/components/ui/page-transition";
 
 function normalizeCategoryAccent(category?: string | null) {
   if (!category) return "neutral";
@@ -353,8 +354,9 @@ export default function PilotosPageContent() {
   }
 
   return (
-    <div className="mt-4 space-y-3 lg:space-y-4 xl:space-y-5">
-      <RankingSearchCard
+    <PageTransition>
+      <div className="mt-4 space-y-3 lg:space-y-4 xl:space-y-5">
+        <RankingSearchCard
         isDarkMode={isDarkMode}
         theme={theme}
         competition={competition}
@@ -644,5 +646,6 @@ export default function PilotosPageContent() {
         </div>
       )}
     </div>
+    </PageTransition>
   );
 }

@@ -9,7 +9,9 @@
       "Bash(git commit *)",
       "Bash(git push)",
       "Bash(npm install *)",
-      "Bash(powershell *)"
+      "Bash(powershell *)",
+      "Bash(npx *)",
+      "Bash(findstr *)"
     ]
   },
   "$version": 3

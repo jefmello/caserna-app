@@ -38,6 +38,7 @@ import {
   BarChart,
   Bar,
 } from "recharts";
+import PageTransition from "@/components/ui/page-transition";
 
 type CategoryThemeLike = ReturnType<typeof getCategoryTheme>;
 
@@ -671,8 +672,9 @@ export default function EstatisticasPageContent() {
   }
 
   return (
-    <div className="mt-4 space-y-4 lg:space-y-5 xl:space-y-6">
-      <RankingHeader
+    <PageTransition>
+      <div className="mt-4 space-y-4 lg:space-y-5 xl:space-y-6">
+        <RankingHeader
         isDarkMode={isDarkMode}
         theme={theme}
         categories={categories}
@@ -752,5 +754,6 @@ export default function EstatisticasPageContent() {
         />
       </div>
     </div>
+    </PageTransition>
   );
 }

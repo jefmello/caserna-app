@@ -20,6 +20,7 @@ import useRankingFilters from "@/lib/hooks/useRankingFilters";
 import { useChampionship } from "@/context/championship-context";
 import { competitionLabels, getCategoryTheme, getPilotFirstAndLastName } from "@/lib/ranking/ranking-utils";
 import CustomScenarioBuilder from "@/components/simulacoes/custom-scenario-builder";
+import PageTransition, { StaggerContainer, StaggerItem } from "@/components/ui/page-transition";
 import {
   buildTitleProbabilityCandidates,
   type TitleProbabilityCandidate,
@@ -558,8 +559,9 @@ export default function SimulacoesPageContent() {
   }
 
   return (
-    <div className="mt-4 space-y-4 lg:space-y-5 xl:space-y-6">
-      <RankingHeader
+    <PageTransition>
+      <div className="mt-4 space-y-4 lg:space-y-5 xl:space-y-6">
+        <RankingHeader
         isDarkMode={isDarkMode}
         theme={theme}
         categories={categories}
@@ -580,7 +582,8 @@ export default function SimulacoesPageContent() {
         theme={theme}
       />
 
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+      <StaggerContainer className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <StaggerItem>
         <SummaryCard
           title="Pontos restantes"
           value={titlePointsStillAvailable}
@@ -590,6 +593,8 @@ export default function SimulacoesPageContent() {
           theme={theme}
           accent
         />
+        </StaggerItem>
+        <StaggerItem>
         <SummaryCard
           title="Próxima etapa"
           value={nextStageNumber || "-"}
@@ -598,6 +603,8 @@ export default function SimulacoesPageContent() {
           isDarkMode={isDarkMode}
           theme={theme}
         />
+        </StaggerItem>
+        <StaggerItem>
         <SummaryCard
           title="Vitória máxima"
           value={nextStageWinPoints || 0}
@@ -606,6 +613,8 @@ export default function SimulacoesPageContent() {
           isDarkMode={isDarkMode}
           theme={theme}
         />
+        </StaggerItem>
+        <StaggerItem>
         <SummaryCard
           title="Cenário pódio"
           value={nextStagePodiumPoints || 0}
@@ -614,7 +623,8 @@ export default function SimulacoesPageContent() {
           isDarkMode={isDarkMode}
           theme={theme}
         />
-      </div>
+        </StaggerItem>
+      </StaggerContainer>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(340px,0.9fr)]">
         <Card
@@ -1040,5 +1050,6 @@ export default function SimulacoesPageContent() {
         </Card>
       </div>
     </div>
+    </PageTransition>
   );
 }
