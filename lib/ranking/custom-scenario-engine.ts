@@ -51,28 +51,11 @@ export function isValidPosition(position: number): boolean {
 }
 
 /**
- * Calcula os pontos que um piloto ganha baseado na posição de chegada.
- * Posição 1: pontos base (35) + pole (1, se aplicável) + melhor volta (1).
- * Posições 2+: apenas pontos base.
+ * Retorna APENAS os pontos base da posição (sem pole, sem VMR).
  */
-export function calculateStagePoints(
-  finishingPosition: number,
-  stageNumber: number,
-  hasPolePoint: boolean = true,
-  hasFastestLapPoint: boolean = true
-): number {
-  if (!isValidPosition(finishingPosition)) return 0;
-
-  const basePoints = STAGE_POINTS_BY_POSITION[finishingPosition] || 0;
-  const polePoint = hasPolePoint && !NO_POLE_STAGES.includes(stageNumber) ? 1 : 0;
-  const fastestLapPoint = hasFastestLapPoint ? 1 : 0;
-
-  // Apenas posição 1 ganha pole e VMR
-  if (finishingPosition === 1) {
-    return basePoints + polePoint + fastestLapPoint;
-  }
-
-  return basePoints;
+export function getBasePositionPoints(position: number): number {
+  if (!isValidPosition(position)) return 0;
+  return STAGE_POINTS_BY_POSITION[position] || 0;
 }
 
 /**
@@ -80,37 +63,51 @@ export function calculateStagePoints(
  *
  * @param ranking - Lista atual do ranking
  * @param assignments - Mapa de pilotoId/piloto → posição escolhida
+ * @param polePilotKey - Piloto que fez a pole position (+1 pt)
+ * @param vmrPilotKey - Piloto que fez a volta mais rápida (+1 pt)
  * @param stageNumber - Número da etapa sendo simulada
- * @param competition - Competição atual (para descarte se GERAL)
+ * @param competition - Competição atual
  * @returns Resultado completo com ranking projetado e análises
  */
 export function runCustomScenario({
   ranking,
   assignments,
+  polePilotKey,
+  vmrPilotKey,
   stageNumber,
   competition,
 }: {
   ranking: RankingItem[];
   assignments: CustomScenarioAssignment;
+  polePilotKey?: string | null;
+  vmrPilotKey?: string | null;
   stageNumber: number;
   competition: string;
 }): CustomScenarioResult {
-  const hasPole = !NO_POLE_STAGES.includes(stageNumber);
+  const hasPoleStage = !NO_POLE_STAGES.includes(stageNumber);
 
   // Projeta pontos de cada piloto
   const projectedPilots: ProjectedPilot[] = ranking.map((pilot) => {
     const key = resolvePilotKey(pilot);
     const assignedPosition = assignments[key];
-    const pointsGained = assignedPosition
-      ? calculateStagePoints(assignedPosition, stageNumber, hasPole)
+
+    // Pontos base da posição de chegada
+    const basePoints = assignedPosition
+      ? getBasePositionPoints(assignedPosition)
       : 0;
+
+    // Pontos bônus: pole e VMR são independentes da posição
+    const poleBonus = (hasPoleStage && polePilotKey === key) ? 1 : 0;
+    const vmrBonus = vmrPilotKey === key ? 1 : 0;
+
+    const pointsGained = basePoints + poleBonus + vmrBonus;
     const projectedPoints = pilot.pontos + pointsGained;
 
     return {
       ...pilot,
       projectedPoints,
       pointsGained,
-      positionChange: 0, // será calculado após ordenação
+      positionChange: 0,
     };
   });
 

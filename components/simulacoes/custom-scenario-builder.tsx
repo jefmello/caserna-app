@@ -1,14 +1,27 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Flag, RotateCcw, Trophy, TrendingUp, TrendingDown, Minus, Sparkles, AlertTriangle } from "lucide-react";
+import {
+  Flag,
+  RotateCcw,
+  Trophy,
+  TrendingUp,
+  TrendingDown,
+  Minus,
+  Sparkles,
+  AlertTriangle,
+  Timer,
+  ChevronDown,
+  X,
+} from "lucide-react";
 import type { RankingItem } from "@/types/ranking";
 import { getPilotFirstAndLastName } from "@/lib/ranking/pilot-name-utils";
 import { getCategoryTheme } from "@/lib/ranking/theme-utils";
 import { resolvePilotKey } from "@/lib/ranking/stage-points-engine";
+import { NO_POLE_STAGES } from "@/lib/ranking/stage-points-engine";
 import {
   runCustomScenario,
-  calculateStagePoints,
+  getBasePositionPoints,
   isValidPosition,
   type CustomScenarioAssignment,
   type CustomScenarioResult,
@@ -53,10 +66,103 @@ function PositionSelector({
       <option value="">—</option>
       {displayPositions.map((pos) => (
         <option key={pos} value={pos}>
-          {pos}º ({calculateStagePoints(pos, 1)} pts)
+          {pos}º ({getBasePositionPoints(pos)} pts)
         </option>
       ))}
     </select>
+  );
+}
+
+/**
+ * Seletor compacto de piloto para bônus (pole / VMR).
+ * Mostra dropdown com todos os pilotos elegíveis.
+ */
+function BonusPilotSelector({
+  label,
+  icon: Icon,
+  selectedKey,
+  onSelect,
+  eligiblePilots,
+  isDarkMode,
+  theme,
+  hasBonus,
+}: {
+  label: string;
+  icon: React.ElementType;
+  selectedKey: string | null;
+  onSelect: (key: string | null) => void;
+  eligiblePilots: RankingItem[];
+  isDarkMode: boolean;
+  theme: ReturnType<typeof getCategoryTheme>;
+  hasBonus: boolean;
+}) {
+  return (
+    <div
+      className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 transition ${
+        isDarkMode
+          ? selectedKey
+            ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft}`
+            : "border-white/5 bg-[#0f172a]/60"
+          : selectedKey
+            ? "border-emerald-200 bg-emerald-50/50"
+            : "border-black/5 bg-zinc-50/40"
+      }`}
+    >
+      <div
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
+          isDarkMode
+            ? hasBonus
+              ? `${theme.darkAccentIconWrap}`
+              : "bg-white/5"
+            : hasBonus
+              ? "bg-emerald-100"
+              : "bg-zinc-100"
+        }`}
+      >
+        <Icon
+          className={`h-4 w-4 ${
+            isDarkMode
+              ? hasBonus
+                ? theme.darkAccentText
+                : "text-zinc-500"
+              : hasBonus
+                ? "text-emerald-600"
+                : "text-zinc-400"
+          }`}
+        />
+      </div>
+
+      <div className="min-w-0 flex-1">
+        <p
+          className={`text-[10px] font-bold uppercase tracking-wider ${
+            isDarkMode ? "text-zinc-500" : "text-zinc-400"
+          }`}
+        >
+          {label}
+          {hasBonus && " (+1 pt)"}
+        </p>
+        <select
+          value={selectedKey || ""}
+          onChange={(e) => onSelect(e.target.value || null)}
+          className={`mt-0.5 w-full rounded-lg border px-2 py-1 text-xs font-semibold ${
+            isDarkMode
+              ? selectedKey
+                ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft} ${theme.darkAccentText}`
+                : "border-white/10 bg-[#0f172a] text-zinc-400"
+              : selectedKey
+                ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                : "border-black/5 bg-zinc-50 text-zinc-500"
+          }`}
+        >
+          <option value="">Nenhum</option>
+          {eligiblePilots.map((pilot) => (
+            <option key={resolvePilotKey(pilot)} value={resolvePilotKey(pilot)}>
+              {getPilotFirstAndLastName(pilot.piloto)}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
   );
 }
 
@@ -348,8 +454,15 @@ export default function CustomScenarioBuilder({
 }) {
   const theme = getCategoryTheme(category);
   const [assignments, setAssignments] = useState<CustomScenarioAssignment>({});
+  const [polePilotKey, setPolePilotKey] = useState<string | null>(null);
+  const [vmrPilotKey, setVmrPilotKey] = useState<string | null>(null);
   const [result, setResult] = useState<CustomScenarioResult | null>(null);
   const [showResults, setShowResults] = useState(false);
+
+  const eligiblePilots = useMemo(
+    () => ranking.filter((p) => p.pontos > 0),
+    [ranking]
+  );
 
   const usedPositions = useMemo(() => new Set(Object.values(assignments)), [assignments]);
 
@@ -377,6 +490,8 @@ export default function CustomScenarioBuilder({
 
   const handleReset = useCallback(() => {
     setAssignments({});
+    setPolePilotKey(null);
+    setVmrPilotKey(null);
     setResult(null);
     setShowResults(false);
   }, []);
@@ -387,13 +502,15 @@ export default function CustomScenarioBuilder({
     const scenarioResult = runCustomScenario({
       ranking,
       assignments,
+      polePilotKey,
+      vmrPilotKey,
       stageNumber,
       competition: "GERAL",
     });
 
     setResult(scenarioResult);
     setShowResults(true);
-  }, [ranking, assignments, stageNumber]);
+  }, [ranking, assignments, polePilotKey, vmrPilotKey, stageNumber]);
 
   const assignedCount = Object.keys(assignments).length;
   const canRun = stageNumber && assignedCount >= 2;
@@ -471,6 +588,41 @@ export default function CustomScenarioBuilder({
           </span>
         </div>
       </div>
+
+      {/* Pole + VMR bonus selectors */}
+      {!showResults && (
+        <div className="space-y-2">
+          <p
+            className={`text-[10px] font-bold uppercase tracking-wider ${
+              isDarkMode ? "text-zinc-500" : "text-zinc-400"
+            }`}
+          >
+            Bônus da etapa
+          </p>
+          <div className="grid grid-cols-2 gap-3">
+            <BonusPilotSelector
+              label="Pole position"
+              icon={Flag}
+              selectedKey={polePilotKey}
+              onSelect={setPolePilotKey}
+              eligiblePilots={eligiblePilots}
+              isDarkMode={isDarkMode}
+              theme={theme}
+              hasBonus={!!polePilotKey}
+            />
+            <BonusPilotSelector
+              label="Volta mais rápida"
+              icon={Timer}
+              selectedKey={vmrPilotKey}
+              onSelect={setVmrPilotKey}
+              eligiblePilots={eligiblePilots}
+              isDarkMode={isDarkMode}
+              theme={theme}
+              hasBonus={!!vmrPilotKey}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Pilot assignment list */}
       {!showResults && (
