@@ -1016,7 +1016,8 @@ export default function DuelosPageContent() {
         </>
       ) : (
         <>
-          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_120px_minmax(0,1fr)] xl:items-stretch">
+          <div ref={duelCardRef} className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_120px_minmax(0,1fr)] xl:items-stretch">
             <PilotInfoCard
               title={getPilotWarNameDisplay(comparePilotA) || getPilotFirstAndLastName(comparePilotA.piloto)}
               pilot={comparePilotA}
@@ -1102,18 +1103,22 @@ export default function DuelosPageContent() {
 
                   <div className="grid grid-cols-2 gap-1 text-center">
                     <div
-                      className={`rounded-[12px] px-2 py-1 text-[10px] font-bold ${
-                        isDarkMode ? "bg-white/5 text-zinc-300" : "bg-zinc-50 text-zinc-700"
+                      className={`rounded-[12px] px-2 py-1 text-[10px] font-bold truncate ${
+                        isDarkMode
+                          ? `${theme.darkAccentBgSoft} ${theme.darkAccentText}`
+                          : `${theme.primaryIconWrap} ${theme.primaryIcon}`
                       }`}
                     >
-                      A
+                      {getPilotWarNameDisplay(comparePilotA) || getPilotFirstAndLastName(comparePilotA.piloto)}
                     </div>
                     <div
-                      className={`rounded-[12px] px-2 py-1 text-[10px] font-bold ${
-                        isDarkMode ? "bg-white/5 text-zinc-300" : "bg-zinc-50 text-zinc-700"
+                      className={`rounded-[12px] px-2 py-1 text-[10px] font-bold truncate ${
+                        isDarkMode
+                          ? `${theme.darkAccentBgSoft} ${theme.darkAccentText}`
+                          : `${theme.primaryIconWrap} ${theme.primaryIcon}`
                       }`}
                     >
-                      B
+                      {getPilotWarNameDisplay(comparePilotB) || getPilotFirstAndLastName(comparePilotB.piloto)}
                     </div>
                   </div>
                 </div>
@@ -1415,6 +1420,7 @@ export default function DuelosPageContent() {
               </Card>
             </div>
           </div>
+        </div>
         </>
       )}
     </div>
