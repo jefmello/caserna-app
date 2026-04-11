@@ -22,6 +22,7 @@ import {
 import type { RankingItem, RankingMetaPilot } from "@/types/ranking";
 import ClassificacaoHeroSection from "@/components/classificacao/classificacao-hero-section";
 import ClassificacaoMainTableSection from "@/components/classificacao/classificacao-main-table-section";
+import SectionDivider from "@/components/ui/section-divider";
 import { useChampionship } from "@/context/championship-context";
 import PageTransition from "@/components/ui/page-transition";
 
@@ -418,6 +419,8 @@ export default function ClassificacaoPageContent() {
             pilotTrendMap={pilotTrendMap}
             onSelectPilot={handleSelectPilot}
           />
+
+          <SectionDivider />
 
           <ClassificacaoHeroSection
             isDarkMode={isDarkMode}

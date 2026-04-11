@@ -14,6 +14,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import SectionDivider from "@/components/ui/section-divider";
 import RankingHeader from "@/components/ranking/ranking-header";
 import useRankingData from "@/lib/hooks/useRankingData";
 import useRankingFilters from "@/lib/hooks/useRankingFilters";
@@ -721,6 +722,8 @@ export default function DuelosPageContent() {
         />
       </div>
 
+      <SectionDivider />
+
       {!comparePilotA || !comparePilotB ? (
         <Card
           className={`rounded-[24px] shadow-sm ${
@@ -811,6 +814,8 @@ export default function DuelosPageContent() {
               theme={theme}
             />
           </div>
+
+          <SectionDivider />
 
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
             <Card

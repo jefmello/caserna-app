@@ -14,6 +14,7 @@ import {
   UserPlus,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import SectionDivider from "@/components/ui/section-divider";
 import RankingHeader from "@/components/ranking/ranking-header";
 import useRankingData from "@/lib/hooks/useRankingData";
 import useRankingFilters from "@/lib/hooks/useRankingFilters";
@@ -626,6 +627,8 @@ export default function SimulacoesPageContent() {
         </StaggerItem>
       </StaggerContainer>
 
+      <SectionDivider />
+
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(340px,0.9fr)]">
         <Card
           className={`rounded-[24px] shadow-sm ${
@@ -787,6 +790,8 @@ export default function SimulacoesPageContent() {
         </Card>
       </div>
 
+      <SectionDivider />
+
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(340px,0.9fr)]">
         <Card
           className={`rounded-[24px] shadow-sm ${
@@ -862,6 +867,8 @@ export default function SimulacoesPageContent() {
             </div>
           </CardContent>
         </Card>
+
+        <SectionDivider />
 
         {/* Cenário personalizado */}
         <Card

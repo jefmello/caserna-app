@@ -14,6 +14,7 @@ import {
   Users,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import SectionDivider from "@/components/ui/section-divider";
 import RankingHeader from "@/components/ranking/ranking-header";
 import RankingStatsHeader from "@/components/ranking/ranking-stats-header";
 import RankingStatsSummaryGrid from "@/components/ranking/ranking-stats-summary-grid";
@@ -737,6 +738,8 @@ export default function EstatisticasPageContent() {
           />
         </div>
       </div>
+
+      <SectionDivider />
 
       <div className="xl:pt-1">
         <RankingStatsMetricCardsGrid

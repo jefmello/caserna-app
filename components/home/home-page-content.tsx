@@ -15,6 +15,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import SectionDivider from "@/components/ui/section-divider";
 import RankingHeader from "@/components/ranking/ranking-header";
 import RankingSpotlight from "@/components/ranking/ranking-spotlight";
 import RankingCompetitionContext from "@/components/ranking/sections/ranking-competition-context";
@@ -751,6 +752,8 @@ export default function HomePageContent() {
         </StaggerItem>
       </StaggerContainer>
 
+      <SectionDivider />
+
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
         <RankingCompetitionContext
           isDarkMode={isDarkMode}
@@ -898,6 +901,8 @@ export default function HomePageContent() {
           </CardContent>
         </Card>
       </div>
+
+      <SectionDivider />
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <RankingChampionshipNarrativeCard

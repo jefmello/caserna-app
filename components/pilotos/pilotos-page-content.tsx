@@ -14,6 +14,7 @@ import {
   User,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import SectionDivider from "@/components/ui/section-divider";
 import RankingSearchCard from "@/components/ranking/ranking-search-card";
 import RankingPilotEmptyState from "@/components/ranking/ranking-pilot-empty-state";
 import RankingPilotHeroCard from "@/components/ranking/ranking-pilot-hero-card";
@@ -504,6 +505,8 @@ export default function PilotosPageContent() {
             />
           </div>
 
+          <SectionDivider />
+
           <RankingPilotComparisonCard
             isDarkMode={isDarkMode}
             theme={theme}
@@ -522,6 +525,8 @@ export default function PilotosPageContent() {
             MedalIcon={Medal}
             GaugeIcon={Gauge}
           />
+
+          <SectionDivider />
 
           <RankingPilotPerformanceBlocksCard
             isDarkMode={isDarkMode}
