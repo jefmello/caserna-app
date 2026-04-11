@@ -348,7 +348,7 @@ export default function AppSidebar({
             <div
               className={clsx(
                 "truncate font-semibold tracking-[0.01em] transition-colors",
-                mobile ? "text-[15px]" : "text-sm",
+                mobile ? "text-[16px]" : "text-sm",
                 isActive
                   ? isDarkMode
                     ? "text-white"
@@ -389,7 +389,7 @@ export default function AppSidebar({
         <div className="min-w-0">
           <p
             className={clsx(
-              "text-[11px] font-black uppercase tracking-[0.22em]",
+              "text-[12px] font-bold uppercase tracking-[0.22em]",
               isDarkMode ? "text-zinc-400" : "text-zinc-500"
             )}
           >
@@ -486,7 +486,7 @@ export default function AppSidebar({
                   type="button"
                   onClick={() => setCategoria(option.key as typeof categoria)}
                   className={clsx(
-                    "flex h-11 min-w-0 items-center justify-center rounded-[18px] border px-2 text-[11px] font-semibold tracking-[0.01em] transition-all duration-200",
+                    "flex h-11 min-w-0 items-center justify-center rounded-[18px] border px-2 text-[12px] font-semibold tracking-[0.01em] transition-all duration-200",
                     isActive ? option.activeClass : option.idleClass
                   )}
                 >
@@ -509,7 +509,7 @@ export default function AppSidebar({
             <div className="mb-3 flex items-center justify-between gap-3">
               <div
                 className={clsx(
-                  "text-[11px] font-semibold uppercase tracking-[0.22em]",
+                  "text-[12px] font-semibold uppercase tracking-[0.22em]",
                   currentLeaderStyles.label
                 )}
               >
@@ -606,7 +606,7 @@ export default function AppSidebar({
         <div className="mb-5">
           <div
             className={clsx(
-              "mb-3 px-1 text-[11px] font-semibold uppercase tracking-[0.24em]",
+              "mb-3 px-1 text-[12px] font-semibold uppercase tracking-[0.24em]",
               isDarkMode ? "text-white/32" : "text-zinc-400"
             )}
           >
@@ -621,7 +621,7 @@ export default function AppSidebar({
         <div>
           <div
             className={clsx(
-              "mb-3 px-1 text-[11px] font-semibold uppercase tracking-[0.24em]",
+              "mb-3 px-1 text-[12px] font-semibold uppercase tracking-[0.24em]",
               isDarkMode ? "text-white/32" : "text-zinc-400"
             )}
           >
@@ -862,7 +862,7 @@ export default function AppSidebar({
                       type="button"
                       onClick={() => setCategoria(option.key as typeof categoria)}
                       className={clsx(
-                        "flex h-11 min-w-0 items-center justify-center rounded-[18px] border px-2 text-[11px] font-semibold tracking-[0.01em] transition-all duration-200",
+                        "flex h-11 min-w-0 items-center justify-center rounded-[18px] border px-2 text-[12px] font-semibold tracking-[0.01em] transition-all duration-200",
                         isActive ? option.activeClass : option.idleClass
                       )}
                     >
@@ -888,7 +888,7 @@ export default function AppSidebar({
               <div className="mb-3 flex items-center justify-between gap-3">
                 <div
                   className={clsx(
-                    "text-[11px] font-semibold uppercase tracking-[0.22em]",
+                    "text-[12px] font-semibold uppercase tracking-[0.22em]",
                     currentLeaderStyles.label
                   )}
                 >
@@ -984,7 +984,7 @@ export default function AppSidebar({
             {isExpanded && (
               <div
                 className={clsx(
-                  "mb-3 px-1 text-[11px] font-semibold uppercase tracking-[0.24em]",
+                  "mb-3 px-1 text-[12px] font-semibold uppercase tracking-[0.24em]",
                   isDarkMode ? "text-white/32" : "text-zinc-400"
                 )}
               >
@@ -1003,7 +1003,7 @@ export default function AppSidebar({
             {isExpanded && (
               <div
                 className={clsx(
-                  "mb-3 px-1 text-[11px] font-semibold uppercase tracking-[0.24em]",
+                  "mb-3 px-1 text-[12px] font-semibold uppercase tracking-[0.24em]",
                   isDarkMode ? "text-white/32" : "text-zinc-400"
                 )}
               >

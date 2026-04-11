@@ -95,7 +95,7 @@ export default function ClassificacaoHeroSection({
                 Zona de troféu
               </p>
               <h2
-                className={`mt-1 text-[20px] font-extrabold tracking-[0.01em] ${
+                className={`mt-1 text-[20px] font-bold tracking-[0.01em] ${
                   isDarkMode ? "text-white" : "text-zinc-950"
                 }`}
               >
@@ -195,7 +195,7 @@ export default function ClassificacaoHeroSection({
                   Margem do corte
                 </p>
                 <p
-                  className={`mt-1 text-[18px] font-black ${
+                  className={`mt-1 text-[20px] font-bold ${
                     isDarkMode ? "text-white" : "text-zinc-950"
                   }`}
                 >
@@ -218,7 +218,7 @@ export default function ClassificacaoHeroSection({
                   Média do Top 6
                 </p>
                 <p
-                  className={`mt-1 text-[18px] font-black ${
+                  className={`mt-1 text-[20px] font-bold ${
                     isDarkMode ? "text-white" : "text-zinc-950"
                   }`}
                 >
@@ -241,7 +241,7 @@ export default function ClassificacaoHeroSection({
                   Pressão atual
                 </p>
                 <p
-                  className={`mt-1 text-[18px] font-black ${
+                  className={`mt-1 text-[20px] font-bold ${
                     isDarkMode ? "text-white" : "text-zinc-950"
                   }`}
                 >
@@ -302,7 +302,7 @@ export default function ClassificacaoHeroSection({
                   </p>
 
                   <p
-                    className={`mt-2 line-clamp-2 text-[13px] font-extrabold leading-tight ${
+                    className={`mt-2 line-clamp-2 text-[14px] font-semibold leading-tight ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >

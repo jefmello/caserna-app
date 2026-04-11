@@ -270,7 +270,7 @@ function SponsorMarqueeCard({
 
       {hasError ? (
         <span
-          className={`relative z-10 px-3 text-center text-[11px] font-extrabold uppercase tracking-[0.14em] md:text-[12px] ${
+          className={`relative z-10 px-3 text-center text-[12px] font-bold uppercase tracking-[0.14em] md:text-[14px] ${
             isDarkMode ? "text-white/85" : "text-zinc-700"
           }`}
         >
@@ -430,7 +430,7 @@ export default function AppSponsorsStrip({
               />
 
               <h3
-                className={`relative text-center text-[11px] font-black uppercase tracking-[0.28em] md:text-[13px] ${
+                className={`relative text-center text-[12px] font-bold uppercase tracking-[0.28em] md:text-[14px] ${
                   resolvedDarkMode
                     ? "text-white/88"
                     : "bg-[linear-gradient(180deg,#111827_0%,#374151_100%)] bg-clip-text text-transparent"

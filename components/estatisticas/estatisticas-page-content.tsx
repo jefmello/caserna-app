@@ -123,7 +123,7 @@ function CompactStatCard({
         </p>
 
         <p
-          className={`mt-1 text-[11px] leading-snug ${
+          className={`mt-1 text-[12px] leading-snug ${
             isDark ? "text-zinc-400" : "text-zinc-500"
           }`}
         >
@@ -196,7 +196,7 @@ function HighlightCard({
             className={`w-full text-center font-bold uppercase leading-none ${
               compact
                 ? "text-[10px] tracking-[0.16em]"
-                : "text-[11px] tracking-[0.18em]"
+                : "text-[12px] tracking-[0.18em]"
             } ${
               isDark
                 ? accent
@@ -353,7 +353,7 @@ function StatRankingCard({
                 >
                   <div className="flex min-w-0 items-center gap-2.5">
                     <div
-                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[18px] text-[11px] font-extrabold ${
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[18px] text-[12px] font-semibold ${
                         isDark
                           ? isFirst
                             ? theme.darkTopBadge
@@ -368,7 +368,7 @@ function StatRankingCard({
 
                     <div className="min-w-0">
                       <p
-                        className={`truncate text-[13px] font-extrabold tracking-tight ${
+                        className={`truncate text-[14px] font-semibold tracking-tight ${
                           isDark ? "text-white" : "text-zinc-950"
                         }`}
                       >
@@ -388,7 +388,7 @@ function StatRankingCard({
                   </div>
 
                   <div
-                    className={`shrink-0 rounded-2xl px-3 py-1.5 text-sm font-extrabold ${
+                    className={`shrink-0 rounded-2xl px-3 py-1.5 text-sm font-semibold ${
                       isDark
                         ? isFirst
                           ? `${theme.darkAccentBg} ${theme.darkAccentText}`

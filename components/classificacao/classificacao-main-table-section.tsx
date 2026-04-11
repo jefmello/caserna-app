@@ -63,7 +63,7 @@ export default function ClassificacaoMainTableSection({
                   }`}
                 >
                   <h2
-                    className={`truncate text-[17px] font-extrabold uppercase leading-none tracking-[0.08em] ${
+                    className={`truncate text-[16px] font-extrabold uppercase leading-none tracking-[0.08em] ${
                       isDarkMode ? "text-white" : theme.titlePillText
                     }`}
                   >
@@ -136,7 +136,7 @@ export default function ClassificacaoMainTableSection({
                     Painel oficial
                   </p>
                   <p
-                    className={`text-[14px] font-extrabold tracking-[0.01em] ${
+                    className={`text-[14px] font-semibold tracking-[0.01em] ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >
@@ -218,7 +218,7 @@ export default function ClassificacaoMainTableSection({
                   Zona troféu
                 </p>
                 <p
-                  className={`mt-1 text-[12px] font-extrabold ${
+                  className={`mt-1 text-[12px] font-semibold ${
                     isDarkMode ? "text-white" : "text-zinc-950"
                   }`}
                 >
@@ -366,7 +366,7 @@ export default function ClassificacaoMainTableSection({
                       <td className="px-2 py-2.5 align-middle">
                         <div className="min-w-0">
                           <p
-                            className={`truncate text-[12px] font-extrabold leading-tight ${
+                            className={`truncate text-[12px] font-semibold leading-tight ${
                               isDarkMode ? "text-white" : "text-zinc-950"
                             }`}
                           >

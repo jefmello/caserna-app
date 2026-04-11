@@ -123,7 +123,7 @@ function PilotPhotoSlot({
               />
             </div>
             <p
-              className={`text-[11px] font-semibold uppercase tracking-[0.08em] ${
+              className={`text-[12px] font-semibold uppercase tracking-[0.08em] ${
                 isDark ? "text-zinc-400" : "text-zinc-500"
               }`}
             >
@@ -272,7 +272,7 @@ function HomePilotCtaCard({
               {eyebrow}
             </p>
             <h3
-              className={`mt-1 text-[18px] font-extrabold tracking-tight ${
+              className={`mt-1 text-[20px] font-extrabold tracking-tight ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -770,7 +770,7 @@ export default function HomePageContent() {
                   Próximo passo
                 </p>
                 <h3
-                  className={`mt-1 text-[18px] font-extrabold tracking-tight ${
+                  className={`mt-1 text-[20px] font-extrabold tracking-tight ${
                     isDarkMode ? "text-white" : "text-zinc-950"
                   }`}
                 >
@@ -802,14 +802,14 @@ export default function HomePageContent() {
               >
                 <div>
                   <p
-                    className={`text-[13px] font-extrabold ${
+                    className={`text-[14px] font-semibold ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >
                     Ver classificação oficial
                   </p>
                   <p
-                    className={`mt-0.5 text-[11px] ${
+                    className={`mt-0.5 text-[12px] ${
                       isDarkMode ? "text-zinc-400" : "text-zinc-500"
                     }`}
                   >
@@ -833,14 +833,14 @@ export default function HomePageContent() {
               >
                 <div>
                   <p
-                    className={`text-[13px] font-extrabold ${
+                    className={`text-[14px] font-semibold ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >
                     Projetar cenários futuros
                   </p>
                   <p
-                    className={`mt-0.5 text-[11px] ${
+                    className={`mt-0.5 text-[12px] ${
                       isDarkMode ? "text-zinc-400" : "text-zinc-500"
                     }`}
                   >
@@ -864,14 +864,14 @@ export default function HomePageContent() {
               >
                 <div>
                   <p
-                    className={`text-[13px] font-extrabold ${
+                    className={`text-[14px] font-semibold ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >
                     Gerar conteúdo oficial
                   </p>
                   <p
-                    className={`mt-0.5 text-[11px] ${
+                    className={`mt-0.5 text-[12px] ${
                       isDarkMode ? "text-zinc-400" : "text-zinc-500"
                     }`}
                   >

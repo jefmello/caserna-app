@@ -151,7 +151,7 @@ function PilotInfoCard({
               {title}
             </p>
             <p
-              className={`mt-2 text-[18px] font-extrabold leading-tight ${
+              className={`mt-2 text-[20px] font-bold leading-tight ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -198,7 +198,7 @@ function PilotInfoCard({
               Pontos
             </p>
             <p
-              className={`mt-1 text-[16px] font-extrabold ${
+              className={`mt-1 text-[16px] font-semibold ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -219,7 +219,7 @@ function PilotInfoCard({
               Vitórias
             </p>
             <p
-              className={`mt-1 text-[16px] font-extrabold ${
+              className={`mt-1 text-[16px] font-semibold ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -240,7 +240,7 @@ function PilotInfoCard({
               Pódios
             </p>
             <p
-              className={`mt-1 text-[16px] font-extrabold ${
+              className={`mt-1 text-[16px] font-semibold ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -261,7 +261,7 @@ function PilotInfoCard({
               ADV
             </p>
             <p
-              className={`mt-1 text-[16px] font-extrabold ${
+              className={`mt-1 text-[16px] font-semibold ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -301,14 +301,14 @@ function MetricRow({
 
       <div className="min-w-0">
         <p
-          className={`text-[13px] font-extrabold ${
+          className={`text-[14px] font-bold ${
             isDarkMode ? "text-white" : "text-zinc-950"
           }`}
         >
           {metric.label}
         </p>
         <p
-          className={`mt-0.5 truncate text-[11px] ${
+          className={`mt-0.5 truncate text-[12px] ${
             isDarkMode ? "text-zinc-400" : "text-zinc-500"
           }`}
         >
@@ -317,7 +317,7 @@ function MetricRow({
       </div>
 
       <div
-        className={`rounded-[14px] px-2 py-2 text-center text-[12px] font-extrabold ${
+        className={`rounded-[14px] px-2 py-2 text-center text-[12px] font-bold ${
           metric.winner === "a"
             ? isDarkMode
               ? "bg-emerald-500/10 text-emerald-300"
@@ -331,7 +331,7 @@ function MetricRow({
       </div>
 
       <div
-        className={`rounded-[14px] px-2 py-2 text-center text-[12px] font-extrabold ${
+        className={`rounded-[14px] px-2 py-2 text-center text-[12px] font-bold ${
           metric.winner === "b"
             ? isDarkMode
               ? "bg-emerald-500/10 text-emerald-300"
@@ -668,7 +668,7 @@ export default function DuelosPageContent() {
                 Confronto premium
               </p>
               <h3
-                className={`mt-1 text-[18px] font-extrabold tracking-tight ${
+                className={`mt-1 text-[20px] font-bold tracking-tight ${
                   isDarkMode ? "text-white" : "text-zinc-950"
                 }`}
               >
@@ -741,7 +741,7 @@ export default function DuelosPageContent() {
             </div>
 
             <p
-              className={`text-[18px] font-extrabold tracking-tight ${
+              className={`text-[20px] font-bold tracking-tight ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -749,7 +749,7 @@ export default function DuelosPageContent() {
             </p>
 
             <p
-              className={`mt-2 text-[13px] leading-snug ${
+              className={`mt-2 text-[14px] leading-snug ${
                 isDarkMode ? "text-zinc-400" : "text-zinc-500"
               }`}
             >
@@ -829,7 +829,7 @@ export default function DuelosPageContent() {
                       Leitura por métricas
                     </p>
                     <h3
-                      className={`mt-1 text-[18px] font-extrabold tracking-tight ${
+                      className={`mt-1 text-[20px] font-bold tracking-tight ${
                         isDarkMode ? "text-white" : "text-zinc-950"
                       }`}
                     >
@@ -884,14 +884,14 @@ export default function DuelosPageContent() {
                     Narrativa oficial
                   </p>
                   <p
-                    className={`mt-2 text-[19px] font-extrabold leading-tight ${
+                    className={`mt-2 text-[20px] font-bold leading-tight ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >
                     {duelSummary?.profileLabel}
                   </p>
                   <p
-                    className={`mt-2 text-[13px] leading-snug ${
+                    className={`mt-2 text-[14px] leading-snug ${
                       isDarkMode ? "text-zinc-300" : "text-zinc-700"
                     }`}
                   >
@@ -939,7 +939,7 @@ export default function DuelosPageContent() {
                         Quem lidera em pontos
                       </p>
                       <p
-                        className={`mt-1 text-[13px] font-extrabold ${
+                        className={`mt-1 text-[14px] font-semibold ${
                           isDarkMode ? "text-white" : "text-zinc-950"
                         }`}
                       >
@@ -966,7 +966,7 @@ export default function DuelosPageContent() {
                         Melhor disciplina
                       </p>
                       <p
-                        className={`mt-1 text-[13px] font-extrabold ${
+                        className={`mt-1 text-[14px] font-semibold ${
                           isDarkMode ? "text-white" : "text-zinc-950"
                         }`}
                       >
@@ -994,7 +994,7 @@ export default function DuelosPageContent() {
                       </p>
                       <Link
                         href="/midia"
-                        className={`mt-1 inline-flex items-center gap-2 text-[13px] font-extrabold ${
+                        className={`mt-1 inline-flex items-center gap-2 text-[14px] font-semibold ${
                           isDarkMode ? theme.darkAccentText : "text-zinc-950"
                         }`}
                       >
@@ -1044,7 +1044,7 @@ export default function DuelosPageContent() {
                         </p>
                       </div>
                       <p
-                        className={`text-[16px] font-extrabold ${
+                        className={`text-[16px] font-semibold ${
                           isDarkMode ? "text-white" : "text-zinc-950"
                         }`}
                       >
@@ -1074,7 +1074,7 @@ export default function DuelosPageContent() {
                         </p>
                       </div>
                       <p
-                        className={`text-[16px] font-extrabold ${
+                        className={`text-[16px] font-semibold ${
                           isDarkMode ? "text-white" : "text-zinc-950"
                         }`}
                       >
@@ -1104,7 +1104,7 @@ export default function DuelosPageContent() {
                         </p>
                       </div>
                       <p
-                        className={`text-[16px] font-extrabold ${
+                        className={`text-[16px] font-semibold ${
                           isDarkMode ? "text-white" : "text-zinc-950"
                         }`}
                       >
@@ -1134,7 +1134,7 @@ export default function DuelosPageContent() {
                         </p>
                       </div>
                       <p
-                        className={`text-[16px] font-extrabold ${
+                        className={`text-[16px] font-semibold ${
                           isDarkMode ? "text-white" : "text-zinc-950"
                         }`}
                       >

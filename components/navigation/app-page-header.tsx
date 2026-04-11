@@ -51,7 +51,7 @@ export default function AppPageHeader({
     <div className="mb-4 flex items-start justify-between gap-3">
       <div>
         <h1
-          className={`text-[18px] font-extrabold tracking-tight ${
+          className={`text-[20px] font-bold tracking-tight ${
             dark ? "text-white" : "text-zinc-950"
           }`}
         >

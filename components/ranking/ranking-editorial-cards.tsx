@@ -107,7 +107,7 @@ export default function RankingEditorialCards({
           <p className={`text-[9px] font-bold uppercase tracking-[0.18em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
             Leitura editorial
           </p>
-          <h3 className={`mt-1 text-[16px] font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+          <h3 className={`mt-1 text-[16px] font-semibold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
             Cards automáticos do campeonato
           </h3>
         </div>
@@ -131,7 +131,7 @@ export default function RankingEditorialCards({
                   <p className={`text-[9px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
                     {card.eyebrow}
                   </p>
-                  <h4 className={`mt-1 text-[17px] font-extrabold leading-tight tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                  <h4 className={`mt-1 text-[16px] font-bold leading-tight tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
                     {card.title}
                   </h4>
                 </div>

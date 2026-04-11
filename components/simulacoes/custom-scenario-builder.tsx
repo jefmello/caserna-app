@@ -134,7 +134,7 @@ function BonusPilotSelector({
 
       <div className="min-w-0 flex-1">
         <p
-          className={`text-[10px] font-bold uppercase tracking-wider ${
+          className={`text-[10px] font-semibold uppercase tracking-wider ${
             isDarkMode ? "text-zinc-500" : "text-zinc-400"
           }`}
         >
@@ -200,7 +200,7 @@ function PilotRow({
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span
-            className={`text-xs font-bold ${
+            className={`text-xs font-semibold ${
               isDarkMode ? "text-zinc-500" : "text-zinc-400"
             }`}
           >
@@ -259,7 +259,7 @@ function ScenarioResults({
           }`}
         >
           <p
-            className={`text-sm font-bold ${
+            className={`text-sm font-semibold ${
               isDarkMode ? "text-yellow-300" : "text-yellow-700"
             }`}
           >
@@ -293,7 +293,7 @@ function ScenarioResults({
                 }`}
               />
               <span
-                className={`text-[10px] font-bold uppercase tracking-wider ${
+                className={`text-[10px] font-semibold uppercase tracking-wider ${
                   isDarkMode ? "text-emerald-400" : "text-emerald-700"
                 }`}
               >
@@ -301,7 +301,7 @@ function ScenarioResults({
               </span>
             </div>
             <p
-              className={`mt-1 truncate text-sm font-bold ${
+              className={`mt-1 truncate text-sm font-semibold ${
                 isDarkMode ? "text-emerald-200" : "text-emerald-800"
               }`}
             >
@@ -325,7 +325,7 @@ function ScenarioResults({
                 }`}
               />
               <span
-                className={`text-[10px] font-bold uppercase tracking-wider ${
+                className={`text-[10px] font-semibold uppercase tracking-wider ${
                   isDarkMode ? "text-red-400" : "text-red-700"
                 }`}
               >
@@ -333,7 +333,7 @@ function ScenarioResults({
               </span>
             </div>
             <p
-              className={`mt-1 truncate text-sm font-bold ${
+              className={`mt-1 truncate text-sm font-semibold ${
                 isDarkMode ? "text-red-200" : "text-red-800"
               }`}
             >
@@ -346,7 +346,7 @@ function ScenarioResults({
       {/* Projected ranking list */}
       <div className="space-y-2">
         <p
-          className={`text-[10px] font-bold uppercase tracking-wider ${
+          className={`text-[10px] font-semibold uppercase tracking-wider ${
             isDarkMode ? "text-zinc-500" : "text-zinc-400"
           }`}
         >
@@ -377,7 +377,7 @@ function ScenarioResults({
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <span
-                      className={`text-xs font-bold ${
+                      className={`text-xs font-semibold ${
                         isDarkMode ? theme.darkAccentText : theme.primaryIcon
                       }`}
                     >
@@ -391,18 +391,18 @@ function ScenarioResults({
                       {getPilotFirstAndLastName(pilot.piloto)}
                     </p>
                     {movedUp && (
-                      <span className="flex items-center gap-0.5 rounded-full border border-emerald-200 bg-emerald-50 px-1.5 py-0.5 text-[10px] font-bold text-emerald-600">
+                      <span className="flex items-center gap-0.5 rounded-full border border-emerald-200 bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-600">
                         <TrendingUp className="h-2.5 w-2.5" />+{pilot.positionChange}
                       </span>
                     )}
                     {movedDown && (
-                      <span className="flex items-center gap-0.5 rounded-full border border-red-200 bg-red-50 px-1.5 py-0.5 text-[10px] font-bold text-red-600">
+                      <span className="flex items-center gap-0.5 rounded-full border border-red-200 bg-red-50 px-1.5 py-0.5 text-[10px] font-semibold text-red-600">
                         <TrendingDown className="h-2.5 w-2.5" />{pilot.positionChange}
                       </span>
                     )}
                     {!movedUp && !movedDown && (
                       <span
-                        className={`rounded-full border px-1.5 py-0.5 text-[10px] font-bold ${
+                        className={`rounded-full border px-1.5 py-0.5 text-[10px] font-semibold ${
                           isDarkMode
                             ? "border-yellow-500/30 bg-yellow-500/10 text-yellow-400"
                             : "border-yellow-200 bg-yellow-50 text-yellow-600"
@@ -528,14 +528,14 @@ export default function CustomScenarioBuilder({
         <div className="flex items-start justify-between gap-3">
           <div>
             <p
-              className={`text-[10px] font-bold uppercase tracking-wider ${
+              className={`text-[10px] font-semibold uppercase tracking-wider ${
                 isDarkMode ? "text-zinc-500" : "text-zinc-400"
               }`}
             >
               Cenário personalizado
             </p>
             <p
-              className={`mt-1 text-base font-extrabold ${
+              className={`mt-1 text-base font-semibold ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -580,7 +580,7 @@ export default function CustomScenarioBuilder({
             />
           </div>
           <span
-            className={`text-xs font-bold ${
+            className={`text-xs font-semibold ${
               isDarkMode ? "text-zinc-400" : "text-zinc-500"
             }`}
           >
@@ -593,7 +593,7 @@ export default function CustomScenarioBuilder({
       {!showResults && (
         <div className="space-y-2">
           <p
-            className={`text-[10px] font-bold uppercase tracking-wider ${
+            className={`text-[10px] font-semibold uppercase tracking-wider ${
               isDarkMode ? "text-zinc-500" : "text-zinc-400"
             }`}
           >
@@ -664,7 +664,7 @@ export default function CustomScenarioBuilder({
           type="button"
           onClick={handleRunScenario}
           disabled={!canRun}
-          className={`w-full rounded-2xl px-4 py-3.5 text-sm font-bold transition ${
+          className={`w-full rounded-2xl px-4 py-3.5 text-sm font-semibold transition ${
             canRun
               ? isDarkMode
                 ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText} hover:brightness-110`

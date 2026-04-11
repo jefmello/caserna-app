@@ -389,7 +389,7 @@ export default function PilotosPageContent() {
                     Grade de pilotos
                   </p>
                   <h3
-                    className={`text-[18px] font-extrabold tracking-tight ${
+                    className={`text-[20px] font-extrabold tracking-tight ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >
@@ -424,7 +424,7 @@ export default function PilotosPageContent() {
                     <div className="flex items-center justify-between gap-3">
                       <div className="min-w-0">
                         <p
-                          className={`truncate text-[14px] font-extrabold tracking-tight ${
+                          className={`truncate text-[14px] font-semibold tracking-tight ${
                             isDarkMode ? "text-white" : "text-zinc-950"
                           }`}
                         >
@@ -443,7 +443,7 @@ export default function PilotosPageContent() {
 
                       <div className="shrink-0 text-right">
                         <p
-                          className={`text-[14px] font-extrabold ${
+                          className={`text-[14px] font-semibold ${
                             isDarkMode ? theme.darkAccentText : "text-zinc-950"
                           }`}
                         >
@@ -551,7 +551,7 @@ export default function PilotosPageContent() {
                     Raio-x competitivo
                   </p>
                   <h3
-                    className={`text-[18px] font-extrabold tracking-tight ${
+                    className={`text-[20px] font-extrabold tracking-tight ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >
@@ -586,7 +586,7 @@ export default function PilotosPageContent() {
                     Próximo alvo
                   </p>
                   <p
-                    className={`mt-2 text-[17px] font-extrabold leading-tight ${
+                    className={`mt-2 text-[20px] font-semibold leading-tight ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >
@@ -620,7 +620,7 @@ export default function PilotosPageContent() {
                     Destaque técnico
                   </p>
                   <p
-                    className={`mt-2 text-[17px] font-extrabold leading-tight ${
+                    className={`mt-2 text-[20px] font-semibold leading-tight ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >

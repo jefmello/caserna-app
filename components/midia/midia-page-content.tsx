@@ -107,7 +107,7 @@ function PilotPhotoSlot({
               />
             </div>
             <p
-              className={`text-[11px] font-semibold uppercase tracking-[0.08em] ${
+              className={`text-[12px] font-semibold uppercase tracking-[0.08em] ${
                 isDark ? "text-zinc-400" : "text-zinc-500"
               }`}
             >
@@ -825,7 +825,7 @@ Caserna Kart Racing`;
                 Centro de mídia
               </p>
               <h3
-                className={`mt-1 text-[18px] font-extrabold tracking-tight ${
+                className={`mt-1 text-[20px] font-extrabold tracking-tight ${
                   isDarkMode ? "text-white" : "text-zinc-950"
                 }`}
               >
@@ -885,7 +885,7 @@ Caserna Kart Racing`;
                       Classificação completa
                     </p>
                     <h3
-                      className={`mt-1 text-[18px] font-extrabold tracking-tight ${
+                      className={`mt-1 text-[20px] font-extrabold tracking-tight ${
                         isDarkMode ? "text-white" : "text-zinc-950"
                       }`}
                     >
@@ -955,7 +955,7 @@ Caserna Kart Racing`;
                     Duelo premium
                   </p>
                   <h3
-                    className={`mt-1 text-[18px] font-extrabold tracking-tight ${
+                    className={`mt-1 text-[20px] font-extrabold tracking-tight ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >
@@ -1053,7 +1053,7 @@ Caserna Kart Racing`;
                       Status do duelo
                     </p>
                     <p
-                      className={`mt-1 text-[14px] font-extrabold ${
+                      className={`mt-1 text-[14px] font-semibold ${
                         isDarkMode ? "text-white" : "text-zinc-950"
                       }`}
                     >
@@ -1145,7 +1145,7 @@ Caserna Kart Racing`;
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p
-                    className={`text-[12px] font-extrabold ${
+                    className={`text-[12px] font-semibold ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >
@@ -1180,7 +1180,7 @@ Caserna Kart Racing`;
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p
-                    className={`text-[12px] font-extrabold ${
+                    className={`text-[12px] font-semibold ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >
@@ -1215,7 +1215,7 @@ Caserna Kart Racing`;
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p
-                    className={`text-[12px] font-extrabold ${
+                    className={`text-[12px] font-semibold ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >

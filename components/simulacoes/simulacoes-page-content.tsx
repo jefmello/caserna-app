@@ -69,14 +69,14 @@ function SectionTitle({
 
         <div>
           <p
-            className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+            className={`text-[10px] font-semibold uppercase tracking-[0.16em] ${
               isDarkMode ? "text-zinc-500" : "text-zinc-400"
             }`}
           >
             Centro de projeções
           </p>
           <h2
-            className={`text-[18px] font-extrabold tracking-tight ${
+            className={`text-[20px] font-extrabold tracking-tight ${
               isDarkMode ? "text-white" : "text-zinc-950"
             }`}
           >
@@ -127,7 +127,7 @@ function SummaryCard({
       <CardContent className="p-4">
         <div className="mb-2 flex items-center justify-between gap-2">
           <p
-            className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+            className={`text-[10px] font-semibold uppercase tracking-[0.16em] ${
               isDarkMode ? "text-zinc-500" : "text-zinc-400"
             }`}
           >
@@ -211,7 +211,7 @@ function ProbabilityRow({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p
-            className={`truncate text-[14px] font-extrabold tracking-tight ${
+            className={`truncate text-[14px] font-semibold tracking-tight ${
               isDarkMode ? "text-white" : "text-zinc-950"
             }`}
           >
@@ -220,7 +220,7 @@ function ProbabilityRow({
 
           <div className="mt-1 flex flex-wrap items-center gap-2">
             <span
-              className={`rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+              className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${
                 isAlive
                   ? isDarkMode
                     ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
@@ -234,7 +234,7 @@ function ProbabilityRow({
             </span>
 
             <span
-              className={`text-[11px] font-medium ${
+              className={`text-[12px] font-medium ${
                 isDarkMode ? "text-zinc-400" : "text-zinc-500"
               }`}
             >
@@ -245,14 +245,14 @@ function ProbabilityRow({
 
         <div className="shrink-0 text-right">
           <p
-            className={`text-[22px] font-extrabold leading-none ${
+            className={`text-[24px] font-extrabold leading-none ${
               isDarkMode ? theme.darkAccentText : "text-zinc-950"
             }`}
           >
             {Number(candidate.probability || 0).toFixed(2)}%
           </p>
           <p
-            className={`mt-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+            className={`mt-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${
               isDarkMode ? "text-zinc-500" : "text-zinc-400"
             }`}
           >
@@ -289,7 +289,7 @@ function ScenarioRow({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p
-            className={`truncate text-[14px] font-extrabold tracking-tight ${
+            className={`truncate text-[14px] font-semibold tracking-tight ${
               isDarkMode ? "text-white" : "text-zinc-950"
             }`}
           >
@@ -314,7 +314,7 @@ function ScenarioRow({
             {scenario.winDelta}
           </p>
           <p
-            className={`mt-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+            className={`mt-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${
               isDarkMode ? "text-zinc-500" : "text-zinc-400"
             }`}
           >
@@ -626,7 +626,7 @@ export default function SimulacoesPageContent() {
         >
           <CardHeader className="pb-3">
             <CardTitle
-              className={`flex items-center gap-2 text-[18px] font-extrabold tracking-tight ${
+              className={`flex items-center gap-2 text-[20px] font-extrabold tracking-tight ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -644,7 +644,7 @@ export default function SimulacoesPageContent() {
               }`}
             >
               <p
-                className={`text-[11px] font-bold uppercase tracking-[0.14em] ${
+                className={`text-[12px] font-semibold uppercase tracking-[0.14em] ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >
@@ -658,7 +658,7 @@ export default function SimulacoesPageContent() {
                 {titleProbabilitySummary.headline}
               </p>
               <p
-                className={`mt-2 text-[13px] leading-snug ${
+                className={`mt-2 text-[14px] leading-snug ${
                   isDarkMode ? "text-zinc-400" : "text-zinc-600"
                 }`}
               >
@@ -703,7 +703,7 @@ export default function SimulacoesPageContent() {
         >
           <CardHeader className="pb-3">
             <CardTitle
-              className={`flex items-center gap-2 text-[18px] font-extrabold tracking-tight ${
+              className={`flex items-center gap-2 text-[20px] font-extrabold tracking-tight ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -729,7 +729,7 @@ export default function SimulacoesPageContent() {
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p
-                        className={`truncate text-[14px] font-extrabold ${
+                        className={`truncate text-[14px] font-semibold ${
                           isDarkMode ? "text-white" : "text-zinc-950"
                         }`}
                       >
@@ -747,7 +747,7 @@ export default function SimulacoesPageContent() {
                     </div>
 
                     <span
-                      className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+                      className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${
                         stillAlive
                           ? isDarkMode
                             ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
@@ -787,7 +787,7 @@ export default function SimulacoesPageContent() {
         >
           <CardHeader className="pb-3">
             <CardTitle
-              className={`flex items-center gap-2 text-[18px] font-extrabold tracking-tight ${
+              className={`flex items-center gap-2 text-[20px] font-extrabold tracking-tight ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -805,7 +805,7 @@ export default function SimulacoesPageContent() {
               }`}
             >
               <p
-                className={`text-[11px] font-bold uppercase tracking-[0.14em] ${
+                className={`text-[12px] font-semibold uppercase tracking-[0.14em] ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >
@@ -819,7 +819,7 @@ export default function SimulacoesPageContent() {
                 {nextStageSummary.headline}
               </p>
               <p
-                className={`mt-2 text-[13px] leading-snug ${
+                className={`mt-2 text-[14px] leading-snug ${
                   isDarkMode ? "text-zinc-400" : "text-zinc-600"
                 }`}
               >
@@ -863,7 +863,7 @@ export default function SimulacoesPageContent() {
         >
           <CardHeader className="pb-3">
             <CardTitle
-              className={`flex items-center gap-2 text-[18px] font-extrabold tracking-tight ${
+              className={`flex items-center gap-2 text-[20px] font-extrabold tracking-tight ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -904,7 +904,7 @@ export default function SimulacoesPageContent() {
         >
           <CardHeader className="pb-3">
             <CardTitle
-              className={`flex items-center gap-2 text-[18px] font-extrabold tracking-tight ${
+              className={`flex items-center gap-2 text-[20px] font-extrabold tracking-tight ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -925,14 +925,14 @@ export default function SimulacoesPageContent() {
               }`}
             >
               <p
-                className={`text-[11px] font-bold uppercase tracking-[0.14em] ${
+                className={`text-[12px] font-semibold uppercase tracking-[0.14em] ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >
                 Favorito atual
               </p>
               <p
-                className={`mt-2 text-[18px] font-extrabold leading-tight ${
+                className={`mt-2 text-[20px] font-extrabold leading-tight ${
                   isDarkMode ? "text-white" : "text-zinc-950"
                 }`}
               >
@@ -965,14 +965,14 @@ export default function SimulacoesPageContent() {
               }`}
             >
               <p
-                className={`text-[11px] font-bold uppercase tracking-[0.14em] ${
+                className={`text-[12px] font-semibold uppercase tracking-[0.14em] ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >
                 Pressão da próxima etapa
               </p>
               <p
-                className={`mt-2 text-[18px] font-extrabold leading-tight ${
+                className={`mt-2 text-[20px] font-extrabold leading-tight ${
                   isDarkMode ? "text-white" : "text-zinc-950"
                 }`}
               >
@@ -1001,14 +1001,14 @@ export default function SimulacoesPageContent() {
               }`}
             >
               <p
-                className={`text-[11px] font-bold uppercase tracking-[0.14em] ${
+                className={`text-[12px] font-semibold uppercase tracking-[0.14em] ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >
                 Observação oficial
               </p>
               <p
-                className={`mt-2 text-[13px] leading-snug ${
+                className={`mt-2 text-[14px] leading-snug ${
                   isDarkMode ? "text-zinc-300" : "text-zinc-700"
                 }`}
               >

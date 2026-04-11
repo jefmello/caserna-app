@@ -96,7 +96,7 @@ export default function RankingSpotlight({
 
             <div className="flex flex-col justify-center">
               <p
-                className={`text-[18px] font-extrabold uppercase leading-none tracking-[0.14em] ${
+                className={`text-[20px] font-black uppercase leading-none tracking-[0.14em] ${
                   isDarkMode ? "text-white" : "text-zinc-950"
                 }`}
               >
@@ -260,7 +260,7 @@ export default function RankingSpotlight({
                         {item.title}
                       </p>
                       <p
-                        className={`mt-2 text-[34px] font-black leading-none tracking-tight ${
+                        className={`mt-2 text-[30px] font-black leading-none tracking-tight ${
                           isDarkMode ? "text-white" : "text-white"
                         }`}
                       >

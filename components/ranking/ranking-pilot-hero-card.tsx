@@ -146,7 +146,7 @@ export default function RankingPilotHeroCard({
 
                     <div className="absolute left-3 top-3 flex items-center gap-2">
                       <div
-                        className={`inline-flex h-11 min-w-[54px] items-center justify-center rounded-[16px] border px-3 text-[18px] font-extrabold shadow-lg ${
+                        className={`inline-flex h-11 min-w-[54px] items-center justify-center rounded-[16px] border px-3 text-[20px] font-black shadow-lg ${
                           isDarkMode
                             ? `${theme.darkAccentBorder} bg-black/45 text-white backdrop-blur-md`
                             : "border-white/70 bg-white/88 text-zinc-950 backdrop-blur-md"
@@ -175,7 +175,7 @@ export default function RankingPilotHeroCard({
                         }`}
                       >
                         <p
-                          className={`truncate text-[15px] font-extrabold leading-none tracking-tight ${
+                          className={`truncate text-[16px] font-bold leading-none tracking-tight ${
                             isDarkMode ? "text-white" : "text-zinc-950"
                           }`}
                         >
@@ -228,7 +228,7 @@ export default function RankingPilotHeroCard({
                   </p>
 
                   <h2
-                    className={`mt-2 break-words text-[28px] font-extrabold leading-[1.02] tracking-tight ${
+                    className={`mt-2 break-words text-[30px] font-black leading-[1.02] tracking-tight ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >
@@ -260,7 +260,7 @@ export default function RankingPilotHeroCard({
                       <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}>
                         Posição atual
                       </p>
-                      <p className={`mt-1 text-[24px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                      <p className={`mt-1 text-[24px] font-black leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
                         {safeSelectedPilot.pos}º
                       </p>
                       <p className={`mt-1 text-[11px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
@@ -278,7 +278,7 @@ export default function RankingPilotHeroCard({
                       <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}>
                         Pontuação oficial
                       </p>
-                      <p className={`mt-1 text-[24px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                      <p className={`mt-1 text-[24px] font-black leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
                         {safeSelectedPilot.pontos}
                         <span className={`ml-1 text-[14px] font-bold ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                           pts
@@ -302,7 +302,7 @@ export default function RankingPilotHeroCard({
                         <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}>
                           Análise oficial
                         </p>
-                        <p className={`mt-1 text-[16px] font-extrabold leading-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                        <p className={`mt-1 text-[20px] font-bold leading-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
                           {selectedPilotConsistency}
                         </p>
                         <p className={`mt-2 text-[12px] leading-relaxed ${isDarkMode ? "text-zinc-400" : "text-zinc-600"}`}>

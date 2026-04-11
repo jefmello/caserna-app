@@ -68,21 +68,21 @@ export default function RankingChampionshipNarrativeCard({
                 Narrativa oficial
               </p>
               <p
-                className={`mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] ${
+                className={`mt-1 text-[12px] font-semibold uppercase tracking-[0.14em] ${
                   isDarkMode ? theme.darkAccentText : "text-zinc-600"
                 }`}
               >
                 {narrative.kicker}
               </p>
               <h3
-                className={`mt-1 text-[18px] font-extrabold leading-tight tracking-[0.01em] ${
+                className={`mt-1 text-[20px] font-black leading-tight tracking-[0.01em] ${
                   isDarkMode ? "text-white" : "text-zinc-950"
                 }`}
               >
                 {narrative.headline}
               </h3>
               <p
-                className={`mt-1 text-[11px] font-semibold uppercase tracking-[0.12em] ${
+                className={`mt-1 text-[12px] font-semibold uppercase tracking-[0.12em] ${
                   isDarkMode ? "text-zinc-400" : "text-zinc-500"
                 }`}
               >
@@ -132,7 +132,7 @@ export default function RankingChampionshipNarrativeCard({
               Leitura do momento
             </p>
           </div>
-          <p className={`text-[13px] leading-6 ${isDarkMode ? "text-zinc-300" : "text-zinc-700"}`}>
+          <p className={`text-[14px] leading-6 ${isDarkMode ? "text-zinc-300" : "text-zinc-700"}`}>
             {narrative.body}
           </p>
         </div>
@@ -159,7 +159,7 @@ export default function RankingChampionshipNarrativeCard({
                     {item.label}
                   </p>
                 </div>
-                <p className={`mt-2 text-[14px] font-extrabold leading-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                <p className={`mt-2 text-[14px] font-bold leading-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
                   {item.value}
                 </p>
               </div>

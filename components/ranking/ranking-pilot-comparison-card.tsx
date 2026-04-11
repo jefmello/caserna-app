@@ -59,7 +59,7 @@ export default function RankingPilotComparisonCard({
             <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
               Comparativo oficial
             </p>
-            <h3 className={`text-[18px] font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+            <h3 className={`text-[20px] font-bold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
               Momento competitivo do piloto
             </h3>
           </div>
@@ -77,7 +77,7 @@ export default function RankingPilotComparisonCard({
                   <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
                     Distância do líder
                   </p>
-                  <p className={`mt-1 text-[22px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                  <p className={`mt-1 text-[24px] font-black leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
                     {selectedPilotLeaderGapValue}
                     <span className={`ml-1 text-[12px] font-bold ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                       pts
@@ -104,7 +104,7 @@ export default function RankingPilotComparisonCard({
                   <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
                     Aproveitamento em vitórias
                   </p>
-                  <p className={`mt-1 text-[22px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                  <p className={`mt-1 text-[24px] font-black leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
                     {selectedPilotWinRate}%
                   </p>
                 </div>
@@ -128,7 +128,7 @@ export default function RankingPilotComparisonCard({
                   <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
                     Taxa de pódios
                   </p>
-                  <p className={`mt-1 text-[22px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                  <p className={`mt-1 text-[24px] font-black leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
                     {selectedPilotPodiumRate}%
                   </p>
                 </div>
@@ -152,7 +152,7 @@ export default function RankingPilotComparisonCard({
                   <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
                     Nível disciplinar
                   </p>
-                  <p className={`mt-1 text-[22px] font-extrabold leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                  <p className={`mt-1 text-[24px] font-black leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
                     {selectedPilotDiscipline}%
                   </p>
                 </div>
