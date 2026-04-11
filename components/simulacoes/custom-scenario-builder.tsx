@@ -29,11 +29,18 @@ function PositionSelector({
   isDarkMode: boolean;
   theme: ReturnType<typeof getCategoryTheme>;
 }) {
+  // Sempre mostra: posições disponíveis + a já selecionada (mesmo se já usada)
+  const displayPositions = useMemo(() => {
+    const pool = new Set(availablePositions);
+    if (selectedPosition) pool.add(selectedPosition);
+    return [...pool].sort((a, b) => a - b);
+  }, [availablePositions, selectedPosition]);
+
   return (
     <select
-      value={selectedPosition || ""}
+      value={selectedPosition?.toString() || ""}
       onChange={(e) => onSelect(e.target.value ? Number(e.target.value) : null)}
-      className={`w-20 rounded-xl border px-2 py-2 text-center text-sm font-bold transition ${
+      className={`w-24 rounded-xl border px-2 py-2 text-center text-sm font-bold transition ${
         isDarkMode
           ? selectedPosition
             ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft} ${theme.darkAccentText}`
@@ -44,7 +51,7 @@ function PositionSelector({
       }`}
     >
       <option value="">—</option>
-      {availablePositions.map((pos) => (
+      {displayPositions.map((pos) => (
         <option key={pos} value={pos}>
           {pos}º ({calculateStagePoints(pos, 1)} pts)
         </option>
