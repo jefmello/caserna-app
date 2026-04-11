@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowUpRight,
@@ -16,6 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import RankingHeader from "@/components/ranking/ranking-header";
 import useRankingData from "@/lib/hooks/useRankingData";
 import useRankingFilters from "@/lib/hooks/useRankingFilters";
+import { useChampionship } from "@/context/championship-context";
 import { competitionLabels, getCategoryTheme, getPilotFirstAndLastName } from "@/lib/ranking/ranking-utils";
 import {
   buildTitleProbabilityCandidates,
@@ -343,18 +344,7 @@ export default function SimulacoesPageContent() {
     categories,
   });
 
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    const savedTheme = window.localStorage.getItem("caserna-theme");
-    if (savedTheme === "dark") {
-      setIsDarkMode(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    window.localStorage.setItem("caserna-theme", isDarkMode ? "dark" : "light");
-  }, [isDarkMode]);
+  const { isDarkMode, toggleTheme } = useChampionship();
 
   const theme = useMemo(() => getCategoryTheme(category), [category]);
 
@@ -500,9 +490,7 @@ export default function SimulacoesPageContent() {
     });
   }, [filteredRanking, leaderPoints, titlePointsStillAvailable]);
 
-  const handleToggleDarkMode = () => {
-    setIsDarkMode((prev) => !prev);
-  };
+  const handleToggleDarkMode = toggleTheme;
 
   const handleRetry = () => {
     retry();

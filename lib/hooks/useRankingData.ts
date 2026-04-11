@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { RankingData, RankingMetaData } from "@/types/ranking";
 
 type RankingApiResponse = {
@@ -11,6 +11,12 @@ type RankingApiResponse = {
 type UseRankingDataParams = {
   initialCategory?: string;
   timeoutMs?: number;
+  /**
+   * Intervalo em ms para revalidação automática dos dados.
+   * Define 0 para desativar revalidação periódica.
+   * Padrão: 60000ms (1 minuto) — respeita o revalidate=120 da API route.
+   */
+  revalidateIntervalMs?: number;
 };
 
 type UseRankingDataReturn = {
@@ -24,14 +30,31 @@ type UseRankingDataReturn = {
   syncCategory: (currentCategory: string) => string;
 };
 
+// Cache em módulo para compartilhar entre instâncias do hook
+let sharedCache: {
+  data: RankingData;
+  meta: RankingMetaData;
+  categories: string[];
+  timestamp: number;
+} | null = null;
+
+const CACHE_TTL_MS = 55000; // Um pouco menos que o revalidate=120 da API
+
 export function useRankingData({
   initialCategory = "Base",
   timeoutMs = 20000,
+  revalidateIntervalMs = 60000,
 }: UseRankingDataParams = {}): UseRankingDataReturn {
-  const [rankingData, setRankingData] = useState<RankingData>({});
-  const [rankingMeta, setRankingMeta] = useState<RankingMetaData>({});
-  const [categories, setCategories] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [rankingData, setRankingData] = useState<RankingData>(
+    () => sharedCache?.data ?? {}
+  );
+  const [rankingMeta, setRankingMeta] = useState<RankingMetaData>(
+    () => sharedCache?.meta ?? {}
+  );
+  const [categories, setCategories] = useState<string[]>(
+    () => sharedCache?.categories ?? []
+  );
+  const [loading, setLoading] = useState(!sharedCache);
   const [error, setError] = useState("");
   const [retryCount, setRetryCount] = useState(0);
 
@@ -55,12 +78,26 @@ export function useRankingData({
   useEffect(() => {
     const controller = new AbortController();
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    let intervalId: ReturnType<typeof setInterval> | null = null;
     let didTimeout = false;
     let isMounted = true;
 
     async function loadData() {
       try {
         if (!isMounted) return;
+
+        // Se cache válido e não é retry, usar cache
+        if (
+          retryCount === 0 &&
+          sharedCache &&
+          Date.now() - sharedCache.timestamp < CACHE_TTL_MS
+        ) {
+          setRankingData(sharedCache.data);
+          setRankingMeta(sharedCache.meta);
+          setCategories(sharedCache.categories);
+          setLoading(false);
+          return;
+        }
 
         setLoading(true);
         setError("");
@@ -71,7 +108,6 @@ export function useRankingData({
         }, timeoutMs);
 
         const response = await fetch("/api/ranking", {
-          cache: "no-store",
           signal: controller.signal,
         });
 
@@ -85,11 +121,17 @@ export function useRankingData({
 
         if (!isMounted) return;
 
-        setRankingData(json.data || {});
-        setRankingMeta(json.meta || {});
+        // Atualiza cache compartilhado
+        sharedCache = {
+          data: json.data || {},
+          meta: json.meta || {},
+          categories: json.categories || Object.keys(json.data || {}),
+          timestamp: Date.now(),
+        };
 
-        const nextCategories = json.categories || Object.keys(json.data || {});
-        setCategories(nextCategories);
+        setRankingData(sharedCache.data);
+        setRankingMeta(sharedCache.meta);
+        setCategories(sharedCache.categories);
       } catch (err: unknown) {
         if (err instanceof DOMException && err.name === "AbortError") {
           if (didTimeout && isMounted) {
@@ -122,6 +164,15 @@ export function useRankingData({
 
     loadData();
 
+    // Revalidação periódica
+    if (revalidateIntervalMs > 0) {
+      intervalId = setInterval(() => {
+        if (isMounted) {
+          loadData();
+        }
+      }, revalidateIntervalMs);
+    }
+
     return () => {
       isMounted = false;
 
@@ -129,20 +180,36 @@ export function useRankingData({
         clearTimeout(timeoutId);
       }
 
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+
       controller.abort();
     };
-  }, [retryCount, timeoutMs]);
+  }, [retryCount, timeoutMs, revalidateIntervalMs]);
 
-  return {
-    rankingData,
-    rankingMeta,
-    categories,
-    loading,
-    error,
-    retryCount,
-    retry,
-    syncCategory,
-  };
+  return useMemo<UseRankingDataReturn>(
+    () => ({
+      rankingData,
+      rankingMeta,
+      categories,
+      loading,
+      error,
+      retryCount,
+      retry,
+      syncCategory,
+    }),
+    [
+      rankingData,
+      rankingMeta,
+      categories,
+      loading,
+      error,
+      retryCount,
+      retry,
+      syncCategory,
+    ]
+  );
 }
 
 export default useRankingData;

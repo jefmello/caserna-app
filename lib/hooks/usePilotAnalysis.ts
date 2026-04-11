@@ -19,146 +19,148 @@ type UsePilotAnalysisProps = {
   competition: string;
 };
 
+type PilotAnalysis = {
+  pilot: RankingItem;
+  gapToLeader: string;
+  averagePointsPerRace: number;
+  bestAttribute: { label: string; value: number };
+  consistencyLabel: string;
+  momentumLabel: string;
+  performanceVsLeader: number;
+  podiumRate: number;
+  winRate: number;
+  discipline: number;
+  leaderGapValue: number;
+  winRateLabel: string;
+  podiumRateLabel: string;
+  disciplineLabel: string;
+  rivalAhead: RankingItem | null;
+};
+
 export default function usePilotAnalysis({
   selectedPilot,
   filteredRanking,
   leader,
-  category,
-  competition,
-}: UsePilotAnalysisProps) {
-  const safeSelectedPilot: RankingItem = selectedPilot ?? {
-    pos: 0,
-    pilotoId: "",
-    piloto: "",
-    nomeGuerra: "",
-    pontos: 0,
-    adv: 0,
-    participacoes: 0,
-    vitorias: 0,
-    poles: 0,
-    mv: 0,
-    podios: 0,
-    descarte: 0,
-    categoriaAtual: category,
-    competicao: competition,
-    categoria: category,
-  };
-
-  const selectedPilotGap = useMemo(() => {
-    if (!selectedPilot || !leader) return "-";
-    return getGapToLeader(leader.pontos, safeSelectedPilot.pontos);
-  }, [selectedPilot, leader, safeSelectedPilot.pontos]);
-
-  const selectedPilotAverage = useMemo(
-    () => getPilotEfficiency(selectedPilot),
-    [selectedPilot]
-  );
-
-  const selectedPilotBestAttribute = useMemo(
-    () => getSelectedPilotBestAttribute(selectedPilot),
-    [selectedPilot]
-  );
-
-  const selectedPilotConsistency = useMemo(
-    () => getPilotConsistencyLabel(selectedPilot),
-    [selectedPilot]
-  );
-
-  const selectedPilotMomentum = useMemo(
-    () => getPilotMomentumLabel(selectedPilot, leader),
-    [selectedPilot, leader]
-  );
-
-  const selectedPilotVsLeader = useMemo(() => {
-    if (!selectedPilot || !leader) return 0;
-    return getPerformancePercentage(
-      safeSelectedPilot.pontos,
-      leader.pontos || safeSelectedPilot.pontos || 1
-    );
-  }, [selectedPilot, leader, safeSelectedPilot.pontos]);
-
-  const selectedPilotPodiumRate = useMemo(() => {
-    if (!selectedPilot) return 0;
-    return getPerformancePercentage(
-      safeSelectedPilot.podios,
-      safeSelectedPilot.participacoes || 1
-    );
-  }, [selectedPilot, safeSelectedPilot.podios, safeSelectedPilot.participacoes]);
-
-  const selectedPilotWinRate = useMemo(() => {
-    if (!selectedPilot) return 0;
-    return getPerformancePercentage(
-      safeSelectedPilot.vitorias,
-      safeSelectedPilot.participacoes || 1
-    );
-  }, [selectedPilot, safeSelectedPilot.vitorias, safeSelectedPilot.participacoes]);
-
-  const selectedPilotDiscipline = useMemo(() => {
-    if (!selectedPilot || safeSelectedPilot.participacoes <= 0) return 100;
-    const penalty = getPerformancePercentage(
-      safeSelectedPilot.adv,
-      safeSelectedPilot.participacoes
-    );
-    return Math.max(0, 100 - penalty);
-  }, [selectedPilot, safeSelectedPilot.adv, safeSelectedPilot.participacoes]);
-
-  const selectedPilotLeaderGapValue = useMemo(() => {
-    if (!selectedPilot || !leader) return 0;
-    return Math.max(0, leader.pontos - safeSelectedPilot.pontos);
-  }, [selectedPilot, leader, safeSelectedPilot.pontos]);
-
-  const selectedPilotWinRateLabel = useMemo(() => {
-    if (!selectedPilot || safeSelectedPilot.participacoes <= 0) return "sem leitura";
-    if (selectedPilotWinRate >= 40) return "índice vencedor";
-    if (selectedPilotWinRate >= 20) return "boa conversão";
-    if (selectedPilotWinRate > 0) return "ainda pode crescer";
-    return "busca a 1ª vitória";
-  }, [selectedPilot, safeSelectedPilot.participacoes, selectedPilotWinRate]);
-
-  const selectedPilotPodiumRateLabel = useMemo(() => {
-    if (!selectedPilot || safeSelectedPilot.participacoes <= 0) return "sem leitura";
-    if (selectedPilotPodiumRate >= 70) return "top 6 muito forte";
-    if (selectedPilotPodiumRate >= 50) return "regularidade alta";
-    if (selectedPilotPodiumRate > 0) return "presença competitiva";
-    return "fora do top 6";
-  }, [selectedPilot, safeSelectedPilot.participacoes, selectedPilotPodiumRate]);
-
-  const selectedPilotDisciplineLabel = useMemo(() => {
-    if (!selectedPilot || safeSelectedPilot.participacoes <= 0) return "sem leitura";
-    if (selectedPilotDiscipline >= 90) return "conduta exemplar";
-    if (selectedPilotDiscipline >= 75) return "controle estável";
-    if (selectedPilotDiscipline >= 60) return "atenção moderada";
-    return "risco disciplinar";
-  }, [selectedPilot, safeSelectedPilot.participacoes, selectedPilotDiscipline]);
-
-  const selectedPilotRivalAhead = useMemo(() => {
+}: UsePilotAnalysisProps): PilotAnalysis | null {
+  const analysis = useMemo<PilotAnalysis | null>(() => {
     if (!selectedPilot) return null;
 
-    const pilotIndex = filteredRanking.findIndex(
-      (item) =>
-        item.pilotoId === safeSelectedPilot.pilotoId &&
-        item.competicao === safeSelectedPilot.competicao
-    );
+    const gapToLeader = leader
+      ? getGapToLeader(leader.pontos, selectedPilot.pontos)
+      : "-";
 
-    if (pilotIndex <= 0) return null;
-    return filteredRanking[pilotIndex - 1] || null;
-  }, [filteredRanking, selectedPilot, safeSelectedPilot.pilotoId, safeSelectedPilot.competicao]);
+    const averagePointsPerRace = getPilotEfficiency(selectedPilot);
+    const bestAttribute = getSelectedPilotBestAttribute(selectedPilot);
+    const consistencyLabel = getPilotConsistencyLabel(selectedPilot);
+    const momentumLabel = getPilotMomentumLabel(selectedPilot, leader);
 
-  return {
-    safeSelectedPilot,
-    selectedPilotGap,
-    selectedPilotAverage,
-    selectedPilotBestAttribute,
-    selectedPilotConsistency,
-    selectedPilotMomentum,
-    selectedPilotVsLeader,
-    selectedPilotPodiumRate,
-    selectedPilotWinRate,
-    selectedPilotDiscipline,
-    selectedPilotLeaderGapValue,
-    selectedPilotWinRateLabel,
-    selectedPilotPodiumRateLabel,
-    selectedPilotDisciplineLabel,
-    selectedPilotRivalAhead,
-  };
+    const performanceVsLeader =
+      selectedPilot && leader
+        ? getPerformancePercentage(
+            selectedPilot.pontos,
+            Math.max(leader.pontos, selectedPilot.pontos, 1)
+          )
+        : 0;
+
+    const podiumRate =
+      selectedPilot.participacoes > 0
+        ? getPerformancePercentage(
+            selectedPilot.podios,
+            selectedPilot.participacoes
+          )
+        : 0;
+
+    const winRate =
+      selectedPilot.participacoes > 0
+        ? getPerformancePercentage(
+            selectedPilot.vitorias,
+            selectedPilot.participacoes
+          )
+        : 0;
+
+    const discipline =
+      selectedPilot.participacoes > 0
+        ? Math.max(
+            0,
+            100 -
+              getPerformancePercentage(
+                selectedPilot.adv,
+                selectedPilot.participacoes
+              )
+          )
+        : 100;
+
+    const leaderGapValue = leader
+      ? Math.max(0, leader.pontos - selectedPilot.pontos)
+      : 0;
+
+    const winRateLabel =
+      selectedPilot.participacoes <= 0
+        ? "sem leitura"
+        : winRate >= 40
+          ? "índice vencedor"
+          : winRate >= 20
+            ? "boa conversão"
+            : winRate > 0
+              ? "ainda pode crescer"
+              : "busca a 1ª vitória";
+
+    const podiumRateLabel =
+      selectedPilot.participacoes <= 0
+        ? "sem leitura"
+        : podiumRate >= 70
+          ? "top 6 muito forte"
+          : podiumRate >= 50
+            ? "regularidade alta"
+            : podiumRate > 0
+              ? "presença competitiva"
+              : "fora do top 6";
+
+    const disciplineLabel =
+      selectedPilot.participacoes <= 0
+        ? "sem leitura"
+        : discipline >= 90
+          ? "conduta exemplar"
+          : discipline >= 75
+            ? "controle estável"
+            : discipline >= 60
+              ? "atenção moderada"
+              : "risco disciplinar";
+
+    const rivalAhead = findRivalAhead(filteredRanking, selectedPilot);
+
+    return {
+      pilot: selectedPilot,
+      gapToLeader,
+      averagePointsPerRace,
+      bestAttribute,
+      consistencyLabel,
+      momentumLabel,
+      performanceVsLeader,
+      podiumRate,
+      winRate,
+      discipline,
+      leaderGapValue,
+      winRateLabel,
+      podiumRateLabel,
+      disciplineLabel,
+      rivalAhead,
+    };
+  }, [selectedPilot, filteredRanking, leader]);
+
+  return analysis;
+}
+
+function findRivalAhead(
+  filteredRanking: RankingItem[],
+  selectedPilot: RankingItem
+): RankingItem | null {
+  const pilotIndex = filteredRanking.findIndex(
+    (item) =>
+      item.pilotoId === selectedPilot.pilotoId &&
+      item.competicao === selectedPilot.competicao
+  );
+
+  if (pilotIndex <= 0) return null;
+  return filteredRanking[pilotIndex - 1] || null;
 }

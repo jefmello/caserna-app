@@ -1,5 +1,10 @@
 import type { RankingItem } from "@/types/ranking";
 
+/**
+ * Tabela oficial de pontos por posição no campeonato Caserna Kart Racing.
+ * Este é a ÚNICA fonte verdadeira para cálculos de pontuação.
+ * Qualquer alteração aqui deve ser comunicada à organização do campeonato.
+ */
 export const STAGE_POINTS_BY_POSITION: Record<number, number> = {
   1: 35,
   2: 32,
@@ -31,8 +36,15 @@ export const STAGE_POINTS_BY_POSITION: Record<number, number> = {
   28: 1,
 };
 
+/**
+ * Etapas que NÃO possuem ponto de pole position.
+ */
 export const NO_POLE_STAGES = [2, 5, 8];
 
+/**
+ * Mapeamento de competições para suas respectivas etapas.
+ * GERAL combina T2 + T3 (etapas 4-9).
+ */
 export const CHAMPIONSHIP_STAGE_MAP: Record<string, number[]> = {
   T1: [1, 2, 3],
   T2: [4, 5, 6],
@@ -40,6 +52,10 @@ export const CHAMPIONSHIP_STAGE_MAP: Record<string, number[]> = {
   GERAL: [4, 5, 6, 7, 8, 9],
 };
 
+/**
+ * Etapas já concluídas por padrão. Stage 1 é considerada realizada
+ * para que as projeções comecem a partir da stage 2.
+ */
 export const DEFAULT_COMPLETED_STAGES = [1];
 
 const MAX_STAGE_BASE_POINTS = STAGE_POINTS_BY_POSITION[1] || 35;

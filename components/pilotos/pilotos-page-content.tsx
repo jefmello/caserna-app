@@ -206,29 +206,32 @@ export default function PilotosPageContent() {
     isDarkMode,
   });
 
-  const {
-    safeSelectedPilot,
-    selectedPilotGap,
-    selectedPilotAverage,
-    selectedPilotBestAttribute,
-    selectedPilotConsistency,
-    selectedPilotMomentum,
-    selectedPilotVsLeader,
-    selectedPilotPodiumRate,
-    selectedPilotWinRate,
-    selectedPilotDiscipline,
-    selectedPilotLeaderGapValue,
-    selectedPilotWinRateLabel,
-    selectedPilotPodiumRateLabel,
-    selectedPilotDisciplineLabel,
-    selectedPilotRivalAhead,
-  } = usePilotAnalysis({
+  const pilotAnalysis = usePilotAnalysis({
     selectedPilot,
     filteredRanking,
     leader,
     category,
     competition,
   });
+
+  // Quando selectedPilot está definido, resolvedSafePilot é garantidamente non-null
+  // (os componentes de análise só renderizam no branch onde selectedPilot é truthy)
+  const resolvedSafePilot = pilotAnalysis?.pilot
+    ?? (selectedPilot as RankingItem);
+  const selectedPilotGap = pilotAnalysis?.gapToLeader ?? "-";
+  const selectedPilotAverage = pilotAnalysis?.averagePointsPerRace ?? 0;
+  const selectedPilotBestAttribute = pilotAnalysis?.bestAttribute ?? { label: "Sem dados", value: 0 };
+  const selectedPilotConsistency = pilotAnalysis?.consistencyLabel ?? "Sem leitura";
+  const selectedPilotMomentum = pilotAnalysis?.momentumLabel ?? "Sem leitura";
+  const selectedPilotVsLeader = pilotAnalysis?.performanceVsLeader ?? 0;
+  const selectedPilotPodiumRate = pilotAnalysis?.podiumRate ?? 0;
+  const selectedPilotWinRate = pilotAnalysis?.winRate ?? 0;
+  const selectedPilotDiscipline = pilotAnalysis?.discipline ?? 100;
+  const selectedPilotLeaderGapValue = pilotAnalysis?.leaderGapValue ?? 0;
+  const selectedPilotWinRateLabel = pilotAnalysis?.winRateLabel ?? "sem leitura";
+  const selectedPilotPodiumRateLabel = pilotAnalysis?.podiumRateLabel ?? "sem leitura";
+  const selectedPilotDisciplineLabel = pilotAnalysis?.disciplineLabel ?? "sem leitura";
+  const selectedPilotRivalAhead = pilotAnalysis?.rivalAhead ?? null;
 
   const selectedPilotShortName = useMemo(
     () => getPilotFirstAndLastName(selectedPilot?.piloto),
@@ -277,7 +280,7 @@ export default function PilotosPageContent() {
       const dataUrl = await generateImage(pilotShareCardRef.current);
       if (!dataUrl) return;
 
-      const safePilotName = getPilotFirstAndLastName(safeSelectedPilot.piloto)
+      const safePilotName = getPilotFirstAndLastName(selectedPilot.piloto)
         .toLowerCase()
         .normalize("NFD")
         .replace(/[̀-ͯ]/g, "")
@@ -489,7 +492,7 @@ export default function PilotosPageContent() {
               selectedPilot={selectedPilot}
               selectedPilotShortName={selectedPilotShortName}
               selectedPilotWarName={selectedPilotWarName}
-              safeSelectedPilot={safeSelectedPilot}
+              safeSelectedPilot={resolvedSafePilot}
               selectedPilotGap={selectedPilotGap}
               selectedPilotAverage={selectedPilotAverage}
               selectedPilotConsistency={selectedPilotConsistency}
@@ -511,7 +514,7 @@ export default function PilotosPageContent() {
             selectedPilotPodiumRateLabel={selectedPilotPodiumRateLabel}
             selectedPilotDiscipline={selectedPilotDiscipline}
             selectedPilotDisciplineLabel={selectedPilotDisciplineLabel}
-            safeSelectedPilot={safeSelectedPilot}
+            safeSelectedPilot={resolvedSafePilot}
             TrophyIcon={Trophy}
             CrownIcon={Crown}
             MedalIcon={Medal}
@@ -521,7 +524,7 @@ export default function PilotosPageContent() {
           <RankingPilotPerformanceBlocksCard
             isDarkMode={isDarkMode}
             theme={theme}
-            safeSelectedPilot={safeSelectedPilot}
+            safeSelectedPilot={resolvedSafePilot}
             selectedPilotAverage={selectedPilotAverage}
             selectedPilotGap={selectedPilotGap}
             selectedPilotLeaderGapValue={selectedPilotLeaderGapValue}
@@ -597,7 +600,7 @@ export default function PilotosPageContent() {
                     }`}
                   >
                     {selectedPilotRivalAhead && selectedPilot
-                      ? `${selectedPilotRivalAhead.pontos - safeSelectedPilot.pontos} ponto(s) para avançar mais uma posição.`
+                      ? `${selectedPilotRivalAhead.pontos - resolvedSafePilot.pontos} ponto(s) para avançar mais uma posição.`
                       : "Piloto ocupa a liderança desta seleção."}
                   </p>
                 </div>
