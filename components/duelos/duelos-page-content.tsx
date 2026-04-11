@@ -1,24 +1,29 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
   BarChart3,
+  Download,
   Flag,
   Gauge,
   Medal,
+  Share2,
   ShieldAlert,
   Swords,
   Timer,
   Trophy,
+  Zap,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import SectionDivider from "@/components/ui/section-divider";
 import RankingHeader from "@/components/ranking/ranking-header";
+import { useChampionship } from "@/context/championship-context";
 import useRankingData from "@/lib/hooks/useRankingData";
 import useRankingFilters from "@/lib/hooks/useRankingFilters";
 import useRankingScreenController from "@/lib/hooks/useRankingScreenController";
+import useRankingShare from "@/lib/hooks/useRankingShare";
 import {
   competitionLabels,
   getComparisonWinner,
@@ -27,8 +32,18 @@ import {
   getPilotFirstAndLastName,
   getPilotWarNameDisplay,
 } from "@/lib/ranking/ranking-utils";
+import { resolvePilotKey } from "@/lib/ranking/stage-points-engine";
 import type { RankingItem } from "@/types/ranking";
 import PageTransition from "@/components/ui/page-transition";
+import { motion } from "framer-motion";
+import {
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
 
 type DuelMetric = {
   label: string;
@@ -118,6 +133,7 @@ function DuelSelectorCard({
 function PilotInfoCard({
   title,
   pilot,
+  position,
   score,
   isWinner,
   isDarkMode,
@@ -125,6 +141,7 @@ function PilotInfoCard({
 }: {
   title: string;
   pilot: RankingItem;
+  position: number;
   score: number;
   isWinner: boolean;
   isDarkMode: boolean;
@@ -157,7 +174,7 @@ function PilotInfoCard({
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
-              {getPilotFirstAndLastName(pilot.piloto)}
+              #{position} {getPilotFirstAndLastName(pilot.piloto)}
             </p>
 
             {getPilotWarNameDisplay(pilot) ? (
@@ -316,6 +333,30 @@ function MetricRow({
         >
           {metric.description}
         </p>
+        {metric.a + metric.b > 0 && (
+          <div className="mt-1.5 flex h-1.5 overflow-hidden rounded-full">
+            <div
+              className={`transition-all duration-300 ${
+                metric.winner === "a"
+                  ? "bg-emerald-500"
+                  : isDarkMode
+                    ? "bg-zinc-600"
+                    : "bg-zinc-300"
+              }`}
+              style={{ width: `${(metric.a / (metric.a + metric.b)) * 100}%` }}
+            />
+            <div
+              className={`transition-all duration-300 ${
+                metric.winner === "b"
+                  ? "bg-emerald-500"
+                  : isDarkMode
+                    ? "bg-zinc-600"
+                    : "bg-zinc-300"
+              }`}
+              style={{ width: `${(metric.b / (metric.a + metric.b)) * 100}%` }}
+            />
+          </div>
+        )}
       </div>
 
       <div
@@ -368,20 +409,16 @@ export default function DuelosPageContent() {
     categories,
   });
 
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  // Dark mode do context global (não useState local)
+  const { isDarkMode, toggleTheme } = useChampionship();
+
   const [comparePilotAId, setComparePilotAId] = useState("");
   const [comparePilotBId, setComparePilotBId] = useState("");
 
-  useEffect(() => {
-    const savedTheme = window.localStorage.getItem("caserna-theme");
-    if (savedTheme === "dark") {
-      setIsDarkMode(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    window.localStorage.setItem("caserna-theme", isDarkMode ? "dark" : "light");
-  }, [isDarkMode]);
+  // Share state
+  const duelCardRef = useRef<HTMLDivElement | null>(null);
+  const [isSharingDuel, setIsSharingDuel] = useState(false);
+  const { generateImage, download, shareDataUrlToWhatsApp } = useRankingShare({ isDarkMode });
 
   const { theme } = useRankingScreenController({
     category,
@@ -405,6 +442,16 @@ export default function DuelosPageContent() {
       filteredRanking.find((item) => (item.pilotoId || item.piloto) === comparePilotBId) ||
       null,
     [filteredRanking, comparePilotBId]
+  );
+
+  // Efficiency
+  const efficiencyA = useMemo(
+    () => comparePilotA && comparePilotA.participacoes > 0 ? Math.round((comparePilotA.pontos / comparePilotA.participacoes) * 10) / 10 : 0,
+    [comparePilotA]
+  );
+  const efficiencyB = useMemo(
+    () => comparePilotB && comparePilotB.participacoes > 0 ? Math.round((comparePilotB.pontos / comparePilotB.participacoes) * 10) / 10 : 0,
+    [comparePilotB]
   );
 
   const duelMetrics = useMemo<DuelMetric[]>(() => {
@@ -466,6 +513,14 @@ export default function DuelosPageContent() {
         b: comparePilotB.adv,
         lowerIsBetter: true,
         description: "disciplina na pista",
+      },
+      {
+        label: "Eficiência",
+        shortLabel: "EF",
+        a: efficiencyA,
+        b: efficiencyB,
+        lowerIsBetter: false,
+        description: "pontos por participação",
       },
     ];
   }, [comparePilotA, comparePilotB]);
@@ -575,8 +630,132 @@ export default function DuelosPageContent() {
     }));
   }, [duelMetrics]);
 
-  const handleToggleDarkMode = () => {
-    setIsDarkMode((prev) => !prev);
+  // Position in ranking
+  const positionA = useMemo(
+    () => filteredRanking.findIndex((p) => resolvePilotKey(p) === comparePilotAId) + 1,
+    [filteredRanking, comparePilotAId]
+  );
+  const positionB = useMemo(
+    () => filteredRanking.findIndex((p) => resolvePilotKey(p) === comparePilotBId) + 1,
+    [filteredRanking, comparePilotBId]
+  );
+
+  // Radar data (normalized 0-100)
+  const radarData = useMemo(() => {
+    if (!comparePilotA || !comparePilotB) return [];
+    const maxPts = Math.max(comparePilotA.pontos, comparePilotB.pontos, 1);
+    const maxVit = Math.max(comparePilotA.vitorias, comparePilotB.vitorias, 1);
+    const maxPol = Math.max(comparePilotA.poles, comparePilotB.poles, 1);
+    const maxMv = Math.max(comparePilotA.mv, comparePilotB.mv, 1);
+    const maxPod = Math.max(comparePilotA.podios, comparePilotB.podios, 1);
+    return [
+      { metric: "Pontos", A: Math.round((comparePilotA.pontos / maxPts) * 100), B: Math.round((comparePilotB.pontos / maxPts) * 100) },
+      { metric: "Vitórias", A: Math.round((comparePilotA.vitorias / maxVit) * 100), B: Math.round((comparePilotB.vitorias / maxVit) * 100) },
+      { metric: "Poles", A: Math.round((comparePilotA.poles / maxPol) * 100), B: Math.round((comparePilotB.poles / maxPol) * 100) },
+      { metric: "VMR", A: Math.round((comparePilotA.mv / maxMv) * 100), B: Math.round((comparePilotB.mv / maxMv) * 100) },
+      { metric: "Pódios", A: Math.round((comparePilotA.podios / maxPod) * 100), B: Math.round((comparePilotB.podios / maxPod) * 100) },
+    ];
+  }, [comparePilotA, comparePilotB]);
+
+  const handleToggleDarkMode = toggleTheme;
+
+  const handleSelectPilotA = (value: string) => {
+    // Bloquear duelo do mesmo piloto
+    if (value && value === comparePilotBId) return;
+    setComparePilotAId(value);
+  };
+
+  const handleSelectPilotB = (value: string) => {
+    // Bloquear duelo do mesmo piloto
+    if (value && value === comparePilotAId) return;
+    setComparePilotBId(value);
+  };
+
+  // Suggest duels
+  const suggestedDuels = useMemo(() => {
+    if (filteredRanking.length < 2) return [];
+    const duels: { label: string; a: string; b: string; icon: string }[] = [];
+
+    // Líder vs Vice
+    if (filteredRanking.length >= 2) {
+      duels.push({
+        label: "Líder vs Vice",
+        a: filteredRanking[0].pilotoId || filteredRanking[0].piloto,
+        b: filteredRanking[1].pilotoId || filteredRanking[1].piloto,
+        icon: "🏆",
+      });
+    }
+
+    // Top 6 mais próximo (menor diferença de pontos)
+    let closestDiff = Infinity;
+    let closestA = "";
+    let closestB = "";
+    for (let i = 0; i < Math.min(filteredRanking.length - 1, 5); i++) {
+      const diff = filteredRanking[i].pontos - filteredRanking[i + 1].pontos;
+      if (diff < closestDiff && diff > 0) {
+        closestDiff = diff;
+        closestA = filteredRanking[i].pilotoId || filteredRanking[i].piloto;
+        closestB = filteredRanking[i + 1].pilotoId || filteredRanking[i + 1].piloto;
+      }
+    }
+    if (closestA && closestB) {
+      duels.push({
+        label: "Batalha mais próxima",
+        a: closestA,
+        b: closestB,
+        icon: "⚡",
+      });
+    }
+
+    // Maior rival de categoria (2º vs 3º)
+    if (filteredRanking.length >= 3) {
+      duels.push({
+        label: "Rivalidade direta",
+        a: filteredRanking[1].pilotoId || filteredRanking[1].piloto,
+        b: filteredRanking[2].pilotoId || filteredRanking[2].piloto,
+        icon: "🔥",
+      });
+    }
+
+    return duels;
+  }, [filteredRanking]);
+
+  const handleShareDuel = async () => {
+    if (!comparePilotA || !comparePilotB || !duelCardRef.current || isSharingDuel) return;
+    try {
+      setIsSharingDuel(true);
+      const dataUrl = await generateImage(duelCardRef.current);
+      if (!dataUrl) return;
+      const pilotAName = getPilotFirstAndLastName(comparePilotA.piloto).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-");
+      const pilotBName = getPilotFirstAndLastName(comparePilotB.piloto).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-");
+      download(dataUrl, `duelo-${pilotAName}-vs-${pilotBName}-${category.toLowerCase()}-${competition.toLowerCase()}.png`);
+    } catch (err) {
+      console.error(err);
+      window.alert("Não foi possível gerar a imagem do duelo.");
+    } finally {
+      setIsSharingDuel(false);
+    }
+  };
+
+  const handleShareDuelWhatsApp = async () => {
+    if (!comparePilotA || !comparePilotB || !duelCardRef.current || isSharingDuel) return;
+    try {
+      setIsSharingDuel(true);
+      const dataUrl = await generateImage(duelCardRef.current);
+      if (!dataUrl) return;
+      const pilotAName = getPilotFirstAndLastName(comparePilotA.piloto).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-");
+      const pilotBName = getPilotFirstAndLastName(comparePilotB.piloto).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-");
+      shareDataUrlToWhatsApp({
+        dataUrl,
+        fileName: `duelo-${pilotAName}-vs-${pilotBName}.png`,
+        text: `⚔️ ${getPilotFirstAndLastName(comparePilotA.piloto)} vs ${getPilotFirstAndLastName(comparePilotB.piloto)} — Duelo oficial ${competitionLabels[competition] || competition} · ${category}`,
+      });
+    } catch (err) {
+      console.error(err);
+      window.alert("Não foi possível compartilhar o duelo.");
+    } finally {
+      setIsSharingDuel(false);
+    }
   };
 
   const handleRetry = () => {
@@ -706,8 +885,8 @@ export default function DuelosPageContent() {
         <DuelSelectorCard
           title="Piloto A"
           value={comparePilotAId}
-          onChange={setComparePilotAId}
-          options={filteredRanking}
+          onChange={handleSelectPilotA}
+          options={filteredRanking.filter((p) => (p.pilotoId || p.piloto) !== comparePilotBId)}
           isDarkMode={isDarkMode}
           theme={theme}
         />
@@ -715,8 +894,8 @@ export default function DuelosPageContent() {
         <DuelSelectorCard
           title="Piloto B"
           value={comparePilotBId}
-          onChange={setComparePilotBId}
-          options={filteredRanking}
+          onChange={handleSelectPilotB}
+          options={filteredRanking.filter((p) => (p.pilotoId || p.piloto) !== comparePilotAId)}
           isDarkMode={isDarkMode}
           theme={theme}
         />
@@ -725,50 +904,109 @@ export default function DuelosPageContent() {
       <SectionDivider />
 
       {!comparePilotA || !comparePilotB ? (
-        <Card
-          className={`rounded-[24px] shadow-sm ${
-            isDarkMode
-              ? "border border-white/10 bg-[#111827]"
-              : "border-black/5 bg-white"
-          }`}
-        >
-          <CardContent className="p-6 text-center">
-            <div
-              className={`mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-3xl ${
-                isDarkMode ? "bg-white/5" : "bg-zinc-100"
-              }`}
-            >
-              <ShieldAlert
-                className={`h-6 w-6 ${
+        <>
+          <Card
+            className={`rounded-[24px] shadow-sm ${
+              isDarkMode
+                ? "border border-white/10 bg-[#111827]"
+                : "border-black/5 bg-white"
+            }`}
+          >
+            <CardContent className="p-6 text-center">
+              <div
+                className={`mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-3xl ${
+                  isDarkMode ? "bg-white/5" : "bg-zinc-100"
+                }`}
+              >
+                <ShieldAlert
+                  className={`h-6 w-6 ${
+                    isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                  }`}
+                />
+              </div>
+
+              <p
+                className={`text-[20px] font-bold tracking-tight ${
+                  isDarkMode ? "text-white" : "text-zinc-950"
+                }`}
+              >
+                Selecione dois pilotos
+              </p>
+
+              <p
+                className={`mt-2 text-[14px] leading-snug ${
                   isDarkMode ? "text-zinc-400" : "text-zinc-500"
                 }`}
-              />
-            </div>
+              >
+                O comparativo premium será montado automaticamente quando os dois lados
+                do duelo estiverem definidos.
+              </p>
+            </CardContent>
+          </Card>
 
-            <p
-              className={`text-[20px] font-bold tracking-tight ${
-                isDarkMode ? "text-white" : "text-zinc-950"
+          {/* Suggested Duels */}
+          {suggestedDuels.length > 0 && (
+            <Card
+              className={`rounded-[24px] shadow-sm ${
+                isDarkMode
+                  ? "border border-white/10 bg-[#111827]"
+                  : "border-black/5 bg-white"
               }`}
             >
-              Selecione dois pilotos
-            </p>
-
-            <p
-              className={`mt-2 text-[14px] leading-snug ${
-                isDarkMode ? "text-zinc-400" : "text-zinc-500"
-              }`}
-            >
-              O comparativo premium será montado automaticamente quando os dois lados
-              do duelo estiverem definidos.
-            </p>
-          </CardContent>
-        </Card>
+              <CardContent className="p-4">
+                <p
+                  className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                    isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                  }`}
+                >
+                  Sugestões de confronto
+                </p>
+                <p
+                  className={`mt-1 text-[16px] font-bold ${
+                    isDarkMode ? "text-white" : "text-zinc-950"
+                  }`}
+                >
+                  Duelos em alta
+                </p>
+                <div className="mt-4 space-y-2">
+                  {suggestedDuels.map((duel) => (
+                    <button
+                      key={`suggested-${duel.label}`}
+                      type="button"
+                      onClick={() => {
+                        handleSelectPilotA(duel.a);
+                        handleSelectPilotB(duel.b);
+                      }}
+                      className={`w-full rounded-xl border px-4 py-3 text-left transition ${
+                        isDarkMode
+                          ? "border-white/10 bg-[#0f172a] hover:border-white/20"
+                          : "border-black/5 bg-zinc-50 hover:bg-white"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className={`text-sm font-bold ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                            {duel.icon} {duel.label}
+                          </p>
+                        </div>
+                        <ArrowRight
+                          className={`h-4 w-4 ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}
+                        />
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </>
       ) : (
         <>
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_120px_minmax(0,1fr)] xl:items-stretch">
             <PilotInfoCard
               title="Piloto A"
               pilot={comparePilotA}
+              position={positionA}
               score={duelSummary?.scoreA || 0}
               isWinner={duelSummary?.overallWinner === "a"}
               isDarkMode={isDarkMode}
@@ -790,13 +1028,16 @@ export default function DuelosPageContent() {
                 >
                   Score
                 </p>
-                <p
+                <motion.p
                   className={`mt-2 text-[30px] font-extrabold leading-none ${
                     isDarkMode ? "text-white" : "text-zinc-950"
                   }`}
+                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0 }}
+                  transition={{ delay: 0.2 }}
                 >
                   {duelSummary ? `${duelSummary.scoreA} x ${duelSummary.scoreB}` : "- x -"}
-                </p>
+                </motion.p>
                 <p
                   className={`mt-3 rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${duelIntensity.tone}`}
                 >
@@ -808,6 +1049,7 @@ export default function DuelosPageContent() {
             <PilotInfoCard
               title="Piloto B"
               pilot={comparePilotB}
+              position={positionB}
               score={duelSummary?.scoreB || 0}
               isWinner={duelSummary?.overallWinner === "b"}
               isDarkMode={isDarkMode}
@@ -870,6 +1112,28 @@ export default function DuelosPageContent() {
                       isDarkMode={isDarkMode}
                     />
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className={`rounded-[24px] shadow-sm ${isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"}`}>
+              <CardContent className="p-4">
+                <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                  Radar comparativo
+                </p>
+                <h3 className={`mt-1 text-[20px] font-bold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                  Perfil de desempenho
+                </h3>
+                <div className="mt-4 h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RadarChart data={radarData}>
+                      <PolarGrid stroke={isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"} />
+                      <PolarAngleAxis dataKey="metric" tick={{ fill: isDarkMode ? "#a1a1aa" : "#71717a", fontSize: 11 }} />
+                      <Radar name="A" dataKey="A" stroke={theme.chartBar || "#f97316"} fill={theme.chartBar || "#f97316"} fillOpacity={0.3} />
+                      <Radar name="B" dataKey="B" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
+                      <Legend wrapperStyle={{ fontSize: 12 }} />
+                    </RadarChart>
+                  </ResponsiveContainer>
                 </div>
               </CardContent>
             </Card>
@@ -985,36 +1249,18 @@ export default function DuelosPageContent() {
                       </p>
                     </div>
 
-                    <div
-                      className={`rounded-[18px] border px-3 py-3 ${
-                        isDarkMode
-                          ? "border-white/10 bg-[#0f172a]"
-                          : "border-black/5 bg-zinc-50/80"
-                      }`}
-                    >
-                      <p
-                        className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
-                          isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                        }`}
-                      >
-                        Próximo movimento
+                    <div className={`rounded-[18px] border px-3 py-3 ${isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50/80"}`}>
+                      <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                        Compartilhar duelo
                       </p>
-                      <Link
-                        href="/midia"
-                        className={`mt-1 inline-flex items-center gap-2 text-[14px] font-semibold ${
-                          isDarkMode ? theme.darkAccentText : "text-zinc-950"
-                        }`}
-                      >
-                        Gerar arte do duelo
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>
-                      <p
-                        className={`mt-1 text-[11px] ${
-                          isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                        }`}
-                      >
-                        Use a central de mídia para exportar o confronto.
-                      </p>
+                      <div className="mt-2 flex gap-2">
+                        <button onClick={handleShareDuel} disabled={isSharingDuel} className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold ${isDarkMode ? "border border-white/10 bg-[#111827] text-zinc-300 hover:bg-white/5" : "border border-black/5 bg-white text-zinc-700 hover:bg-zinc-50"}`}>
+                          <Download className="h-3.5 w-3.5" /> Download
+                        </button>
+                        <button onClick={handleShareDuelWhatsApp} disabled={isSharingDuel} className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold ${isDarkMode ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/15" : "border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"}`}>
+                          <Share2 className="h-3.5 w-3.5" /> WhatsApp
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
