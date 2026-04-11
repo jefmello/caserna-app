@@ -1004,7 +1004,7 @@ export default function DuelosPageContent() {
         <>
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_120px_minmax(0,1fr)] xl:items-stretch">
             <PilotInfoCard
-              title="Piloto A"
+              title={getPilotWarNameDisplay(comparePilotA) || getPilotFirstAndLastName(comparePilotA.piloto)}
               pilot={comparePilotA}
               position={positionA}
               score={duelSummary?.scoreA || 0}
@@ -1047,7 +1047,7 @@ export default function DuelosPageContent() {
             </Card>
 
             <PilotInfoCard
-              title="Piloto B"
+              title={getPilotWarNameDisplay(comparePilotB) || getPilotFirstAndLastName(comparePilotB.piloto)}
               pilot={comparePilotB}
               position={positionB}
               score={duelSummary?.scoreB || 0}
