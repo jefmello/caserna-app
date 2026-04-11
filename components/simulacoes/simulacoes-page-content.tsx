@@ -11,6 +11,7 @@ import {
   Sparkles,
   Swords,
   Trophy,
+  UserPlus,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import RankingHeader from "@/components/ranking/ranking-header";
@@ -18,6 +19,7 @@ import useRankingData from "@/lib/hooks/useRankingData";
 import useRankingFilters from "@/lib/hooks/useRankingFilters";
 import { useChampionship } from "@/context/championship-context";
 import { competitionLabels, getCategoryTheme, getPilotFirstAndLastName } from "@/lib/ranking/ranking-utils";
+import CustomScenarioBuilder from "@/components/simulacoes/custom-scenario-builder";
 import {
   buildTitleProbabilityCandidates,
   type TitleProbabilityCandidate,
@@ -848,6 +850,48 @@ export default function SimulacoesPageContent() {
                 </div>
               )}
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Cenário personalizado */}
+        <Card
+          className={`rounded-[24px] shadow-sm ${
+            isDarkMode
+              ? "border border-white/10 bg-[#111827]"
+              : "border-black/5 bg-white"
+          }`}
+        >
+          <CardHeader className="pb-3">
+            <CardTitle
+              className={`flex items-center gap-2 text-[18px] font-extrabold tracking-tight ${
+                isDarkMode ? "text-white" : "text-zinc-950"
+              }`}
+            >
+              <UserPlus className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+              Monte seu próprio cenário
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            {nextStageNumber ? (
+              <CustomScenarioBuilder
+                ranking={filteredRanking.filter((p) => p.pontos > 0)}
+                stageNumber={nextStageNumber}
+                category={category}
+                isDarkMode={isDarkMode}
+                onSelectPilot={handleSelectPilot}
+              />
+            ) : (
+              <div
+                className={`rounded-[20px] border border-dashed px-4 py-8 text-center text-sm ${
+                  isDarkMode
+                    ? "border-white/10 bg-[#0f172a] text-zinc-400"
+                    : "border-black/10 bg-zinc-50 text-zinc-500"
+                }`}
+              >
+                Disponível quando houver uma próxima etapa definida.
+              </div>
+            )}
           </CardContent>
         </Card>
 
