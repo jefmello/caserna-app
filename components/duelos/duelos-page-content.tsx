@@ -296,9 +296,13 @@ function PilotInfoCard({
 function MetricRow({
   metric,
   isDarkMode,
+  pilotAName,
+  pilotBName,
 }: {
   metric: DuelMetric & { winner: "a" | "b" | "tie" };
   isDarkMode: boolean;
+  pilotAName: string;
+  pilotBName: string;
 }) {
   return (
     <div
@@ -355,6 +359,16 @@ function MetricRow({
               }`}
               style={{ width: `${(metric.b / (metric.a + metric.b)) * 100}%` }}
             />
+          </div>
+        )}
+        {metric.a + metric.b > 0 && (
+          <div className="mt-0.5 flex justify-between">
+            <span className={`text-[9px] font-semibold ${isDarkMode ? "text-zinc-600" : "text-zinc-400"}`}>
+              {pilotAName}
+            </span>
+            <span className={`text-[9px] font-semibold ${isDarkMode ? "text-zinc-600" : "text-zinc-400"}`}>
+              {pilotBName}
+            </span>
           </div>
         )}
       </div>
@@ -1110,6 +1124,8 @@ export default function DuelosPageContent() {
                       key={`duel-metric-${metric.label}`}
                       metric={metric}
                       isDarkMode={isDarkMode}
+                      pilotAName={getPilotWarNameDisplay(comparePilotA) || getPilotFirstAndLastName(comparePilotA.piloto)}
+                      pilotBName={getPilotWarNameDisplay(comparePilotB) || getPilotFirstAndLastName(comparePilotB.piloto)}
                     />
                   ))}
                 </div>
@@ -1129,8 +1145,8 @@ export default function DuelosPageContent() {
                     <RadarChart data={radarData}>
                       <PolarGrid stroke={isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"} />
                       <PolarAngleAxis dataKey="metric" tick={{ fill: isDarkMode ? "#a1a1aa" : "#71717a", fontSize: 11 }} />
-                      <Radar name="A" dataKey="A" stroke={theme.chartBar || "#f97316"} fill={theme.chartBar || "#f97316"} fillOpacity={0.3} />
-                      <Radar name="B" dataKey="B" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
+                      <Radar name={getPilotWarNameDisplay(comparePilotA) || getPilotFirstAndLastName(comparePilotA.piloto)} dataKey="A" stroke={theme.chartBar || "#f97316"} fill={theme.chartBar || "#f97316"} fillOpacity={0.3} />
+                      <Radar name={getPilotWarNameDisplay(comparePilotB) || getPilotFirstAndLastName(comparePilotB.piloto)} dataKey="B" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
                       <Legend wrapperStyle={{ fontSize: 12 }} />
                     </RadarChart>
                   </ResponsiveContainer>
