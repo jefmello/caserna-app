@@ -1,9 +1,8 @@
 import type { RankingItem } from "@/types/ranking";
 
 /**
- * Normaliza o nome do piloto: trim, lowercase, title case
- * @param name - Nome bruto do piloto
- * @returns Nome normalizado ou "-" se vazio
+ * Normaliza o nome do piloto: trim, lowercase, title case.
+ * ÚNICA fonte verdadeira para formatação de nomes de pilotos.
  */
 export function normalizePilotName(name?: string): string {
   if (!name) return "-";
@@ -18,9 +17,7 @@ export function normalizePilotName(name?: string): string {
 }
 
 /**
- * Extrai primeira e última parte do nome normalizado
- * @param name - Nome do piloto
- * @returns Objeto com firstName e lastName
+ * Extrai primeira e última parte do nome normalizado.
  */
 export function getPilotNameParts(name?: string): { firstName: string; lastName: string } {
   const normalized = normalizePilotName(name);
@@ -39,9 +36,7 @@ export function getPilotNameParts(name?: string): { firstName: string; lastName:
 }
 
 /**
- * Retorna primeiro e último nome ou apenas o primeiro
- * @param name - Nome do piloto
- * @returns Nome formatado
+ * Retorna primeiro e último nome ou apenas o primeiro.
  */
 export function getPilotFirstAndLastName(name?: string): string {
   const { firstName, lastName } = getPilotNameParts(name);
@@ -49,9 +44,7 @@ export function getPilotFirstAndLastName(name?: string): string {
 }
 
 /**
- * Extrai e retorna o nome de guerra normalizado
- * @param pilot - Item do ranking
- * @returns Nome de guerra ou string vazia
+ * Extrai e retorna o nome de guerra normalizado.
  */
 export function getPilotWarName(pilot?: RankingItem | null): string {
   const nomeGuerra = normalizePilotName(pilot?.nomeGuerra);
@@ -60,9 +53,7 @@ export function getPilotWarName(pilot?: RankingItem | null): string {
 }
 
 /**
- * Retorna o nome de guerra entre aspas para display
- * @param pilot - Item do ranking
- * @returns Nome de guerra entre aspas ou string vazia
+ * Retorna o nome de guerra entre aspas para display.
  */
 export function getPilotWarNameDisplay(pilot?: RankingItem | null): string {
   const nomeGuerra = getPilotWarName(pilot);
@@ -70,9 +61,7 @@ export function getPilotWarNameDisplay(pilot?: RankingItem | null): string {
 }
 
 /**
- * Retorna nome em uppercase
- * @param name - Nome do piloto
- * @returns Nome em uppercase ou "-"
+ * Retorna nome em uppercase para destaque visual.
  */
 export function getPilotHighlightName(name?: string): string {
   const normalized = normalizePilotName(name);
@@ -80,9 +69,7 @@ export function getPilotHighlightName(name?: string): string {
 }
 
 /**
- * Retorna caminho para foto do piloto
- * @param pilot - Item do ranking
- * @returns Caminho relativo ou null
+ * Retorna caminho para foto do piloto por ID.
  */
 export function getPilotPhotoPath(pilot?: RankingItem | null): string | null {
   if (!pilot?.pilotoId) return null;
