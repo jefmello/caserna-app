@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { rankingRowSchema, type ValidationErrors } from "@/lib/validation-schemas";
 
 export const revalidate = 120;
 
@@ -389,11 +390,17 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
   const grouped: RankingData = {};
   let totalRows = 0;
   let acceptedRows = 0;
+  let rejectedByValidation = 0;
   let ignoredEmptyPilot = 0;
   let matchedById = 0;
   let matchedByFullName = 0;
   let matchedByFirstLast = 0;
   let withoutNomeGuerra = 0;
+  const validationErrors: ValidationErrors = {
+    totalValidated: 0,
+    totalRejected: 0,
+    errors: [],
+  };
 
   for (let i = headerRowIndex + 1; i < parsedRows.length; i++) {
     const cols = parsedRows[i];
@@ -439,7 +446,7 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
       withoutNomeGuerra++;
     }
 
-    const item: RankingItem = {
+    const rawItem = {
       pos: idxPosicao >= 0 ? toNumber(cols[idxPosicao]) : 0,
       pilotoId,
       piloto,
@@ -457,6 +464,22 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
       competicao,
       categoria,
     };
+
+    // Validação Zod
+    validationErrors.totalValidated++;
+    const zodResult = rankingRowSchema.safeParse(rawItem);
+    if (!zodResult.success) {
+      rejectedByValidation++;
+      const errDetail = zodResult.error.issues
+        .map((e) => `${e.path.join(".")}: ${e.message}`)
+        .join("; ");
+      validationErrors.errors.push(
+        `Linha ${i + 1} (${piloto || "desconhecido"}): ${errDetail}`
+      );
+      continue; // Pula linha inválida
+    }
+
+    const item = zodResult.data;
 
     if (!grouped[categoria]) {
       grouped[categoria] = createEmptyCompetitionMap();
@@ -495,6 +518,11 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
       headers,
       totalRows,
       acceptedRows,
+      rejectedByValidation,
+      validationErrors:
+        validationErrors.errors.length > 0
+          ? validationErrors.errors.slice(0, 20) // Limita a 20 erros no debug
+          : undefined,
       ignoredEmptyPilot,
       matchedById,
       matchedByFullName,
@@ -732,6 +760,16 @@ export async function GET() {
 
     const pilotosParsed = parsePilotosCsv(pilotosText);
     const rankingParsed = parseRankingCsv(rankingText, pilotosParsed.maps);
+
+    // Log de erros de validação no servidor
+    if ((rankingParsed.debug.rejectedByValidation ?? 0) > 0) {
+      console.warn(
+        `[Ranking API] ${rankingParsed.debug.rejectedByValidation} linhas rejeitadas pela validação Zod:`
+      );
+      rankingParsed.debug.validationErrors?.forEach((err: string) =>
+        console.warn(`  → ${err}`)
+      );
+    }
 
     const rankingMeta = buildRankingMeta(rankingParsed.grouped);
 
