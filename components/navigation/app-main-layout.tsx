@@ -2,121 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
-import {
-  ChampionshipProvider,
-  useChampionship,
-} from "@/context/championship-context";
+import { useChampionship } from "@/context/championship-context";
 import AppSidebar from "./app-sidebar";
-
-type ThemeMode = "dark" | "light";
-
-const DARK_BACKGROUND = "#05070a";
-const LIGHT_BACKGROUND = "#f3f4f6";
-const DARK_TEXT = "#ffffff";
-const LIGHT_TEXT = "#18181b";
-
-function resolveThemeModeFromEnvironment(): ThemeMode {
-  if (typeof window === "undefined") return "dark";
-
-  const storedTheme = window.localStorage.getItem("caserna-theme");
-  const rootHasDark = document.documentElement.classList.contains("dark");
-  const bodyHasDark = document.body.classList.contains("dark");
-
-  if (storedTheme === "light") return "light";
-  if (storedTheme === "dark") return "dark";
-  if (rootHasDark || bodyHasDark) return "dark";
-
-  return "light";
-}
-
-function applyThemeToDocument(themeMode: ThemeMode) {
-  if (typeof window === "undefined") return;
-
-  const isDarkMode = themeMode === "dark";
-
-  document.documentElement.classList.toggle("dark", isDarkMode);
-  document.body.classList.toggle("dark", isDarkMode);
-
-  document.documentElement.dataset.theme = themeMode;
-  document.body.dataset.theme = themeMode;
-
-  document.documentElement.style.backgroundColor = isDarkMode
-    ? DARK_BACKGROUND
-    : LIGHT_BACKGROUND;
-  document.body.style.backgroundColor = isDarkMode
-    ? DARK_BACKGROUND
-    : LIGHT_BACKGROUND;
-
-  document.documentElement.style.colorScheme = isDarkMode ? "dark" : "light";
-  document.body.style.color = isDarkMode ? DARK_TEXT : LIGHT_TEXT;
-}
 
 function AppMainLayoutContent({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { themeMode, isDarkMode, setThemeMode } = useChampionship();
+  const { themeMode, isDarkMode } = useChampionship();
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const syncThemeFromEnvironment = () => {
-      const resolvedTheme = resolveThemeModeFromEnvironment();
-      setThemeMode(resolvedTheme);
-    };
-
-    syncThemeFromEnvironment();
-
-    const rootObserver = new MutationObserver(() => {
-      const resolvedTheme = resolveThemeModeFromEnvironment();
-      if (resolvedTheme !== themeMode) {
-        setThemeMode(resolvedTheme);
-      }
-    });
-
-    const bodyObserver = new MutationObserver(() => {
-      const resolvedTheme = resolveThemeModeFromEnvironment();
-      if (resolvedTheme !== themeMode) {
-        setThemeMode(resolvedTheme);
-      }
-    });
-
-    rootObserver.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class", "data-theme"],
-    });
-
-    bodyObserver.observe(document.body, {
-      attributes: true,
-      attributeFilter: ["class", "data-theme"],
-    });
-
-    const handleStorage = () => {
-      const resolvedTheme = resolveThemeModeFromEnvironment();
-      setThemeMode(resolvedTheme);
-    };
-
-    const handleVisibilityChange = () => {
-      const resolvedTheme = resolveThemeModeFromEnvironment();
-      setThemeMode(resolvedTheme);
-    };
-
-    window.addEventListener("storage", handleStorage);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      rootObserver.disconnect();
-      bodyObserver.disconnect();
-      window.removeEventListener("storage", handleStorage);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [setThemeMode, themeMode]);
-
-  useEffect(() => {
-    applyThemeToDocument(themeMode);
-  }, [themeMode]);
 
   useEffect(() => {
     if (!isMobileSidebarOpen) return;
@@ -218,9 +113,5 @@ export default function AppMainLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <ChampionshipProvider>
-      <AppMainLayoutContent>{children}</AppMainLayoutContent>
-    </ChampionshipProvider>
-  );
+  return <AppMainLayoutContent>{children}</AppMainLayoutContent>;
 }

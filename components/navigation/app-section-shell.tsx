@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { useChampionship } from "@/context/championship-context";
 import AppSponsorsStrip from "./app-sponsors-strip";
 
 type AppSectionShellProps = {
@@ -10,7 +11,6 @@ type AppSectionShellProps = {
   categoryAccent?: "base" | "graduados" | "elite" | "neutral";
 };
 
-type ThemeMode = "dark" | "light";
 type CategoryAccent = "base" | "graduados" | "elite" | "neutral";
 
 type CasernaCategoryAccentDetail = {
@@ -21,26 +21,6 @@ declare global {
   interface WindowEventMap {
     "caserna-category-accent-change": CustomEvent<CasernaCategoryAccentDetail>;
   }
-}
-
-function resolveThemeModeFromEnvironment(
-  explicitIsDarkMode?: boolean
-): ThemeMode {
-  if (typeof explicitIsDarkMode === "boolean") {
-    return explicitIsDarkMode ? "dark" : "light";
-  }
-
-  if (typeof window === "undefined") return "dark";
-
-  const storedTheme = window.localStorage.getItem("caserna-theme");
-  const rootHasDark = document.documentElement.classList.contains("dark");
-  const bodyHasDark = document.body.classList.contains("dark");
-
-  if (storedTheme === "light") return "light";
-  if (storedTheme === "dark") return "dark";
-  if (rootHasDark || bodyHasDark) return "dark";
-
-  return "light";
 }
 
 function normalizeCategoryAccent(
@@ -140,11 +120,10 @@ function getAccentLayers(
 
 export default function AppSectionShell({
   children,
-  isDarkMode,
   section = "default",
   categoryAccent = "neutral",
 }: AppSectionShellProps) {
-  const [themeMode, setThemeMode] = useState<ThemeMode>("dark");
+  const { isDarkMode } = useChampionship();
   const [liveCategoryAccent, setLiveCategoryAccent] = useState<CategoryAccent>(
     normalizeCategoryAccent(categoryAccent)
   );
@@ -152,45 +131,6 @@ export default function AppSectionShell({
   useEffect(() => {
     setLiveCategoryAccent(normalizeCategoryAccent(categoryAccent));
   }, [categoryAccent]);
-
-  useEffect(() => {
-    const syncTheme = () => {
-      const resolvedTheme = resolveThemeModeFromEnvironment(isDarkMode);
-      setThemeMode((current) =>
-        current === resolvedTheme ? current : resolvedTheme
-      );
-    };
-
-    syncTheme();
-
-    const rootObserver = new MutationObserver(syncTheme);
-    const bodyObserver = new MutationObserver(syncTheme);
-
-    rootObserver.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class", "data-theme"],
-    });
-
-    bodyObserver.observe(document.body, {
-      attributes: true,
-      attributeFilter: ["class", "data-theme"],
-    });
-
-    window.addEventListener("storage", syncTheme);
-    window.addEventListener("caserna-theme-change", syncTheme as EventListener);
-    document.addEventListener("visibilitychange", syncTheme);
-
-    return () => {
-      rootObserver.disconnect();
-      bodyObserver.disconnect();
-      window.removeEventListener("storage", syncTheme);
-      window.removeEventListener(
-        "caserna-theme-change",
-        syncTheme as EventListener
-      );
-      document.removeEventListener("visibilitychange", syncTheme);
-    };
-  }, [isDarkMode]);
 
   useEffect(() => {
     const handleCategoryAccentChange = (
@@ -213,11 +153,9 @@ export default function AppSectionShell({
     };
   }, []);
 
-  const resolvedDarkMode = themeMode === "dark";
-
   const accentLayers = useMemo(
-    () => getAccentLayers(liveCategoryAccent, resolvedDarkMode),
-    [liveCategoryAccent, resolvedDarkMode]
+    () => getAccentLayers(liveCategoryAccent, isDarkMode),
+    [liveCategoryAccent, isDarkMode]
   );
 
   const contentWidthClass =
@@ -233,10 +171,10 @@ export default function AppSectionShell({
   return (
     <div
       data-section={section}
-      data-theme={themeMode}
+      data-theme={isDarkMode ? "dark" : "light"}
       data-category-accent={liveCategoryAccent}
       className={`relative min-h-screen w-full transition-colors duration-300 ${
-        resolvedDarkMode
+        isDarkMode
           ? "bg-transparent text-white"
           : "bg-transparent text-zinc-950"
       }`}
@@ -256,7 +194,7 @@ export default function AppSectionShell({
       >
         <div
           className={`relative overflow-hidden rounded-[30px] border transition-[border-color,background,box-shadow] duration-300 ${accentLayers.edgeGlow} ${
-            resolvedDarkMode
+            isDarkMode
               ? `bg-[linear-gradient(180deg,rgba(17,24,39,0.8)_0%,rgba(10,15,24,0.74)_100%)] backdrop-blur-xl ${accentLayers.ring}`
               : `bg-[linear-gradient(180deg,rgba(255,255,255,0.93)_0%,rgba(248,250,252,0.9)_100%)] backdrop-blur-xl ${accentLayers.ring}`
           }`}
@@ -264,7 +202,7 @@ export default function AppSectionShell({
           <div
             aria-hidden="true"
             className={`pointer-events-none absolute inset-0 ${
-              resolvedDarkMode
+              isDarkMode
                 ? "bg-[linear-gradient(180deg,rgba(255,255,255,0.03)_0%,transparent_18%,transparent_82%,rgba(255,255,255,0.02)_100%)]"
                 : "bg-[linear-gradient(180deg,rgba(255,255,255,0.5)_0%,transparent_16%,transparent_84%,rgba(255,255,255,0.24)_100%)]"
             }`}
@@ -273,7 +211,7 @@ export default function AppSectionShell({
           <div
             aria-hidden="true"
             className={`pointer-events-none absolute inset-0 ${
-              resolvedDarkMode
+              isDarkMode
                 ? "bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:24px_24px] opacity-35 [mask-image:radial-gradient(circle_at_center,black,transparent_88%)]"
                 : "bg-[linear-gradient(rgba(15,23,42,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.02)_1px,transparent_1px)] bg-[size:24px_24px] opacity-40 [mask-image:radial-gradient(circle_at_center,black,transparent_88%)]"
             }`}
@@ -282,7 +220,7 @@ export default function AppSectionShell({
           <div
             aria-hidden="true"
             className={`pointer-events-none absolute inset-x-0 top-0 h-[140px] transition-opacity duration-300 ${
-              resolvedDarkMode ? "opacity-100" : "opacity-80"
+              isDarkMode ? "opacity-100" : "opacity-80"
             } ${accentLayers.glow}`}
           />
 
@@ -291,7 +229,7 @@ export default function AppSectionShell({
           </div>
         </div>
 
-        <AppSponsorsStrip isDarkMode={resolvedDarkMode} />
+        <AppSponsorsStrip isDarkMode={isDarkMode} />
       </div>
     </div>
   );

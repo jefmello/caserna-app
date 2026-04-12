@@ -9,6 +9,52 @@ const CSV_RANKING =
 const CSV_PILOTOS =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vQfg1DPMuv2HVxhnx61PiF6tiowSwJl2baHvPXGaSzB9x7BF_ASJgxtqU2qRfUdgf0dRemQNnVGYNfh/pub?gid=482963932&single=true&output=csv";
 
+/**
+ * Timeout personalizado para fetch — AbortController nativo do Next.js
+ * previne que requisições ao Google Sheets travem indefinidamente.
+ */
+const FETCH_TIMEOUT_MS = 15000;
+/**
+ * Limite máximo de tamanho do CSV (5 MB) para evitar OOM.
+ */
+const MAX_CSV_SIZE = 5 * 1024 * 1024;
+
+async function fetchWithTimeout(url: string) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(url, {
+      next: { revalidate: 120 },
+      redirect: "follow",
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `HTTP ${response.status}: ${response.statusText || "Erro ao buscar CSV"}`
+      );
+    }
+
+    // Verifica tamanho do response antes de ler
+    const contentLength = response.headers.get("content-length");
+    if (contentLength && parseInt(contentLength, 10) > MAX_CSV_SIZE) {
+      throw new Error("CSV excede o tamanho máximo permitido (5 MB).");
+    }
+
+    const text = await response.text();
+
+    // Verifica tamanho do texto parseado (caso content-length não esteja presente)
+    if (text.length > MAX_CSV_SIZE) {
+      throw new Error("CSV excede o tamanho máximo permitido (5 MB).");
+    }
+
+    return text;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 type RankingItem = {
   pos: number;
   pilotoId: string;
@@ -720,42 +766,9 @@ function buildRankingMeta(grouped: RankingData): RankingMetaData {
 
 export async function GET() {
   try {
-    const [rankingResponse, pilotosResponse] = await Promise.all([
-      fetch(CSV_RANKING, {
-        next: { revalidate: 120 },
-        redirect: "follow",
-      }),
-      fetch(CSV_PILOTOS, {
-        next: { revalidate: 120 },
-        redirect: "follow",
-      }),
-    ]);
-
-    if (!rankingResponse.ok) {
-      return NextResponse.json(
-        {
-          error: "Não foi possível carregar a planilha de ranking.",
-          status: rankingResponse.status,
-          statusText: rankingResponse.statusText,
-        },
-        { status: 500 }
-      );
-    }
-
-    if (!pilotosResponse.ok) {
-      return NextResponse.json(
-        {
-          error: "Não foi possível carregar a planilha de pilotos.",
-          status: pilotosResponse.status,
-          statusText: pilotosResponse.statusText,
-        },
-        { status: 500 }
-      );
-    }
-
     const [rankingText, pilotosText] = await Promise.all([
-      rankingResponse.text(),
-      pilotosResponse.text(),
+      fetchWithTimeout(CSV_RANKING),
+      fetchWithTimeout(CSV_PILOTOS),
     ]);
 
     const pilotosParsed = parsePilotosCsv(pilotosText);

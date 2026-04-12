@@ -24,26 +24,24 @@ export default function useRankingFilters({
   const category = categoria;
   const competition = campeonato;
 
+  // Guard: só atualiza se o valor for diferente (evita re-render desnecessário)
   useEffect(() => {
     if (categories.length === 0) return;
+    if (categoria === categories[0] || categories.includes(categoria)) return;
 
-    if (!categories.includes(categoria)) {
-      setCategoria(categories[0]);
-    }
+    setCategoria(categories[0]);
   }, [categories, categoria, setCategoria]);
 
   const availableCompetitions = useMemo(() => {
     return Object.keys(rankingData[category] || {});
   }, [rankingData, category]);
 
+  // Guard: só atualiza se o valor for diferente
   useEffect(() => {
     if (availableCompetitions.length === 0) return;
+    if (availableCompetitions.includes(competition)) return;
 
-    setCampeonato(
-      availableCompetitions.includes(competition)
-        ? competition
-        : availableCompetitions[0]
-    );
+    setCampeonato(availableCompetitions[0]);
   }, [availableCompetitions, competition, setCampeonato]);
 
   const currentCompetitionList = useMemo(() => {
@@ -66,17 +64,32 @@ export default function useRankingFilters({
 
   const leader = filteredRanking[0];
 
-  return {
-    category,
-    setCategory: setCategoria,
-    competition,
-    setCompetition: setCampeonato,
-    search,
-    setSearch,
-    availableCompetitions,
-    currentCompetitionList,
-    currentCompetitionMeta,
-    filteredRanking,
-    leader,
-  };
+  // Memoiza o retorno para evitar nova referência a cada render
+  return useMemo(
+    () => ({
+      category,
+      setCategory: setCategoria,
+      competition,
+      setCompetition: setCampeonato,
+      search,
+      setSearch,
+      availableCompetitions,
+      currentCompetitionList,
+      currentCompetitionMeta,
+      filteredRanking,
+      leader,
+    }),
+    [
+      category,
+      setCategoria,
+      competition,
+      setCampeonato,
+      search,
+      availableCompetitions,
+      currentCompetitionList,
+      currentCompetitionMeta,
+      filteredRanking,
+      leader,
+    ]
+  );
 }

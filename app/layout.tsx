@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ChampionshipProvider } from "@/context/championship-context";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,6 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://caserna-app.vercel.app"),
   title: "Classificação Geral - Caserna Kart Racing",
   description:
     "Acompanhe a classificação oficial do campeonato Caserna Kart Racing. Pontuação, pilotos e destaques atualizados em tempo real.",
@@ -53,7 +55,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>{children}</body>
+      <body>
+        <ChampionshipProvider>{children}</ChampionshipProvider>
+      </body>
     </html>
   );
 }
