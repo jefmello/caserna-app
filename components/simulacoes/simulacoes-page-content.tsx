@@ -330,9 +330,10 @@ function ScenarioRow({
 
 export default function SimulacoesPageContent() {
   const router = useRouter();
+  const { isDarkMode, toggleTheme, categoria, campeonato } = useChampionship();
 
   const { rankingData, rankingMeta, categories, loading, error, retry } =
-    useRankingData();
+    useRankingData({ categoria, campeonato });
 
   const {
     category,
@@ -347,8 +348,6 @@ export default function SimulacoesPageContent() {
     rankingMeta,
     categories,
   });
-
-  const { isDarkMode, toggleTheme } = useChampionship();
 
   const theme = useMemo(() => getCategoryTheme(category), [category]);
 

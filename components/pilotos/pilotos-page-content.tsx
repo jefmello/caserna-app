@@ -22,6 +22,7 @@ import RankingPilotComparisonCard from "@/components/ranking/ranking-pilot-compa
 import RankingPilotPerformanceBlocksCard from "@/components/ranking/ranking-pilot-performance-blocks-card";
 import useRankingData from "@/lib/hooks/useRankingData";
 import useRankingFilters from "@/lib/hooks/useRankingFilters";
+import { useChampionship } from "@/context/championship-context";
 import usePilotAnalysis from "@/lib/hooks/usePilotAnalysis";
 import useRankingScreenController from "@/lib/hooks/useRankingScreenController";
 import useRankingShare from "@/lib/hooks/useRankingShare";
@@ -32,7 +33,6 @@ import {
   getPilotWarNameDisplay,
 } from "@/lib/ranking/ranking-utils";
 import type { RankingItem } from "@/types/ranking";
-import { useChampionship } from "@/context/championship-context";
 import PageTransition from "@/components/ui/page-transition";
 
 function normalizeCategoryAccent(category?: string | null) {
@@ -143,10 +143,10 @@ function PilotPhotoSlot({
 
 export default function PilotosPageContent() {
   const searchParams = useSearchParams();
-  const { isDarkMode } = useChampionship();
+  const { isDarkMode, categoria, campeonato } = useChampionship();
 
   const { rankingData, rankingMeta, categories, loading, error, retry } =
-    useRankingData();
+    useRankingData({ categoria, campeonato });
 
   const {
     category,

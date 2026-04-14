@@ -21,6 +21,7 @@ import useRankingFilters from "@/lib/hooks/useRankingFilters";
 import useChampionshipNarrative from "@/lib/hooks/useChampionshipNarrative";
 import useRankingScreenController from "@/lib/hooks/useRankingScreenController";
 import useRankingShare from "@/lib/hooks/useRankingShare";
+import { useChampionship } from "@/context/championship-context";
 import {
   competitionLabels,
   getComparisonWinner,
@@ -136,8 +137,10 @@ function PilotPhotoSlot({
 }
 
 export default function MidiaPageContent() {
+  const { categoria, campeonato } = useChampionship();
+
   const { rankingData, rankingMeta, categories, loading, error, retry } =
-    useRankingData();
+    useRankingData({ categoria, campeonato });
 
   const {
     category,

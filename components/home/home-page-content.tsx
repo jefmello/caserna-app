@@ -335,10 +335,10 @@ function HomePilotCtaCard({
 }
 
 export default function HomePageContent() {
-  const { isDarkMode, toggleTheme } = useChampionship();
+  const { isDarkMode, toggleTheme, categoria, campeonato } = useChampionship();
 
   const { rankingData, rankingMeta, categories, loading, error, retry } =
-    useRankingData();
+    useRankingData({ categoria, campeonato });
 
   const {
     category,

@@ -405,8 +405,10 @@ function MetricRow({
 }
 
 export default function DuelosPageContent() {
+  const { isDarkMode, toggleTheme, categoria, campeonato } = useChampionship();
+
   const { rankingData, rankingMeta, categories, loading, error, retry } =
-    useRankingData();
+    useRankingData({ categoria, campeonato });
 
   const {
     category,
@@ -423,8 +425,6 @@ export default function DuelosPageContent() {
     categories,
   });
 
-  // Dark mode do context global (não useState local)
-  const { isDarkMode, toggleTheme } = useChampionship();
 
   const [comparePilotAId, setComparePilotAId] = useState("");
   const [comparePilotBId, setComparePilotBId] = useState("");

@@ -24,6 +24,7 @@ import RankingStatsMetricCardsGrid from "@/components/ranking/ranking-stats-metr
 import useRankingData from "@/lib/hooks/useRankingData";
 import useRankingFilters from "@/lib/hooks/useRankingFilters";
 import useRankingScreenController from "@/lib/hooks/useRankingScreenController";
+import { useChampionship } from "@/context/championship-context";
 import {
   competitionLabels,
   getCategoryTheme,
@@ -421,9 +422,10 @@ function getPilotWarNameDisplay(pilot?: RankingItem | null) {
 
 export default function EstatisticasPageContent() {
   const router = useRouter();
+  const { categoria, campeonato } = useChampionship();
 
   const { rankingData, rankingMeta, categories, loading, error, retry } =
-    useRankingData();
+    useRankingData({ categoria, campeonato });
 
   const {
     category,

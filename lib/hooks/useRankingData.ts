@@ -12,6 +12,8 @@ type UseRankingDataParams = {
   initialCategory?: string;
   timeoutMs?: number;
   revalidateIntervalMs?: number;
+  categoria?: string;
+  campeonato?: string;
 };
 
 type UseRankingDataReturn = {
@@ -68,21 +70,27 @@ function sanitizeApiError(raw: string): string {
 }
 
 /**
- * Gera a chave de cache com base no contexto atual (vazio = dados gerais).
+ * Gera a chave de cache com base na categoria e campeonato.
+ * Ex: "Elite@Geral", "Base@T1"
  */
-function getCacheKey(): string {
-  return "global";
+function getCacheKey(categoria?: string, campeonato?: string): string {
+  return `${categoria || "global"}@${campeonato || "geral"}`;
 }
 
 export function useRankingData({
-  initialCategory = "Base",
+  initialCategory = "Elite",
   timeoutMs = 20000,
   revalidateIntervalMs = 60000,
+  categoria,
+  campeonato,
 }: UseRankingDataParams = {}): UseRankingDataReturn {
+  const cKey = getCacheKey(categoria, campeonato);
+
   const initialData = useMemo(() => {
-    const entry = cache.get(getCacheKey());
+    const entry = cache.get(cKey);
     return entry ?? null;
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cKey]);
 
   const [rankingData, setRankingData] = useState<RankingData>(
     () => initialData?.data ?? {}
@@ -110,14 +118,16 @@ export function useRankingData({
    * Invalida o cache quando chamado — útil ao trocar de contexto.
    */
   const invalidateCache = useCallback(() => {
-    cache.delete(getCacheKey());
-  }, []);
+    cache.delete(cKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cKey]);
 
   const retry = useCallback(() => {
     invalidateCache();
     setRetryCount((prev) => prev + 1);
     consecutiveFailuresRef.current = 0; // Reseta backoff no retry manual
-  }, [invalidateCache]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [invalidateCache, cKey]);
 
   const syncCategory = useCallback(
     (currentCategory: string) => {
@@ -143,7 +153,6 @@ export function useRankingData({
         if (!isMountedRef.current) return;
 
         // Se cache válido e não é retry, usar cache
-        const cKey = getCacheKey();
         const cached = cache.get(cKey);
 
         if (
@@ -266,7 +275,7 @@ export function useRankingData({
       if (intervalId) clearTimeout(intervalId);
       controller.abort();
     };
-  }, [retryCount, timeoutMs, revalidateIntervalMs]);
+  }, [retryCount, timeoutMs, revalidateIntervalMs, cKey]);
 
   return useMemo<UseRankingDataReturn>(
     () => ({

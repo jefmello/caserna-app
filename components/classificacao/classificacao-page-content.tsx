@@ -49,10 +49,10 @@ function normalizeCategoryAccent(category?: string | null) {
 
 export default function ClassificacaoPageContent() {
   const router = useRouter();
-  const { isDarkMode, toggleTheme } = useChampionship();
+  const { isDarkMode, toggleTheme, categoria, campeonato } = useChampionship();
 
   const { rankingData, rankingMeta, categories, loading, error, retry } =
-    useRankingData();
+    useRankingData({ categoria, campeonato });
 
   const {
     category,
