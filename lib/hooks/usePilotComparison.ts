@@ -37,6 +37,22 @@ export default function usePilotComparison({
     [filteredRanking, comparePilotBId]
   );
 
+  const efficiencyA = useMemo(
+    () =>
+      comparePilotA && comparePilotA.participacoes > 0
+        ? Math.round((comparePilotA.pontos / comparePilotA.participacoes) * 10) / 10
+        : 0,
+    [comparePilotA]
+  );
+
+  const efficiencyB = useMemo(
+    () =>
+      comparePilotB && comparePilotB.participacoes > 0
+        ? Math.round((comparePilotB.pontos / comparePilotB.participacoes) * 10) / 10
+        : 0,
+    [comparePilotB]
+  );
+
   const duelMetrics = useMemo(() => {
     if (!comparePilotA || !comparePilotB) return [];
 
@@ -97,8 +113,16 @@ export default function usePilotComparison({
         lowerIsBetter: true,
         description: "disciplina na pista",
       },
+      {
+        label: "Eficiência",
+        shortLabel: "EF",
+        a: efficiencyA,
+        b: efficiencyB,
+        lowerIsBetter: false,
+        description: "pontos por participação",
+      },
     ];
-  }, [comparePilotA, comparePilotB]);
+  }, [comparePilotA, comparePilotB, efficiencyA, efficiencyB]);
 
   const duelSummary = useMemo(() => {
     if (!comparePilotA || !comparePilotB || duelMetrics.length === 0) {
@@ -221,6 +245,8 @@ export default function usePilotComparison({
   return {
     comparePilotA,
     comparePilotB,
+    efficiencyA,
+    efficiencyB,
     duelMetrics,
     duelSummary,
     duelIntensity,
