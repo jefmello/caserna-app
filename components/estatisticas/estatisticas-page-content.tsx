@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   BarChart3,
@@ -421,7 +421,6 @@ function getPilotWarNameDisplay(pilot?: RankingItem | null) {
 }
 
 export default function EstatisticasPageContent() {
-  const router = useRouter();
   const { categoria, campeonato } = useChampionship();
 
   const { rankingData, rankingMeta, categories, loading, error, retry } =
@@ -603,23 +602,6 @@ export default function EstatisticasPageContent() {
     retry();
   };
 
-  const handleSelectPilot = (pilot: RankingItem) => {
-    const pilotId = pilot.pilotoId || "";
-    router.push(pilotId ? `/pilotos?pilotId=${pilotId}` : "/pilotos");
-  };
-
-  const StatRankingCardConnected = (props: {
-    title: string;
-    icon: React.ElementType;
-    items: RankingItem[];
-    metricKey: "vitorias" | "poles" | "mv" | "podios";
-    emptyLabel: string;
-    theme: ReturnType<typeof getCategoryTheme>;
-    isDark?: boolean;
-  }) => {
-    return <StatRankingCard {...props} onSelectPilot={handleSelectPilot} />;
-  };
-
   if (loading) {
     return (
       <div
@@ -760,5 +742,48 @@ export default function EstatisticasPageContent() {
       </div>
     </div>
     </PageTransition>
+  );
+}
+
+type StatRankingCardConnectedProps = {
+  title: string;
+  icon: React.ElementType;
+  items: RankingItem[];
+  metricKey: "vitorias" | "poles" | "mv" | "podios";
+  emptyLabel: string;
+  theme: ReturnType<typeof getCategoryTheme>;
+  isDark?: boolean;
+};
+
+function StatRankingCardConnected({
+  title,
+  icon,
+  items,
+  metricKey,
+  emptyLabel,
+  theme,
+  isDark,
+}: StatRankingCardConnectedProps) {
+  const router = useRouter();
+
+  const handleSelectPilot = useCallback(
+    (pilot: RankingItem) => {
+      const pilotId = pilot.pilotoId || "";
+      router.push(pilotId ? `/pilotos?pilotId=${pilotId}` : "/pilotos");
+    },
+    [router]
+  );
+
+  return (
+    <StatRankingCard
+      title={title}
+      icon={icon}
+      items={items}
+      metricKey={metricKey}
+      emptyLabel={emptyLabel}
+      theme={theme}
+      isDark={isDark}
+      onSelectPilot={handleSelectPilot}
+    />
   );
 }

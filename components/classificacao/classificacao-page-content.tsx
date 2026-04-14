@@ -97,13 +97,9 @@ export default function ClassificacaoPageContent() {
     };
   }, [category]);
 
-  const headerCategories = useMemo(() => {
-    return [];
-  }, []);
-
-  const handleHeaderCategoryChange = () => {
-    return;
-  };
+  // Esta página usa seletor de categoria separado — header fica desabilitado
+  const headerCategories: string[] = [];
+  const handleHeaderCategoryChange = () => {};
 
   const { theme, pilotTrendMap, titleFightStatus } =
     useRankingScreenController({

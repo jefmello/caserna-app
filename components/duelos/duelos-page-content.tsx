@@ -685,6 +685,17 @@ export default function DuelosPageContent() {
     setComparePilotBId(value);
   };
 
+  // Opções memoizadas para evitar recriar arrays a cada render
+  const pilotAOptions = useMemo(
+    () => filteredRanking.filter((p) => (p.pilotoId || p.piloto) !== comparePilotBId),
+    [filteredRanking, comparePilotBId]
+  );
+
+  const pilotBOptions = useMemo(
+    () => filteredRanking.filter((p) => (p.pilotoId || p.piloto) !== comparePilotAId),
+    [filteredRanking, comparePilotAId]
+  );
+
   // Suggest duels
   const suggestedDuels = useMemo(() => {
     if (filteredRanking.length < 2) return [];
@@ -900,7 +911,7 @@ export default function DuelosPageContent() {
           title="Piloto A"
           value={comparePilotAId}
           onChange={handleSelectPilotA}
-          options={filteredRanking.filter((p) => (p.pilotoId || p.piloto) !== comparePilotBId)}
+          options={pilotAOptions}
           isDarkMode={isDarkMode}
           theme={theme}
         />
@@ -909,7 +920,7 @@ export default function DuelosPageContent() {
           title="Piloto B"
           value={comparePilotBId}
           onChange={handleSelectPilotB}
-          options={filteredRanking.filter((p) => (p.pilotoId || p.piloto) !== comparePilotAId)}
+          options={pilotBOptions}
           isDarkMode={isDarkMode}
           theme={theme}
         />
