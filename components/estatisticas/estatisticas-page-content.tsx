@@ -522,12 +522,13 @@ export default function EstatisticasPageContent() {
       };
     }
 
-    const hottestPilot = [...filteredRanking].sort((a, b) => {
-      const aScore = a.vitorias * 4 + a.poles * 2 + a.mv * 2 + a.podios;
-      const bScore = b.vitorias * 4 + b.poles * 2 + b.mv * 2 + b.podios;
-      if (bScore !== aScore) return bScore - aScore;
-      return b.pontos - a.pontos;
-    })[0];
+    const hottestPilot = filteredRanking.reduce((best, item) => {
+      const itemScore = item.vitorias * 4 + item.poles * 2 + item.mv * 2 + item.podios;
+      const bestScore = best.vitorias * 4 + best.poles * 2 + best.mv * 2 + best.podios;
+      if (itemScore > bestScore) return item;
+      if (itemScore === bestScore && item.pontos > best.pontos) return item;
+      return best;
+    }, filteredRanking[0]);
 
     const podiumPressure =
       filteredRanking.length >= 6
@@ -586,12 +587,13 @@ export default function EstatisticasPageContent() {
 
     if (eligible.length === 0) return null;
 
-    return [...eligible].sort((a, b) => {
-      const aEfficiency = a.pontos / Math.max(a.participacoes, 1);
-      const bEfficiency = b.pontos / Math.max(b.participacoes, 1);
-      if (bEfficiency !== aEfficiency) return bEfficiency - aEfficiency;
-      return b.pontos - a.pontos;
-    })[0];
+    return eligible.reduce((best, item) => {
+      const itemEff = item.pontos / item.participacoes;
+      const bestEff = best.pontos / best.participacoes;
+      if (itemEff > bestEff) return item;
+      if (itemEff === bestEff && item.pontos > best.pontos) return item;
+      return best;
+    }, eligible[0]);
   }, [filteredRanking, currentCompetitionMeta]);
 
   const handleToggleDarkMode = () => {
