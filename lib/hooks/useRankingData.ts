@@ -37,6 +37,11 @@ type CacheEntry = {
 // Cache com chave (categoria@competicao) para evitar dados stale
 const cache = new Map<string, CacheEntry>();
 
+// Cache global do resultado raw da API — todos os hooks compartilham
+// uma única Promise de fetch, evitando N requisições simultâneas
+let sharedFetchPromise: Promise<RankingApiResponse> | null = null;
+let sharedFetchTimestamp = 0;
+
 const CACHE_TTL_MS = 55000;
 const BASE_BACKOFF_MS = 2000;
 const MAX_BACKOFF_MS = 60000;
@@ -51,6 +56,43 @@ function getBackoffDelay(consecutiveFailures: number): number {
   );
   const jitter = Math.random() * 0.3 * exponential;
   return exponential + jitter;
+}
+
+/**
+ * Fetch compartilhado — evita que múltiplos hooks disparem requisições
+ * simultâneas para a mesma URL. Todos os hooks compartilham a mesma
+ * Promise enquanto ela estiver dentro do TTL.
+ */
+function getSharedFetch(): Promise<RankingApiResponse> {
+  const now = Date.now();
+  // Reusa Promise in-flight ou cacheada dentro do TTL
+  if (sharedFetchPromise && now - sharedFetchTimestamp < CACHE_TTL_MS) {
+    return sharedFetchPromise;
+  }
+
+  sharedFetchPromise = fetch("/api/ranking").then(async (res) => {
+    const json = await res.json();
+    if (!res.ok) {
+      throw new Error(
+        (json?.error as string) || "Erro ao carregar os dados da classificação."
+      );
+    }
+    return json as RankingApiResponse;
+  });
+  sharedFetchTimestamp = now;
+
+  // Limpa referência quando a Promise terminar (com ou sem erro)
+  // para que o próximo ciclo possa tentar novamente
+  sharedFetchPromise.catch(() => {}); // evita unhandled rejection
+  sharedFetchPromise.finally(() => {
+    // Mantém a Promise por mais um breve período para que outros
+    // hooks que montarem logo depois possam reusá-la
+    setTimeout(() => {
+      sharedFetchPromise = null;
+    }, 2000);
+  });
+
+  return sharedFetchPromise;
 }
 
 /**
@@ -143,10 +185,7 @@ export function useRankingData({
   );
 
   useEffect(() => {
-    const controller = new AbortController();
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-    let intervalId: ReturnType<typeof setInterval> | null = null;
-    let didTimeout = false;
+    let intervalId: ReturnType<typeof setTimeout> | null = null;
 
     async function loadData() {
       try {
@@ -171,40 +210,35 @@ export function useRankingData({
         setLoading(true);
         setError("");
 
-        timeoutId = setTimeout(() => {
-          didTimeout = true;
-          controller.abort();
-        }, timeoutMs);
-
-        const response = await fetch("/api/ranking", {
-          signal: controller.signal,
-        });
-
+        // Usa fetch compartilhado para evitar N requisições simultâneas
         let json: RankingApiResponse;
         try {
-          json = await response.json();
+          json = await getSharedFetch();
         } catch {
-          // Erro de parse JSON — não expor stack trace
           if (!isMountedRef.current) return;
           setError("Erro ao processar os dados recebidos. Tente novamente.");
           consecutiveFailuresRef.current++;
           return;
         }
 
-        if (!response.ok) {
-          throw new Error(
-            (json?.error as string) ||
-              "Erro ao carregar os dados da classificação."
-          );
-        }
-
         if (!isMountedRef.current) return;
 
         // Atualiza cache compartilhado
+        const newCategories: string[] = json.categories || Object.keys(json.data || {});
+
+        // Estabiliza referência: só cria novo array se o conteúdo mudou
+        const prevCached = cache.get(cKey);
+        const stableCategories =
+          prevCached?.categories &&
+          prevCached.categories.length === newCategories.length &&
+          prevCached.categories.every((c, i) => c === newCategories[i])
+            ? prevCached.categories
+            : newCategories;
+
         const entry: CacheEntry = {
           data: json.data || {},
           meta: json.meta || {},
-          categories: json.categories || Object.keys(json.data || {}),
+          categories: stableCategories,
           timestamp: Date.now(),
         };
         cache.set(cKey, entry);
@@ -212,20 +246,8 @@ export function useRankingData({
         setRankingData(entry.data);
         setRankingMeta(entry.meta);
         setCategories(entry.categories);
-        consecutiveFailuresRef.current = 0; // Reseta falhas consecutivas
+        consecutiveFailuresRef.current = 0;
       } catch (err: unknown) {
-        if (err instanceof DOMException && err.name === "AbortError") {
-          if (didTimeout && isMountedRef.current) {
-            setError("Tempo de resposta excedido. Tente novamente em instantes.");
-          }
-          return;
-        }
-
-        // Log em development, não expõe stack em produção
-        if (process.env.NODE_ENV === "development") {
-          console.error("[Ranking API Error]", err);
-        }
-
         if (isMountedRef.current) {
           const rawMessage =
             err instanceof Error ? err.message : "Erro desconhecido.";
@@ -233,10 +255,6 @@ export function useRankingData({
           consecutiveFailuresRef.current++;
         }
       } finally {
-        if (timeoutId) {
-          clearTimeout(timeoutId);
-        }
-
         if (isMountedRef.current) {
           setLoading(false);
         }
@@ -271,11 +289,9 @@ export function useRankingData({
     }
 
     return () => {
-      if (timeoutId) clearTimeout(timeoutId);
       if (intervalId) clearTimeout(intervalId);
-      controller.abort();
     };
-  }, [retryCount, timeoutMs, revalidateIntervalMs, cKey]);
+  }, [retryCount, revalidateIntervalMs, cKey]);
 
   return useMemo<UseRankingDataReturn>(
     () => ({

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { rankingRowSchema, type ValidationErrors } from "@/lib/validation-schemas";
+import { type ValidationErrors } from "@/lib/validation-schemas";
 
 export const revalidate = 120;
 
@@ -511,21 +511,39 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
       categoria,
     };
 
-    // Validação Zod
+    // Validação manual (substituiu Zod safeParse — maior gargalo da pipeline)
     validationErrors.totalValidated++;
-    const zodResult = rankingRowSchema.safeParse(rawItem);
-    if (!zodResult.success) {
+    const validationIssues: string[] = [];
+    if (typeof rawItem.piloto !== "string" || rawItem.piloto.length === 0)
+      validationIssues.push("piloto: obrigatório");
+    if (typeof rawItem.pontos !== "number" || !Number.isFinite(rawItem.pontos))
+      validationIssues.push("pontos: deve ser número válido");
+    if (
+      typeof rawItem.categoriaAtual !== "string" ||
+      rawItem.categoriaAtual.length === 0
+    )
+      validationIssues.push("categoriaAtual: obrigatória");
+    if (typeof rawItem.competicao !== "string" || rawItem.competicao.length === 0)
+      validationIssues.push("competicao: obrigatória");
+    if (typeof rawItem.categoria !== "string" || rawItem.categoria.length === 0)
+      validationIssues.push("categoria: obrigatória");
+    if (typeof rawItem.pos !== "number" || !Number.isInteger(rawItem.pos) || rawItem.pos < 0)
+      validationIssues.push("pos: deve ser inteiro >= 0");
+    if (typeof rawItem.adv !== "number" || !Number.isFinite(rawItem.adv))
+      validationIssues.push("adv: deve ser número válido");
+    if (typeof rawItem.descarte !== "number" || !Number.isFinite(rawItem.descarte))
+      validationIssues.push("descarte: deve ser número válido");
+
+    if (validationIssues.length > 0) {
       rejectedByValidation++;
-      const errDetail = zodResult.error.issues
-        .map((e) => `${e.path.join(".")}: ${e.message}`)
-        .join("; ");
+      const errDetail = validationIssues.join("; ");
       validationErrors.errors.push(
         `Linha ${i + 1} (${piloto || "desconhecido"}): ${errDetail}`
       );
       continue; // Pula linha inválida
     }
 
-    const item = zodResult.data;
+    const item = rawItem;
 
     if (!grouped[categoria]) {
       grouped[categoria] = createEmptyCompetitionMap();
@@ -669,13 +687,14 @@ function buildCompetitionMeta(list: RankingItem[]): RankingCompetitionMeta {
   let titleHeat = "Sem disputa";
 
   if (filtered.length > 0) {
-    hottestPilot =
-      [...filtered].sort((a, b) => {
-        const aScore = a.vitorias * 4 + a.poles * 2 + a.mv * 2 + a.podios;
-        const bScore = b.vitorias * 4 + b.poles * 2 + b.mv * 2 + b.podios;
-        if (bScore !== aScore) return bScore - aScore;
-        return b.pontos - a.pontos;
-      })[0] || null;
+    // O(N) scan em vez de .sort()[0] — evita O(N log N) desnecessário
+    hottestPilot = filtered.reduce((best, item) => {
+      const itemScore = item.vitorias * 4 + item.poles * 2 + item.mv * 2 + item.podios;
+      const bestScore = best.vitorias * 4 + best.poles * 2 + best.mv * 2 + best.podios;
+      if (itemScore > bestScore) return item;
+      if (itemScore === bestScore && item.pontos > best.pontos) return item;
+      return best;
+    }, filtered[0]);
 
     podiumPressure =
       filtered.length >= 6
@@ -718,14 +737,16 @@ function buildCompetitionMeta(list: RankingItem[]): RankingCompetitionMeta {
   }
 
   const eligible = filtered.filter((item) => item.participacoes > 0);
+  // O(N) scan em vez de .sort()[0]
   const bestEfficiencyPilot =
     eligible.length > 0
-      ? [...eligible].sort((a, b) => {
-          const aEfficiency = a.pontos / Math.max(a.participacoes, 1);
-          const bEfficiency = b.pontos / Math.max(b.participacoes, 1);
-          if (bEfficiency !== aEfficiency) return bEfficiency - aEfficiency;
-          return b.pontos - a.pontos;
-        })[0]
+      ? eligible.reduce((best, item) => {
+          const itemEff = item.pontos / item.participacoes;
+          const bestEff = best.pontos / best.participacoes;
+          if (itemEff > bestEff) return item;
+          if (itemEff === bestEff && item.pontos > best.pontos) return item;
+          return best;
+        }, eligible[0])
       : null;
 
   return {
