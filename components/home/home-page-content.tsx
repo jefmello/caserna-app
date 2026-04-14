@@ -31,29 +31,13 @@ import {
   getPilotFirstAndLastName,
   getPilotHighlightName,
   getPilotWarName,
+  normalizeCategoryAccent,
+  type CategoryAccent,
 } from "@/lib/ranking/ranking-utils";
 import HallOfFame from "@/components/ranking/hall-of-fame";
 import type { RankingItem, RankingMetaPilot } from "@/types/ranking";
 import { useChampionship } from "@/context/championship-context";
 import PageTransition, { StaggerContainer, StaggerItem } from "@/components/ui/page-transition";
-
-type CategoryAccent = "base" | "graduados" | "elite" | "neutral";
-
-function normalizeCategoryAccent(category?: string | null): CategoryAccent {
-  if (!category) return "neutral";
-
-  const normalized = category
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .toLowerCase();
-
-  if (normalized === "base") return "base";
-  if (normalized === "graduados") return "graduados";
-  if (normalized === "elite") return "elite";
-
-  return "neutral";
-}
 
 function PilotPhotoSlot({
   pilot,

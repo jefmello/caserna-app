@@ -31,25 +31,10 @@ import {
   competitionLabels,
   getPilotFirstAndLastName,
   getPilotWarNameDisplay,
+  normalizeCategoryAccent,
 } from "@/lib/ranking/ranking-utils";
 import type { RankingItem } from "@/types/ranking";
 import PageTransition from "@/components/ui/page-transition";
-
-function normalizeCategoryAccent(category?: string | null) {
-  if (!category) return "neutral";
-
-  const normalized = category
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .toLowerCase();
-
-  if (normalized === "base") return "base";
-  if (normalized === "graduados") return "graduados";
-  if (normalized === "elite") return "elite";
-
-  return "neutral";
-}
 
 function PilotPhotoSlot({
   pilot,
