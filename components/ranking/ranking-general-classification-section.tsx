@@ -98,7 +98,7 @@ export default function RankingGeneralClassificationSection({
   return (
     <section className="space-y-3">
       <div
-        className={`overflow-hidden rounded-[22px] shadow-sm ${
+        className={`overflow-hidden rounded-3xl shadow-sm ${
           isDarkMode
             ? `border ${theme.darkAccentBorder} bg-[#111827]`
             : `border ${theme.titleBorder} bg-gradient-to-br ${theme.titleBg}`
@@ -156,7 +156,7 @@ export default function RankingGeneralClassificationSection({
       </div>
 
       <Card
-        className={`overflow-hidden rounded-[22px] shadow-sm ${
+        className={`overflow-hidden rounded-3xl shadow-sm ${
           isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
         }`}
       >
@@ -229,7 +229,7 @@ export default function RankingGeneralClassificationSection({
 
             <div className="mt-3 grid grid-cols-3 gap-2">
               <div
-                className={`rounded-[16px] border px-3 py-2 ${
+                className={`rounded-xl border px-3 py-2 ${
                   isDarkMode
                     ? "border-white/10 bg-[#0f172a]"
                     : "border-black/5 bg-white"
@@ -259,7 +259,7 @@ export default function RankingGeneralClassificationSection({
               </div>
 
               <div
-                className={`rounded-[16px] border px-3 py-2 ${
+                className={`rounded-xl border px-3 py-2 ${
                   isDarkMode
                     ? "border-white/10 bg-[#0f172a]"
                     : "border-black/5 bg-white"
@@ -289,7 +289,7 @@ export default function RankingGeneralClassificationSection({
               </div>
 
               <div
-                className={`rounded-[16px] border px-3 py-2 ${
+                className={`rounded-xl border px-3 py-2 ${
                   isDarkMode
                     ? "border-white/10 bg-[#0f172a]"
                     : "border-black/5 bg-white"
@@ -382,80 +382,78 @@ export default function RankingGeneralClassificationSection({
                   return (
                     <tr
                       key={`${category}-${competition}-table-${item.pos}-${item.piloto}`}
-                      className={`group transition ${
+                      className={`group transition cursor-pointer ${
                         isDarkMode
                           ? darkRow
                           : isTop6
                             ? styles.row
                             : `${index % 2 === 0 ? "bg-white" : "bg-zinc-50/40"} hover:bg-zinc-50`
                       }`}
+                      onClick={() => handleSelectPilot(item)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleSelectPilot(item);
+                        }
+                      }}
+                      tabIndex={0}
+                      role="button"
+                      aria-label={`Abrir perfil de ${nomeLinha1}`}
                     >
                       <td className="px-1 py-2.5 text-center align-middle">
-                        <button
-                          type="button"
-                          onClick={() => handleSelectPilot(item)}
-                          className="mx-auto flex h-7 w-7 items-center justify-center rounded-[10px] text-[11px] font-bold transition active:scale-95"
+                        <span
+                          className={`relative mx-auto flex h-7 w-7 items-center justify-center rounded-lg text-[11px] font-bold ${isTop6 ? "shadow-[0_6px_14px_rgba(0,0,0,0.14)]" : "shadow-sm"} ${
+                            isDarkMode
+                              ? index === 0
+                                ? theme.darkTopBadge
+                                : index === 1
+                                  ? "bg-white/10 text-white"
+                                  : index === 2
+                                    ? "bg-amber-500/20 text-amber-300"
+                                    : "bg-white/10 text-white"
+                              : styles.badge
+                          }`}
                         >
-                          <span
-                            className={`relative flex h-7 w-7 items-center justify-center rounded-[10px] ${isTop6 ? "shadow-[0_6px_14px_rgba(0,0,0,0.14)]" : "shadow-sm"} ${
-                              isDarkMode
-                                ? index === 0
-                                  ? theme.darkTopBadge
-                                  : index === 1
-                                    ? "bg-white/10 text-white"
-                                    : index === 2
-                                      ? "bg-amber-500/20 text-amber-300"
-                                      : "bg-white/10 text-white"
-                                : styles.badge
-                            }`}
-                          >
-                            {isLeader ? (
-                              <Star className="absolute -right-1 -top-1 h-3 w-3 fill-yellow-300 text-yellow-500" />
-                            ) : null}
-                            {index + 1}
-                          </span>
-                        </button>
+                          {isLeader ? (
+                            <Star className="absolute -right-1 -top-1 h-3 w-3 fill-yellow-300 text-yellow-500" />
+                          ) : null}
+                          {index + 1}
+                        </span>
                       </td>
 
                       <td className="min-w-0 px-2 py-2.5 align-middle">
-                        <button
-                          type="button"
-                          onClick={() => handleSelectPilot(item)}
-                          className="block w-full text-left transition active:scale-[0.99]"
-                        >
-                          <div className="min-w-0">
-                            <div className="flex items-start justify-between gap-1.5">
+                        <div className="min-w-0">
+                          <div className="flex items-start justify-between gap-1.5">
+                            <span
+                              className={`block min-w-0 flex-1 whitespace-normal break-words text-[12px] font-extrabold leading-[1.1] tracking-tight ${
+                                isDarkMode ? "text-white" : styles.name
+                              }`}
+                            >
+                              {nomeLinha1}
+                            </span>
+
+                            <span
+                              className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.08em] ${trendVisual.className}`}
+                            >
+                              <TrendIcon className="h-3 w-3" />
+                              {trendVisual.label}
+                            </span>
+                          </div>
+
+                          {nomeLinha2 ? (
+                            <div className="mt-0.5 flex items-center gap-1">
                               <span
-                                className={`block min-w-0 flex-1 whitespace-normal break-words text-[12px] font-extrabold leading-[1.1] tracking-tight ${
-                                  isDarkMode ? "text-white" : styles.name
+                                className={`inline-flex max-w-full whitespace-normal break-words rounded-full border px-1.5 py-0.5 text-[9px] font-semibold italic tracking-[0.02em] ${
+                                  isDarkMode
+                                    ? `${theme.darkAccentBorder} ${theme.darkAccentBg} text-zinc-200`
+                                    : styles.chip
                                 }`}
                               >
-                                {nomeLinha1}
-                              </span>
-
-                              <span
-                                className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.08em] ${trendVisual.className}`}
-                              >
-                                <TrendIcon className="h-3 w-3" />
-                                {trendVisual.label}
+                                {nomeLinha2}
                               </span>
                             </div>
-
-                            {nomeLinha2 ? (
-                              <div className="mt-0.5 flex items-center gap-1">
-                                <span
-                                  className={`inline-flex max-w-full whitespace-normal break-words rounded-full border px-1.5 py-0.5 text-[9px] font-semibold italic tracking-[0.02em] ${
-                                    isDarkMode
-                                      ? `${theme.darkAccentBorder} ${theme.darkAccentBg} text-zinc-200`
-                                      : styles.chip
-                                  }`}
-                                >
-                                  {nomeLinha2}
-                                </span>
-                              </div>
-                            ) : null}
-                          </div>
-                        </button>
+                          ) : null}
+                        </div>
                       </td>
 
                       <td
@@ -469,13 +467,7 @@ export default function RankingGeneralClassificationSection({
                               : "text-zinc-950"
                         }`}
                       >
-                        <button
-                          type="button"
-                          onClick={() => handleSelectPilot(item)}
-                          className="w-full transition active:scale-95"
-                        >
-                          {item.pontos}
-                        </button>
+                        {item.pontos}
                       </td>
 
                       <td
@@ -483,13 +475,7 @@ export default function RankingGeneralClassificationSection({
                           isDarkMode ? "text-white" : "text-zinc-950"
                         }`}
                       >
-                        <button
-                          type="button"
-                          onClick={() => handleSelectPilot(item)}
-                          className="w-full transition active:scale-95"
-                        >
-                          {item.vitorias}
-                        </button>
+                        {item.vitorias}
                       </td>
 
                       <td
@@ -497,13 +483,7 @@ export default function RankingGeneralClassificationSection({
                           isDarkMode ? "text-white" : "text-zinc-950"
                         }`}
                       >
-                        <button
-                          type="button"
-                          onClick={() => handleSelectPilot(item)}
-                          className="w-full transition active:scale-95"
-                        >
-                          {item.poles}
-                        </button>
+                        {item.poles}
                       </td>
 
                       <td
@@ -511,13 +491,7 @@ export default function RankingGeneralClassificationSection({
                           isDarkMode ? "text-white" : "text-zinc-950"
                         }`}
                       >
-                        <button
-                          type="button"
-                          onClick={() => handleSelectPilot(item)}
-                          className="w-full transition active:scale-95"
-                        >
-                          {item.mv}
-                        </button>
+                        {item.mv}
                       </td>
 
                       <td
@@ -525,13 +499,7 @@ export default function RankingGeneralClassificationSection({
                           isDarkMode ? "text-white" : "text-zinc-950"
                         }`}
                       >
-                        <button
-                          type="button"
-                          onClick={() => handleSelectPilot(item)}
-                          className="w-full transition active:scale-95"
-                        >
-                          {item.podios}
-                        </button>
+                        {item.podios}
                       </td>
                     </tr>
                   );

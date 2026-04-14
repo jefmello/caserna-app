@@ -222,7 +222,7 @@ export default function RankingPilotDuelCard({
   return (
     <div className="w-full space-y-4 overflow-x-hidden">
       <div
-        className={`w-full overflow-hidden rounded-[24px] border ${
+        className={`w-full overflow-hidden rounded-3xl border ${
           isDarkMode
             ? `${theme.darkAccentBorder} bg-gradient-to-br ${theme.darkAccentCard}`
             : `${theme.primaryBorder} bg-gradient-to-br ${theme.heroBg}`
@@ -283,7 +283,7 @@ export default function RankingPilotDuelCard({
               return (
                 <div
                   key={`${side}-${pilot.pilotoId || pilot.piloto}`}
-                  className={`relative min-w-0 rounded-[24px] border p-3 sm:p-4 ${
+                  className={`relative min-w-0 rounded-3xl border p-3 sm:p-4 ${
                     isDarkMode
                       ? isWinner
                         ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft} shadow-[0_14px_32px_rgba(0,0,0,0.34)]`
@@ -368,7 +368,7 @@ export default function RankingPilotDuelCard({
 
                   <div className="mt-3 grid grid-cols-2 gap-2">
                     <div
-                      className={`rounded-[18px] border px-3 py-2 ${
+                      className={`rounded-2xl border px-3 py-2 ${
                         isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50/70"
                       }`}
                     >
@@ -389,7 +389,7 @@ export default function RankingPilotDuelCard({
                     </div>
 
                     <div
-                      className={`rounded-[18px] border px-3 py-2 ${
+                      className={`rounded-2xl border px-3 py-2 ${
                         isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50/70"
                       }`}
                     >
@@ -420,7 +420,7 @@ export default function RankingPilotDuelCard({
                       return (
                         <div
                           key={`${pilot.pilotoId || pilot.piloto}-${stat.label}`}
-                          className={`min-w-0 rounded-[18px] border px-2.5 py-2 ${
+                          className={`min-w-0 rounded-2xl border px-2.5 py-2 ${
                             isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50/70"
                           }`}
                         >
@@ -453,7 +453,7 @@ export default function RankingPilotDuelCard({
 
             <div className="flex flex-col items-center justify-center gap-2 px-1 py-1">
               <div
-                className={`w-full max-w-[220px] rounded-[28px] border px-4 py-3 text-center ${
+                className={`w-full max-w-[220px] rounded-3xl border px-4 py-3 text-center ${
                   isDarkMode
                     ? `${theme.darkAccentBorder} bg-[#0f172a] shadow-[0_10px_28px_rgba(0,0,0,0.26)]`
                     : `${theme.primaryBorder} bg-white shadow-[0_14px_28px_rgba(15,23,42,0.06)]`
@@ -496,7 +496,7 @@ export default function RankingPilotDuelCard({
               </div>
 
               <div
-                className={`w-full max-w-[220px] rounded-[22px] border px-3 py-2 text-center ${
+                className={`w-full max-w-[220px] rounded-3xl border px-3 py-2 text-center ${
                   isDarkMode ? `${theme.darkAccentBorder} ${theme.darkAccentBg}` : theme.searchBadge
                 }`}
               >
@@ -510,7 +510,7 @@ export default function RankingPilotDuelCard({
               </div>
 
               <div
-                className={`w-full max-w-[220px] rounded-[22px] border px-3 py-3 text-center ${
+                className={`w-full max-w-[220px] rounded-3xl border px-3 py-3 text-center ${
                   isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white/90"
                 }`}
               >
@@ -543,7 +543,7 @@ export default function RankingPilotDuelCard({
 
       <div className="grid grid-cols-1 gap-4">
         <Card
-          className={`rounded-[24px] shadow-sm ${
+          className={`rounded-3xl shadow-sm ${
             isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
           }`}
         >
@@ -584,7 +584,7 @@ export default function RankingPilotDuelCard({
                 return (
                   <div
                     key={metric.label}
-                    className={`rounded-[22px] border p-3 ${
+                    className={`rounded-3xl border p-3 ${
                       isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50/70"
                     }`}
                   >
@@ -635,7 +635,7 @@ export default function RankingPilotDuelCard({
                         </div>
                         <div className={`h-2.5 overflow-hidden rounded-full ${isDarkMode ? "bg-white/10" : "bg-zinc-200"}`}>
                           <div
-                            className={`h-full rounded-full ${
+                            className={`h-full rounded-full transition-all duration-700 ease-out ${
                               winner === "a"
                                 ? isDarkMode
                                   ? "bg-emerald-400"
@@ -688,7 +688,7 @@ export default function RankingPilotDuelCard({
         </Card>
 
         <Card
-          className={`rounded-[24px] shadow-sm ${
+          className={`rounded-3xl shadow-sm ${
             isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
           }`}
         >
@@ -721,7 +721,7 @@ export default function RankingPilotDuelCard({
 
             <div className="grid grid-cols-1 gap-3">
               <div
-                className={`rounded-[20px] border p-3 ${
+                className={`rounded-2xl border p-3 ${
                   isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50/70"
                 }`}
               >
@@ -753,7 +753,7 @@ export default function RankingPilotDuelCard({
               </div>
 
               <div
-                className={`rounded-[20px] border p-3 ${
+                className={`rounded-2xl border p-3 ${
                   isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50/70"
                 }`}
               >
@@ -785,7 +785,7 @@ export default function RankingPilotDuelCard({
               </div>
 
               <div
-                className={`rounded-[20px] border p-3 ${
+                className={`rounded-2xl border p-3 ${
                   isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50/70"
                 }`}
               >

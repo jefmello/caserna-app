@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import RankingClassificationSection from "@/components/ranking/ranking-classification-section";
+// RankingClassificationSection was a pass-through wrapper — removed.
 import RankingClassificationShareCard from "@/components/ranking/ranking-classification-share-card";
 import RankingChampionshipNarrativeCard from "@/components/ranking/ranking-championship-narrative-card";
 import RankingEditorialCards from "@/components/ranking/ranking-editorial-cards";
@@ -76,10 +76,10 @@ export default function ClassificacaoHeroSection({
       : null;
 
   return (
-    <RankingClassificationSection>
+    <>
       {top6.length > 0 && (
         <div
-          className={`mb-4 overflow-hidden rounded-[28px] border p-5 shadow-[0_20px_40px_rgba(0,0,0,0.28)] ${
+          className={`mb-4 overflow-hidden rounded-3xl border p-5 shadow-[0_20px_40px_rgba(0,0,0,0.28)] ${
             isDarkMode
               ? "border-white/8 bg-[linear-gradient(180deg,#111827_0%,#0f172a_100%)]"
               : "border-black/5 bg-white"
@@ -124,7 +124,7 @@ export default function ClassificacaoHeroSection({
           <div className="mb-4 grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
             {leader && (
               <div
-                className={`rounded-[24px] border p-4 ${
+                className={`rounded-3xl border p-4 ${
                   isDarkMode
                     ? `${theme.darkAccentBorder} bg-white/[0.03]`
                     : "border-black/5 bg-zinc-50"
@@ -181,7 +181,7 @@ export default function ClassificacaoHeroSection({
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-1">
               <div
-                className={`rounded-[22px] border p-3 ${
+                className={`rounded-3xl border p-3 ${
                   isDarkMode
                     ? "border-emerald-400/20 bg-emerald-400/[0.06]"
                     : "border-emerald-200 bg-emerald-50"
@@ -204,7 +204,7 @@ export default function ClassificacaoHeroSection({
               </div>
 
               <div
-                className={`rounded-[22px] border p-3 ${
+                className={`rounded-3xl border p-3 ${
                   isDarkMode
                     ? "border-white/8 bg-[#0f172a]"
                     : "border-black/5 bg-zinc-50"
@@ -227,7 +227,7 @@ export default function ClassificacaoHeroSection({
               </div>
 
               <div
-                className={`rounded-[22px] border p-3 ${
+                className={`rounded-3xl border p-3 ${
                   isDarkMode
                     ? "border-white/8 bg-[#0f172a]"
                     : "border-black/5 bg-zinc-50"
@@ -273,7 +273,7 @@ export default function ClassificacaoHeroSection({
               return (
                 <div
                   key={`${pilot.piloto}-${index}`}
-                  className={`rounded-[22px] border p-3 transition-all ${
+                  className={`rounded-3xl border p-3 transition-all ${
                     isDarkMode
                       ? isLeader
                         ? `${theme.darkAccentBorder} bg-white/[0.04]`
@@ -364,6 +364,6 @@ export default function ClassificacaoHeroSection({
           />
         </div>
       </div>
-    </RankingClassificationSection>
+    </>
   );
 }
