@@ -4,6 +4,8 @@
  * Esta é a ÚNICA fonte de temas visuais do aplicativo.
  */
 
+export type CategoryAccent = "base" | "graduados" | "elite" | "neutral";
+
 type CategoryTheme = {
   shellGlow: string;
   primaryBorder: string;
@@ -324,4 +326,24 @@ export function getSpotlightCategoryStyles(
     label: "text-yellow-700",
     iconBubble: "border border-white/20 bg-white/18 text-white",
   };
+}
+
+/**
+ * Normaliza uma categoria para o identificador de accent CSS.
+ * Usado por múltiplos componentes para reagir a mudanças de categoria.
+ */
+export function normalizeCategoryAccent(category?: string | null): "base" | "graduados" | "elite" | "neutral" {
+  if (!category) return "neutral";
+
+  const normalized = category
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
+
+  if (normalized === "base") return "base";
+  if (normalized === "graduados") return "graduados";
+  if (normalized === "elite") return "elite";
+
+  return "neutral";
 }

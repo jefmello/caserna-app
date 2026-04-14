@@ -18,6 +18,7 @@ import {
   getTop6RowStyles,
   getTrendVisual,
   normalizePilotName,
+  normalizeCategoryAccent,
 } from "@/lib/ranking/ranking-utils";
 import type { RankingItem, RankingMetaPilot } from "@/types/ranking";
 import ClassificacaoHeroSection from "@/components/classificacao/classificacao-hero-section";
@@ -30,22 +31,6 @@ const RankingShareCanvas = dynamic(
   () => import("@/components/ranking/sections/ranking-share-canvas"),
   { ssr: false }
 );
-
-function normalizeCategoryAccent(category?: string | null) {
-  if (!category) return "neutral";
-
-  const normalized = category
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .toLowerCase();
-
-  if (normalized === "base") return "base";
-  if (normalized === "graduados") return "graduados";
-  if (normalized === "elite") return "elite";
-
-  return "neutral";
-}
 
 export default function ClassificacaoPageContent() {
   const router = useRouter();

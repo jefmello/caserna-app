@@ -42,7 +42,7 @@ const cache = new Map<string, CacheEntry>();
 let sharedFetchPromise: Promise<RankingApiResponse> | null = null;
 let sharedFetchTimestamp = 0;
 
-const CACHE_TTL_MS = 55000;
+const CACHE_TTL_MS = 120000;
 const BASE_BACKOFF_MS = 2000;
 const MAX_BACKOFF_MS = 60000;
 

@@ -62,6 +62,8 @@ export {
 export {
   getCategoryTheme,
   getSpotlightCategoryStyles,
+  normalizeCategoryAccent,
+  type CategoryAccent,
 } from "@/lib/ranking/theme-utils";
 
 // Estilos visuais

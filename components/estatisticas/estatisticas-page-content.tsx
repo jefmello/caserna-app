@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   BarChart3,
@@ -441,18 +441,7 @@ export default function EstatisticasPageContent() {
     categories,
   });
 
-  const [isDarkMode, setIsDarkMode] = React.useState(false);
-
-  useEffect(() => {
-    const savedTheme = window.localStorage.getItem("caserna-theme");
-    if (savedTheme === "dark") {
-      setIsDarkMode(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    window.localStorage.setItem("caserna-theme", isDarkMode ? "dark" : "light");
-  }, [isDarkMode]);
+  const { isDarkMode, toggleTheme } = useChampionship();
 
   const {
     theme,
@@ -596,9 +585,7 @@ export default function EstatisticasPageContent() {
     }, eligible[0]);
   }, [filteredRanking, currentCompetitionMeta]);
 
-  const handleToggleDarkMode = () => {
-    setIsDarkMode((prev) => !prev);
-  };
+  const handleToggleDarkMode = toggleTheme;
 
   const handleRetry = () => {
     retry();

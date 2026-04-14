@@ -31,6 +31,7 @@ import {
   getDuelProfileLabel,
   getPilotFirstAndLastName,
   getPilotWarNameDisplay,
+  getCategoryTheme,
 } from "@/lib/ranking/ranking-utils";
 import { resolvePilotKey } from "@/lib/ranking/stage-points-engine";
 import type { RankingItem } from "@/types/ranking";
@@ -79,7 +80,7 @@ function DuelSelectorCard({
   onChange: (value: string) => void;
   options: RankingItem[];
   isDarkMode: boolean;
-  theme: any;
+  theme: ReturnType<typeof getCategoryTheme>;
 }) {
   return (
     <Card
@@ -145,7 +146,7 @@ function PilotInfoCard({
   score: number;
   isWinner: boolean;
   isDarkMode: boolean;
-  theme: any;
+  theme: ReturnType<typeof getCategoryTheme>;
 }) {
   return (
     <Card

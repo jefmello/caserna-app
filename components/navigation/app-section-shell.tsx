@@ -3,15 +3,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useChampionship } from "@/context/championship-context";
 import AppSponsorsStrip from "./app-sponsors-strip";
+import { normalizeCategoryAccent, type CategoryAccent } from "@/lib/ranking/ranking-utils";
 
 type AppSectionShellProps = {
   children: React.ReactNode;
   isDarkMode?: boolean;
   section?: "default" | "home";
-  categoryAccent?: "base" | "graduados" | "elite" | "neutral";
+  categoryAccent?: CategoryAccent;
 };
-
-type CategoryAccent = "base" | "graduados" | "elite" | "neutral";
 
 type CasernaCategoryAccentDetail = {
   accent?: string | null;
@@ -21,24 +20,6 @@ declare global {
   interface WindowEventMap {
     "caserna-category-accent-change": CustomEvent<CasernaCategoryAccentDetail>;
   }
-}
-
-function normalizeCategoryAccent(
-  accent?: string | null
-): CategoryAccent {
-  if (!accent) return "neutral";
-
-  const normalized = accent
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .toLowerCase();
-
-  if (normalized === "base") return "base";
-  if (normalized === "graduados") return "graduados";
-  if (normalized === "elite") return "elite";
-
-  return "neutral";
 }
 
 function getAccentLayers(
