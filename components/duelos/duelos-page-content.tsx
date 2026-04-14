@@ -35,6 +35,10 @@ import {
 import { resolvePilotKey } from "@/lib/ranking/stage-points-engine";
 import type { RankingItem } from "@/types/ranking";
 import PageTransition from "@/components/ui/page-transition";
+import { ScrollToTopButton } from "@/components/ui/scroll-to-top";
+import Breadcrumb from "@/components/ui/breadcrumb";
+import { useToast } from "@/components/ui/toast";
+import { FilterX } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   Radar,
@@ -80,6 +84,7 @@ export default function DuelosPageContent() {
   const duelCardRef = useRef<HTMLDivElement | null>(null);
   const [isSharingDuel, setIsSharingDuel] = useState(false);
   const { generateImage, download, shareDataUrlToWhatsApp } = useRankingShare({ isDarkMode });
+  const { addToast } = useToast();
 
   const { theme } = useRankingScreenController({
     category,
@@ -219,13 +224,17 @@ export default function DuelosPageContent() {
     try {
       setIsSharingDuel(true);
       const dataUrl = await generateImage(duelCardRef.current);
-      if (!dataUrl) return;
+      if (!dataUrl) {
+        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar a imagem do duelo." });
+        return;
+      }
       const pilotAName = getPilotFirstAndLastName(comparePilotA.piloto).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-");
       const pilotBName = getPilotFirstAndLastName(comparePilotB.piloto).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-");
       download(dataUrl, `duelo-${pilotAName}-vs-${pilotBName}-${category.toLowerCase()}-${competition.toLowerCase()}.png`);
+      addToast({ type: "success", title: "Imagem salva", message: "Duelo exportado com sucesso." });
     } catch (err) {
       console.error(err);
-      window.alert("Não foi possível gerar a imagem do duelo.");
+      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar a imagem do duelo." });
     } finally {
       setIsSharingDuel(false);
     }
@@ -236,7 +245,10 @@ export default function DuelosPageContent() {
     try {
       setIsSharingDuel(true);
       const dataUrl = await generateImage(duelCardRef.current);
-      if (!dataUrl) return;
+      if (!dataUrl) {
+        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o duelo." });
+        return;
+      }
       const pilotAName = getPilotFirstAndLastName(comparePilotA.piloto).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-");
       const pilotBName = getPilotFirstAndLastName(comparePilotB.piloto).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-");
       shareDataUrlToWhatsApp({
@@ -244,9 +256,10 @@ export default function DuelosPageContent() {
         fileName: `duelo-${pilotAName}-vs-${pilotBName}.png`,
         text: `⚔️ ${getPilotFirstAndLastName(comparePilotA.piloto)} vs ${getPilotFirstAndLastName(comparePilotB.piloto)} — Duelo oficial ${competitionLabels[competition] || competition} · ${category}`,
       });
+      addToast({ type: "success", title: "Enviado para WhatsApp", message: "Duelo compartilhado." });
     } catch (err) {
       console.error(err);
-      window.alert("Não foi possível compartilhar o duelo.");
+      addToast({ type: "error", title: "Erro ao enviar", message: "Não foi possível compartilhar o duelo." });
     } finally {
       setIsSharingDuel(false);
     }
@@ -324,6 +337,13 @@ export default function DuelosPageContent() {
         setCompetition={setCompetition}
         competitionLabels={competitionLabels}
         toggleDarkMode={handleToggleDarkMode}
+      />
+
+      <Breadcrumb
+        items={[
+          { label: "Duelos", href: "/duelos" },
+        ]}
+        isDark={isDarkMode}
       />
 
       <Card
@@ -904,6 +924,7 @@ export default function DuelosPageContent() {
         </>
       )}
     </div>
+      <ScrollToTopButton isDark={isDarkMode} />
     </PageTransition>
   );
 }

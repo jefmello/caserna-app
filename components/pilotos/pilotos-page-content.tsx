@@ -35,6 +35,9 @@ import {
 } from "@/lib/ranking/ranking-utils";
 import type { RankingItem } from "@/types/ranking";
 import PageTransition from "@/components/ui/page-transition";
+import { ScrollToTopButton } from "@/components/ui/scroll-to-top";
+import Breadcrumb from "@/components/ui/breadcrumb";
+import { useToast } from "@/components/ui/toast";
 
 function PilotPhotoSlot({
   pilot,
@@ -193,6 +196,8 @@ export default function PilotosPageContent() {
     isDarkMode,
   });
 
+  const { addToast } = useToast();
+
   const pilotAnalysis = usePilotAnalysis({
     selectedPilot,
     filteredRanking,
@@ -265,7 +270,10 @@ export default function PilotosPageContent() {
     try {
       setIsSharingPilotImage(true);
       const dataUrl = await generateImage(pilotShareCardRef.current);
-      if (!dataUrl) return;
+      if (!dataUrl) {
+        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar a imagem do piloto." });
+        return;
+      }
 
       const safePilotName = getPilotFirstAndLastName(selectedPilot.piloto)
         .toLowerCase()
@@ -277,9 +285,10 @@ export default function PilotosPageContent() {
         dataUrl,
         `piloto-${safePilotName}-${category.toLowerCase()}-${competition.toLowerCase()}.png`
       );
+      addToast({ type: "success", title: "Imagem salva", message: "Perfil do piloto exportado com sucesso." });
     } catch (err) {
       console.error(err);
-      window.alert("Não foi possível gerar a imagem do piloto.");
+      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar a imagem do piloto." });
     } finally {
       setIsSharingPilotImage(false);
     }
@@ -349,6 +358,13 @@ export default function PilotosPageContent() {
         competitionLabels={competitionLabels}
         search={search}
         onSearchChange={setSearch}
+      />
+
+      <Breadcrumb
+        items={[
+          { label: "Pilotos", href: "/pilotos" },
+        ]}
+        isDark={isDarkMode}
       />
 
       {!selectedPilot ? (
@@ -636,6 +652,7 @@ export default function PilotosPageContent() {
         </div>
       )}
     </div>
+      <ScrollToTopButton isDark={isDarkMode} />
     </PageTransition>
   );
 }

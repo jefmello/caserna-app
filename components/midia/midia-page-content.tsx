@@ -35,6 +35,9 @@ import {
 } from "@/lib/ranking/ranking-utils";
 import type { RankingItem, RankingMetaPilot } from "@/types/ranking";
 import PageTransition from "@/components/ui/page-transition";
+import { ScrollToTopButton } from "@/components/ui/scroll-to-top";
+import Breadcrumb from "@/components/ui/breadcrumb";
+import { useToast } from "@/components/ui/toast";
 
 const RankingShareCanvas = dynamic(
   () => import("@/components/ranking/sections/ranking-share-canvas"),
@@ -529,6 +532,8 @@ export default function MidiaPageContent() {
     isDarkMode,
   });
 
+  const { addToast } = useToast();
+
   const scrollToSection = (ref: React.RefObject<HTMLDivElement | null>) => {
     ref.current?.scrollIntoView({
       behavior: "smooth",
@@ -550,15 +555,19 @@ export default function MidiaPageContent() {
     try {
       setIsSharingImage(true);
       const dataUrl = await generateImage(shareCardRef.current);
-      if (!dataUrl) return;
+      if (!dataUrl) {
+        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar a classificação." });
+        return;
+      }
 
       download(
         dataUrl,
         `classificacao-${category.toLowerCase()}-${competition.toLowerCase()}.png`
       );
+      addToast({ type: "success", title: "Imagem salva", message: "Classificação exportada com sucesso." });
     } catch (err) {
       console.error(err);
-      window.alert("Não foi possível gerar a imagem da classificação.");
+      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar a classificação." });
     } finally {
       setIsSharingImage(false);
     }
@@ -574,15 +583,19 @@ export default function MidiaPageContent() {
     try {
       setIsSharingFullClassificationImage(true);
       const dataUrl = await generateImage(fullClassificationShareCardRef.current);
-      if (!dataUrl) return;
+      if (!dataUrl) {
+        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar a classificação completa." });
+        return;
+      }
 
       download(
         dataUrl,
         `classificacao-completa-${category.toLowerCase()}-${competition.toLowerCase()}.png`
       );
+      addToast({ type: "success", title: "Imagem salva", message: "Classificação completa exportada com sucesso." });
     } catch (err) {
       console.error(err);
-      window.alert("Não foi possível gerar a imagem da classificação completa.");
+      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar a classificação completa." });
     } finally {
       setIsSharingFullClassificationImage(false);
     }
@@ -595,7 +608,10 @@ export default function MidiaPageContent() {
     try {
       setIsSharingLeaderImage(true);
       const dataUrl = await generateImage(ref);
-      if (!dataUrl) return;
+      if (!dataUrl) {
+        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card do líder." });
+        return;
+      }
 
       download(
         dataUrl,
@@ -603,9 +619,10 @@ export default function MidiaPageContent() {
           ? `lider-stories-${category.toLowerCase()}-${competition.toLowerCase()}.png`
           : `lider-${category.toLowerCase()}-${competition.toLowerCase()}.png`
       );
+      addToast({ type: "success", title: "Imagem salva", message: "Card do líder exportado com sucesso." });
     } catch (err) {
       console.error(err);
-      window.alert("Não foi possível gerar a imagem do líder.");
+      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card do líder." });
     } finally {
       setIsSharingLeaderImage(false);
     }
@@ -624,7 +641,10 @@ export default function MidiaPageContent() {
     try {
       setIsSharingNarrativeImage(true);
       const dataUrl = await generateImage(ref);
-      if (!dataUrl) return;
+      if (!dataUrl) {
+        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card da narrativa." });
+        return;
+      }
 
       download(
         dataUrl,
@@ -632,9 +652,10 @@ export default function MidiaPageContent() {
           ? `narrativa-stories-${category.toLowerCase()}-${competition.toLowerCase()}.png`
           : `narrativa-${category.toLowerCase()}-${competition.toLowerCase()}.png`
       );
+      addToast({ type: "success", title: "Imagem salva", message: "Card da narrativa exportado com sucesso." });
     } catch (err) {
       console.error(err);
-      window.alert("Não foi possível gerar a imagem da narrativa.");
+      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card da narrativa." });
     } finally {
       setIsSharingNarrativeImage(false);
     }
@@ -654,15 +675,19 @@ export default function MidiaPageContent() {
     try {
       setIsSharingDuelImage(true);
       const dataUrl = await generateImage(duelShareCardRef.current);
-      if (!dataUrl) return;
+      if (!dataUrl) {
+        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card do duelo." });
+        return;
+      }
 
       download(
         dataUrl,
         `duelo-${category.toLowerCase()}-${competition.toLowerCase()}.png`
       );
+      addToast({ type: "success", title: "Imagem salva", message: "Card do duelo exportado com sucesso." });
     } catch (err) {
       console.error(err);
-      window.alert("Não foi possível gerar a imagem do duelo.");
+      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card do duelo." });
     } finally {
       setIsSharingDuelImage(false);
     }
@@ -690,6 +715,10 @@ ${getPilotFirstAndLastName(leader.piloto)} lidera ${category} - ${
 
 Caserna Kart Racing`,
       });
+      addToast({ type: "success", title: "Enviado para WhatsApp", message: "Card do líder compartilhado." });
+    } catch (err) {
+      console.error(err);
+      addToast({ type: "error", title: "Erro ao enviar", message: "Não foi possível enviar para o WhatsApp." });
     } finally {
       setIsSharingLeaderImage(false);
     }
@@ -707,7 +736,10 @@ Caserna Kart Racing`,
     try {
       setIsSharingNarrativeImage(true);
       const dataUrl = await generateImage(narrativeShareCardRef.current);
-      if (!dataUrl) return;
+      if (!dataUrl) {
+        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card da narrativa." });
+        return;
+      }
 
       await shareDataUrlToWhatsApp({
         dataUrl,
@@ -719,6 +751,10 @@ ${championshipNarrative.body}
 ${category} - ${competitionLabels[competition] || competition}
 Caserna Kart Racing`,
       });
+      addToast({ type: "success", title: "Enviado para WhatsApp", message: "Card da narrativa compartilhado." });
+    } catch (err) {
+      console.error(err);
+      addToast({ type: "error", title: "Erro ao enviar", message: "Não foi possível enviar para o WhatsApp." });
     } finally {
       setIsSharingNarrativeImage(false);
     }
@@ -760,6 +796,10 @@ Caserna Kart Racing`;
         fileName: `duelo-${category.toLowerCase()}-${competition.toLowerCase()}.png`,
         text: duelText,
       });
+      addToast({ type: "success", title: "Enviado para WhatsApp", message: "Card do duelo compartilhado." });
+    } catch (err) {
+      console.error(err);
+      addToast({ type: "error", title: "Erro ao enviar", message: "Não foi possível enviar para o WhatsApp." });
     } finally {
       setIsSharingDuelImage(false);
     }
@@ -833,6 +873,13 @@ Caserna Kart Racing`;
         setCompetition={setCompetition}
         competitionLabels={competitionLabels}
         toggleDarkMode={handleToggleDarkMode}
+      />
+
+      <Breadcrumb
+        items={[
+          { label: "Mídia", href: "/midia" },
+        ]}
+        isDark={isDarkMode}
       />
 
       <Card
@@ -1400,6 +1447,7 @@ Caserna Kart Racing`;
         />
       </div>
     </div>
+      <ScrollToTopButton isDark={isDarkMode} />
     </PageTransition>
   );
 }

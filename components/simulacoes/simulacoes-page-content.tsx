@@ -22,6 +22,8 @@ import { useChampionship } from "@/context/championship-context";
 import { competitionLabels, getCategoryTheme, getPilotFirstAndLastName } from "@/lib/ranking/ranking-utils";
 import CustomScenarioBuilder from "@/components/simulacoes/custom-scenario-builder";
 import PageTransition, { StaggerContainer, StaggerItem } from "@/components/ui/page-transition";
+import { ScrollToTopButton } from "@/components/ui/scroll-to-top";
+import Breadcrumb from "@/components/ui/breadcrumb";
 import {
   buildTitleProbabilityCandidates,
   type TitleProbabilityCandidate,
@@ -574,6 +576,13 @@ export default function SimulacoesPageContent() {
         toggleDarkMode={handleToggleDarkMode}
       />
 
+      <Breadcrumb
+        items={[
+          { label: "Simulações", href: "/simulacoes" },
+        ]}
+        isDark={isDarkMode}
+      />
+
       <SectionTitle
         title="Leitura matemática do campeonato"
         subtitle={`${category} · ${competitionLabels[competition] || competition}`}
@@ -1056,6 +1065,7 @@ export default function SimulacoesPageContent() {
         </Card>
       </div>
     </div>
+      <ScrollToTopButton isDark={isDarkMode} />
     </PageTransition>
   );
 }

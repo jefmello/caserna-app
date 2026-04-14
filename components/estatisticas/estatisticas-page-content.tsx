@@ -39,6 +39,8 @@ import {
   Bar,
 } from "recharts";
 import PageTransition from "@/components/ui/page-transition";
+import { ScrollToTopButton } from "@/components/ui/scroll-to-top";
+import Breadcrumb from "@/components/ui/breadcrumb";
 import {
   CompactStatCard,
   HighlightCard,
@@ -286,6 +288,13 @@ export default function EstatisticasPageContent() {
         toggleDarkMode={handleToggleDarkMode}
       />
 
+      <Breadcrumb
+        items={[
+          { label: "Estatísticas", href: "/estatisticas" },
+        ]}
+        isDark={isDarkMode}
+      />
+
       <div className="space-y-4 xl:grid xl:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] xl:items-start xl:gap-5 xl:space-y-0">
         <div className="space-y-4">
           <RankingStatsHeader
@@ -355,6 +364,7 @@ export default function EstatisticasPageContent() {
         />
       </div>
     </div>
+      <ScrollToTopButton isDark={isDarkMode} />
     </PageTransition>
   );
 }

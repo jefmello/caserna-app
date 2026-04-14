@@ -26,6 +26,8 @@ import ClassificacaoMainTableSection from "@/components/classificacao/classifica
 import SectionDivider from "@/components/ui/section-divider";
 import { useChampionship } from "@/context/championship-context";
 import PageTransition from "@/components/ui/page-transition";
+import { ScrollToTopButton } from "@/components/ui/scroll-to-top";
+import Breadcrumb from "@/components/ui/breadcrumb";
 
 const RankingShareCanvas = dynamic(
   () => import("@/components/ranking/sections/ranking-share-canvas"),
@@ -382,6 +384,13 @@ export default function ClassificacaoPageContent() {
             toggleDarkMode={toggleTheme}
           />
 
+          <Breadcrumb
+            items={[
+              { label: "Classificação", href: "/classificacao" },
+            ]}
+            isDark={isDarkMode}
+          />
+
           <RankingSearchCard
             isDarkMode={isDarkMode}
             theme={theme}
@@ -459,6 +468,7 @@ export default function ClassificacaoPageContent() {
         </div>
       </div>
     </div>
+      <ScrollToTopButton isDark={isDarkMode} />
     </PageTransition>
   );
 }
