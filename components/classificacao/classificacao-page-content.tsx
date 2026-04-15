@@ -65,6 +65,8 @@ export default function ClassificacaoPageContent() {
   const leaderShareCardRef = useRef<HTMLDivElement | null>(null);
   const narrativeShareCardRef = useRef<HTMLDivElement | null>(null);
   const duelShareCardRef = useRef<HTMLDivElement | null>(null);
+  const podiumCardRef = useRef<HTMLDivElement | null>(null);
+  const evolutionCardRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const accent = normalizeCategoryAccent(category);
@@ -463,6 +465,8 @@ export default function ClassificacaoPageContent() {
               duelShareCardRef,
               shareCardRef,
               fullClassificationShareCardRef,
+              podiumCardRef,
+              evolutionCardRef,
             }}
           />
         </div>

@@ -169,11 +169,15 @@ export default function MidiaPageContent() {
   const leaderShareCardRef = useRef<HTMLDivElement | null>(null);
   const duelShareCardRef = useRef<HTMLDivElement | null>(null);
   const narrativeShareCardRef = useRef<HTMLDivElement | null>(null);
+  const podiumCardRef = useRef<HTMLDivElement | null>(null);
+  const evolutionCardRef = useRef<HTMLDivElement | null>(null);
 
   // Stories refs
   const storiesLeaderRef = useRef<HTMLDivElement | null>(null);
   const storiesNarrativeRef = useRef<HTMLDivElement | null>(null);
   const storiesClassificationRef = useRef<HTMLDivElement | null>(null);
+  const storiesPodiumRef = useRef<HTMLDivElement | null>(null);
+  const storiesEvolutionRef = useRef<HTMLDivElement | null>(null);
 
   const [shareFormat, setShareFormat] = useState<"landscape" | "stories">("landscape");
 
@@ -187,6 +191,10 @@ export default function MidiaPageContent() {
   const [isSharingLeaderImage, setIsSharingLeaderImage] = useState(false);
   const [isSharingDuelImage, setIsSharingDuelImage] = useState(false);
   const [isSharingNarrativeImage, setIsSharingNarrativeImage] = useState(false);
+  const [isSharingPodiumImage, setIsSharingPodiumImage] = useState(false);
+  const [isSharingEvolutionImage, setIsSharingEvolutionImage] = useState(false);
+  const [isSharingStoriesPodiumImage, setIsSharingStoriesPodiumImage] = useState(false);
+  const [isSharingStoriesEvolutionImage, setIsSharingStoriesEvolutionImage] = useState(false);
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("caserna-theme");
@@ -690,6 +698,60 @@ export default function MidiaPageContent() {
       addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card do duelo." });
     } finally {
       setIsSharingDuelImage(false);
+    }
+  };
+
+  const handleSharePodiumCard = async () => {
+    const ref = shareFormat === "stories" ? storiesPodiumRef.current : podiumCardRef.current;
+    if (!ref || isSharingPodiumImage) return;
+
+    try {
+      setIsSharingPodiumImage(true);
+      const dataUrl = await generateImage(ref);
+      if (!dataUrl) {
+        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card do pódio." });
+        return;
+      }
+
+      download(
+        dataUrl,
+        shareFormat === "stories"
+          ? `podio-stories-${category.toLowerCase()}-${competition.toLowerCase()}.png`
+          : `podio-${category.toLowerCase()}-${competition.toLowerCase()}.png`
+      );
+      addToast({ type: "success", title: "Imagem salva", message: "Card do pódio exportado com sucesso." });
+    } catch (err) {
+      console.error(err);
+      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card do pódio." });
+    } finally {
+      setIsSharingPodiumImage(false);
+    }
+  };
+
+  const handleShareEvolutionCard = async () => {
+    const ref = shareFormat === "stories" ? storiesEvolutionRef.current : evolutionCardRef.current;
+    if (!ref || isSharingEvolutionImage) return;
+
+    try {
+      setIsSharingEvolutionImage(true);
+      const dataUrl = await generateImage(ref);
+      if (!dataUrl) {
+        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card da evolução." });
+        return;
+      }
+
+      download(
+        dataUrl,
+        shareFormat === "stories"
+          ? `evolucao-stories-${category.toLowerCase()}-${competition.toLowerCase()}.png`
+          : `evolucao-${category.toLowerCase()}-${competition.toLowerCase()}.png`
+      );
+      addToast({ type: "success", title: "Imagem salva", message: "Card da evolução exportado com sucesso." });
+    } catch (err) {
+      console.error(err);
+      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card da evolução." });
+    } finally {
+      setIsSharingEvolutionImage(false);
     }
   };
 
@@ -1421,6 +1483,8 @@ Caserna Kart Racing`;
             duelShareCardRef,
             shareCardRef,
             fullClassificationShareCardRef,
+            podiumCardRef,
+            evolutionCardRef,
           }}
         />
         <RankingShareStoriesCanvas
@@ -1443,6 +1507,8 @@ Caserna Kart Racing`;
             storiesLeaderRef,
             storiesNarrativeRef,
             storiesClassificationRef,
+            storiesPodiumRef,
+            storiesEvolutionRef,
           }}
         />
       </div>
