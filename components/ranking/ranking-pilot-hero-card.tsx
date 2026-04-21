@@ -130,11 +130,11 @@ export default function RankingPilotHeroCard({
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-[200px_1fr]">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-[220px_1fr] md:gap-5 lg:grid-cols-[380px_1fr] lg:gap-7 xl:grid-cols-[440px_1fr] xl:gap-8">
                 {/* Premium photo frame: blurred backdrop + metallic ring + motion streaks */}
                 <div className="relative">
                   {/* Blurred backdrop of same photo — fills column edges with motion blur feel */}
-                  <div className="pointer-events-none absolute -inset-4 overflow-hidden rounded-[36px] opacity-70">
+                  <div className="pointer-events-none absolute -inset-4 overflow-hidden rounded-[36px] opacity-70 lg:-inset-6 lg:rounded-[48px]">
                     <div className="absolute inset-0 scale-[1.6] blur-3xl saturate-[1.2]">
                       <PilotPhotoSlot pilot={selectedPilot} alt="" isDark={isDarkMode} />
                     </div>
@@ -147,10 +147,10 @@ export default function RankingPilotHeroCard({
                     />
                   </div>
 
-                  {/* Motion-blur streaks (horizontal) — racing feel */}
+                  {/* Motion-blur streaks (horizontal) — racing feel, scale up on desktop */}
                   <div
                     aria-hidden="true"
-                    className={`pointer-events-none absolute top-1/2 -left-6 h-12 w-6 -translate-y-1/2 rounded-full blur-md ${
+                    className={`pointer-events-none absolute top-1/2 -left-6 h-12 w-6 -translate-y-1/2 rounded-full blur-md lg:-left-10 lg:h-24 lg:w-10 lg:blur-xl ${
                       isDarkMode
                         ? `${theme.darkAccentBgSoft} opacity-60`
                         : `${theme.primaryIconWrap} opacity-70`
@@ -158,16 +158,26 @@ export default function RankingPilotHeroCard({
                   />
                   <div
                     aria-hidden="true"
-                    className={`pointer-events-none absolute top-1/3 -right-5 h-10 w-4 rounded-full blur-md ${
+                    className={`pointer-events-none absolute top-1/3 -right-5 h-10 w-4 rounded-full blur-md lg:-right-9 lg:h-20 lg:w-8 lg:blur-xl ${
                       isDarkMode
                         ? `${theme.darkAccentBgSoft} opacity-50`
                         : `${theme.primaryIconWrap} opacity-60`
                     }`}
                   />
 
-                  {/* Photo frame with metallic chrome ring */}
+                  {/* Secondary streak (bottom, desktop-only) for extra speed feel */}
                   <div
-                    className="relative overflow-hidden rounded-[28px] p-[2px] shadow-[0_20px_40px_rgba(0,0,0,0.35)]"
+                    aria-hidden="true"
+                    className={`pointer-events-none absolute bottom-6 -left-8 hidden h-6 w-16 rounded-full blur-xl lg:block ${
+                      isDarkMode
+                        ? `${theme.darkAccentBgSoft} opacity-40`
+                        : `${theme.primaryIconWrap} opacity-50`
+                    }`}
+                  />
+
+                  {/* Photo frame with metallic chrome ring — thicker on desktop */}
+                  <div
+                    className="relative overflow-hidden rounded-[28px] p-[2px] shadow-[0_20px_40px_rgba(0,0,0,0.35)] lg:rounded-[36px] lg:p-[3px] lg:shadow-[0_28px_58px_rgba(0,0,0,0.4)]"
                     style={{
                       background: isDarkMode
                         ? "linear-gradient(145deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.06) 35%, rgba(255,255,255,0.22) 65%, rgba(255,255,255,0.04) 100%)"
@@ -175,12 +185,12 @@ export default function RankingPilotHeroCard({
                     }}
                   >
                     <div
-                      className={`relative overflow-hidden rounded-[26px] ${
+                      className={`relative overflow-hidden rounded-[26px] lg:rounded-[33px] ${
                         isDarkMode ? "bg-[#0f172a]" : "bg-zinc-50"
                       }`}
                     >
                       <div
-                        className={`pointer-events-none absolute inset-x-8 top-0 z-10 h-[2px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
+                        className={`pointer-events-none absolute inset-x-8 top-0 z-10 h-[2px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent lg:inset-x-12 lg:h-[3px]`}
                       />
 
                       <div className="relative aspect-square w-full">
@@ -193,11 +203,11 @@ export default function RankingPilotHeroCard({
                         {/* Bottom gradient fade to pedestal */}
                         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/82 via-black/20 to-transparent" />
 
-                        {/* Top-left: metallic podium badge for position (replaces plain text) */}
-                        <div className="absolute top-3 left-3 flex flex-col items-start gap-2">
+                        {/* Top-left: metallic podium badge for position */}
+                        <div className="absolute top-3 left-3 flex flex-col items-start gap-2 lg:top-5 lg:left-5 lg:gap-3">
                           <PodiumBadge position={safeSelectedPilot.pos} size="lg" />
                           <div
-                            className={`inline-flex rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.16em] uppercase shadow-sm backdrop-blur-md ${
+                            className={`inline-flex rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.16em] uppercase shadow-sm backdrop-blur-md lg:px-4 lg:py-1.5 lg:text-[12px] ${
                               isDarkMode
                                 ? `${theme.darkAccentBorder} bg-black/45 ${theme.darkAccentText}`
                                 : categoryColors[category] ||
@@ -209,16 +219,16 @@ export default function RankingPilotHeroCard({
                         </div>
 
                         {/* Bottom: name + war name pedestal */}
-                        <div className="absolute inset-x-0 bottom-0 p-3">
+                        <div className="absolute inset-x-0 bottom-0 p-3 lg:p-5">
                           <div
-                            className={`rounded-[20px] border px-3 py-3 backdrop-blur-xl ${
+                            className={`rounded-[20px] border px-3 py-3 backdrop-blur-xl lg:rounded-[24px] lg:px-5 lg:py-4 ${
                               isDarkMode
                                 ? "border-white/10 bg-black/40"
                                 : "border-white/70 bg-white/75"
                             }`}
                           >
                             <p
-                              className={`truncate text-[16px] leading-none font-bold tracking-tight ${
+                              className={`truncate text-[16px] leading-none font-bold tracking-tight lg:text-[22px] ${
                                 isDarkMode ? "text-white" : "text-zinc-950"
                               }`}
                             >
@@ -227,7 +237,7 @@ export default function RankingPilotHeroCard({
 
                             {selectedPilotWarName ? (
                               <p
-                                className={`mt-1 truncate text-[11px] font-semibold italic ${
+                                className={`mt-1 truncate text-[11px] font-semibold italic lg:mt-2 lg:text-[14px] ${
                                   isDarkMode ? "text-zinc-300" : "text-zinc-600"
                                 }`}
                               >
@@ -235,9 +245,9 @@ export default function RankingPilotHeroCard({
                               </p>
                             ) : null}
 
-                            <div className="mt-2 flex items-center justify-between gap-2">
+                            <div className="mt-2 flex items-center justify-between gap-2 lg:mt-3">
                               <span
-                                className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold tracking-[0.14em] uppercase ${
+                                className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold tracking-[0.14em] uppercase lg:px-3 lg:py-1.5 lg:text-[10px] ${
                                   isDarkMode
                                     ? "border-white/10 bg-white/5 text-zinc-300"
                                     : "border-black/5 bg-white/80 text-zinc-700"
@@ -247,7 +257,7 @@ export default function RankingPilotHeroCard({
                               </span>
 
                               <span
-                                className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold tracking-[0.14em] uppercase ${
+                                className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold tracking-[0.14em] uppercase lg:px-3 lg:py-1.5 lg:text-[10px] ${
                                   isDarkMode
                                     ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                                     : theme.heroChip
