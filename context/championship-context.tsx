@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 type ThemeMode = "dark" | "light";
 
@@ -69,20 +62,14 @@ function applyThemeToDom(mode: ThemeMode) {
   document.documentElement.dataset.theme = mode;
   document.body.dataset.theme = mode;
 
-  document.documentElement.style.backgroundColor = isDark
-    ? DARK_BACKGROUND
-    : LIGHT_BACKGROUND;
+  document.documentElement.style.backgroundColor = isDark ? DARK_BACKGROUND : LIGHT_BACKGROUND;
   document.body.style.backgroundColor = isDark ? DARK_BACKGROUND : LIGHT_BACKGROUND;
 
   document.documentElement.style.colorScheme = isDark ? "dark" : "light";
   document.body.style.color = isDark ? DARK_TEXT : LIGHT_TEXT;
 }
 
-export function ChampionshipProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function ChampionshipProvider({ children }: { children: React.ReactNode }) {
   // Inicialização lazy — lê do localStorage na primeira renderização
   const [categoria, setCategoriaState] = useState(() => {
     if (typeof window !== "undefined") {
@@ -147,22 +134,10 @@ export function ChampionshipProvider({
       setThemeMode,
       toggleTheme,
     }),
-    [
-      categoria,
-      campeonato,
-      themeModeState,
-      setCategoria,
-      setCampeonato,
-      setThemeMode,
-      toggleTheme,
-    ]
+    [categoria, campeonato, themeModeState, setCategoria, setCampeonato, setThemeMode, toggleTheme]
   );
 
-  return (
-    <ChampionshipContext.Provider value={value}>
-      {children}
-    </ChampionshipContext.Provider>
-  );
+  return <ChampionshipContext.Provider value={value}>{children}</ChampionshipContext.Provider>;
 }
 
 export function useChampionship() {
