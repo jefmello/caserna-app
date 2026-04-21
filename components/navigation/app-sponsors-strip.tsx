@@ -9,62 +9,20 @@ import { sponsorLogos } from "@/lib/ranking/ranking-utils";
 type SponsorLogoItem = {
   name: string;
   src: string;
-  wrapper: string;
-  surfaceLight: string;
-  surfaceDark: string;
-  image: string;
+  wrapper?: string;
+  surfaceLight?: string;
+  surfaceDark?: string;
+  image?: string;
   shareImage?: string;
 };
 
 const FALLBACK_SPONSOR_LOGOS: SponsorLogoItem[] = [
-  {
-    name: "LazyKart",
-    src: "/patrocinadores/lazykart.png",
-    wrapper: "px-3",
-    surfaceLight: "bg-white",
-    surfaceDark: "bg-white/5",
-    image: "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
-  },
-  {
-    name: "Lumine",
-    src: "/patrocinadores/lumine.png",
-    wrapper: "px-3",
-    surfaceLight: "bg-white",
-    surfaceDark: "bg-white/5",
-    image: "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
-  },
-  {
-    name: "Precision",
-    src: "/patrocinadores/precision.png",
-    wrapper: "px-3",
-    surfaceLight: "bg-white",
-    surfaceDark: "bg-white/5",
-    image: "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
-  },
-  {
-    name: "Skyflow",
-    src: "/patrocinadores/skyflow.png",
-    wrapper: "px-3",
-    surfaceLight: "bg-white",
-    surfaceDark: "bg-white/5",
-    image: "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
-  },
-  {
-    name: "Vits",
-    src: "/patrocinadores/vits.png",
-    wrapper: "px-3",
-    surfaceLight: "bg-white",
-    surfaceDark: "bg-white/5",
-    image: "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
-  },
-  {
-    name: "Astera",
-    src: "/patrocinadores/astera.png",
-    wrapper: "px-3",
-    surfaceLight: "bg-white",
-    surfaceDark: "bg-white/5",
-    image: "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
-  },
+  { name: "LazyKart", src: "/patrocinadores/lazykart.png" },
+  { name: "Lumine", src: "/patrocinadores/lumine.png" },
+  { name: "Precision", src: "/patrocinadores/precision.png" },
+  { name: "Skyflow", src: "/patrocinadores/skyflow.png" },
+  { name: "Vits", src: "/patrocinadores/vits.png" },
+  { name: "Astera", src: "/patrocinadores/astera.png" },
 ];
 
 function readThemeFromEnvironment(explicitIsDarkMode?: boolean) {
@@ -78,46 +36,16 @@ function readThemeFromEnvironment(explicitIsDarkMode?: boolean) {
   return storedTheme === "dark" || rootHasDark || bodyHasDark;
 }
 
-function normalizeSponsorName(name: string) {
-  return name.trim().toLowerCase();
-}
-
-function getSponsorLogoClassName(sponsor: SponsorLogoItem, isDarkMode: boolean) {
-  const name = normalizeSponsorName(sponsor.name);
-
-  // Tamanhos consistentes: todos cabem dentro do card 88-92px com folga.
-  // Logos muito quadrados (lazykart, astera) recebem tamanho levemente menor
-  // para não dominar visualmente ao lado dos logos horizontais (lumine, precision...).
-  const base =
-    "h-auto w-auto object-contain transition-transform duration-300 group-hover:scale-[1.04]";
-
-  const compactLogos = new Set(["lazykart", "astera"]);
-  const size = compactLogos.has(name)
-    ? "max-h-[44px] max-w-[78%] md:max-h-[50px]"
-    : "max-h-[56px] max-w-[88%] md:max-h-[64px]";
-
-  // Dropshadow sutil para dar lift sem alterar cor real do logo.
-  const shadow = isDarkMode
-    ? "drop-shadow-[0_2px_6px_rgba(0,0,0,0.55)]"
-    : "drop-shadow-[0_2px_6px_rgba(15,23,42,0.08)]";
-
-  return `${base} ${size} ${shadow}`;
-}
-
-function getSponsorInnerSurfaceClassName(_sponsor: SponsorLogoItem, isDarkMode: boolean) {
-  // Surface neutra por cima do card. Sem tint colorido (evita interferir
-  // na cor real do logo). Spotlight branco sutil no centro ajuda legibilidade.
-  return isDarkMode
-    ? "bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.035),transparent_72%)]"
-    : "bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.85),rgba(255,255,255,0.4)_55%,transparent_80%)]";
-}
-
-function getSponsorContentClassName(_sponsor: SponsorLogoItem) {
-  // Padding único e consistente. Evita cada sponsor ter seu próprio layout
-  // que fazia logos "vazarem" do card ou ficarem mal centralizados.
-  return "px-4 py-2 md:px-5";
-}
-
+/**
+ * Sponsor marquee card — premium F1-style panel.
+ *
+ * Design principles:
+ * - Inner surface is always a light panel regardless of theme (logos are designed
+ *   for white backgrounds; this guarantees legibility everywhere).
+ * - Outer frame adapts to theme: dark cards in dark mode, neutral cards in light.
+ * - Single logo size (h-16 / md:h-20) — all sponsors get equal visual weight.
+ * - Subtle 3D depth via top highlight + bottom inner shadow, no distracting tints.
+ */
 function SponsorMarqueeCard({
   sponsor,
   isDarkMode,
@@ -132,84 +60,52 @@ function SponsorMarqueeCard({
     setHasError(false);
   }
 
-  const logoClassName = getSponsorLogoClassName(sponsor, isDarkMode);
-  const innerSurfaceClassName = getSponsorInnerSurfaceClassName(sponsor, isDarkMode);
-  const surfaceClassName = isDarkMode ? sponsor.surfaceDark : sponsor.surfaceLight;
-  const contentClassName = getSponsorContentClassName(sponsor);
-
   return (
     <div
-      className={`group relative flex h-[88px] min-w-[228px] items-center justify-center overflow-hidden rounded-[22px] border px-3 transition-all duration-300 md:h-[92px] md:min-w-[248px] xl:min-w-[264px] ${
-        isDarkMode
-          ? "border-white/10 bg-[linear-gradient(180deg,rgba(17,24,39,0.985)_0%,rgba(6,10,24,0.985)_52%,rgba(2,6,23,0.985)_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_14px_34px_rgba(0,0,0,0.34)] hover:-translate-y-[1px] hover:border-white/20 hover:bg-[linear-gradient(180deg,rgba(22,31,50,1)_0%,rgba(8,13,28,1)_54%,rgba(5,8,20,1)_100%)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_20px_42px_rgba(0,0,0,0.42)]"
-          : "border-black/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.995)_0%,rgba(250,250,252,0.995)_36%,rgba(241,245,249,0.99)_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,1),0_10px_26px_rgba(15,23,42,0.08),0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-[1px] hover:border-black/10 hover:bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(252,252,253,1)_36%,rgba(238,242,247,1)_100%)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,1),0_16px_32px_rgba(15,23,42,0.12)]"
-      }`}
       title={sponsor.name}
+      className={`group relative flex h-[112px] min-w-[240px] items-center justify-center overflow-hidden rounded-[22px] border px-3 transition-all duration-300 md:h-[120px] md:min-w-[260px] xl:min-w-[280px] ${
+        isDarkMode
+          ? "border-white/10 bg-[linear-gradient(180deg,#0f172a_0%,#0b1120_60%,#070b14_100%)] shadow-[0_16px_38px_rgba(0,0,0,0.4)] hover:-translate-y-[2px] hover:border-white/20 hover:shadow-[0_24px_50px_rgba(0,0,0,0.5)]"
+          : "border-black/5 bg-white shadow-[0_12px_28px_rgba(15,23,42,0.08)] hover:-translate-y-[2px] hover:border-black/10 hover:shadow-[0_18px_38px_rgba(15,23,42,0.12)]"
+      }`}
     >
+      {/* Outer top highlight — 1px bright line for glass/metal feel */}
       <div
-        className={`pointer-events-none absolute inset-[1px] rounded-[21px] ${
-          isDarkMode
-            ? "bg-[linear-gradient(180deg,rgba(255,255,255,0.06)_0%,transparent_30%,transparent_100%)]"
-            : "bg-[linear-gradient(180deg,rgba(255,255,255,0.98)_0%,rgba(255,255,255,0.72)_22%,rgba(255,255,255,0.2)_62%,transparent_100%)]"
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-x-[10%] top-0 h-px ${
+          isDarkMode ? "bg-white/20" : "bg-white"
         }`}
       />
 
+      {/* Inner light panel — ALWAYS light so logos (designed for white) render native */}
       <div
-        className={`pointer-events-none absolute inset-[5px] rounded-[18px] border ${
-          isDarkMode ? "border-white/8" : "border-white/80"
-        } ${surfaceClassName}`}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-[6px] rounded-[16px] border border-black/5 bg-[linear-gradient(180deg,#ffffff_0%,#fafafa_55%,#f3f4f6_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,1),inset_0_-6px_14px_rgba(15,23,42,0.04)]"
       />
 
+      {/* Inner top highlight on the panel */}
       <div
-        className={`pointer-events-none absolute inset-[6px] rounded-[18px] ${innerSurfaceClassName}`}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-[14%] top-[7px] h-px bg-white"
       />
 
+      {/* Soft spotlight on hover */}
       <div
-        className={`pointer-events-none absolute inset-x-[16%] top-0 h-px ${
-          isDarkMode ? "bg-white/14" : "bg-white"
-        }`}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-[6px] rounded-[16px] bg-[radial-gradient(circle_at_50%_30%,rgba(255,255,255,0.9),transparent_65%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
       />
 
-      <div
-        className={`pointer-events-none absolute inset-x-[8%] bottom-[5px] h-[24px] rounded-full blur-2xl ${
-          isDarkMode
-            ? "bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.04),transparent_72%)]"
-            : "bg-[radial-gradient(circle_at_center,rgba(15,23,42,0.08),transparent_72%)]"
-        }`}
-      />
-
-      <div
-        className={`pointer-events-none absolute inset-0 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100 ${
-          isDarkMode
-            ? "bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.11),transparent_62%)]"
-            : "bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.55),rgba(15,23,42,0.05)_42%,transparent_70%)]"
-        }`}
-      />
-
-      {!isDarkMode && (
-        <>
-          <div className="pointer-events-none absolute inset-x-6 bottom-2 h-6 rounded-full bg-[radial-gradient(circle_at_center,rgba(15,23,42,0.05),transparent_74%)] blur-xl" />
-          <div className="pointer-events-none absolute inset-x-10 top-2 h-7 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.95),transparent_70%)] blur-xl" />
-          <div className="pointer-events-none absolute top-3 right-5 h-8 w-20 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.72),transparent_72%)] blur-xl" />
-        </>
-      )}
-
+      {/* Content — logo or name fallback */}
       {hasError ? (
-        <span
-          className={`relative z-10 px-3 text-center text-[12px] font-bold tracking-[0.14em] uppercase md:text-[14px] ${
-            isDarkMode ? "text-white/85" : "text-zinc-700"
-          }`}
-        >
+        <span className="relative z-10 px-3 text-center text-[14px] font-bold tracking-[0.14em] text-zinc-700 uppercase">
           {sponsor.name}
         </span>
       ) : (
-        <div
-          className={`relative z-10 flex h-full w-full items-center justify-center ${contentClassName}`}
-        >
+        <div className="relative z-10 flex h-full w-full items-center justify-center px-5 py-3 md:px-6 md:py-4">
           <img
             src={sponsor.src}
             alt={sponsor.name}
-            className={logoClassName}
+            className="h-auto max-h-[64px] w-auto max-w-[88%] object-contain transition-transform duration-300 group-hover:scale-[1.04] md:max-h-[72px]"
             onError={() => setHasError(true)}
           />
         </div>
@@ -252,7 +148,6 @@ export default function AppSponsorsStrip({ isDarkMode }: { isDarkMode?: boolean 
     if (Array.isArray(sponsorLogos) && sponsorLogos.length > 0) {
       return sponsorLogos as SponsorLogoItem[];
     }
-
     return FALLBACK_SPONSOR_LOGOS;
   }, []);
 
@@ -269,12 +164,12 @@ export default function AppSponsorsStrip({ isDarkMode }: { isDarkMode?: boolean 
     <Card
       className={`relative overflow-hidden rounded-[28px] border transition-all duration-300 ${
         resolvedDarkMode
-          ? "border-white/10 bg-[linear-gradient(180deg,rgba(17,24,39,0.985)_0%,rgba(6,10,24,0.985)_52%,rgba(2,6,23,0.99)_100%)] shadow-[0_22px_54px_rgba(0,0,0,0.3)]"
-          : "border-black/6 bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(251,252,253,1)_38%,rgba(240,244,248,0.995)_100%)] shadow-[0_18px_42px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,1)]"
+          ? "border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.75)_0%,rgba(8,12,24,0.8)_100%)] shadow-[0_22px_54px_rgba(0,0,0,0.3)] backdrop-blur-xl"
+          : "border-black/5 bg-[linear-gradient(180deg,rgba(255,255,255,0.95)_0%,rgba(248,250,252,0.95)_100%)] shadow-[0_18px_42px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,1)] backdrop-blur-xl"
       }`}
     >
       <CardContent className="p-0">
-        <div className="relative px-4 py-4 md:px-5 md:py-5 xl:px-6 xl:py-6">
+        <div className="relative px-4 py-5 md:px-6 md:py-6">
           <style jsx>{`
             @keyframes casernaSponsorsMarquee {
               0% {
@@ -287,7 +182,7 @@ export default function AppSponsorsStrip({ isDarkMode }: { isDarkMode?: boolean 
 
             .caserna-sponsors-marquee {
               width: max-content;
-              animation: casernaSponsorsMarquee 34s linear infinite;
+              animation: casernaSponsorsMarquee 40s linear infinite;
               will-change: transform;
             }
 
@@ -297,7 +192,7 @@ export default function AppSponsorsStrip({ isDarkMode }: { isDarkMode?: boolean 
 
             @media (max-width: 768px) {
               .caserna-sponsors-marquee {
-                animation-duration: 26s;
+                animation-duration: 28s;
               }
             }
 
@@ -308,97 +203,52 @@ export default function AppSponsorsStrip({ isDarkMode }: { isDarkMode?: boolean 
             }
           `}</style>
 
-          <div
-            className={`pointer-events-none absolute inset-x-0 top-0 h-px ${
-              resolvedDarkMode ? "bg-white/10" : "bg-white"
-            }`}
-          />
-
-          {!resolvedDarkMode && (
-            <>
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.9),transparent_38%)]" />
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top,rgba(15,23,42,0.06),transparent_72%)]" />
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.016)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.016)_1px,transparent_1px)] [mask-image:radial-gradient(circle_at_center,black,transparent_88%)] bg-[size:24px_24px] opacity-45" />
-              <div className="pointer-events-none absolute inset-x-[12%] top-0 h-20 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.92),transparent_72%)] blur-2xl" />
-            </>
-          )}
-
-          {resolvedDarkMode && (
-            <>
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05),transparent_64%)]" />
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.018)_1px,transparent_1px)] [mask-image:radial-gradient(circle_at_center,black,transparent_90%)] bg-[size:28px_28px] opacity-20" />
-            </>
-          )}
-
+          {/* Section header */}
           <div className="relative mb-5 flex items-center justify-center">
             <div
-              className={`absolute top-1/2 left-0 h-px w-[18%] -translate-y-1/2 md:w-[22%] ${
+              className={`absolute top-1/2 left-0 h-px w-[16%] -translate-y-1/2 md:w-[22%] ${
                 resolvedDarkMode
-                  ? "bg-gradient-to-r from-transparent via-white/10 to-white/10"
-                  : "bg-gradient-to-r from-transparent via-zinc-300/80 to-zinc-400/70"
+                  ? "bg-gradient-to-r from-transparent to-white/15"
+                  : "bg-gradient-to-r from-transparent to-zinc-300"
               }`}
             />
 
-            <div className="relative flex items-center justify-center px-4 md:px-6">
-              <div
-                className={`pointer-events-none absolute inset-0 rounded-full blur-xl ${
-                  resolvedDarkMode
-                    ? "bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.06),transparent_70%)]"
-                    : "bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.96),rgba(15,23,42,0.05)_58%,transparent_78%)]"
-                }`}
-              />
-
-              <h3
-                className={`relative text-center text-[12px] font-bold tracking-[0.28em] uppercase md:text-[14px] ${
-                  resolvedDarkMode
-                    ? "text-white/88"
-                    : "bg-[linear-gradient(180deg,#111827_0%,#374151_100%)] bg-clip-text text-transparent"
-                }`}
-              >
-                PATROCINADORES OFICIAIS
-              </h3>
-            </div>
+            <h3
+              className={`px-4 text-center text-[11px] font-bold tracking-[0.32em] uppercase md:text-[13px] ${
+                resolvedDarkMode ? "text-white/75" : "text-zinc-600"
+              }`}
+            >
+              Patrocinadores Oficiais
+            </h3>
 
             <div
-              className={`absolute top-1/2 right-0 h-px w-[18%] -translate-y-1/2 md:w-[22%] ${
+              className={`absolute top-1/2 right-0 h-px w-[16%] -translate-y-1/2 md:w-[22%] ${
                 resolvedDarkMode
-                  ? "bg-gradient-to-l from-transparent via-white/10 to-white/10"
-                  : "bg-gradient-to-l from-transparent via-zinc-300/80 to-zinc-400/70"
+                  ? "bg-gradient-to-l from-transparent to-white/15"
+                  : "bg-gradient-to-l from-transparent to-zinc-300"
               }`}
             />
           </div>
 
-          <div
-            className={`relative overflow-hidden rounded-[24px] border ${
-              resolvedDarkMode
-                ? "border-white/8"
-                : "border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.55)_0%,rgba(255,255,255,0.22)_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.95)]"
-            }`}
-          >
+          {/* Marquee container — edge fades to blend scroll edges */}
+          <div className="relative overflow-hidden rounded-[24px]">
             <div
-              className={`pointer-events-none absolute inset-y-0 left-0 z-20 w-10 md:w-14 ${
+              className={`pointer-events-none absolute inset-y-0 left-0 z-20 w-12 md:w-16 ${
                 resolvedDarkMode
-                  ? "bg-gradient-to-r from-[#09111d] via-[#09111d]/84 to-transparent"
-                  : "bg-gradient-to-r from-[#f8fafc] via-[#f8fafc]/84 to-transparent"
+                  ? "bg-gradient-to-r from-[#0a1020] via-[#0a1020]/80 to-transparent"
+                  : "bg-gradient-to-r from-white via-white/80 to-transparent"
               }`}
             />
             <div
-              className={`pointer-events-none absolute inset-y-0 right-0 z-20 w-10 md:w-14 ${
+              className={`pointer-events-none absolute inset-y-0 right-0 z-20 w-12 md:w-16 ${
                 resolvedDarkMode
-                  ? "bg-gradient-to-l from-[#09111d] via-[#09111d]/84 to-transparent"
-                  : "bg-gradient-to-l from-[#f8fafc] via-[#f8fafc]/84 to-transparent"
+                  ? "bg-gradient-to-l from-[#0a1020] via-[#0a1020]/80 to-transparent"
+                  : "bg-gradient-to-l from-white via-white/80 to-transparent"
               }`}
             />
 
-            {!resolvedDarkMode && (
-              <>
-                <div className="pointer-events-none absolute inset-x-4 top-0 h-px bg-white" />
-                <div className="pointer-events-none absolute inset-x-8 bottom-0 h-10 rounded-full bg-[radial-gradient(circle_at_center,rgba(15,23,42,0.06),transparent_74%)] blur-2xl" />
-              </>
-            )}
-
-            <div className="overflow-hidden px-0.5 py-0.5">
-              <div className="caserna-sponsors-marquee flex items-center gap-3 md:gap-4">
+            <div className="overflow-hidden py-1">
+              <div className="caserna-sponsors-marquee flex items-stretch gap-4 md:gap-5">
                 {marqueeItems.map((sponsor, index) => (
                   <SponsorMarqueeCard
                     key={`global-sponsor-marquee-${sponsor.name}-${index}`}
