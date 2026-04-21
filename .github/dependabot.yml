@@ -1,0 +1,40 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    groups:
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react*"
+      next:
+        patterns:
+          - "next"
+          - "eslint-config-next"
+      testing:
+        patterns:
+          - "vitest"
+          - "@testing-library/*"
+          - "@vitejs/plugin-react"
+          - "jsdom"
+      linting:
+        patterns:
+          - "eslint*"
+          - "prettier*"
+          - "husky"
+          - "lint-staged"
+    labels:
+      - "dependencies"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
+      - "github-actions"
