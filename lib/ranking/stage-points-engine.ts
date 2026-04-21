@@ -60,10 +60,7 @@ export const DEFAULT_COMPLETED_STAGES = [1];
 
 const MAX_STAGE_BASE_POINTS = STAGE_POINTS_BY_POSITION[1] || 35;
 
-export function getRemainingChampionshipStages(
-  competition: string,
-  completedStages: number[]
-) {
+export function getRemainingChampionshipStages(competition: string, completedStages: number[]) {
   const stages = CHAMPIONSHIP_STAGE_MAP[competition] || [];
   return stages.filter((stage) => !completedStages.includes(stage));
 }
@@ -80,7 +77,7 @@ export function getMaxPointsFromStages(stages: number[]) {
   return stages.reduce((total, stage) => total + getStageMaxPoints(stage), 0);
 }
 
-export function getStagePodiumScenarioPoints(stage: number) {
+export function getStagePodiumScenarioPoints(_stage: number) {
   const basePoints = STAGE_POINTS_BY_POSITION[3] || 30;
   const fastestLapPoint = 1;
 

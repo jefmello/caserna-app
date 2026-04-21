@@ -3,11 +3,7 @@
 import { useMemo, useState } from "react";
 import { Calendar, ChevronDown } from "lucide-react";
 import { getCategoryTheme } from "@/lib/ranking/theme-utils";
-import {
-  getCombinedSeasons,
-  SEASONS,
-  type Season,
-} from "@/lib/seasons";
+import { getCombinedSeasons, SEASONS } from "@/lib/seasons";
 
 /**
  * Seletor de temporada para a sidebar/header.
@@ -24,10 +20,7 @@ export default function SeasonSelector({
   const [isOpen, setIsOpen] = useState(false);
 
   const seasons = useMemo(() => getCombinedSeasons(), []);
-  const activeSeason = useMemo(
-    () => SEASONS.find((s) => s.isActive) || null,
-    []
-  );
+  const activeSeason = useMemo(() => SEASONS.find((s) => s.isActive) || null, []);
 
   const currentLabel = activeSeason?.label || `Temporada ${new Date().getFullYear()}`;
 
@@ -46,25 +39,23 @@ export default function SeasonSelector({
       >
         <Calendar className="h-3.5 w-3.5" />
         <span>{currentLabel}</span>
-        <ChevronDown
-          className={`h-3 w-3 transition-transform ${isOpen ? "rotate-180" : ""}`}
-        />
+        <ChevronDown className={`h-3 w-3 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {isOpen && (
         <>
           {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-40"
+          <button
+            type="button"
+            aria-label="Fechar seletor de temporada"
+            className="fixed inset-0 z-40 cursor-default"
             onClick={() => setIsOpen(false)}
           />
 
           {/* Dropdown */}
           <div
             className={`absolute right-0 z-50 mt-1 w-56 overflow-hidden rounded-xl border shadow-lg ${
-              isDarkMode
-                ? "border-white/10 bg-[#111827]"
-                : "border-black/5 bg-white"
+              isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"
             }`}
           >
             {seasons.map((season) => {

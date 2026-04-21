@@ -62,8 +62,7 @@ export function getPilotMomentumLabel(
   leader?: RankingItem | null
 ): string {
   if (!pilot) return "Sem leitura";
-  if (!leader || pilot.pilotoId === leader.pilotoId)
-    return "Referência da categoria";
+  if (!leader || pilot.pilotoId === leader.pilotoId) return "Referência da categoria";
 
   const diff = Math.max(0, leader.pontos - pilot.pontos);
 

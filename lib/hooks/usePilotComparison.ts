@@ -23,17 +23,13 @@ export default function usePilotComparison({
 }: UsePilotComparisonProps) {
   const comparePilotA = useMemo(
     () =>
-      filteredRanking.find(
-        (item) => (item.pilotoId || item.piloto) === comparePilotAId
-      ) || null,
+      filteredRanking.find((item) => (item.pilotoId || item.piloto) === comparePilotAId) || null,
     [filteredRanking, comparePilotAId]
   );
 
   const comparePilotB = useMemo(
     () =>
-      filteredRanking.find(
-        (item) => (item.pilotoId || item.piloto) === comparePilotBId
-      ) || null,
+      filteredRanking.find((item) => (item.pilotoId || item.piloto) === comparePilotBId) || null,
     [filteredRanking, comparePilotBId]
   );
 
@@ -133,27 +129,14 @@ export default function usePilotComparison({
     let scoreB = 0;
 
     duelMetrics.forEach((metric) => {
-      const winner = getComparisonWinner(
-        metric.a,
-        metric.b,
-        metric.lowerIsBetter
-      );
+      const winner = getComparisonWinner(metric.a, metric.b, metric.lowerIsBetter);
       if (winner === "a") scoreA += 1;
       if (winner === "b") scoreB += 1;
     });
 
-    const pointsWinner = getComparisonWinner(
-      comparePilotA.pontos,
-      comparePilotB.pontos,
-      false
-    );
-    const advWinner = getComparisonWinner(
-      comparePilotA.adv,
-      comparePilotB.adv,
-      true
-    );
-    const overallWinner =
-      scoreA === scoreB ? pointsWinner : scoreA > scoreB ? "a" : "b";
+    const pointsWinner = getComparisonWinner(comparePilotA.pontos, comparePilotB.pontos, false);
+    const advWinner = getComparisonWinner(comparePilotA.adv, comparePilotB.adv, true);
+    const overallWinner = scoreA === scoreB ? pointsWinner : scoreA > scoreB ? "a" : "b";
     const scoreDiff = Math.abs(scoreA - scoreB);
     const pointsDiff = Math.abs(comparePilotA.pontos - comparePilotB.pontos);
 

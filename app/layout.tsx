@@ -24,8 +24,7 @@ export const metadata: Metadata = {
 
   openGraph: {
     title: "Classificação Geral - Caserna Kart Racing",
-    description:
-      "Veja a classificação completa do campeonato Caserna Kart Racing em tempo real.",
+    description: "Veja a classificação completa do campeonato Caserna Kart Racing em tempo real.",
     url: "https://caserna-app.vercel.app",
     siteName: "Caserna Kart Racing",
     images: [
@@ -43,17 +42,12 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Classificação Geral - Caserna Kart Racing",
-    description:
-      "Classificação oficial do campeonato Caserna Kart Racing.",
+    description: "Classificação oficial do campeonato Caserna Kart Racing.",
     images: ["https://caserna-app.vercel.app/opengraph-image.png"],
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>

@@ -24,9 +24,7 @@ export default function EmptyState({
   return (
     <div
       className={`rounded-[24px] border px-6 py-12 text-center ${
-        isDark
-          ? "border-white/10 bg-[#111827] text-white"
-          : "border-black/5 bg-white text-zinc-950"
+        isDark ? "border-white/10 bg-[#111827] text-white" : "border-black/5 bg-white text-zinc-950"
       }`}
     >
       <div
@@ -34,20 +32,10 @@ export default function EmptyState({
           isDark ? "bg-white/5" : "bg-zinc-100"
         }`}
       >
-        <Icon
-          className={`h-7 w-7 ${
-            isDark ? "text-zinc-500" : "text-zinc-400"
-          }`}
-        />
+        <Icon className={`h-7 w-7 ${isDark ? "text-zinc-500" : "text-zinc-400"}`} />
       </div>
       <p className="mt-4 text-base font-semibold">{title}</p>
-      <p
-        className={`mt-2 text-sm ${
-          isDark ? "text-zinc-400" : "text-zinc-500"
-        }`}
-      >
-        {description}
-      </p>
+      <p className={`mt-2 text-sm ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>{description}</p>
       {action && (
         <button
           type="button"

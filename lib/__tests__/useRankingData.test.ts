@@ -8,10 +8,7 @@ const BASE_BACKOFF_MS = 2000;
 const MAX_BACKOFF_MS = 60000;
 
 function getBackoffDelay(consecutiveFailures: number): number {
-  const exponential = Math.min(
-    BASE_BACKOFF_MS * 2 ** consecutiveFailures,
-    MAX_BACKOFF_MS
-  );
+  const exponential = Math.min(BASE_BACKOFF_MS * 2 ** consecutiveFailures, MAX_BACKOFF_MS);
   const jitter = Math.random() * 0.3 * exponential;
   return exponential + jitter;
 }

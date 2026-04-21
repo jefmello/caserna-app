@@ -1,17 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import {
-  BarChart3,
-  Crown,
-  Flag,
-  Gauge,
-  Medal,
-  Star,
-  Timer,
-  Trophy,
-  Users,
-} from "lucide-react";
+import { BarChart3, Crown, Flag, Gauge, Medal, Star, Timer, Trophy, Users } from "lucide-react";
 import SectionDivider from "@/components/ui/section-divider";
 import RankingHeader from "@/components/ranking/ranking-header";
 import RankingStatsHeader from "@/components/ranking/ranking-stats-header";
@@ -23,21 +13,8 @@ import useRankingData from "@/lib/hooks/useRankingData";
 import useRankingFilters from "@/lib/hooks/useRankingFilters";
 import useRankingScreenController from "@/lib/hooks/useRankingScreenController";
 import { useChampionship } from "@/context/championship-context";
-import {
-  competitionLabels,
-  getCategoryTheme,
-  getPilotFirstAndLastName,
-} from "@/lib/ranking/ranking-utils";
-import type { RankingItem, RankingMetaPilot } from "@/types/ranking";
-import {
-  ResponsiveContainer,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  BarChart,
-  Bar,
-} from "recharts";
+import { competitionLabels, getPilotFirstAndLastName } from "@/lib/ranking/ranking-utils";
+import type { RankingMetaPilot } from "@/types/ranking";
 import PageTransition from "@/components/ui/page-transition";
 import { ScrollToTopButton } from "@/components/ui/scroll-to-top";
 import Breadcrumb from "@/components/ui/breadcrumb";
@@ -50,8 +27,10 @@ import {
 export default function EstatisticasPageContent() {
   const { categoria, campeonato } = useChampionship();
 
-  const { rankingData, rankingMeta, categories, loading, error, retry } =
-    useRankingData({ categoria, campeonato });
+  const { rankingData, rankingMeta, categories, loading, error, retry } = useRankingData({
+    categoria,
+    campeonato,
+  });
 
   const {
     category,
@@ -70,22 +49,16 @@ export default function EstatisticasPageContent() {
 
   const { isDarkMode, toggleTheme } = useChampionship();
 
-  const {
-    theme,
-    topPointsChartData,
-    topVitorias,
-    topPoles,
-    topMv,
-    topPodios,
-  } = useRankingScreenController({
-    category,
-    competition,
-    isDarkMode,
-    filteredRanking,
-    rankingData,
-    leader,
-    currentCompetitionMeta,
-  });
+  const { theme, topPointsChartData, topVitorias, topPoles, topMv, topPodios } =
+    useRankingScreenController({
+      category,
+      competition,
+      isDarkMode,
+      filteredRanking,
+      rankingData,
+      leader,
+      currentCompetitionMeta,
+    });
 
   const statsSummary = useMemo(() => {
     if (currentCompetitionMeta?.summary) {
@@ -103,14 +76,8 @@ export default function EstatisticasPageContent() {
     const totalPoints = filteredRanking.reduce((sum, item) => sum + item.pontos, 0);
     const avgPoints = totalPilots > 0 ? totalPoints / totalPilots : 0;
 
-    const totalVictories = filteredRanking.reduce(
-      (sum, item) => sum + item.vitorias,
-      0
-    );
-    const totalPodiums = filteredRanking.reduce(
-      (sum, item) => sum + item.podios,
-      0
-    );
+    const totalVictories = filteredRanking.reduce((sum, item) => sum + item.vitorias, 0);
+    const totalPodiums = filteredRanking.reduce((sum, item) => sum + item.podios, 0);
 
     return {
       totalPilots,
@@ -148,10 +115,7 @@ export default function EstatisticasPageContent() {
 
     const podiumPressure =
       filteredRanking.length >= 6
-        ? Math.max(
-            (filteredRanking[2]?.pontos || 0) - (filteredRanking[5]?.pontos || 0),
-            0
-          )
+        ? Math.max((filteredRanking[2]?.pontos || 0) - (filteredRanking[5]?.pontos || 0), 0)
         : Math.max(
             (filteredRanking[0]?.pontos || 0) -
               (filteredRanking[filteredRanking.length - 1]?.pontos || 0),
@@ -179,10 +143,7 @@ export default function EstatisticasPageContent() {
       hottestLabel = "Ataque dominante";
     } else if ((hottestPilot?.podios || 0) >= 4) {
       hottestLabel = "Consistência premium";
-    } else if (
-      (hottestPilot?.poles || 0) >= 2 ||
-      (hottestPilot?.mv || 0) >= 2
-    ) {
+    } else if ((hottestPilot?.poles || 0) >= 2 || (hottestPilot?.mv || 0) >= 2) {
       hottestLabel = "Velocidade em alta";
     }
 
@@ -227,14 +188,8 @@ export default function EstatisticasPageContent() {
             : "border-black/5 bg-white text-zinc-950"
         }`}
       >
-        <p className="text-xl font-semibold tracking-tight">
-          Carregando estatísticas...
-        </p>
-        <p
-          className={`mt-2 text-sm ${
-            isDarkMode ? "text-zinc-400" : "text-zinc-500"
-          }`}
-        >
+        <p className="text-xl font-semibold tracking-tight">Carregando estatísticas...</p>
+        <p className={`mt-2 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
           Preparando leitura analítica do campeonato
         </p>
       </div>
@@ -251,13 +206,7 @@ export default function EstatisticasPageContent() {
         }`}
       >
         <p className="text-2xl font-semibold tracking-tight">Erro</p>
-        <p
-          className={`mt-2 ${
-            isDarkMode ? "text-zinc-300" : "text-zinc-600"
-          }`}
-        >
-          {error}
-        </p>
+        <p className={`mt-2 ${isDarkMode ? "text-zinc-300" : "text-zinc-600"}`}>{error}</p>
         <button
           onClick={handleRetry}
           className={`mt-5 w-full rounded-2xl px-4 py-3 text-sm font-semibold transition ${
@@ -276,94 +225,85 @@ export default function EstatisticasPageContent() {
     <PageTransition>
       <div className="mt-4 space-y-4 lg:space-y-5 xl:space-y-6">
         <RankingHeader
-        isDarkMode={isDarkMode}
-        theme={theme}
-        categories={categories}
-        category={category}
-        setCategory={setCategory}
-        availableCompetitions={availableCompetitions}
-        competition={competition}
-        setCompetition={setCompetition}
-        competitionLabels={competitionLabels}
-        toggleDarkMode={handleToggleDarkMode}
-      />
+          isDarkMode={isDarkMode}
+          theme={theme}
+          categories={categories}
+          category={category}
+          setCategory={setCategory}
+          availableCompetitions={availableCompetitions}
+          competition={competition}
+          setCompetition={setCompetition}
+          competitionLabels={competitionLabels}
+          toggleDarkMode={handleToggleDarkMode}
+        />
 
-      <Breadcrumb
-        items={[
-          { label: "Estatísticas", href: "/estatisticas" },
-        ]}
-        isDark={isDarkMode}
-      />
+        <Breadcrumb
+          items={[{ label: "Estatísticas", href: "/estatisticas" }]}
+          isDark={isDarkMode}
+        />
 
-      <div className="space-y-4 xl:grid xl:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] xl:items-start xl:gap-5 xl:space-y-0">
-        <div className="space-y-4">
-          <RankingStatsHeader
-            isDarkMode={isDarkMode}
-            theme={theme}
-            category={category}
-            competition={competition}
-            competitionLabels={competitionLabels}
-          />
+        <div className="space-y-4 xl:grid xl:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] xl:items-start xl:gap-5 xl:space-y-0">
+          <div className="space-y-4">
+            <RankingStatsHeader
+              isDarkMode={isDarkMode}
+              theme={theme}
+              category={category}
+              competition={competition}
+              competitionLabels={competitionLabels}
+            />
 
-          <RankingStatsTopPointsChartCard
-            topPointsChartData={topPointsChartData}
-            theme={theme}
-            isDarkMode={isDarkMode}
-            BarChart3Icon={BarChart3}
-            ResponsiveContainerComponent={ResponsiveContainer}
-            CartesianGridComponent={CartesianGrid}
-            XAxisComponent={XAxis}
-            YAxisComponent={YAxis}
-            TooltipComponent={Tooltip}
-            BarChartComponent={BarChart}
-            BarComponent={Bar}
-          />
+            <RankingStatsTopPointsChartCard
+              topPointsChartData={topPointsChartData}
+              theme={theme}
+              isDarkMode={isDarkMode}
+              BarChart3Icon={BarChart3}
+            />
+          </div>
+
+          <div className="space-y-4 xl:sticky xl:top-6">
+            <RankingStatsSummaryGrid
+              statsSummary={statsSummary}
+              theme={theme}
+              isDarkMode={isDarkMode}
+              CompactStatCard={CompactStatCard}
+              UsersIcon={Users}
+              CrownIcon={Crown}
+              GaugeIcon={Gauge}
+              MedalIcon={Medal}
+            />
+
+            <RankingStatsRadarCard
+              statsRadar={statsRadar}
+              statsSummary={statsSummary}
+              bestEfficiencyPilot={bestEfficiencyPilot}
+              theme={theme}
+              category={category}
+              isDarkMode={isDarkMode}
+              HighlightCard={HighlightCard}
+              StarIcon={Star}
+              getPilotFirstAndLastName={getPilotFirstAndLastName}
+            />
+          </div>
         </div>
 
-        <div className="space-y-4 xl:sticky xl:top-6">
-          <RankingStatsSummaryGrid
-            statsSummary={statsSummary}
+        <SectionDivider />
+
+        <div className="xl:pt-1">
+          <RankingStatsMetricCardsGrid
+            StatRankingCardComponent={StatRankingCardConnected}
+            topVitorias={topVitorias}
+            topPoles={topPoles}
+            topMv={topMv}
+            topPodios={topPodios}
             theme={theme}
             isDarkMode={isDarkMode}
-            CompactStatCard={CompactStatCard}
-            UsersIcon={Users}
-            CrownIcon={Crown}
-            GaugeIcon={Gauge}
+            TrophyIcon={Trophy}
+            FlagIcon={Flag}
+            TimerIcon={Timer}
             MedalIcon={Medal}
           />
-
-          <RankingStatsRadarCard
-            statsRadar={statsRadar}
-            statsSummary={statsSummary}
-            bestEfficiencyPilot={bestEfficiencyPilot}
-            theme={theme}
-            category={category}
-            isDarkMode={isDarkMode}
-            HighlightCard={HighlightCard}
-            StarIcon={Star}
-            getPilotFirstAndLastName={getPilotFirstAndLastName}
-          />
         </div>
       </div>
-
-      <SectionDivider />
-
-      <div className="xl:pt-1">
-        <RankingStatsMetricCardsGrid
-          StatRankingCardComponent={StatRankingCardConnected}
-          topVitorias={topVitorias}
-          topPoles={topPoles}
-          topMv={topMv}
-          topPodios={topPodios}
-          theme={theme}
-          isDarkMode={isDarkMode}
-          TrophyIcon={Trophy}
-          FlagIcon={Flag}
-          TimerIcon={Timer}
-          MedalIcon={Medal}
-        />
-      </div>
-    </div>
       <ScrollToTopButton isDark={isDarkMode} />
     </PageTransition>
   );

@@ -76,18 +76,16 @@ function RankingCompetitionContext({
             }`}
           >
             <Gauge
-              className={`h-4.5 w-4.5 ${
-                isDarkMode ? theme.darkAccentText : theme.searchIcon
-              }`}
+              className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.searchIcon}`}
             />
           </div>
 
           <div className="min-w-0 flex-1">
-            <p className="text-[8px] font-bold uppercase tracking-[0.18em] text-zinc-400">
+            <p className="text-[8px] font-bold tracking-[0.18em] text-zinc-400 uppercase">
               Contexto competitivo
             </p>
             <p
-              className={`mt-0.5 text-[11px] font-semibold leading-tight ${
+              className={`mt-0.5 text-[11px] leading-tight font-semibold ${
                 isDarkMode ? "text-white" : "text-zinc-900"
               }`}
             >
@@ -96,7 +94,7 @@ function RankingCompetitionContext({
           </div>
 
           <div
-            className={`shrink-0 rounded-full border px-2 py-1 text-[8px] font-bold uppercase tracking-[0.12em] ${
+            className={`shrink-0 rounded-full border px-2 py-1 text-[8px] font-bold tracking-[0.12em] uppercase ${
               isDarkMode
                 ? titleFightStatus.label === "BRIGA ACIRRADA"
                   ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
@@ -113,22 +111,20 @@ function RankingCompetitionContext({
         <div className="grid grid-cols-2 gap-2">
           <div
             className={`rounded-[16px] border px-2.5 py-2.5 ${
-              isDarkMode
-                ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                : "border-black/5 bg-white/80"
+              isDarkMode ? `${theme.darkAccentBorder} bg-[#0f172a]` : "border-black/5 bg-white/80"
             }`}
           >
             <div className="flex items-start justify-between gap-2">
               <div>
                 <p
-                  className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+                  className={`text-[9px] font-bold tracking-[0.14em] uppercase ${
                     isDarkMode ? "text-zinc-500" : "text-zinc-400"
                   }`}
                 >
                   Título
                 </p>
                 <p
-                  className={`mt-1 text-[15px] font-extrabold leading-tight ${
+                  className={`mt-1 text-[15px] leading-tight font-extrabold ${
                     isDarkMode ? "text-white" : "text-zinc-950"
                   }`}
                 >
@@ -142,9 +138,7 @@ function RankingCompetitionContext({
                 }`}
               >
                 <Crown
-                  className={`h-4 w-4 ${
-                    isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                  }`}
+                  className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
                 />
               </div>
             </div>
@@ -162,22 +156,20 @@ function RankingCompetitionContext({
 
           <div
             className={`rounded-[16px] border px-2.5 py-2.5 ${
-              isDarkMode
-                ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                : "border-black/5 bg-white/80"
+              isDarkMode ? `${theme.darkAccentBorder} bg-[#0f172a]` : "border-black/5 bg-white/80"
             }`}
           >
             <div className="flex items-start justify-between gap-2">
               <div>
                 <p
-                  className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+                  className={`text-[9px] font-bold tracking-[0.14em] uppercase ${
                     isDarkMode ? "text-zinc-500" : "text-zinc-400"
                   }`}
                 >
                   Corte Top 6
                 </p>
                 <p
-                  className={`mt-1 text-[15px] font-extrabold leading-tight ${
+                  className={`mt-1 text-[15px] leading-tight font-extrabold ${
                     isDarkMode ? "text-white" : "text-zinc-950"
                   }`}
                 >
@@ -191,9 +183,7 @@ function RankingCompetitionContext({
                 }`}
               >
                 <Trophy
-                  className={`h-4 w-4 ${
-                    isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                  }`}
+                  className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
                 />
               </div>
             </div>
@@ -211,22 +201,20 @@ function RankingCompetitionContext({
 
           <div
             className={`rounded-[16px] border px-2.5 py-2.5 ${
-              isDarkMode
-                ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                : "border-black/5 bg-white/80"
+              isDarkMode ? `${theme.darkAccentBorder} bg-[#0f172a]` : "border-black/5 bg-white/80"
             }`}
           >
             <div className="flex items-start justify-between gap-2">
               <div>
                 <p
-                  className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+                  className={`text-[9px] font-bold tracking-[0.14em] uppercase ${
                     isDarkMode ? "text-zinc-500" : "text-zinc-400"
                   }`}
                 >
                   Momento do grid
                 </p>
                 <p
-                  className={`mt-1 text-[15px] font-extrabold leading-tight ${
+                  className={`mt-1 text-[15px] leading-tight font-extrabold ${
                     isDarkMode ? "text-white" : "text-zinc-950"
                   }`}
                 >
@@ -240,9 +228,7 @@ function RankingCompetitionContext({
                 }`}
               >
                 <TrendingUp
-                  className={`h-4 w-4 ${
-                    isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                  }`}
+                  className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
                 />
               </div>
             </div>
@@ -260,22 +246,20 @@ function RankingCompetitionContext({
 
           <div
             className={`rounded-[16px] border px-2.5 py-2.5 ${
-              isDarkMode
-                ? `${theme.darkAccentBorder} bg-[#0f172a]`
-                : "border-black/5 bg-white/80"
+              isDarkMode ? `${theme.darkAccentBorder} bg-[#0f172a]` : "border-black/5 bg-white/80"
             }`}
           >
             <div className="flex items-start justify-between gap-2">
               <div>
                 <p
-                  className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+                  className={`text-[9px] font-bold tracking-[0.14em] uppercase ${
                     isDarkMode ? "text-zinc-500" : "text-zinc-400"
                   }`}
                 >
                   Eficiência premium
                 </p>
                 <p
-                  className={`mt-1 text-[15px] font-extrabold leading-tight ${
+                  className={`mt-1 text-[15px] leading-tight font-extrabold ${
                     isDarkMode ? "text-white" : "text-zinc-950"
                   }`}
                 >
@@ -291,9 +275,7 @@ function RankingCompetitionContext({
                 }`}
               >
                 <Users
-                  className={`h-4 w-4 ${
-                    isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                  }`}
+                  className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
                 />
               </div>
             </div>
@@ -303,10 +285,11 @@ function RankingCompetitionContext({
                 isDarkMode ? "text-zinc-400" : "text-zinc-500"
               }`}
             >
-              {bestEfficiencyPilot && "pontos" in bestEfficiencyPilot && "participacoes" in bestEfficiencyPilot
+              {bestEfficiencyPilot &&
+              "pontos" in bestEfficiencyPilot &&
+              "participacoes" in bestEfficiencyPilot
                 ? `${(
-                    bestEfficiencyPilot.pontos /
-                    Math.max(bestEfficiencyPilot.participacoes, 1)
+                    bestEfficiencyPilot.pontos / Math.max(bestEfficiencyPilot.participacoes, 1)
                   ).toFixed(1)} pts por participação.`
                 : "Nenhuma participação registrada para calcular eficiência."}
             </p>

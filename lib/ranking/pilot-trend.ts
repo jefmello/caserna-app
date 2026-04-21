@@ -16,8 +16,7 @@ export function getPilotPositionInList(
   const index = list.findIndex(
     (item) =>
       (pilotoId && item.pilotoId === pilotoId) ||
-      (!pilotoId &&
-        normalizePilotName(item.piloto) === normalizePilotName(fallbackName))
+      (!pilotoId && normalizePilotName(item.piloto) === normalizePilotName(fallbackName))
   );
 
   return index >= 0 ? index + 1 : null;
@@ -39,22 +38,12 @@ export function getPilotTrendStatus({
   if (!categoryData) return "stable";
 
   const currentList = categoryData[competition] || [];
-  const currentPos = getPilotPositionInList(
-    currentList,
-    pilot.pilotoId,
-    pilot.piloto
-  );
+  const currentPos = getPilotPositionInList(currentList, pilot.pilotoId, pilot.piloto);
   if (!currentPos) return "stable";
 
   if (competition === "GERAL") {
     const turnoPositions = ["T1", "T2", "T3"]
-      .map((key) =>
-        getPilotPositionInList(
-          categoryData[key] || [],
-          pilot.pilotoId,
-          pilot.piloto
-        )
-      )
+      .map((key) => getPilotPositionInList(categoryData[key] || [], pilot.pilotoId, pilot.piloto))
       .filter((value): value is number => value !== null);
 
     if (turnoPositions.length === 0) return "stable";
@@ -65,19 +54,11 @@ export function getPilotTrendStatus({
     return "down";
   }
 
-  const geralPos = getPilotPositionInList(
-    categoryData.GERAL || [],
-    pilot.pilotoId,
-    pilot.piloto
-  );
+  const geralPos = getPilotPositionInList(categoryData.GERAL || [], pilot.pilotoId, pilot.piloto);
   if (!geralPos) return "stable";
 
   if (currentPos < geralPos) return "up";
-  if (
-    currentPos === geralPos ||
-    currentPos === geralPos + 1 ||
-    currentPos + 1 === geralPos
-  ) {
+  if (currentPos === geralPos || currentPos === geralPos + 1 || currentPos + 1 === geralPos) {
     return "stable";
   }
   return "down";

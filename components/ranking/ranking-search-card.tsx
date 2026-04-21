@@ -66,7 +66,7 @@ export default function RankingSearchCard({
 
               <div className="min-w-0 flex-1">
                 <p
-                  className={`text-[10px] font-bold uppercase tracking-[0.18em] ${
+                  className={`text-[10px] font-bold tracking-[0.18em] uppercase ${
                     isDarkMode ? "text-zinc-500" : "text-zinc-400"
                   }`}
                 >
@@ -83,7 +83,7 @@ export default function RankingSearchCard({
                   </p>
 
                   <span
-                    className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+                    className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-bold tracking-[0.12em] uppercase ${
                       isDarkMode
                         ? `${theme.darkAccentBorder || "border-white/10"} bg-white/[0.04] ${theme.darkAccentText || "text-white"}`
                         : "border-black/5 bg-zinc-50 text-zinc-700"
@@ -99,20 +99,17 @@ export default function RankingSearchCard({
                     isDarkMode ? "text-zinc-400" : "text-zinc-500"
                   }`}
                 >
-                  Digite nome, sobrenome ou nome de guerra para filtrar a
-                  classificação oficial.
+                  Digite nome, sobrenome ou nome de guerra para filtrar a classificação oficial.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto lg:min-w-[420px] lg:max-w-[520px] lg:flex-1">
+          <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto lg:max-w-[520px] lg:min-w-[420px] lg:flex-1">
             <div className="relative flex-1">
               <Search
-                className={`pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
-                  isDarkMode
-                    ? "text-zinc-500"
-                    : theme.searchIcon || "text-zinc-400"
+                className={`pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 ${
+                  isDarkMode ? "text-zinc-500" : theme.searchIcon || "text-zinc-400"
                 }`}
               />
 
@@ -120,7 +117,7 @@ export default function RankingSearchCard({
                 value={search}
                 onChange={(event) => onSearchChange(event.target.value)}
                 placeholder="Buscar piloto..."
-                className={`h-11 rounded-[16px] pl-10 pr-10 text-[13px] font-medium shadow-none transition-all duration-200 ${
+                className={`h-11 rounded-[16px] pr-10 pl-10 text-[13px] font-medium shadow-none transition-all duration-200 ${
                   isDarkMode
                     ? "border-white/10 bg-white/[0.04] text-white placeholder:text-zinc-500 focus-visible:border-white/20 focus-visible:ring-0"
                     : "border-black/5 bg-zinc-50/80 text-zinc-950 placeholder:text-zinc-400 focus-visible:border-zinc-300 focus-visible:bg-white focus-visible:ring-0"
@@ -131,7 +128,7 @@ export default function RankingSearchCard({
                 <button
                   type="button"
                   onClick={() => onSearchChange("")}
-                  className={`absolute right-2 top-1/2 inline-flex h-7 min-w-7 -translate-y-1/2 items-center justify-center rounded-full px-2 text-[10px] font-bold uppercase tracking-[0.08em] transition ${
+                  className={`absolute top-1/2 right-2 inline-flex h-7 min-w-7 -translate-y-1/2 items-center justify-center rounded-full px-2 text-[10px] font-bold tracking-[0.08em] uppercase transition ${
                     isDarkMode
                       ? "bg-white/8 text-zinc-300 hover:bg-white/12 hover:text-white"
                       : "bg-white text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
@@ -158,7 +155,7 @@ export default function RankingSearchCard({
                 }`}
               />
               <span
-                className={`text-[11px] font-bold uppercase tracking-[0.12em] ${
+                className={`text-[11px] font-bold tracking-[0.12em] uppercase ${
                   isDarkMode ? "text-zinc-200" : "text-zinc-700"
                 }`}
               >

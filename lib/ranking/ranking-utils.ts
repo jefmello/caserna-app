@@ -67,10 +67,7 @@ export {
 } from "@/lib/ranking/theme-utils";
 
 // Estilos visuais
-export {
-  categoryColors,
-  getTop6RowStyles,
-} from "@/lib/ranking/visual-styles";
+export { categoryColors, getTop6RowStyles } from "@/lib/ranking/visual-styles";
 
 // Patrocinadores
 export { sponsorLogos } from "@/lib/ranking/sponsor-logos";

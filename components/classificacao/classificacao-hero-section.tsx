@@ -1,27 +1,34 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React from "react";
 // RankingClassificationSection was a pass-through wrapper — removed.
 import RankingClassificationShareCard from "@/components/ranking/ranking-classification-share-card";
 import RankingChampionshipNarrativeCard from "@/components/ranking/ranking-championship-narrative-card";
 import RankingEditorialCards from "@/components/ranking/ranking-editorial-cards";
-import {
-  competitionLabels,
-  getPilotFirstAndLastName,
-} from "@/lib/ranking/ranking-utils";
+import { competitionLabels, getPilotFirstAndLastName } from "@/lib/ranking/ranking-utils";
+import type { CategoryTheme } from "@/lib/ranking/theme-utils";
+import type {
+  RankingItem,
+  RankingMetaPilot,
+  StatsRadar,
+  StatsSummary,
+  TitleFightStatus,
+} from "@/types/ranking";
+import type { ChampionshipNarrative } from "@/lib/hooks/useChampionshipNarrative";
+import type { EditorialCardItem } from "@/lib/hooks/useEditorialCards";
 
 type ClassificacaoHeroSectionProps = {
   isDarkMode: boolean;
-  theme: any;
+  theme: CategoryTheme;
   category: string;
   competition: string;
-  filteredRanking: any[];
-  titleFightStatus: any;
-  statsSummary: any;
-  statsRadar: any;
-  bestEfficiencyPilot: any;
-  championshipNarrative: any;
-  editorialCards: any[];
+  filteredRanking: RankingItem[];
+  titleFightStatus: TitleFightStatus;
+  statsSummary: StatsSummary;
+  statsRadar: StatsRadar;
+  bestEfficiencyPilot: RankingMetaPilot | RankingItem | null;
+  championshipNarrative: ChampionshipNarrative;
+  editorialCards: EditorialCardItem[];
   isSharingImage: boolean;
   onShareClassification: () => void;
 };
@@ -32,10 +39,10 @@ export default function ClassificacaoHeroSection({
   category,
   competition,
   filteredRanking,
-  titleFightStatus,
+  titleFightStatus: _titleFightStatus,
   statsSummary,
   statsRadar,
-  bestEfficiencyPilot,
+  bestEfficiencyPilot: _bestEfficiencyPilot,
   championshipNarrative,
   editorialCards,
   isSharingImage,
@@ -46,11 +53,10 @@ export default function ClassificacaoHeroSection({
   const sixthPlace = top6[5] ?? null;
   const seventhPlace = filteredRanking[6] ?? null;
 
-  const top6Average = useMemo(() => {
-    if (top6.length === 0) return 0;
-    const total = top6.reduce((sum, item) => sum + (item.pontos || 0), 0);
-    return Math.round(total / top6.length);
-  }, [top6]);
+  const top6Average =
+    top6.length === 0
+      ? 0
+      : Math.round(top6.reduce((sum, item) => sum + (item.pontos || 0), 0) / top6.length);
 
   const trophyCutLabel = sixthPlace ? `${sixthPlace.pontos} pts` : "—";
   const trophyMargin =
@@ -70,10 +76,9 @@ export default function ClassificacaoHeroSection({
       ? `+${statsSummary.leaderAdvantage} pts sobre o vice`
       : "Liderança empatada";
 
-  const hottestPilotName =
-    statsRadar?.hottestPilot?.piloto
-      ? getPilotFirstAndLastName(statsRadar.hottestPilot.piloto)
-      : null;
+  const hottestPilotName = statsRadar?.hottestPilot?.piloto
+    ? getPilotFirstAndLastName(statsRadar.hottestPilot.piloto)
+    : null;
 
   return (
     <>
@@ -88,7 +93,7 @@ export default function ClassificacaoHeroSection({
           <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
             <div>
               <p
-                className={`text-[10px] font-bold uppercase tracking-[0.2em] ${
+                className={`text-[10px] font-bold tracking-[0.2em] uppercase ${
                   isDarkMode ? "text-white/35" : "text-zinc-400"
                 }`}
               >
@@ -101,11 +106,7 @@ export default function ClassificacaoHeroSection({
               >
                 Top 6 do campeonato
               </h2>
-              <p
-                className={`mt-1 text-sm ${
-                  isDarkMode ? "text-white/55" : "text-zinc-500"
-                }`}
-              >
+              <p className={`mt-1 text-sm ${isDarkMode ? "text-white/55" : "text-zinc-500"}`}>
                 {category} · {competitionLabels[competition] || competition}
               </p>
             </div>
@@ -133,14 +134,14 @@ export default function ClassificacaoHeroSection({
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
                     <p
-                      className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                      className={`text-[10px] font-bold tracking-[0.16em] uppercase ${
                         isDarkMode ? theme.darkAccentText : "text-zinc-500"
                       }`}
                     >
                       Líder da zona de troféu
                     </p>
                     <p
-                      className={`mt-1 text-[24px] font-black leading-none ${
+                      className={`mt-1 text-[24px] leading-none font-black ${
                         isDarkMode ? "text-white" : "text-zinc-950"
                       }`}
                     >
@@ -167,13 +168,7 @@ export default function ClassificacaoHeroSection({
                       isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
                     }`}
                   >
-                    <span
-                      className={
-                        isDarkMode ? theme.darkAccentText : "text-zinc-700"
-                      }
-                    >
-                      🏆
-                    </span>
+                    <span className={isDarkMode ? theme.darkAccentText : "text-zinc-700"}>🏆</span>
                   </div>
                 </div>
               </div>
@@ -188,7 +183,7 @@ export default function ClassificacaoHeroSection({
                 }`}
               >
                 <p
-                  className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                  className={`text-[10px] font-bold tracking-[0.14em] uppercase ${
                     isDarkMode ? "text-emerald-300" : "text-emerald-700"
                   }`}
                 >
@@ -205,13 +200,11 @@ export default function ClassificacaoHeroSection({
 
               <div
                 className={`rounded-3xl border p-3 ${
-                  isDarkMode
-                    ? "border-white/8 bg-[#0f172a]"
-                    : "border-black/5 bg-zinc-50"
+                  isDarkMode ? "border-white/8 bg-[#0f172a]" : "border-black/5 bg-zinc-50"
                 }`}
               >
                 <p
-                  className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                  className={`text-[10px] font-bold tracking-[0.14em] uppercase ${
                     isDarkMode ? "text-white/38" : "text-zinc-500"
                   }`}
                 >
@@ -228,13 +221,11 @@ export default function ClassificacaoHeroSection({
 
               <div
                 className={`rounded-3xl border p-3 ${
-                  isDarkMode
-                    ? "border-white/8 bg-[#0f172a]"
-                    : "border-black/5 bg-zinc-50"
+                  isDarkMode ? "border-white/8 bg-[#0f172a]" : "border-black/5 bg-zinc-50"
                 }`}
               >
                 <p
-                  className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                  className={`text-[10px] font-bold tracking-[0.14em] uppercase ${
                     isDarkMode ? "text-white/38" : "text-zinc-500"
                   }`}
                 >
@@ -249,9 +240,7 @@ export default function ClassificacaoHeroSection({
                 </p>
                 {hottestPilotName && (
                   <p
-                    className={`mt-1 text-[11px] ${
-                      isDarkMode ? "text-white/55" : "text-zinc-500"
-                    }`}
+                    className={`mt-1 text-[11px] ${isDarkMode ? "text-white/55" : "text-zinc-500"}`}
                   >
                     Em alta: {hottestPilotName}
                   </p>
@@ -288,7 +277,7 @@ export default function ClassificacaoHeroSection({
                   }`}
                 >
                   <p
-                    className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+                    className={`text-[10px] font-bold tracking-[0.14em] uppercase ${
                       isDarkMode
                         ? isLeader
                           ? theme.darkAccentText
@@ -302,7 +291,7 @@ export default function ClassificacaoHeroSection({
                   </p>
 
                   <p
-                    className={`mt-2 line-clamp-2 text-[14px] font-semibold leading-tight ${
+                    className={`mt-2 line-clamp-2 text-[14px] leading-tight font-semibold ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >
@@ -357,11 +346,7 @@ export default function ClassificacaoHeroSection({
             narrative={championshipNarrative}
           />
 
-          <RankingEditorialCards
-            isDarkMode={isDarkMode}
-            theme={theme}
-            cards={editorialCards}
-          />
+          <RankingEditorialCards isDarkMode={isDarkMode} theme={theme} cards={editorialCards} />
         </div>
       </div>
     </>

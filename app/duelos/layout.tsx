@@ -8,11 +8,7 @@ export const metadata: Metadata = {
     "Compare pilotos lado a lado e veja quem leva vantagem nos confrontos diretos do campeonato Caserna Kart Racing.",
 };
 
-export default function DuelosLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DuelosLayout({ children }: { children: React.ReactNode }) {
   return (
     <AppMainLayout>
       <AppSectionShell>{children}</AppSectionShell>

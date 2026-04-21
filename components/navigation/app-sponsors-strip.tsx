@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element -- sponsor logos use native img to preserve marquee animation styles and onError handling */
+
 import React, { useEffect, useMemo, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { sponsorLogos } from "@/lib/ranking/ranking-utils";
@@ -21,8 +23,7 @@ const FALLBACK_SPONSOR_LOGOS: SponsorLogoItem[] = [
     wrapper: "px-3",
     surfaceLight: "bg-white",
     surfaceDark: "bg-white/5",
-    image:
-      "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
+    image: "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
   },
   {
     name: "Lumine",
@@ -30,8 +31,7 @@ const FALLBACK_SPONSOR_LOGOS: SponsorLogoItem[] = [
     wrapper: "px-3",
     surfaceLight: "bg-white",
     surfaceDark: "bg-white/5",
-    image:
-      "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
+    image: "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
   },
   {
     name: "Precision",
@@ -39,8 +39,7 @@ const FALLBACK_SPONSOR_LOGOS: SponsorLogoItem[] = [
     wrapper: "px-3",
     surfaceLight: "bg-white",
     surfaceDark: "bg-white/5",
-    image:
-      "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
+    image: "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
   },
   {
     name: "Skyflow",
@@ -48,8 +47,7 @@ const FALLBACK_SPONSOR_LOGOS: SponsorLogoItem[] = [
     wrapper: "px-3",
     surfaceLight: "bg-white",
     surfaceDark: "bg-white/5",
-    image:
-      "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
+    image: "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
   },
   {
     name: "Vits",
@@ -57,8 +55,7 @@ const FALLBACK_SPONSOR_LOGOS: SponsorLogoItem[] = [
     wrapper: "px-3",
     surfaceLight: "bg-white",
     surfaceDark: "bg-white/5",
-    image:
-      "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
+    image: "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
   },
   {
     name: "Astera",
@@ -66,8 +63,7 @@ const FALLBACK_SPONSOR_LOGOS: SponsorLogoItem[] = [
     wrapper: "px-3",
     surfaceLight: "bg-white",
     surfaceDark: "bg-white/5",
-    image:
-      "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
+    image: "h-auto max-h-[28px] w-auto max-w-[84%] object-contain md:max-h-[34px]",
   },
 ];
 
@@ -86,14 +82,10 @@ function normalizeSponsorName(name: string) {
   return name.trim().toLowerCase();
 }
 
-function getSponsorLogoClassName(
-  sponsor: SponsorLogoItem,
-  isDarkMode: boolean
-) {
+function getSponsorLogoClassName(sponsor: SponsorLogoItem, isDarkMode: boolean) {
   const name = normalizeSponsorName(sponsor.name);
 
-  const base =
-    "h-auto w-auto object-contain transition-all duration-300 group-hover:scale-[1.055]";
+  const base = "h-auto w-auto object-contain transition-all duration-300 group-hover:scale-[1.055]";
 
   if (isDarkMode) {
     switch (name) {
@@ -132,10 +124,7 @@ function getSponsorLogoClassName(
   }
 }
 
-function getSponsorInnerSurfaceClassName(
-  sponsor: SponsorLogoItem,
-  isDarkMode: boolean
-) {
+function getSponsorInnerSurfaceClassName(sponsor: SponsorLogoItem, isDarkMode: boolean) {
   const name = normalizeSponsorName(sponsor.name);
 
   if (isDarkMode) {
@@ -196,19 +185,15 @@ function SponsorMarqueeCard({
   isDarkMode: boolean;
 }) {
   const [hasError, setHasError] = useState(false);
-
-  useEffect(() => {
+  const [prevSrc, setPrevSrc] = useState(sponsor.src);
+  if (sponsor.src !== prevSrc) {
+    setPrevSrc(sponsor.src);
     setHasError(false);
-  }, [sponsor.src]);
+  }
 
   const logoClassName = getSponsorLogoClassName(sponsor, isDarkMode);
-  const innerSurfaceClassName = getSponsorInnerSurfaceClassName(
-    sponsor,
-    isDarkMode
-  );
-  const surfaceClassName = isDarkMode
-    ? sponsor.surfaceDark
-    : sponsor.surfaceLight;
+  const innerSurfaceClassName = getSponsorInnerSurfaceClassName(sponsor, isDarkMode);
+  const surfaceClassName = isDarkMode ? sponsor.surfaceDark : sponsor.surfaceLight;
   const contentClassName = getSponsorContentClassName(sponsor);
 
   return (
@@ -264,13 +249,13 @@ function SponsorMarqueeCard({
         <>
           <div className="pointer-events-none absolute inset-x-6 bottom-2 h-6 rounded-full bg-[radial-gradient(circle_at_center,rgba(15,23,42,0.05),transparent_74%)] blur-xl" />
           <div className="pointer-events-none absolute inset-x-10 top-2 h-7 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.95),transparent_70%)] blur-xl" />
-          <div className="pointer-events-none absolute right-5 top-3 h-8 w-20 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.72),transparent_72%)] blur-xl" />
+          <div className="pointer-events-none absolute top-3 right-5 h-8 w-20 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.72),transparent_72%)] blur-xl" />
         </>
       )}
 
       {hasError ? (
         <span
-          className={`relative z-10 px-3 text-center text-[12px] font-bold uppercase tracking-[0.14em] md:text-[14px] ${
+          className={`relative z-10 px-3 text-center text-[12px] font-bold tracking-[0.14em] uppercase md:text-[14px] ${
             isDarkMode ? "text-white/85" : "text-zinc-700"
           }`}
         >
@@ -292,11 +277,7 @@ function SponsorMarqueeCard({
   );
 }
 
-export default function AppSponsorsStrip({
-  isDarkMode,
-}: {
-  isDarkMode?: boolean;
-}) {
+export default function AppSponsorsStrip({ isDarkMode }: { isDarkMode?: boolean }) {
   const [resolvedDarkMode, setResolvedDarkMode] = useState(true);
 
   useEffect(() => {
@@ -322,10 +303,7 @@ export default function AppSponsorsStrip({
     return () => {
       observer.disconnect();
       window.removeEventListener("storage", syncTheme);
-      window.removeEventListener(
-        "caserna-theme-change",
-        syncTheme as EventListener
-      );
+      window.removeEventListener("caserna-theme-change", syncTheme as EventListener);
     };
   }, [isDarkMode]);
 
@@ -399,7 +377,7 @@ export default function AppSponsorsStrip({
             <>
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.9),transparent_38%)]" />
               <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top,rgba(15,23,42,0.06),transparent_72%)]" />
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.016)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.016)_1px,transparent_1px)] bg-[size:24px_24px] opacity-45 [mask-image:radial-gradient(circle_at_center,black,transparent_88%)]" />
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.016)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.016)_1px,transparent_1px)] [mask-image:radial-gradient(circle_at_center,black,transparent_88%)] bg-[size:24px_24px] opacity-45" />
               <div className="pointer-events-none absolute inset-x-[12%] top-0 h-20 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.92),transparent_72%)] blur-2xl" />
             </>
           )}
@@ -407,13 +385,13 @@ export default function AppSponsorsStrip({
           {resolvedDarkMode && (
             <>
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05),transparent_64%)]" />
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.018)_1px,transparent_1px)] bg-[size:28px_28px] opacity-20 [mask-image:radial-gradient(circle_at_center,black,transparent_90%)]" />
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.018)_1px,transparent_1px)] [mask-image:radial-gradient(circle_at_center,black,transparent_90%)] bg-[size:28px_28px] opacity-20" />
             </>
           )}
 
           <div className="relative mb-5 flex items-center justify-center">
             <div
-              className={`absolute left-0 top-1/2 h-px w-[18%] -translate-y-1/2 md:w-[22%] ${
+              className={`absolute top-1/2 left-0 h-px w-[18%] -translate-y-1/2 md:w-[22%] ${
                 resolvedDarkMode
                   ? "bg-gradient-to-r from-transparent via-white/10 to-white/10"
                   : "bg-gradient-to-r from-transparent via-zinc-300/80 to-zinc-400/70"
@@ -430,7 +408,7 @@ export default function AppSponsorsStrip({
               />
 
               <h3
-                className={`relative text-center text-[12px] font-bold uppercase tracking-[0.28em] md:text-[14px] ${
+                className={`relative text-center text-[12px] font-bold tracking-[0.28em] uppercase md:text-[14px] ${
                   resolvedDarkMode
                     ? "text-white/88"
                     : "bg-[linear-gradient(180deg,#111827_0%,#374151_100%)] bg-clip-text text-transparent"
@@ -441,7 +419,7 @@ export default function AppSponsorsStrip({
             </div>
 
             <div
-              className={`absolute right-0 top-1/2 h-px w-[18%] -translate-y-1/2 md:w-[22%] ${
+              className={`absolute top-1/2 right-0 h-px w-[18%] -translate-y-1/2 md:w-[22%] ${
                 resolvedDarkMode
                   ? "bg-gradient-to-l from-transparent via-white/10 to-white/10"
                   : "bg-gradient-to-l from-transparent via-zinc-300/80 to-zinc-400/70"

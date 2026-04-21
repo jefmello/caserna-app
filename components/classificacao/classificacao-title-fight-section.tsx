@@ -7,12 +7,13 @@ import {
   getPilotFirstAndLastName,
   getPilotWarNameDisplay,
 } from "@/lib/ranking/ranking-utils";
-import type { RankingItem } from "@/types/ranking";
+import type { RankingItem, TitleFightStatus } from "@/types/ranking";
+import type { CategoryTheme } from "@/lib/ranking/theme-utils";
 
 type ClassificacaoTitleFightSectionProps = {
   isDarkMode: boolean;
-  theme: any;
-  titleFightStatus: any;
+  theme: CategoryTheme;
+  titleFightStatus: TitleFightStatus;
   top3TitleFight: RankingItem[];
   category: string;
   onSelectPilot: (pilot: RankingItem) => void;

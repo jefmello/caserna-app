@@ -51,7 +51,7 @@ export function CompactStatCard({
       <CardContent className="p-3">
         <div className="mb-1.5 flex items-center justify-between gap-1.5">
           <p
-            className={`text-[10px] font-semibold uppercase tracking-[0.14em] ${
+            className={`text-[10px] font-semibold tracking-[0.14em] uppercase ${
               isDark ? "text-zinc-400" : "text-zinc-500"
             }`}
           >
@@ -83,7 +83,7 @@ export function CompactStatCard({
         </div>
 
         <p
-          className={`text-[22px] font-bold leading-none tracking-tight tabular-nums ${
+          className={`text-[22px] leading-none font-bold tracking-tight tabular-nums ${
             isDark ? "text-white" : "text-zinc-950"
           }`}
         >
@@ -91,9 +91,7 @@ export function CompactStatCard({
         </p>
 
         <p
-          className={`mt-1 text-[12px] leading-snug ${
-            isDark ? "text-zinc-400" : "text-zinc-500"
-          }`}
+          className={`mt-1 text-[12px] leading-snug ${isDark ? "text-zinc-400" : "text-zinc-500"}`}
         >
           {subtitle}
         </p>
@@ -156,15 +154,13 @@ export function HighlightCard({
     >
       <CardContent
         className={`${compact ? "flex h-full flex-col" : "flex flex-col"} ${
-          compact ? "px-2.5 pb-2.5 pt-2" : "px-3 pb-3 pt-2"
+          compact ? "px-2.5 pt-2 pb-2.5" : "px-3 pt-2 pb-3"
         }`}
       >
         <div className="mb-0.5 flex items-start justify-between gap-1.5">
           <p
-            className={`w-full text-center font-bold uppercase leading-none ${
-              compact
-                ? "text-[10px] tracking-[0.16em]"
-                : "text-[12px] tracking-[0.18em]"
+            className={`w-full text-center leading-none font-bold uppercase ${
+              compact ? "text-[10px] tracking-[0.16em]" : "text-[12px] tracking-[0.18em]"
             } ${
               isDark
                 ? accent
@@ -269,7 +265,7 @@ export function StatRankingCard({
           </div>
           <div>
             <p
-              className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+              className={`text-[9px] font-bold tracking-[0.14em] uppercase ${
                 isDark ? "text-zinc-500" : "text-zinc-400"
               }`}
             >

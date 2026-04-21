@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element -- PilotPhotoSlot uses native img with onError fallback for missing photos */
+
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
@@ -32,10 +34,10 @@ import {
   getPilotHighlightName,
   getPilotWarName,
   normalizeCategoryAccent,
-  type CategoryAccent,
 } from "@/lib/ranking/ranking-utils";
 import HallOfFame from "@/components/ranking/hall-of-fame";
 import type { RankingItem, RankingMetaPilot } from "@/types/ranking";
+import type { CategoryTheme } from "@/lib/ranking/theme-utils";
 import { useChampionship } from "@/context/championship-context";
 import PageTransition, { StaggerContainer, StaggerItem } from "@/components/ui/page-transition";
 
@@ -55,18 +57,17 @@ function PilotPhotoSlot({
 
   const src = pilotoId ? `/pilotos/${pilotoId}.jpg` : null;
   const [hasError, setHasError] = useState(false);
-
-  useEffect(() => {
+  const [prevSrc, setPrevSrc] = useState(src);
+  if (src !== prevSrc) {
+    setPrevSrc(src);
     setHasError(false);
-  }, [src]);
+  }
 
   const showImage = Boolean(src) && !hasError;
 
   return (
     <div
-      className={`relative h-full w-full overflow-hidden ${
-        isDark ? "bg-[#0f172a]" : "bg-zinc-50"
-      }`}
+      className={`relative h-full w-full overflow-hidden ${isDark ? "bg-[#0f172a]" : "bg-zinc-50"}`}
     >
       {showImage ? (
         <>
@@ -76,11 +77,7 @@ function PilotPhotoSlot({
             className="absolute inset-0 h-full w-full scale-[1.18] object-cover object-center opacity-24 blur-2xl"
             onError={() => setHasError(true)}
           />
-          <div
-            className={`absolute inset-0 ${
-              isDark ? "bg-slate-950/18" : "bg-white/8"
-            }`}
-          />
+          <div className={`absolute inset-0 ${isDark ? "bg-slate-950/18" : "bg-white/8"}`} />
           <img
             src={src || ""}
             alt={alt}
@@ -102,14 +99,10 @@ function PilotPhotoSlot({
                 isDark ? "bg-white/5" : "bg-white"
               }`}
             >
-              <Camera
-                className={`h-5 w-5 ${
-                  isDark ? "text-zinc-400" : "text-zinc-500"
-                }`}
-              />
+              <Camera className={`h-5 w-5 ${isDark ? "text-zinc-400" : "text-zinc-500"}`} />
             </div>
             <p
-              className={`text-[12px] font-semibold uppercase tracking-[0.08em] ${
+              className={`text-[12px] font-semibold tracking-[0.08em] uppercase ${
                 isDark ? "text-zinc-400" : "text-zinc-500"
               }`}
             >
@@ -143,7 +136,7 @@ function HomeSummaryCard({
   subtitle: string;
   icon: React.ElementType;
   isDarkMode: boolean;
-  theme: any;
+  theme: CategoryTheme;
   accent?: boolean;
 }) {
   return (
@@ -161,7 +154,7 @@ function HomeSummaryCard({
       <CardContent className="p-4">
         <div className="mb-2 flex items-center justify-between gap-2">
           <p
-            className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+            className={`text-[10px] font-bold tracking-[0.14em] uppercase ${
               isDarkMode ? "text-zinc-500" : "text-zinc-400"
             }`}
           >
@@ -194,7 +187,7 @@ function HomeSummaryCard({
         </div>
 
         <p
-          className={`text-[24px] font-extrabold leading-none tracking-tight ${
+          className={`text-[24px] leading-none font-extrabold tracking-tight ${
             isDarkMode ? "text-white" : "text-zinc-950"
           }`}
         >
@@ -231,7 +224,7 @@ function HomePilotCtaCard({
   buttonLabel: string;
   icon: React.ElementType;
   isDarkMode: boolean;
-  theme: any;
+  theme: CategoryTheme;
   accent?: boolean;
 }) {
   return (
@@ -251,7 +244,7 @@ function HomePilotCtaCard({
         <div className="mb-3 flex items-start justify-between gap-3">
           <div>
             <p
-              className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+              className={`text-[10px] font-bold tracking-[0.16em] uppercase ${
                 isDarkMode ? "text-zinc-500" : "text-zinc-400"
               }`}
             >
@@ -291,11 +284,7 @@ function HomePilotCtaCard({
           </div>
         </div>
 
-        <p
-          className={`text-[12px] leading-snug ${
-            isDarkMode ? "text-zinc-400" : "text-zinc-600"
-          }`}
-        >
+        <p className={`text-[12px] leading-snug ${isDarkMode ? "text-zinc-400" : "text-zinc-600"}`}>
           {description}
         </p>
 
@@ -319,10 +308,12 @@ function HomePilotCtaCard({
 }
 
 export default function HomePageContent() {
-  const { isDarkMode, toggleTheme, categoria, campeonato } = useChampionship();
+  const { isDarkMode, toggleTheme: _toggleTheme, categoria, campeonato } = useChampionship();
 
-  const { rankingData, rankingMeta, categories, loading, error, retry } =
-    useRankingData({ categoria, campeonato });
+  const { rankingData, rankingMeta, categories, loading, error, retry } = useRankingData({
+    categoria,
+    campeonato,
+  });
 
   const {
     category,
@@ -357,12 +348,7 @@ export default function HomePageContent() {
     };
   }, [category]);
 
-  const {
-    theme,
-    leaderName,
-    spotlightStyles,
-    titleFightStatus,
-  } = useRankingScreenController({
+  const { theme, leaderName, spotlightStyles, titleFightStatus } = useRankingScreenController({
     category,
     competition,
     isDarkMode,
@@ -388,14 +374,8 @@ export default function HomePageContent() {
     const totalPoints = filteredRanking.reduce((sum, item) => sum + item.pontos, 0);
     const avgPoints = totalPilots > 0 ? totalPoints / totalPilots : 0;
 
-    const totalVictories = filteredRanking.reduce(
-      (sum, item) => sum + item.vitorias,
-      0
-    );
-    const totalPodiums = filteredRanking.reduce(
-      (sum, item) => sum + item.podios,
-      0
-    );
+    const totalVictories = filteredRanking.reduce((sum, item) => sum + item.vitorias, 0);
+    const totalPodiums = filteredRanking.reduce((sum, item) => sum + item.podios, 0);
 
     return {
       totalPilots,
@@ -433,10 +413,7 @@ export default function HomePageContent() {
 
     const podiumPressure =
       filteredRanking.length >= 6
-        ? Math.max(
-            (filteredRanking[2]?.pontos || 0) - (filteredRanking[5]?.pontos || 0),
-            0
-          )
+        ? Math.max((filteredRanking[2]?.pontos || 0) - (filteredRanking[5]?.pontos || 0), 0)
         : Math.max(
             (filteredRanking[0]?.pontos || 0) -
               (filteredRanking[filteredRanking.length - 1]?.pontos || 0),
@@ -464,10 +441,7 @@ export default function HomePageContent() {
       hottestLabel = "Ataque dominante";
     } else if ((hottestPilot?.podios || 0) >= 4) {
       hottestLabel = "Consistência premium";
-    } else if (
-      (hottestPilot?.poles || 0) >= 2 ||
-      (hottestPilot?.mv || 0) >= 2
-    ) {
+    } else if ((hottestPilot?.poles || 0) >= 2 || (hottestPilot?.mv || 0) >= 2) {
       hottestLabel = "Velocidade em alta";
     }
 
@@ -517,12 +491,9 @@ export default function HomePageContent() {
     bestEfficiencyPilot,
   });
 
-  const leaderPilotHref = leader?.pilotoId
-    ? `/pilotos?pilotId=${leader.pilotoId}`
-    : "/pilotos";
+  const leaderPilotHref = leader?.pilotoId ? `/pilotos?pilotId=${leader.pilotoId}` : "/pilotos";
 
-  const hottestPilot =
-    (statsRadar?.hottestPilot as RankingItem | RankingMetaPilot | null) || null;
+  const hottestPilot = (statsRadar?.hottestPilot as RankingItem | RankingMetaPilot | null) || null;
 
   const hottestPilotHref =
     hottestPilot && "pilotoId" in hottestPilot && hottestPilot.pilotoId
@@ -535,8 +506,7 @@ export default function HomePageContent() {
         href: "/simulacoes",
         eyebrow: "Disputa do título",
         title: "Cenário quente do campeonato",
-        description:
-          "A briga está apertada. Veja a matemática atual e o impacto da próxima etapa.",
+        description: "A briga está apertada. Veja a matemática atual e o impacto da próxima etapa.",
         buttonLabel: "Abrir simulações",
         icon: Sparkles,
         accent: true,
@@ -586,14 +556,8 @@ export default function HomePageContent() {
             : "border-black/5 bg-white text-zinc-950"
         }`}
       >
-        <p className="text-xl font-semibold tracking-tight">
-          Carregando painel principal...
-        </p>
-        <p
-          className={`mt-2 text-sm ${
-            isDarkMode ? "text-zinc-400" : "text-zinc-500"
-          }`}
-        >
+        <p className="text-xl font-semibold tracking-tight">Carregando painel principal...</p>
+        <p className={`mt-2 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
           Preparando central oficial do campeonato
         </p>
       </div>
@@ -610,13 +574,7 @@ export default function HomePageContent() {
         }`}
       >
         <p className="text-2xl font-semibold tracking-tight">Erro</p>
-        <p
-          className={`mt-2 ${
-            isDarkMode ? "text-zinc-300" : "text-zinc-600"
-          }`}
-        >
-          {error}
-        </p>
+        <p className={`mt-2 ${isDarkMode ? "text-zinc-300" : "text-zinc-600"}`}>{error}</p>
         <button
           onClick={handleRetry}
           className={`mt-5 w-full rounded-2xl px-4 py-3 text-sm font-semibold transition ${
@@ -635,294 +593,284 @@ export default function HomePageContent() {
     <PageTransition>
       <div className="mt-4 space-y-4 lg:space-y-5 xl:space-y-6">
         <RankingHeader
-        theme={theme}
-        categories={categories}
-        category={category}
-        setCategory={setCategory}
-        availableCompetitions={availableCompetitions}
-        competition={competition}
-        setCompetition={setCompetition}
-        competitionLabels={competitionLabels}
-      />
-
-      <RankingSpotlight
-        isDarkMode={isDarkMode}
-        theme={theme}
-        spotlightStyles={spotlightStyles}
-        leader={leader}
-        leaderName={leaderName}
-        PilotPhotoSlot={PilotPhotoSlot}
-        getPilotHighlightName={getPilotHighlightName}
-        getPilotWarName={getSpotlightPilotWarName}
-      />
-
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]">
-        <HomePilotCtaCard
-          href={dynamicPrimaryCta.href}
-          eyebrow={dynamicPrimaryCta.eyebrow}
-          title={dynamicPrimaryCta.title}
-          description={dynamicPrimaryCta.description}
-          buttonLabel={dynamicPrimaryCta.buttonLabel}
-          icon={dynamicPrimaryCta.icon}
-          isDarkMode={isDarkMode}
           theme={theme}
-          accent={dynamicPrimaryCta.accent}
-        />
-
-        {hottestPilot && "pilotoId" in hottestPilot && hottestPilot.pilotoId ? (
-          <HomePilotCtaCard
-            href={hottestPilotHref}
-            eyebrow="Piloto em alta"
-            title={getPilotFirstAndLastName(hottestPilot.piloto)}
-            description={`${statsRadar.hottestLabel}. Abra a análise individual para ver o momento completo do piloto.`}
-            buttonLabel="Abrir piloto"
-            icon={UserRound}
-            isDarkMode={isDarkMode}
-            theme={theme}
-          />
-        ) : (
-          <HomePilotCtaCard
-            href="/pilotos"
-            eyebrow="Central individual"
-            title="Abrir análise de pilotos"
-            description="Entre no módulo de pilotos para buscar qualquer nome e abrir a análise individual completa."
-            buttonLabel="Ir para pilotos"
-            icon={UserRound}
-            isDarkMode={isDarkMode}
-            theme={theme}
-          />
-        )}
-      </div>
-
-      <StaggerContainer className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
-        <StaggerItem>
-        <HomeSummaryCard
-          title="Líder"
-          value={leader ? getPilotFirstAndLastName(leader.piloto) : "-"}
-          subtitle={`${leader?.pontos || 0} pts no recorte atual`}
-          icon={Crown}
-          isDarkMode={isDarkMode}
-          theme={theme}
-          accent
-        />
-        </StaggerItem>
-        <StaggerItem>
-        <HomeSummaryCard
-          title="Vantagem"
-          value={`${statsSummary.leaderAdvantage} pts`}
-          subtitle="Diferença entre líder e vice"
-          icon={Gauge}
-          isDarkMode={isDarkMode}
-          theme={theme}
-        />
-        </StaggerItem>
-        <StaggerItem>
-        <HomeSummaryCard
-          title="Corte Top 6"
-          value={`${statsSummary.top6CutPoints} pts`}
-          subtitle="Linha de troféu do campeonato"
-          icon={Trophy}
-          isDarkMode={isDarkMode}
-          theme={theme}
-        />
-        </StaggerItem>
-        <StaggerItem>
-        <HomeSummaryCard
-          title="Calor da disputa"
-          value={statsRadar.titleHeat}
-          subtitle="Leitura rápida da briga pelo título"
-          icon={Swords}
-          isDarkMode={isDarkMode}
-          theme={theme}
-        />
-        </StaggerItem>
-      </StaggerContainer>
-
-      <SectionDivider />
-
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
-        <RankingCompetitionContext
-          isDarkMode={isDarkMode}
-          theme={theme}
-          titleFightStatus={titleFightStatus}
-          statsSummary={statsSummary}
-          statsRadar={statsRadar}
-          bestEfficiencyPilot={bestEfficiencyPilot}
-          getPilotFirstAndLastName={getPilotFirstAndLastName}
-        />
-
-        <Card
-          className={`rounded-[24px] shadow-sm ${
-            isDarkMode
-              ? "border border-white/10 bg-[#111827]"
-              : "border-black/5 bg-white"
-          }`}
-        >
-          <CardContent className="p-4">
-            <div className="mb-3 flex items-center justify-between gap-3">
-              <div>
-                <p
-                  className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
-                    isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                  }`}
-                >
-                  Próximo passo
-                </p>
-                <h3
-                  className={`mt-1 text-[20px] font-extrabold tracking-tight ${
-                    isDarkMode ? "text-white" : "text-zinc-950"
-                  }`}
-                >
-                  Acesse o módulo certo
-                </h3>
-              </div>
-
-              <div
-                className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
-                  isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                }`}
-              >
-                <ChevronRight
-                  className={`h-4.5 w-4.5 ${
-                    isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                  }`}
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2.5">
-              <Link
-                href="/classificacao"
-                className={`flex items-center justify-between rounded-[18px] border px-3 py-3 transition-all duration-200 ${
-                  isDarkMode
-                    ? "border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033]"
-                    : "border-black/5 bg-zinc-50/80 hover:bg-white"
-                }`}
-              >
-                <div>
-                  <p
-                    className={`text-[14px] font-semibold ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
-                    }`}
-                  >
-                    Ver classificação oficial
-                  </p>
-                  <p
-                    className={`mt-0.5 text-[12px] ${
-                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                    }`}
-                  >
-                    Tabela completa, pressão no topo e corte do Top 6.
-                  </p>
-                </div>
-                <Trophy
-                  className={`h-4 w-4 ${
-                    isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                  }`}
-                />
-              </Link>
-
-              <Link
-                href="/simulacoes"
-                className={`flex items-center justify-between rounded-[18px] border px-3 py-3 transition-all duration-200 ${
-                  isDarkMode
-                    ? "border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033]"
-                    : "border-black/5 bg-zinc-50/80 hover:bg-white"
-                }`}
-              >
-                <div>
-                  <p
-                    className={`text-[14px] font-semibold ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
-                    }`}
-                  >
-                    Projetar cenários futuros
-                  </p>
-                  <p
-                    className={`mt-0.5 text-[12px] ${
-                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                    }`}
-                  >
-                    Veja favorito, vivos na matemática e impacto da próxima etapa.
-                  </p>
-                </div>
-                <Sparkles
-                  className={`h-4 w-4 ${
-                    isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                  }`}
-                />
-              </Link>
-
-              <Link
-                href="/midia"
-                className={`flex items-center justify-between rounded-[18px] border px-3 py-3 transition-all duration-200 ${
-                  isDarkMode
-                    ? "border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033]"
-                    : "border-black/5 bg-zinc-50/80 hover:bg-white"
-                }`}
-              >
-                <div>
-                  <p
-                    className={`text-[14px] font-semibold ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
-                    }`}
-                  >
-                    Gerar conteúdo oficial
-                  </p>
-                  <p
-                    className={`mt-0.5 text-[12px] ${
-                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                    }`}
-                  >
-                    Cards da classificação, líder, narrativa e duelo.
-                  </p>
-                </div>
-                <Clapperboard
-                  className={`h-4 w-4 ${
-                    isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                  }`}
-                />
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <SectionDivider />
-
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-        <RankingChampionshipNarrativeCard
-          isDarkMode={isDarkMode}
-          theme={theme}
+          categories={categories}
           category={category}
-          competitionLabel={competitionLabels[competition] || competition}
-          narrative={championshipNarrative}
+          setCategory={setCategory}
+          availableCompetitions={availableCompetitions}
+          competition={competition}
+          setCompetition={setCompetition}
+          competitionLabels={competitionLabels}
         />
 
-        <RankingEditorialCards
+        <RankingSpotlight
           isDarkMode={isDarkMode}
           theme={theme}
-          cards={editorialCards.slice(0, 2)}
+          spotlightStyles={spotlightStyles}
+          leader={leader}
+          leaderName={leaderName}
+          PilotPhotoSlot={PilotPhotoSlot}
+          getPilotHighlightName={getPilotHighlightName}
+          getPilotWarName={getSpotlightPilotWarName}
         />
-      </div>
 
-      {/* Hall da Fama */}
-      <div className="space-y-2">
-        <div className="flex items-center gap-2">
-          <Trophy
-            className={`h-5 w-5 ${isDarkMode ? "text-yellow-400" : "text-yellow-600"}`}
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]">
+          <HomePilotCtaCard
+            href={dynamicPrimaryCta.href}
+            eyebrow={dynamicPrimaryCta.eyebrow}
+            title={dynamicPrimaryCta.title}
+            description={dynamicPrimaryCta.description}
+            buttonLabel={dynamicPrimaryCta.buttonLabel}
+            icon={dynamicPrimaryCta.icon}
+            isDarkMode={isDarkMode}
+            theme={theme}
+            accent={dynamicPrimaryCta.accent}
           />
-          <h2
-            className={`text-lg font-extrabold tracking-tight ${
-              isDarkMode ? "text-white" : "text-zinc-950"
+
+          {hottestPilot && "pilotoId" in hottestPilot && hottestPilot.pilotoId ? (
+            <HomePilotCtaCard
+              href={hottestPilotHref}
+              eyebrow="Piloto em alta"
+              title={getPilotFirstAndLastName(hottestPilot.piloto)}
+              description={`${statsRadar.hottestLabel}. Abra a análise individual para ver o momento completo do piloto.`}
+              buttonLabel="Abrir piloto"
+              icon={UserRound}
+              isDarkMode={isDarkMode}
+              theme={theme}
+            />
+          ) : (
+            <HomePilotCtaCard
+              href="/pilotos"
+              eyebrow="Central individual"
+              title="Abrir análise de pilotos"
+              description="Entre no módulo de pilotos para buscar qualquer nome e abrir a análise individual completa."
+              buttonLabel="Ir para pilotos"
+              icon={UserRound}
+              isDarkMode={isDarkMode}
+              theme={theme}
+            />
+          )}
+        </div>
+
+        <StaggerContainer className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <StaggerItem>
+            <HomeSummaryCard
+              title="Líder"
+              value={leader ? getPilotFirstAndLastName(leader.piloto) : "-"}
+              subtitle={`${leader?.pontos || 0} pts no recorte atual`}
+              icon={Crown}
+              isDarkMode={isDarkMode}
+              theme={theme}
+              accent
+            />
+          </StaggerItem>
+          <StaggerItem>
+            <HomeSummaryCard
+              title="Vantagem"
+              value={`${statsSummary.leaderAdvantage} pts`}
+              subtitle="Diferença entre líder e vice"
+              icon={Gauge}
+              isDarkMode={isDarkMode}
+              theme={theme}
+            />
+          </StaggerItem>
+          <StaggerItem>
+            <HomeSummaryCard
+              title="Corte Top 6"
+              value={`${statsSummary.top6CutPoints} pts`}
+              subtitle="Linha de troféu do campeonato"
+              icon={Trophy}
+              isDarkMode={isDarkMode}
+              theme={theme}
+            />
+          </StaggerItem>
+          <StaggerItem>
+            <HomeSummaryCard
+              title="Calor da disputa"
+              value={statsRadar.titleHeat}
+              subtitle="Leitura rápida da briga pelo título"
+              icon={Swords}
+              isDarkMode={isDarkMode}
+              theme={theme}
+            />
+          </StaggerItem>
+        </StaggerContainer>
+
+        <SectionDivider />
+
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+          <RankingCompetitionContext
+            isDarkMode={isDarkMode}
+            theme={theme}
+            titleFightStatus={titleFightStatus}
+            statsSummary={statsSummary}
+            statsRadar={statsRadar}
+            bestEfficiencyPilot={bestEfficiencyPilot}
+            getPilotFirstAndLastName={getPilotFirstAndLastName}
+          />
+
+          <Card
+            className={`rounded-[24px] shadow-sm ${
+              isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
             }`}
           >
-            Hall da Fama
-          </h2>
+            <CardContent className="p-4">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <div>
+                  <p
+                    className={`text-[10px] font-bold tracking-[0.16em] uppercase ${
+                      isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                    }`}
+                  >
+                    Próximo passo
+                  </p>
+                  <h3
+                    className={`mt-1 text-[20px] font-extrabold tracking-tight ${
+                      isDarkMode ? "text-white" : "text-zinc-950"
+                    }`}
+                  >
+                    Acesse o módulo certo
+                  </h3>
+                </div>
+
+                <div
+                  className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
+                    isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                  }`}
+                >
+                  <ChevronRight
+                    className={`h-4.5 w-4.5 ${
+                      isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                    }`}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2.5">
+                <Link
+                  href="/classificacao"
+                  className={`flex items-center justify-between rounded-[18px] border px-3 py-3 transition-all duration-200 ${
+                    isDarkMode
+                      ? "border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033]"
+                      : "border-black/5 bg-zinc-50/80 hover:bg-white"
+                  }`}
+                >
+                  <div>
+                    <p
+                      className={`text-[14px] font-semibold ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}
+                    >
+                      Ver classificação oficial
+                    </p>
+                    <p
+                      className={`mt-0.5 text-[12px] ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}
+                    >
+                      Tabela completa, pressão no topo e corte do Top 6.
+                    </p>
+                  </div>
+                  <Trophy
+                    className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
+                  />
+                </Link>
+
+                <Link
+                  href="/simulacoes"
+                  className={`flex items-center justify-between rounded-[18px] border px-3 py-3 transition-all duration-200 ${
+                    isDarkMode
+                      ? "border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033]"
+                      : "border-black/5 bg-zinc-50/80 hover:bg-white"
+                  }`}
+                >
+                  <div>
+                    <p
+                      className={`text-[14px] font-semibold ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}
+                    >
+                      Projetar cenários futuros
+                    </p>
+                    <p
+                      className={`mt-0.5 text-[12px] ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}
+                    >
+                      Veja favorito, vivos na matemática e impacto da próxima etapa.
+                    </p>
+                  </div>
+                  <Sparkles
+                    className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
+                  />
+                </Link>
+
+                <Link
+                  href="/midia"
+                  className={`flex items-center justify-between rounded-[18px] border px-3 py-3 transition-all duration-200 ${
+                    isDarkMode
+                      ? "border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033]"
+                      : "border-black/5 bg-zinc-50/80 hover:bg-white"
+                  }`}
+                >
+                  <div>
+                    <p
+                      className={`text-[14px] font-semibold ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}
+                    >
+                      Gerar conteúdo oficial
+                    </p>
+                    <p
+                      className={`mt-0.5 text-[12px] ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}
+                    >
+                      Cards da classificação, líder, narrativa e duelo.
+                    </p>
+                  </div>
+                  <Clapperboard
+                    className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
+                  />
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-        <HallOfFame isDarkMode={isDarkMode} category={category} />
+
+        <SectionDivider />
+
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <RankingChampionshipNarrativeCard
+            isDarkMode={isDarkMode}
+            theme={theme}
+            category={category}
+            competitionLabel={competitionLabels[competition] || competition}
+            narrative={championshipNarrative}
+          />
+
+          <RankingEditorialCards
+            isDarkMode={isDarkMode}
+            theme={theme}
+            cards={editorialCards.slice(0, 2)}
+          />
+        </div>
+
+        {/* Hall da Fama */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <Trophy className={`h-5 w-5 ${isDarkMode ? "text-yellow-400" : "text-yellow-600"}`} />
+            <h2
+              className={`text-lg font-extrabold tracking-tight ${
+                isDarkMode ? "text-white" : "text-zinc-950"
+              }`}
+            >
+              Hall da Fama
+            </h2>
+          </div>
+          <HallOfFame isDarkMode={isDarkMode} category={category} />
+        </div>
       </div>
-    </div>
     </PageTransition>
   );
 }

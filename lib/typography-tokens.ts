@@ -46,17 +46,17 @@ export const TYPE_SCALE = {
  */
 export const TYPE_WEIGHTS = {
   // Labels uppercase micro
-  label: "font-bold",        // 700
+  label: "font-bold", // 700
   // Corpo secundário
   bodySecondary: "font-medium", // 500
   // Corpo principal
-  body: "font-normal",        // 400
+  body: "font-normal", // 400
   // Nomes, títulos de lista
-  title: "font-semibold",     // 600
+  title: "font-semibold", // 600
   // Títulos de card, headlines
-  heading: "font-bold",       // 700
+  heading: "font-bold", // 700
   // Números de destaque, hero
-  display: "font-extrabold",  // 800 — RESERVADO para display
+  display: "font-extrabold", // 800 — RESERVADO para display
 } as const;
 
 /**

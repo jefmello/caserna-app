@@ -4,10 +4,12 @@ import React from "react";
 import { ArrowLeft, Share2, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import type { CategoryTheme } from "@/lib/ranking/theme-utils";
+import type { RankingItem } from "@/types/ranking";
 
 type RankingPilotHeroCardProps = {
   isDarkMode: boolean;
-  theme: any;
+  theme: CategoryTheme;
   category: string;
   categoryColors: Record<string, string>;
   competition: string;
@@ -15,16 +17,20 @@ type RankingPilotHeroCardProps = {
   handleBackToRanking: () => void;
   handleSharePilotCard: () => void;
   isSharingPilotImage: boolean;
-  selectedPilot: any;
+  selectedPilot: RankingItem | null;
   selectedPilotShortName: string;
   selectedPilotWarName: string;
-  safeSelectedPilot: any;
+  safeSelectedPilot: RankingItem;
   selectedPilotGap: string;
   selectedPilotAverage: number;
   selectedPilotConsistency: string;
   selectedPilotMomentum: string;
   selectedPilotBestAttribute: { label: string; value: number };
-  PilotPhotoSlot: React.ComponentType<{ pilot?: any; alt: string; isDark?: boolean }>;
+  PilotPhotoSlot: React.ComponentType<{
+    pilot?: RankingItem | null;
+    alt: string;
+    isDark?: boolean;
+  }>;
 };
 
 export default function RankingPilotHeroCard({
@@ -135,7 +141,7 @@ export default function RankingPilotHeroCard({
                     className={`pointer-events-none absolute inset-x-6 top-0 z-10 h-[2px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
                   />
 
-                  <div className="relative w-full aspect-square">
+                  <div className="relative aspect-square w-full">
                     <PilotPhotoSlot
                       pilot={selectedPilot}
                       alt={selectedPilotShortName}
@@ -144,7 +150,7 @@ export default function RankingPilotHeroCard({
 
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/72 via-black/16 to-transparent" />
 
-                    <div className="absolute left-3 top-3 flex items-center gap-2">
+                    <div className="absolute top-3 left-3 flex items-center gap-2">
                       <div
                         className={`inline-flex h-11 min-w-[54px] items-center justify-center rounded-[16px] border px-3 text-[20px] font-black shadow-lg ${
                           isDarkMode
@@ -156,10 +162,11 @@ export default function RankingPilotHeroCard({
                       </div>
 
                       <div
-                        className={`inline-flex rounded-full border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] shadow-sm ${
+                        className={`inline-flex rounded-full border px-3 py-1.5 text-[10px] font-bold tracking-[0.16em] uppercase shadow-sm ${
                           isDarkMode
                             ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                            : categoryColors[category] || "border-black/10 bg-white/90 text-zinc-700"
+                            : categoryColors[category] ||
+                              "border-black/10 bg-white/90 text-zinc-700"
                         }`}
                       >
                         {category}
@@ -169,13 +176,11 @@ export default function RankingPilotHeroCard({
                     <div className="absolute inset-x-0 bottom-0 p-3">
                       <div
                         className={`rounded-[20px] border px-3 py-3 backdrop-blur-md ${
-                          isDarkMode
-                            ? "border-white/10 bg-black/30"
-                            : "border-white/60 bg-white/72"
+                          isDarkMode ? "border-white/10 bg-black/30" : "border-white/60 bg-white/72"
                         }`}
                       >
                         <p
-                          className={`truncate text-[16px] font-bold leading-none tracking-tight ${
+                          className={`truncate text-[16px] leading-none font-bold tracking-tight ${
                             isDarkMode ? "text-white" : "text-zinc-950"
                           }`}
                         >
@@ -194,7 +199,7 @@ export default function RankingPilotHeroCard({
 
                         <div className="mt-2 flex items-center justify-between gap-2">
                           <span
-                            className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] ${
+                            className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold tracking-[0.14em] uppercase ${
                               isDarkMode
                                 ? "border-white/10 bg-white/5 text-zinc-300"
                                 : "border-black/5 bg-white/80 text-zinc-700"
@@ -204,7 +209,7 @@ export default function RankingPilotHeroCard({
                           </span>
 
                           <span
-                            className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] ${
+                            className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold tracking-[0.14em] uppercase ${
                               isDarkMode
                                 ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                                 : theme.heroChip
@@ -220,7 +225,7 @@ export default function RankingPilotHeroCard({
 
                 <div className="min-w-0">
                   <p
-                    className={`text-[11px] font-bold uppercase tracking-[0.18em] ${
+                    className={`text-[11px] font-bold tracking-[0.18em] uppercase ${
                       isDarkMode ? "text-zinc-500" : "text-zinc-400"
                     }`}
                   >
@@ -228,7 +233,7 @@ export default function RankingPilotHeroCard({
                   </p>
 
                   <h2
-                    className={`mt-2 break-words text-[30px] font-black leading-[1.02] tracking-tight ${
+                    className={`mt-2 text-[30px] leading-[1.02] font-black tracking-tight break-words ${
                       isDarkMode ? "text-white" : "text-zinc-950"
                     }`}
                   >
@@ -238,7 +243,7 @@ export default function RankingPilotHeroCard({
                   {selectedPilotWarName ? (
                     <div className="mt-3">
                       <span
-                        className={`inline-flex max-w-full break-words rounded-full border px-3 py-1.5 text-[11px] font-semibold italic ${
+                        className={`inline-flex max-w-full rounded-full border px-3 py-1.5 text-[11px] font-semibold break-words italic ${
                           isDarkMode
                             ? `${theme.darkAccentBorder} ${theme.darkAccentBg} text-zinc-300`
                             : theme.heroChip
@@ -257,13 +262,19 @@ export default function RankingPilotHeroCard({
                           : `${theme.heroBorder} bg-gradient-to-b ${theme.heroBg}`
                       }`}
                     >
-                      <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}>
+                      <p
+                        className={`text-[10px] font-bold tracking-[0.14em] uppercase ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}
+                      >
                         Posição atual
                       </p>
-                      <p className={`mt-1 text-[24px] font-black leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                      <p
+                        className={`mt-1 text-[24px] leading-none font-black tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}
+                      >
                         {safeSelectedPilot.pos}º
                       </p>
-                      <p className={`mt-1 text-[11px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                      <p
+                        className={`mt-1 text-[11px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}
+                      >
                         {selectedPilotGap}
                       </p>
                     </div>
@@ -275,16 +286,24 @@ export default function RankingPilotHeroCard({
                           : "border-black/5 bg-zinc-50/80"
                       }`}
                     >
-                      <p className={`text-[10px] font-bold uppercase tracking-[0.14em] ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}>
+                      <p
+                        className={`text-[10px] font-bold tracking-[0.14em] uppercase ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}
+                      >
                         Pontuação oficial
                       </p>
-                      <p className={`mt-1 text-[24px] font-black leading-none tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                      <p
+                        className={`mt-1 text-[24px] leading-none font-black tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}
+                      >
                         {safeSelectedPilot.pontos}
-                        <span className={`ml-1 text-[14px] font-bold ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                        <span
+                          className={`ml-1 text-[14px] font-bold ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}
+                        >
                           pts
                         </span>
                       </p>
-                      <p className={`mt-1 text-[11px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
+                      <p
+                        className={`mt-1 text-[11px] ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}
+                      >
                         média {selectedPilotAverage.toFixed(1)} por participação
                       </p>
                     </div>
@@ -299,14 +318,25 @@ export default function RankingPilotHeroCard({
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
-                        <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}>
+                        <p
+                          className={`text-[10px] font-bold tracking-[0.16em] uppercase ${isDarkMode ? "text-zinc-500" : "text-zinc-500"}`}
+                        >
                           Análise oficial
                         </p>
-                        <p className={`mt-1 text-[20px] font-bold leading-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                        <p
+                          className={`mt-1 text-[20px] leading-tight font-bold ${isDarkMode ? "text-white" : "text-zinc-950"}`}
+                        >
                           {selectedPilotConsistency}
                         </p>
-                        <p className={`mt-2 text-[12px] leading-relaxed ${isDarkMode ? "text-zinc-400" : "text-zinc-600"}`}>
-                          Momento: <span className="font-semibold">{selectedPilotMomentum}</span> · melhor fundamento atual em <span className="font-semibold">{selectedPilotBestAttribute.label.toLowerCase()}</span> ({selectedPilotBestAttribute.value}).
+                        <p
+                          className={`mt-2 text-[12px] leading-relaxed ${isDarkMode ? "text-zinc-400" : "text-zinc-600"}`}
+                        >
+                          Momento: <span className="font-semibold">{selectedPilotMomentum}</span> ·
+                          melhor fundamento atual em{" "}
+                          <span className="font-semibold">
+                            {selectedPilotBestAttribute.label.toLowerCase()}
+                          </span>{" "}
+                          ({selectedPilotBestAttribute.value}).
                         </p>
                       </div>
 

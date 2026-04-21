@@ -1,7 +1,37 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { type ValidationErrors } from "@/lib/validation-schemas";
 
 export const revalidate = 120;
+
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 30;
+const rateBuckets = new Map<string, { count: number; resetAt: number }>();
+
+function getClientKey(req: NextRequest): string {
+  const fwd = req.headers.get("x-forwarded-for");
+  if (fwd) return fwd.split(",")[0].trim();
+  return req.headers.get("x-real-ip") || "unknown";
+}
+
+function checkRateLimit(key: string): { ok: boolean; retryAfter: number } {
+  const now = Date.now();
+  const bucket = rateBuckets.get(key);
+
+  if (!bucket || bucket.resetAt <= now) {
+    rateBuckets.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    if (rateBuckets.size > 10_000) {
+      for (const [k, v] of rateBuckets) if (v.resetAt <= now) rateBuckets.delete(k);
+    }
+    return { ok: true, retryAfter: 0 };
+  }
+
+  if (bucket.count >= RATE_LIMIT_MAX) {
+    return { ok: false, retryAfter: Math.ceil((bucket.resetAt - now) / 1000) };
+  }
+
+  bucket.count += 1;
+  return { ok: true, retryAfter: 0 };
+}
 
 const CSV_RANKING =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vQfg1DPMuv2HVxhnx61PiF6tiowSwJl2baHvPXGaSzB9x7BF_ASJgxtqU2qRfUdgf0dRemQNnVGYNfh/pub?gid=214006946&single=true&output=csv";
@@ -31,9 +61,7 @@ async function fetchWithTimeout(url: string) {
     });
 
     if (!response.ok) {
-      throw new Error(
-        `HTTP ${response.status}: ${response.statusText || "Erro ao buscar CSV"}`
-      );
+      throw new Error(`HTTP ${response.status}: ${response.statusText || "Erro ao buscar CSV"}`);
     }
 
     // Verifica tamanho do response antes de ler
@@ -287,14 +315,10 @@ function parsePilotosCsv(text: string) {
   }
 
   const separator = detectSeparator(nonEmptyLines[0]);
-  const parsedRows = nonEmptyLines.map((line) =>
-    parseDelimitedLine(line, separator)
-  );
+  const parsedRows = nonEmptyLines.map((line) => parseDelimitedLine(line, separator));
 
   const headerRowIndex = 2;
-  const headers = (parsedRows[headerRowIndex] || []).map((h) =>
-    normalizeText(h)
-  );
+  const headers = (parsedRows[headerRowIndex] || []).map((h) => normalizeText(h));
 
   const idxPilotoId = findHeaderIndex(headers, ["piloto id", "id piloto", "id"]);
   const idxPilotoNome = findHeaderIndex(headers, [
@@ -370,18 +394,12 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
   }
 
   const separator = detectSeparator(nonEmptyLines[0]);
-  const parsedRows = nonEmptyLines.map((line) =>
-    parseDelimitedLine(line, separator)
-  );
+  const parsedRows = nonEmptyLines.map((line) => parseDelimitedLine(line, separator));
 
   let headerRowIndex = -1;
   for (let i = 0; i < parsedRows.length; i++) {
     const row = parsedRows[i].map((c) => normalizeText(c));
-    if (
-      row.includes("categoria") &&
-      row.includes("piloto") &&
-      row.includes("pontos")
-    ) {
+    if (row.includes("categoria") && row.includes("piloto") && row.includes("pontos")) {
       headerRowIndex = i;
       break;
     }
@@ -415,23 +433,10 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
   ]);
   const idxVitorias = findHeaderIndex(headers, ["vitorias", "vitórias"]);
   const idxPoles = findHeaderIndex(headers, ["poles", "pole", "pol"]);
-  const idxMv = findHeaderIndex(headers, [
-    "melhores voltas",
-    "melhor volta",
-    "mv",
-    "vmr",
-  ]);
-  const idxPodios = findHeaderIndex(headers, [
-    "podios",
-    "pódios",
-    "podio",
-    "pódio",
-  ]);
+  const idxMv = findHeaderIndex(headers, ["melhores voltas", "melhor volta", "mv", "vmr"]);
+  const idxPodios = findHeaderIndex(headers, ["podios", "pódios", "podio", "pódio"]);
   const idxDescarte = findHeaderIndex(headers, ["descarte"]);
-  const idxCategoriaAtual = findHeaderIndex(headers, [
-    "categoria atual",
-    "cat atual",
-  ]);
+  const idxCategoriaAtual = findHeaderIndex(headers, ["categoria atual", "cat atual"]);
 
   const grouped: RankingData = {};
   let totalRows = 0;
@@ -464,12 +469,9 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
 
     const pilotoId = idxPilotoId >= 0 ? (cols[idxPilotoId] || "").trim() : "";
     const categoriaOriginal = idxCategoria >= 0 ? cols[idxCategoria] || "" : "";
-    const competicaoOriginal =
-      idxCompeticao >= 0 ? cols[idxCompeticao] || "" : "";
+    const competicaoOriginal = idxCompeticao >= 0 ? cols[idxCompeticao] || "" : "";
     const categoriaAtualOriginal =
-      idxCategoriaAtual >= 0
-        ? cols[idxCategoriaAtual] || categoriaOriginal
-        : categoriaOriginal;
+      idxCategoriaAtual >= 0 ? cols[idxCategoriaAtual] || categoriaOriginal : categoriaOriginal;
 
     const categoria = normalizeCategory(categoriaOriginal);
     const competicao = normalizeCompetition(competicaoOriginal);
@@ -499,8 +501,7 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
       nomeGuerra,
       pontos: idxPontos >= 0 ? toNumber(cols[idxPontos]) : 0,
       adv: idxAdv >= 0 ? toNumber(cols[idxAdv]) : 0,
-      participacoes:
-        idxParticipacoes >= 0 ? toNumber(cols[idxParticipacoes]) : 0,
+      participacoes: idxParticipacoes >= 0 ? toNumber(cols[idxParticipacoes]) : 0,
       vitorias: idxVitorias >= 0 ? toNumber(cols[idxVitorias]) : 0,
       poles: idxPoles >= 0 ? toNumber(cols[idxPoles]) : 0,
       mv: idxMv >= 0 ? toNumber(cols[idxMv]) : 0,
@@ -518,10 +519,7 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
       validationIssues.push("piloto: obrigatório");
     if (typeof rawItem.pontos !== "number" || !Number.isFinite(rawItem.pontos))
       validationIssues.push("pontos: deve ser número válido");
-    if (
-      typeof rawItem.categoriaAtual !== "string" ||
-      rawItem.categoriaAtual.length === 0
-    )
+    if (typeof rawItem.categoriaAtual !== "string" || rawItem.categoriaAtual.length === 0)
       validationIssues.push("categoriaAtual: obrigatória");
     if (typeof rawItem.competicao !== "string" || rawItem.competicao.length === 0)
       validationIssues.push("competicao: obrigatória");
@@ -537,9 +535,7 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
     if (validationIssues.length > 0) {
       rejectedByValidation++;
       const errDetail = validationIssues.join("; ");
-      validationErrors.errors.push(
-        `Linha ${i + 1} (${piloto || "desconhecido"}): ${errDetail}`
-      );
+      validationErrors.errors.push(`Linha ${i + 1} (${piloto || "desconhecido"}): ${errDetail}`);
       continue; // Pula linha inválida
     }
 
@@ -613,9 +609,7 @@ function parseRankingCsv(text: string, pilotosMaps: PilotosMaps) {
   };
 }
 
-function toMetaPilot(
-  item: RankingItem | null | undefined
-): RankingMetaPilot | null {
+function toMetaPilot(item: RankingItem | null | undefined): RankingMetaPilot | null {
   if (!item) return null;
 
   return {
@@ -672,9 +666,7 @@ function buildCompetitionMeta(list: RankingItem[]): RankingCompetitionMeta {
   const leaderPoints = filtered[0]?.pontos || 0;
   const vicePoints = filtered[1]?.pontos || 0;
   const top6CutPoints =
-    totalPilots >= 6
-      ? filtered[5]?.pontos || 0
-      : filtered[totalPilots - 1]?.pontos || 0;
+    totalPilots >= 6 ? filtered[5]?.pontos || 0 : filtered[totalPilots - 1]?.pontos || 0;
 
   const totalPoints = filtered.reduce((sum, item) => sum + item.pontos, 0);
   const avgPoints = totalPilots > 0 ? totalPoints / totalPilots : 0;
@@ -698,20 +690,10 @@ function buildCompetitionMeta(list: RankingItem[]): RankingCompetitionMeta {
 
     podiumPressure =
       filtered.length >= 6
-        ? Math.max(
-            (filtered[2]?.pontos || 0) - (filtered[5]?.pontos || 0),
-            0
-          )
-        : Math.max(
-            (filtered[0]?.pontos || 0) -
-              (filtered[filtered.length - 1]?.pontos || 0),
-            0
-          );
+        ? Math.max((filtered[2]?.pontos || 0) - (filtered[5]?.pontos || 0), 0)
+        : Math.max((filtered[0]?.pontos || 0) - (filtered[filtered.length - 1]?.pontos || 0), 0);
 
-    const titleDiff = Math.max(
-      (filtered[0]?.pontos || 0) - (filtered[1]?.pontos || 0),
-      0
-    );
+    const titleDiff = Math.max((filtered[0]?.pontos || 0) - (filtered[1]?.pontos || 0), 0);
 
     if (filtered.length < 2) {
       titleHeat = "Sem disputa";
@@ -728,10 +710,7 @@ function buildCompetitionMeta(list: RankingItem[]): RankingCompetitionMeta {
       hottestLabel = "Ataque dominante";
     } else if ((hottestPilot?.podios || 0) >= 4) {
       hottestLabel = "Consistência premium";
-    } else if (
-      (hottestPilot?.poles || 0) >= 2 ||
-      (hottestPilot?.mv || 0) >= 2
-    ) {
+    } else if ((hottestPilot?.poles || 0) >= 2 || (hottestPilot?.mv || 0) >= 2) {
       hottestLabel = "Velocidade em alta";
     }
   }
@@ -785,7 +764,19 @@ function buildRankingMeta(grouped: RankingData): RankingMetaData {
   return meta;
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const key = getClientKey(req);
+  const rate = checkRateLimit(key);
+  if (!rate.ok) {
+    return NextResponse.json(
+      { error: "Muitas requisições. Tente novamente em alguns segundos." },
+      {
+        status: 429,
+        headers: { "Retry-After": String(rate.retryAfter) },
+      }
+    );
+  }
+
   try {
     const [rankingText, pilotosText] = await Promise.all([
       fetchWithTimeout(CSV_RANKING),
@@ -800,9 +791,7 @@ export async function GET() {
       console.warn(
         `[Ranking API] ${rankingParsed.debug.rejectedByValidation} linhas rejeitadas pela validação Zod:`
       );
-      rankingParsed.debug.validationErrors?.forEach((err: string) =>
-        console.warn(`  → ${err}`)
-      );
+      rankingParsed.debug.validationErrors?.forEach((err: string) => console.warn(`  → ${err}`));
     }
 
     const rankingMeta = buildRankingMeta(rankingParsed.grouped);
@@ -817,12 +806,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    return NextResponse.json(
-      {
-        error: "Erro ao buscar dados da planilha.",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
-      },
-      { status: 500 }
-    );
+    console.error("[Ranking API] erro:", error);
+    return NextResponse.json({ error: "Erro ao buscar dados da planilha." }, { status: 500 });
   }
 }

@@ -25,12 +25,11 @@ export default function AppPageHeader({
 
   useEffect(() => {
     const syncTheme = () => {
-      setResolvedDarkMode(
-        typeof isDarkMode === "boolean" ? isDarkMode : getStoredTheme()
-      );
+      setResolvedDarkMode(typeof isDarkMode === "boolean" ? isDarkMode : getStoredTheme());
     };
 
     syncTheme();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- mounted flag required for SSR hydration consistency
     setMounted(true);
 
     window.addEventListener("storage", syncTheme);
@@ -38,10 +37,7 @@ export default function AppPageHeader({
 
     return () => {
       window.removeEventListener("storage", syncTheme);
-      window.removeEventListener(
-        "caserna-theme-change",
-        syncTheme as EventListener
-      );
+      window.removeEventListener("caserna-theme-change", syncTheme as EventListener);
     };
   }, [isDarkMode]);
 
@@ -59,11 +55,7 @@ export default function AppPageHeader({
         </h1>
 
         {subtitle && (
-          <p
-            className={`mt-1 text-[12px] font-medium ${
-              dark ? "text-zinc-400" : "text-zinc-500"
-            }`}
-          >
+          <p className={`mt-1 text-[12px] font-medium ${dark ? "text-zinc-400" : "text-zinc-500"}`}>
             {subtitle}
           </p>
         )}

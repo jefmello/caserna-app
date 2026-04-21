@@ -1,7 +1,13 @@
 "use client";
 
 import React from "react";
+import dynamic from "next/dynamic";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const TopPointsBarChart = dynamic(() => import("@/components/charts/top-points-bar-chart"), {
+  ssr: false,
+  loading: () => <div className="h-full w-full animate-pulse rounded-2xl bg-zinc-100/50" />,
+});
 
 type ThemeLike = {
   darkAccentIconWrap: string;
@@ -19,20 +25,11 @@ type ChartPoint = {
   pontos: number;
 };
 
-type GenericComponent = React.ComponentType<any>;
-
 type RankingStatsTopPointsChartCardProps = {
   topPointsChartData: ChartPoint[];
   theme: ThemeLike;
   isDarkMode: boolean;
   BarChart3Icon: React.ElementType;
-  ResponsiveContainerComponent: GenericComponent;
-  CartesianGridComponent: GenericComponent;
-  XAxisComponent: GenericComponent;
-  YAxisComponent: GenericComponent;
-  TooltipComponent: GenericComponent;
-  BarChartComponent: GenericComponent;
-  BarComponent: GenericComponent;
 };
 
 export default function RankingStatsTopPointsChartCard({
@@ -40,13 +37,6 @@ export default function RankingStatsTopPointsChartCard({
   theme,
   isDarkMode,
   BarChart3Icon,
-  ResponsiveContainerComponent,
-  CartesianGridComponent,
-  XAxisComponent,
-  YAxisComponent,
-  TooltipComponent,
-  BarChartComponent,
-  BarComponent,
 }: RankingStatsTopPointsChartCardProps) {
   return (
     <Card
@@ -62,9 +52,7 @@ export default function RankingStatsTopPointsChartCard({
         }`}
       >
         <CardTitle
-          className={`flex items-center gap-3 ${
-            isDarkMode ? "text-white" : "text-zinc-950"
-          }`}
+          className={`flex items-center gap-3 ${isDarkMode ? "text-white" : "text-zinc-950"}`}
         >
           <div
             className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
@@ -72,14 +60,12 @@ export default function RankingStatsTopPointsChartCard({
             }`}
           >
             <BarChart3Icon
-              className={`h-5 w-5 ${
-                isDarkMode ? theme.darkAccentText : theme.statsIcon
-              }`}
+              className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.statsIcon}`}
             />
           </div>
           <div>
             <p
-              className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+              className={`text-[9px] font-bold tracking-[0.14em] uppercase ${
                 isDarkMode ? "text-zinc-500" : "text-zinc-400"
               }`}
             >
@@ -108,36 +94,14 @@ export default function RankingStatsTopPointsChartCard({
             Nenhum dado disponível para este campeonato.
           </div>
         ) : (
-          <ResponsiveContainerComponent width="100%" height="100%">
-            <BarChartComponent data={topPointsChartData}>
-              <CartesianGridComponent
-                stroke={isDarkMode ? "rgba(255,255,255,0.08)" : theme.chartGrid}
-                strokeDasharray="3 3"
-              />
-              <XAxisComponent
-                dataKey="piloto"
-                stroke={isDarkMode ? "#9ca3af" : theme.chartAxis}
-              />
-              <YAxisComponent
-                stroke={isDarkMode ? "#9ca3af" : theme.chartAxis}
-              />
-              <TooltipComponent
-                contentStyle={{
-                  background: isDarkMode ? "#111827" : "#ffffff",
-                  border: isDarkMode
-                    ? "1px solid rgba(255,255,255,0.10)"
-                    : "1px solid rgba(15,23,42,0.08)",
-                  color: isDarkMode ? "#ffffff" : "#111827",
-                  borderRadius: 16,
-                }}
-              />
-              <BarComponent
-                dataKey="pontos"
-                fill={isDarkMode ? theme.darkChartBar : theme.chartBar}
-                radius={[10, 10, 0, 0]}
-              />
-            </BarChartComponent>
-          </ResponsiveContainerComponent>
+          <TopPointsBarChart
+            data={topPointsChartData}
+            isDarkMode={isDarkMode}
+            chartGrid={theme.chartGrid}
+            chartAxis={theme.chartAxis}
+            chartBar={theme.chartBar}
+            darkChartBar={theme.darkChartBar}
+          />
         )}
       </CardContent>
     </Card>

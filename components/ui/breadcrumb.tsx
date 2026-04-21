@@ -34,11 +34,7 @@ export default function Breadcrumb({ items, isDark = false }: BreadcrumbProps) {
           const isLast = index === items.length - 1;
           return (
             <li key={item.href || item.label} className="flex items-center gap-1">
-              <ChevronRight
-                className={`h-3 w-3 ${
-                  isDark ? "text-zinc-600" : "text-zinc-300"
-                }`}
-              />
+              <ChevronRight className={`h-3 w-3 ${isDark ? "text-zinc-600" : "text-zinc-300"}`} />
               {item.href && !isLast ? (
                 <Link
                   href={item.href}

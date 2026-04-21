@@ -1,14 +1,16 @@
 "use client";
 
 import React from "react";
+import type { CategoryTheme } from "@/lib/ranking/theme-utils";
+import type { RankingItem } from "@/types/ranking";
 
 type RankingStatsMetricCardsGridProps = {
   StatRankingCardComponent: React.ElementType;
-  topVitorias: any[];
-  topPoles: any[];
-  topMv: any[];
-  topPodios: any[];
-  theme: any;
+  topVitorias: RankingItem[];
+  topPoles: RankingItem[];
+  topMv: RankingItem[];
+  topPodios: RankingItem[];
+  theme: CategoryTheme;
   isDarkMode: boolean;
   TrophyIcon: React.ElementType;
   FlagIcon: React.ElementType;

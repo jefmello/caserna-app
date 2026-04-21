@@ -22,40 +22,33 @@ declare global {
   }
 }
 
-function getAccentLayers(
-  categoryAccent: CategoryAccent,
-  isDarkMode: boolean
-) {
+function getAccentLayers(categoryAccent: CategoryAccent, isDarkMode: boolean) {
   if (isDarkMode) {
     switch (categoryAccent) {
       case "base":
         return {
-          glow:
-            "bg-[radial-gradient(circle_at_top,rgba(249,115,22,0.18),transparent_34%),radial-gradient(circle_at_18%_18%,rgba(251,146,60,0.09),transparent_24%),radial-gradient(circle_at_bottom,rgba(249,115,22,0.06),transparent_28%)]",
+          glow: "bg-[radial-gradient(circle_at_top,rgba(249,115,22,0.18),transparent_34%),radial-gradient(circle_at_18%_18%,rgba(251,146,60,0.09),transparent_24%),radial-gradient(circle_at_bottom,rgba(249,115,22,0.06),transparent_28%)]",
           line: "from-orange-400/40 via-orange-300/14 to-transparent",
           ring: "border-orange-400/20",
           edgeGlow: "shadow-[0_0_0_1px_rgba(251,146,60,0.08),0_28px_90px_rgba(249,115,22,0.12)]",
         };
       case "graduados":
         return {
-          glow:
-            "bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_34%),radial-gradient(circle_at_18%_18%,rgba(96,165,250,0.09),transparent_24%),radial-gradient(circle_at_bottom,rgba(59,130,246,0.06),transparent_28%)]",
+          glow: "bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_34%),radial-gradient(circle_at_18%_18%,rgba(96,165,250,0.09),transparent_24%),radial-gradient(circle_at_bottom,rgba(59,130,246,0.06),transparent_28%)]",
           line: "from-blue-400/42 via-blue-300/14 to-transparent",
           ring: "border-blue-400/20",
           edgeGlow: "shadow-[0_0_0_1px_rgba(96,165,250,0.08),0_28px_90px_rgba(59,130,246,0.12)]",
         };
       case "elite":
         return {
-          glow:
-            "bg-[radial-gradient(circle_at_top,rgba(250,204,21,0.2),transparent_34%),radial-gradient(circle_at_18%_18%,rgba(253,224,71,0.1),transparent_24%),radial-gradient(circle_at_bottom,rgba(250,204,21,0.06),transparent_28%)]",
+          glow: "bg-[radial-gradient(circle_at_top,rgba(250,204,21,0.2),transparent_34%),radial-gradient(circle_at_18%_18%,rgba(253,224,71,0.1),transparent_24%),radial-gradient(circle_at_bottom,rgba(250,204,21,0.06),transparent_28%)]",
           line: "from-yellow-300/44 via-yellow-200/15 to-transparent",
           ring: "border-yellow-300/22",
           edgeGlow: "shadow-[0_0_0_1px_rgba(253,224,71,0.08),0_28px_90px_rgba(250,204,21,0.13)]",
         };
       default:
         return {
-          glow:
-            "bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_34%),radial-gradient(circle_at_bottom,rgba(255,255,255,0.02),transparent_28%)]",
+          glow: "bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_34%),radial-gradient(circle_at_bottom,rgba(255,255,255,0.02),transparent_28%)]",
           line: "from-white/18 via-white/6 to-transparent",
           ring: "border-white/10",
           edgeGlow: "shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_24px_80px_rgba(0,0,0,0.12)]",
@@ -66,32 +59,28 @@ function getAccentLayers(
   switch (categoryAccent) {
     case "base":
       return {
-        glow:
-          "bg-[radial-gradient(circle_at_top,rgba(249,115,22,0.14),transparent_34%),radial-gradient(circle_at_18%_18%,rgba(251,146,60,0.08),transparent_24%),radial-gradient(circle_at_bottom,rgba(249,115,22,0.05),transparent_28%)]",
+        glow: "bg-[radial-gradient(circle_at_top,rgba(249,115,22,0.14),transparent_34%),radial-gradient(circle_at_18%_18%,rgba(251,146,60,0.08),transparent_24%),radial-gradient(circle_at_bottom,rgba(249,115,22,0.05),transparent_28%)]",
         line: "from-orange-500/30 via-orange-300/12 to-transparent",
         ring: "border-orange-300/45",
         edgeGlow: "shadow-[0_0_0_1px_rgba(251,146,60,0.05),0_24px_80px_rgba(249,115,22,0.08)]",
       };
     case "graduados":
       return {
-        glow:
-          "bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.14),transparent_34%),radial-gradient(circle_at_18%_18%,rgba(96,165,250,0.08),transparent_24%),radial-gradient(circle_at_bottom,rgba(59,130,246,0.05),transparent_28%)]",
+        glow: "bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.14),transparent_34%),radial-gradient(circle_at_18%_18%,rgba(96,165,250,0.08),transparent_24%),radial-gradient(circle_at_bottom,rgba(59,130,246,0.05),transparent_28%)]",
         line: "from-blue-500/30 via-blue-300/12 to-transparent",
         ring: "border-blue-300/45",
         edgeGlow: "shadow-[0_0_0_1px_rgba(96,165,250,0.05),0_24px_80px_rgba(59,130,246,0.08)]",
       };
     case "elite":
       return {
-        glow:
-          "bg-[radial-gradient(circle_at_top,rgba(250,204,21,0.16),transparent_34%),radial-gradient(circle_at_18%_18%,rgba(253,224,71,0.08),transparent_24%),radial-gradient(circle_at_bottom,rgba(250,204,21,0.06),transparent_28%)]",
+        glow: "bg-[radial-gradient(circle_at_top,rgba(250,204,21,0.16),transparent_34%),radial-gradient(circle_at_18%_18%,rgba(253,224,71,0.08),transparent_24%),radial-gradient(circle_at_bottom,rgba(250,204,21,0.06),transparent_28%)]",
         line: "from-yellow-500/32 via-yellow-300/13 to-transparent",
         ring: "border-yellow-300/48",
         edgeGlow: "shadow-[0_0_0_1px_rgba(253,224,71,0.05),0_24px_80px_rgba(250,204,21,0.08)]",
       };
     default:
       return {
-        glow:
-          "bg-[radial-gradient(circle_at_top,rgba(15,23,42,0.05),transparent_36%),radial-gradient(circle_at_bottom,rgba(15,23,42,0.025),transparent_28%)]",
+        glow: "bg-[radial-gradient(circle_at_top,rgba(15,23,42,0.05),transparent_36%),radial-gradient(circle_at_bottom,rgba(15,23,42,0.025),transparent_28%)]",
         line: "from-slate-500/18 via-slate-400/8 to-transparent",
         ring: "border-black/5",
         edgeGlow: "shadow-[0_24px_80px_rgba(15,23,42,0.08)]",
@@ -121,16 +110,10 @@ export default function AppSectionShell({
       setLiveCategoryAccent(nextAccent);
     };
 
-    window.addEventListener(
-      "caserna-category-accent-change",
-      handleCategoryAccentChange
-    );
+    window.addEventListener("caserna-category-accent-change", handleCategoryAccentChange);
 
     return () => {
-      window.removeEventListener(
-        "caserna-category-accent-change",
-        handleCategoryAccentChange
-      );
+      window.removeEventListener("caserna-category-accent-change", handleCategoryAccentChange);
     };
   }, []);
 
@@ -155,9 +138,7 @@ export default function AppSectionShell({
       data-theme={isDarkMode ? "dark" : "light"}
       data-category-accent={liveCategoryAccent}
       className={`relative min-h-screen w-full transition-colors duration-300 ${
-        isDarkMode
-          ? "bg-transparent text-white"
-          : "bg-transparent text-zinc-950"
+        isDarkMode ? "bg-transparent text-white" : "bg-transparent text-zinc-950"
       }`}
     >
       <div
@@ -193,8 +174,8 @@ export default function AppSectionShell({
             aria-hidden="true"
             className={`pointer-events-none absolute inset-0 ${
               isDarkMode
-                ? "bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:24px_24px] opacity-35 [mask-image:radial-gradient(circle_at_center,black,transparent_88%)]"
-                : "bg-[linear-gradient(rgba(15,23,42,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.02)_1px,transparent_1px)] bg-[size:24px_24px] opacity-40 [mask-image:radial-gradient(circle_at_center,black,transparent_88%)]"
+                ? "bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] [mask-image:radial-gradient(circle_at_center,black,transparent_88%)] bg-[size:24px_24px] opacity-35"
+                : "bg-[linear-gradient(rgba(15,23,42,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.02)_1px,transparent_1px)] [mask-image:radial-gradient(circle_at_center,black,transparent_88%)] bg-[size:24px_24px] opacity-40"
             }`}
           />
 
@@ -205,9 +186,7 @@ export default function AppSectionShell({
             } ${accentLayers.glow}`}
           />
 
-          <div className="relative z-[1] p-3 sm:p-4 lg:p-5 xl:p-6">
-            {children}
-          </div>
+          <div className="relative z-[1] p-3 sm:p-4 lg:p-5 xl:p-6">{children}</div>
         </div>
 
         <AppSponsorsStrip isDarkMode={isDarkMode} />

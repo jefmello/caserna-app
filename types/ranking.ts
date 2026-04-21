@@ -60,3 +60,7 @@ export type RankingCompetitionMeta = {
 };
 
 export type RankingMetaData = Record<string, Record<string, RankingCompetitionMeta>>;
+
+export type StatsSummary = RankingCompetitionMeta["summary"];
+export type StatsRadar = RankingCompetitionMeta["radar"];
+export type TitleFightStatus = RankingCompetitionMeta["titleFight"];

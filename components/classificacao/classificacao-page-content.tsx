@@ -38,12 +38,14 @@ export default function ClassificacaoPageContent() {
   const router = useRouter();
   const { isDarkMode, toggleTheme, categoria, campeonato } = useChampionship();
 
-  const { rankingData, rankingMeta, categories, loading, error, retry } =
-    useRankingData({ categoria, campeonato });
+  const { rankingData, rankingMeta, categories, loading, error, retry } = useRankingData({
+    categoria,
+    campeonato,
+  });
 
   const {
     category,
-    setCategory,
+    setCategory: _setCategory,
     competition,
     setCompetition,
     search,
@@ -90,16 +92,15 @@ export default function ClassificacaoPageContent() {
   const headerCategories: string[] = [];
   const handleHeaderCategoryChange = () => {};
 
-  const { theme, pilotTrendMap, titleFightStatus } =
-    useRankingScreenController({
-      category,
-      competition,
-      isDarkMode,
-      filteredRanking,
-      rankingData,
-      leader,
-      currentCompetitionMeta,
-    });
+  const { theme, pilotTrendMap, titleFightStatus } = useRankingScreenController({
+    category,
+    competition,
+    isDarkMode,
+    filteredRanking,
+    rankingData,
+    leader,
+    currentCompetitionMeta,
+  });
 
   const statsSummary = useMemo(() => {
     if (currentCompetitionMeta?.summary) {
@@ -114,20 +115,11 @@ export default function ClassificacaoPageContent() {
         ? filteredRanking[5]?.pontos || 0
         : filteredRanking[totalPilots - 1]?.pontos || 0;
 
-    const totalPoints = filteredRanking.reduce(
-      (sum, item) => sum + item.pontos,
-      0
-    );
+    const totalPoints = filteredRanking.reduce((sum, item) => sum + item.pontos, 0);
     const avgPoints = totalPilots > 0 ? totalPoints / totalPilots : 0;
 
-    const totalVictories = filteredRanking.reduce(
-      (sum, item) => sum + item.vitorias,
-      0
-    );
-    const totalPodiums = filteredRanking.reduce(
-      (sum, item) => sum + item.podios,
-      0
-    );
+    const totalVictories = filteredRanking.reduce((sum, item) => sum + item.vitorias, 0);
+    const totalPodiums = filteredRanking.reduce((sum, item) => sum + item.podios, 0);
 
     return {
       totalPilots,
@@ -165,11 +157,7 @@ export default function ClassificacaoPageContent() {
 
     const podiumPressure =
       filteredRanking.length >= 6
-        ? Math.max(
-            (filteredRanking[2]?.pontos || 0) -
-              (filteredRanking[5]?.pontos || 0),
-            0
-          )
+        ? Math.max((filteredRanking[2]?.pontos || 0) - (filteredRanking[5]?.pontos || 0), 0)
         : Math.max(
             (filteredRanking[0]?.pontos || 0) -
               (filteredRanking[filteredRanking.length - 1]?.pontos || 0),
@@ -197,10 +185,7 @@ export default function ClassificacaoPageContent() {
       hottestLabel = "Ataque dominante";
     } else if ((hottestPilot?.podios || 0) >= 4) {
       hottestLabel = "Consistência premium";
-    } else if (
-      (hottestPilot?.poles || 0) >= 2 ||
-      (hottestPilot?.mv || 0) >= 2
-    ) {
+    } else if ((hottestPilot?.poles || 0) >= 2 || (hottestPilot?.mv || 0) >= 2) {
       hottestLabel = "Velocidade em alta";
     }
 
@@ -271,10 +256,7 @@ export default function ClassificacaoPageContent() {
       const dataUrl = await generateImage(shareCardRef.current);
       if (!dataUrl) return;
 
-      download(
-        dataUrl,
-        `classificacao-${category.toLowerCase()}-${competition.toLowerCase()}.png`
-      );
+      download(dataUrl, `classificacao-${category.toLowerCase()}-${competition.toLowerCase()}.png`);
     } catch (err) {
       console.error(err);
       window.alert("Não foi possível gerar a imagem da classificação.");
@@ -300,14 +282,8 @@ export default function ClassificacaoPageContent() {
                 isDarkMode ? "bg-white/8" : "bg-zinc-100"
               }`}
             />
-            <p className="text-xl font-semibold tracking-tight">
-              Carregando campeonato...
-            </p>
-            <p
-              className={`mt-2 text-sm ${
-                isDarkMode ? "text-zinc-400" : "text-zinc-500"
-              }`}
-            >
+            <p className="text-xl font-semibold tracking-tight">Carregando campeonato...</p>
+            <p className={`mt-2 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
               Preparando classificação oficial
             </p>
           </div>
@@ -329,13 +305,7 @@ export default function ClassificacaoPageContent() {
             }`}
           >
             <p className="text-2xl font-semibold tracking-tight">Erro</p>
-            <p
-              className={`mt-2 ${
-                isDarkMode ? "text-zinc-300" : "text-zinc-600"
-              }`}
-            >
-              {error}
-            </p>
+            <p className={`mt-2 ${isDarkMode ? "text-zinc-300" : "text-zinc-600"}`}>{error}</p>
             <button
               onClick={handleRetry}
               className={`mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-2xl border px-4 py-3 text-sm font-semibold transition ${
@@ -346,11 +316,7 @@ export default function ClassificacaoPageContent() {
             >
               Tentar novamente
             </button>
-            <p
-              className={`mt-4 text-sm ${
-                isDarkMode ? "text-zinc-400" : "text-zinc-500"
-              }`}
-            >
+            <p className={`mt-4 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
               Ou abra <strong>/api/ranking</strong> no navegador para testar.
             </p>
           </div>
@@ -361,117 +327,113 @@ export default function ClassificacaoPageContent() {
 
   return (
     <PageTransition>
-      <div
-        className={`min-h-screen ${isDarkMode ? "bg-[#05070a] text-white" : ""}`}
-      >
+      <div className={`min-h-screen ${isDarkMode ? "bg-[#05070a] text-white" : ""}`}>
         <div className="relative mx-auto mt-4 w-full max-w-[1600px]">
-        {isDarkMode && (
-          <>
-            <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(180deg,#05070a_0%,#070b11_38%,#05070a_100%)]" />
-            <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-40 rounded-[36px] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.045),transparent_62%)]" />
-            <div className="pointer-events-none absolute right-0 top-8 -z-10 h-28 w-28 rounded-full bg-amber-300/4 blur-3xl" />
-          </>
-        )}
+          {isDarkMode && (
+            <>
+              <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(180deg,#05070a_0%,#070b11_38%,#05070a_100%)]" />
+              <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-40 rounded-[36px] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.045),transparent_62%)]" />
+              <div className="pointer-events-none absolute top-8 right-0 -z-10 h-28 w-28 rounded-full bg-amber-300/4 blur-3xl" />
+            </>
+          )}
 
-        <div className="relative space-y-3 lg:space-y-4 xl:space-y-5">
-          <RankingHeader
-            theme={theme}
-            categories={headerCategories}
-            category={category}
-            setCategory={handleHeaderCategoryChange}
-            availableCompetitions={availableCompetitions}
-            competition={competition}
-            setCompetition={setCompetition}
-            competitionLabels={competitionLabels}
-            toggleDarkMode={toggleTheme}
-          />
+          <div className="relative space-y-3 lg:space-y-4 xl:space-y-5">
+            <RankingHeader
+              theme={theme}
+              categories={headerCategories}
+              category={category}
+              setCategory={handleHeaderCategoryChange}
+              availableCompetitions={availableCompetitions}
+              competition={competition}
+              setCompetition={setCompetition}
+              competitionLabels={competitionLabels}
+              toggleDarkMode={toggleTheme}
+            />
 
-          <Breadcrumb
-            items={[
-              { label: "Classificação", href: "/classificacao" },
-            ]}
-            isDark={isDarkMode}
-          />
+            <Breadcrumb
+              items={[{ label: "Classificação", href: "/classificacao" }]}
+              isDark={isDarkMode}
+            />
 
-          <RankingSearchCard
-            isDarkMode={isDarkMode}
-            theme={theme}
-            competition={competition}
-            competitionLabels={competitionLabels}
-            search={search}
-            onSearchChange={setSearch}
-          />
+            <RankingSearchCard
+              isDarkMode={isDarkMode}
+              theme={theme}
+              competition={competition}
+              competitionLabels={competitionLabels}
+              search={search}
+              onSearchChange={setSearch}
+            />
 
-          <ClassificacaoMainTableSection
-            isDarkMode={isDarkMode}
-            theme={theme}
-            category={category}
-            competition={competition}
-            filteredRanking={filteredRanking}
-            leader={leader}
-            titleFightStatus={titleFightStatus}
-            pilotTrendMap={pilotTrendMap}
-            onSelectPilot={handleSelectPilot}
-          />
+            <ClassificacaoMainTableSection
+              isDarkMode={isDarkMode}
+              theme={theme}
+              category={category}
+              competition={competition}
+              filteredRanking={filteredRanking}
+              leader={leader}
+              titleFightStatus={titleFightStatus}
+              pilotTrendMap={pilotTrendMap}
+              onSelectPilot={handleSelectPilot}
+            />
 
-          <SectionDivider />
+            <SectionDivider />
 
-          <ClassificacaoHeroSection
-            isDarkMode={isDarkMode}
-            theme={theme}
-            category={category}
-            competition={competition}
-            filteredRanking={filteredRanking}
-            titleFightStatus={titleFightStatus}
-            statsSummary={statsSummary}
-            statsRadar={statsRadar}
-            bestEfficiencyPilot={bestEfficiencyPilot}
-            championshipNarrative={championshipNarrative}
-            editorialCards={editorialCards}
-            isSharingImage={isSharingImage}
-            onShareClassification={handleShareClassification}
-          />
-        </div>
+            <ClassificacaoHeroSection
+              isDarkMode={isDarkMode}
+              theme={theme}
+              category={category}
+              competition={competition}
+              filteredRanking={filteredRanking}
+              titleFightStatus={titleFightStatus}
+              statsSummary={statsSummary}
+              statsRadar={statsRadar}
+              bestEfficiencyPilot={bestEfficiencyPilot}
+              championshipNarrative={championshipNarrative}
+              editorialCards={editorialCards}
+              isSharingImage={isSharingImage}
+              onShareClassification={handleShareClassification}
+            />
+          </div>
 
-        <div className="pointer-events-none fixed -left-[9999px] top-0 z-[-1] opacity-0">
-          <RankingShareCanvas
-            isDarkMode={isDarkMode}
-            theme={theme}
-            category={category}
-            competition={competition}
-            competitionLabels={competitionLabels}
-            leader={leader}
-            statsSummary={statsSummary}
-            championshipNarrative={championshipNarrative}
-            comparePilotA={null}
-            comparePilotB={null}
-            duelSummary={null}
-            duelIntensity={{
-              label: "SEM LEITURA",
-              tone: isDarkMode
-                ? "border-white/10 bg-white/5 text-zinc-300"
-                : "border-zinc-200 bg-zinc-50 text-zinc-600",
-            }}
-            filteredRanking={filteredRanking}
-            pilotTrendMap={pilotTrendMap}
-            getPilotFirstAndLastName={getPilotFirstAndLastName}
-            getPilotWarNameDisplay={getPilotWarNameDisplay}
-            getTop6RowStyles={getTop6RowStyles}
-            getTrendVisual={getTrendVisual}
-            normalizePilotName={normalizePilotName}
-            refs={{
-              leaderShareCardRef,
-              narrativeShareCardRef,
-              duelShareCardRef,
-              shareCardRef,
-              fullClassificationShareCardRef,
-              podiumCardRef,
-              evolutionCardRef,
-            }}
-          />
+          <div className="pointer-events-none fixed top-0 -left-[9999px] z-[-1] opacity-0">
+            <RankingShareCanvas
+              isDarkMode={isDarkMode}
+              theme={theme}
+              category={category}
+              competition={competition}
+              competitionLabels={competitionLabels}
+              leader={leader}
+              statsSummary={statsSummary}
+              championshipNarrative={championshipNarrative}
+              comparePilotA={null}
+              comparePilotB={null}
+              duelSummary={null}
+              duelIntensity={{
+                label: "SEM LEITURA",
+                tone: isDarkMode
+                  ? "border-white/10 bg-white/5 text-zinc-300"
+                  : "border-zinc-200 bg-zinc-50 text-zinc-600",
+              }}
+              filteredRanking={filteredRanking}
+              pilotTrendMap={pilotTrendMap}
+              getPilotFirstAndLastName={getPilotFirstAndLastName}
+              getPilotWarNameDisplay={getPilotWarNameDisplay}
+              getTop6RowStyles={getTop6RowStyles}
+              getTrendVisual={getTrendVisual}
+              normalizePilotName={normalizePilotName}
+              refs={{
+                leaderShareCardRef,
+                narrativeShareCardRef,
+                duelShareCardRef,
+                shareCardRef,
+                fullClassificationShareCardRef,
+                podiumCardRef,
+                evolutionCardRef,
+              }}
+            />
+          </div>
         </div>
       </div>
-    </div>
       <ScrollToTopButton isDark={isDarkMode} />
     </PageTransition>
   );

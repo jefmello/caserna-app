@@ -42,7 +42,7 @@ export function ScrollToTopButton({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 16 }}
           transition={{ duration: 0.2 }}
-          className={`fixed bottom-20 right-4 z-40 flex h-11 w-11 items-center justify-center rounded-full shadow-lg transition-transform active:scale-95 lg:bottom-8 ${
+          className={`fixed right-4 bottom-20 z-40 flex h-11 w-11 items-center justify-center rounded-full shadow-lg transition-transform active:scale-95 lg:bottom-8 ${
             isDark
               ? "bg-zinc-800 text-white hover:bg-zinc-700"
               : "bg-white text-zinc-900 hover:bg-zinc-50"

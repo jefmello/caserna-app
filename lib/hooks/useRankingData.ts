@@ -50,10 +50,7 @@ const MAX_BACKOFF_MS = 60000;
  * Calcula o delay com exponential backoff + jitter para evitar thundering herd.
  */
 function getBackoffDelay(consecutiveFailures: number): number {
-  const exponential = Math.min(
-    BASE_BACKOFF_MS * 2 ** consecutiveFailures,
-    MAX_BACKOFF_MS
-  );
+  const exponential = Math.min(BASE_BACKOFF_MS * 2 ** consecutiveFailures, MAX_BACKOFF_MS);
   const jitter = Math.random() * 0.3 * exponential;
   return exponential + jitter;
 }
@@ -73,9 +70,7 @@ function getSharedFetch(): Promise<RankingApiResponse> {
   sharedFetchPromise = fetch("/api/ranking").then(async (res) => {
     const json = await res.json();
     if (!res.ok) {
-      throw new Error(
-        (json?.error as string) || "Erro ao carregar os dados da classificação."
-      );
+      throw new Error((json?.error as string) || "Erro ao carregar os dados da classificação.");
     }
     return json as RankingApiResponse;
   });
@@ -121,7 +116,7 @@ function getCacheKey(categoria?: string, campeonato?: string): string {
 
 export function useRankingData({
   initialCategory = "Elite",
-  timeoutMs = 20000,
+  timeoutMs: _timeoutMs = 20000,
   revalidateIntervalMs = 60000,
   categoria,
   campeonato,
@@ -131,18 +126,11 @@ export function useRankingData({
   const initialData = useMemo(() => {
     const entry = cache.get(cKey);
     return entry ?? null;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cKey]);
 
-  const [rankingData, setRankingData] = useState<RankingData>(
-    () => initialData?.data ?? {}
-  );
-  const [rankingMeta, setRankingMeta] = useState<RankingMetaData>(
-    () => initialData?.meta ?? {}
-  );
-  const [categories, setCategories] = useState<string[]>(
-    () => initialData?.categories ?? []
-  );
+  const [rankingData, setRankingData] = useState<RankingData>(() => initialData?.data ?? {});
+  const [rankingMeta, setRankingMeta] = useState<RankingMetaData>(() => initialData?.meta ?? {});
+  const [categories, setCategories] = useState<string[]>(() => initialData?.categories ?? []);
   const [loading, setLoading] = useState(!initialData);
   const [error, setError] = useState("");
   const [retryCount, setRetryCount] = useState(0);
@@ -161,15 +149,13 @@ export function useRankingData({
    */
   const invalidateCache = useCallback(() => {
     cache.delete(cKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cKey]);
 
   const retry = useCallback(() => {
     invalidateCache();
     setRetryCount((prev) => prev + 1);
     consecutiveFailuresRef.current = 0; // Reseta backoff no retry manual
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [invalidateCache, cKey]);
+  }, [invalidateCache]);
 
   const syncCategory = useCallback(
     (currentCategory: string) => {
@@ -177,9 +163,7 @@ export function useRankingData({
         return currentCategory || initialCategory;
       }
 
-      return categories.includes(currentCategory)
-        ? currentCategory
-        : categories[0];
+      return categories.includes(currentCategory) ? currentCategory : categories[0];
     },
     [categories, initialCategory]
   );
@@ -194,11 +178,7 @@ export function useRankingData({
         // Se cache válido e não é retry, usar cache
         const cached = cache.get(cKey);
 
-        if (
-          retryCount === 0 &&
-          cached &&
-          Date.now() - cached.timestamp < CACHE_TTL_MS
-        ) {
+        if (retryCount === 0 && cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
           setRankingData(cached.data);
           setRankingMeta(cached.meta);
           setCategories(cached.categories);
@@ -249,8 +229,7 @@ export function useRankingData({
         consecutiveFailuresRef.current = 0;
       } catch (err: unknown) {
         if (isMountedRef.current) {
-          const rawMessage =
-            err instanceof Error ? err.message : "Erro desconhecido.";
+          const rawMessage = err instanceof Error ? err.message : "Erro desconhecido.";
           setError(sanitizeApiError(rawMessage));
           consecutiveFailuresRef.current++;
         }
@@ -269,10 +248,7 @@ export function useRankingData({
         const failures = consecutiveFailuresRef.current;
 
         // Se há falhas consecutivas, usa backoff; senão, usa intervalo normal
-        const delay =
-          failures > 0
-            ? getBackoffDelay(failures)
-            : revalidateIntervalMs;
+        const delay = failures > 0 ? getBackoffDelay(failures) : revalidateIntervalMs;
 
         intervalId = setTimeout(() => {
           if (!isMountedRef.current) return;
@@ -304,16 +280,7 @@ export function useRankingData({
       retry,
       syncCategory,
     }),
-    [
-      rankingData,
-      rankingMeta,
-      categories,
-      loading,
-      error,
-      retryCount,
-      retry,
-      syncCategory,
-    ]
+    [rankingData, rankingMeta, categories, loading, error, retryCount, retry, syncCategory]
   );
 }
 

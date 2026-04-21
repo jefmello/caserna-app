@@ -4,25 +4,20 @@ import { useCallback, useMemo, useState } from "react";
 import {
   Flag,
   RotateCcw,
-  Trophy,
   TrendingUp,
   TrendingDown,
   Minus,
   Sparkles,
   AlertTriangle,
   Timer,
-  ChevronDown,
-  X,
 } from "lucide-react";
 import type { RankingItem } from "@/types/ranking";
 import { getPilotFirstAndLastName } from "@/lib/ranking/pilot-name-utils";
 import { getCategoryTheme } from "@/lib/ranking/theme-utils";
 import { resolvePilotKey } from "@/lib/ranking/stage-points-engine";
-import { NO_POLE_STAGES } from "@/lib/ranking/stage-points-engine";
 import {
   runCustomScenario,
   getBasePositionPoints,
-  isValidPosition,
   type CustomScenarioAssignment,
   type CustomScenarioResult,
 } from "@/lib/ranking/custom-scenario-engine";
@@ -134,7 +129,7 @@ function BonusPilotSelector({
 
       <div className="min-w-0 flex-1">
         <p
-          className={`text-[10px] font-semibold uppercase tracking-wider ${
+          className={`text-[10px] font-semibold tracking-wider uppercase ${
             isDarkMode ? "text-zinc-500" : "text-zinc-400"
           }`}
         >
@@ -200,9 +195,7 @@ function PilotRow({
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span
-            className={`text-xs font-semibold ${
-              isDarkMode ? "text-zinc-500" : "text-zinc-400"
-            }`}
+            className={`text-xs font-semibold ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}
           >
             #{currentPosition}
           </span>
@@ -214,11 +207,7 @@ function PilotRow({
             {getPilotFirstAndLastName(pilot.piloto)}
           </p>
         </div>
-        <p
-          className={`mt-0.5 text-xs ${
-            isDarkMode ? "text-zinc-500" : "text-zinc-400"
-          }`}
-        >
+        <p className={`mt-0.5 text-xs ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
           {pilot.pontos} pts
         </p>
       </div>
@@ -253,9 +242,7 @@ function ScenarioResults({
       {leaderChange.oldLeader !== leaderChange.newLeader && (
         <div
           className={`rounded-2xl border p-4 text-center ${
-            isDarkMode
-              ? "border-yellow-500/30 bg-yellow-500/10"
-              : "border-yellow-200 bg-yellow-50"
+            isDarkMode ? "border-yellow-500/30 bg-yellow-500/10" : "border-yellow-200 bg-yellow-50"
           }`}
         >
           <p
@@ -265,11 +252,7 @@ function ScenarioResults({
           >
             ⚡ Troca na liderança!
           </p>
-          <p
-            className={`mt-1 text-xs ${
-              isDarkMode ? "text-yellow-400/80" : "text-yellow-600"
-            }`}
-          >
+          <p className={`mt-1 text-xs ${isDarkMode ? "text-yellow-400/80" : "text-yellow-600"}`}>
             {leaderChange.newLeader && getPilotFirstAndLastName(leaderChange.newLeader)} assume com{" "}
             {projectedRanking[0]?.projectedPoints || 0} pts
           </p>
@@ -288,12 +271,10 @@ function ScenarioResults({
           >
             <div className="flex items-center gap-1.5">
               <TrendingUp
-                className={`h-3.5 w-3.5 ${
-                  isDarkMode ? "text-emerald-300" : "text-emerald-600"
-                }`}
+                className={`h-3.5 w-3.5 ${isDarkMode ? "text-emerald-300" : "text-emerald-600"}`}
               />
               <span
-                className={`text-[10px] font-semibold uppercase tracking-wider ${
+                className={`text-[10px] font-semibold tracking-wider uppercase ${
                   isDarkMode ? "text-emerald-400" : "text-emerald-700"
                 }`}
               >
@@ -313,19 +294,15 @@ function ScenarioResults({
         {biggestLoser && (
           <div
             className={`rounded-xl border p-3 ${
-              isDarkMode
-                ? "border-red-500/30 bg-red-500/10"
-                : "border-red-200 bg-red-50"
+              isDarkMode ? "border-red-500/30 bg-red-500/10" : "border-red-200 bg-red-50"
             }`}
           >
             <div className="flex items-center gap-1.5">
               <TrendingDown
-                className={`h-3.5 w-3.5 ${
-                  isDarkMode ? "text-red-300" : "text-red-600"
-                }`}
+                className={`h-3.5 w-3.5 ${isDarkMode ? "text-red-300" : "text-red-600"}`}
               />
               <span
-                className={`text-[10px] font-semibold uppercase tracking-wider ${
+                className={`text-[10px] font-semibold tracking-wider uppercase ${
                   isDarkMode ? "text-red-400" : "text-red-700"
                 }`}
               >
@@ -346,7 +323,7 @@ function ScenarioResults({
       {/* Projected ranking list */}
       <div className="space-y-2">
         <p
-          className={`text-[10px] font-semibold uppercase tracking-wider ${
+          className={`text-[10px] font-semibold tracking-wider uppercase ${
             isDarkMode ? "text-zinc-500" : "text-zinc-400"
           }`}
         >
@@ -397,7 +374,8 @@ function ScenarioResults({
                     )}
                     {movedDown && (
                       <span className="flex items-center gap-0.5 rounded-full border border-red-200 bg-red-50 px-1.5 py-0.5 text-[10px] font-semibold text-red-600">
-                        <TrendingDown className="h-2.5 w-2.5" />{pilot.positionChange}
+                        <TrendingDown className="h-2.5 w-2.5" />
+                        {pilot.positionChange}
                       </span>
                     )}
                     {!movedUp && !movedDown && (
@@ -412,11 +390,7 @@ function ScenarioResults({
                       </span>
                     )}
                   </div>
-                  <p
-                    className={`mt-0.5 text-xs ${
-                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                    }`}
-                  >
+                  <p className={`mt-0.5 text-xs ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
                     {pilot.projectedPoints} pts{" "}
                     {pilot.pointsGained > 0 && `(+${pilot.pointsGained})`}
                   </p>
@@ -426,11 +400,7 @@ function ScenarioResults({
           );
         })}
         {projectedRanking.length > 10 && (
-          <p
-            className={`text-center text-xs ${
-              isDarkMode ? "text-zinc-500" : "text-zinc-400"
-            }`}
-          >
+          <p className={`text-center text-xs ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
             +{projectedRanking.length - 10} pilotos
           </p>
         )}
@@ -459,34 +429,29 @@ export default function CustomScenarioBuilder({
   const [result, setResult] = useState<CustomScenarioResult | null>(null);
   const [showResults, setShowResults] = useState(false);
 
-  const eligiblePilots = useMemo(
-    () => ranking.filter((p) => p.pontos > 0),
-    [ranking]
-  );
+  const eligiblePilots = useMemo(() => ranking.filter((p) => p.pontos > 0), [ranking]);
 
   const usedPositions = useMemo(() => new Set(Object.values(assignments)), [assignments]);
 
   const availablePositions = useMemo(
-    () => Array.from({ length: MAX_POSITIONS }, (_, i) => i + 1).filter((p) => !usedPositions.has(p)),
+    () =>
+      Array.from({ length: MAX_POSITIONS }, (_, i) => i + 1).filter((p) => !usedPositions.has(p)),
     [usedPositions]
   );
 
-  const handlePositionChange = useCallback(
-    (pilotKey: string, position: number | null) => {
-      setAssignments((prev) => {
-        const next = { ...prev };
-        if (position === null) {
-          delete next[pilotKey];
-        } else {
-          next[pilotKey] = position;
-        }
-        return next;
-      });
-      setResult(null);
-      setShowResults(false);
-    },
-    []
-  );
+  const handlePositionChange = useCallback((pilotKey: string, position: number | null) => {
+    setAssignments((prev) => {
+      const next = { ...prev };
+      if (position === null) {
+        delete next[pilotKey];
+      } else {
+        next[pilotKey] = position;
+      }
+      return next;
+    });
+    setResult(null);
+    setShowResults(false);
+  }, []);
 
   const handleReset = useCallback(() => {
     setAssignments({});
@@ -528,7 +493,7 @@ export default function CustomScenarioBuilder({
         <div className="flex items-start justify-between gap-3">
           <div>
             <p
-              className={`text-[10px] font-semibold uppercase tracking-wider ${
+              className={`text-[10px] font-semibold tracking-wider uppercase ${
                 isDarkMode ? "text-zinc-500" : "text-zinc-400"
               }`}
             >
@@ -541,11 +506,7 @@ export default function CustomScenarioBuilder({
             >
               Monte sua projeção para a etapa {stageNumber || "?"}
             </p>
-            <p
-              className={`mt-1 text-xs ${
-                isDarkMode ? "text-zinc-400" : "text-zinc-500"
-              }`}
-            >
+            <p className={`mt-1 text-xs ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
               Escolha a posição de chegada para cada piloto e veja o impacto no campeonato.
             </p>
           </div>
@@ -580,9 +541,7 @@ export default function CustomScenarioBuilder({
             />
           </div>
           <span
-            className={`text-xs font-semibold ${
-              isDarkMode ? "text-zinc-400" : "text-zinc-500"
-            }`}
+            className={`text-xs font-semibold ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}
           >
             {assignedCount}/{ranking.length}
           </span>
@@ -593,7 +552,7 @@ export default function CustomScenarioBuilder({
       {!showResults && (
         <div className="space-y-2">
           <p
-            className={`text-[10px] font-semibold uppercase tracking-wider ${
+            className={`text-[10px] font-semibold tracking-wider uppercase ${
               isDarkMode ? "text-zinc-500" : "text-zinc-400"
             }`}
           >
@@ -670,8 +629,8 @@ export default function CustomScenarioBuilder({
                 ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText} hover:brightness-110`
                 : `${theme.primaryBorder} ${theme.primaryIconWrap} ${theme.primaryIcon}`
               : isDarkMode
-                ? "border border-white/5 bg-white/5 text-zinc-600 cursor-not-allowed"
-                : "border border-black/5 bg-zinc-100 text-zinc-400 cursor-not-allowed"
+                ? "cursor-not-allowed border border-white/5 bg-white/5 text-zinc-600"
+                : "cursor-not-allowed border border-black/5 bg-zinc-100 text-zinc-400"
           }`}
         >
           <span className="flex items-center justify-center gap-2">

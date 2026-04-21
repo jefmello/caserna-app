@@ -3,13 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
-import {
-  BarChart3,
-  Home,
-  Menu,
-  Trophy,
-  UserRound,
-} from "lucide-react";
+import { BarChart3, Home, Menu, Trophy, UserRound } from "lucide-react";
 import AppMobileMoreSheet from "@/components/navigation/app-mobile-more-sheet";
 
 type AppBottomNavProps = {
@@ -61,9 +55,7 @@ function isActivePath(pathname: string, href?: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export default function AppBottomNav({
-  isDarkMode = false,
-}: AppBottomNavProps) {
+export default function AppBottomNav({ isDarkMode = false }: AppBottomNavProps) {
   const pathname = usePathname();
   const [isMoreOpen, setIsMoreOpen] = useState(false);
 
@@ -82,7 +74,7 @@ export default function AppBottomNav({
             : "border-black/5 bg-white/95 text-zinc-950 backdrop-blur-xl"
         }`}
       >
-        <div className="mx-auto grid max-w-xl grid-cols-5 gap-1 px-2 pb-[max(env(safe-area-inset-bottom),8px)] pt-2">
+        <div className="mx-auto grid max-w-xl grid-cols-5 gap-1 px-2 pt-2 pb-[max(env(safe-area-inset-bottom),8px)]">
           {navItems.map((item) => {
             const Icon = item.icon;
 
@@ -105,9 +97,7 @@ export default function AppBottomNav({
                   }`}
                 >
                   <Icon className="h-[18px] w-[18px]" />
-                  <span className="text-[10px] font-bold tracking-tight">
-                    {item.label}
-                  </span>
+                  <span className="text-[10px] font-bold tracking-tight">{item.label}</span>
                 </button>
               );
             }
@@ -129,9 +119,7 @@ export default function AppBottomNav({
                 }`}
               >
                 <Icon className="h-[18px] w-[18px]" />
-                <span className="text-[10px] font-bold tracking-tight">
-                  {item.label}
-                </span>
+                <span className="text-[10px] font-bold tracking-tight">{item.label}</span>
               </Link>
             );
           })}

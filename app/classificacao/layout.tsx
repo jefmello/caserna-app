@@ -8,11 +8,7 @@ export const metadata: Metadata = {
     "Veja a tabela de classificação completa do campeonato Caserna Kart Racing. Pontos, vitórias, poles e muito mais.",
 };
 
-export default function ClassificacaoLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ClassificacaoLayout({ children }: { children: React.ReactNode }) {
   return (
     <AppMainLayout>
       <AppSectionShell section="default">{children}</AppSectionShell>

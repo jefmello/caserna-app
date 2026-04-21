@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element -- PilotPhotoSlot uses native img with onError fallback for missing photos */
+
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
@@ -55,18 +57,17 @@ function PilotPhotoSlot({
 
   const src = pilotoId ? `/pilotos/${pilotoId}.jpg` : null;
   const [hasError, setHasError] = useState(false);
-
-  useEffect(() => {
+  const [prevSrc, setPrevSrc] = useState(src);
+  if (src !== prevSrc) {
+    setPrevSrc(src);
     setHasError(false);
-  }, [src]);
+  }
 
   const showImage = Boolean(src) && !hasError;
 
   return (
     <div
-      className={`relative h-full w-full overflow-hidden ${
-        isDark ? "bg-[#0f172a]" : "bg-zinc-50"
-      }`}
+      className={`relative h-full w-full overflow-hidden ${isDark ? "bg-[#0f172a]" : "bg-zinc-50"}`}
     >
       {showImage ? (
         <>
@@ -76,11 +77,7 @@ function PilotPhotoSlot({
             className="absolute inset-0 h-full w-full scale-[1.18] object-cover object-center opacity-24 blur-2xl"
             onError={() => setHasError(true)}
           />
-          <div
-            className={`absolute inset-0 ${
-              isDark ? "bg-slate-950/18" : "bg-white/8"
-            }`}
-          />
+          <div className={`absolute inset-0 ${isDark ? "bg-slate-950/18" : "bg-white/8"}`} />
           <img
             src={src || ""}
             alt={alt}
@@ -102,14 +99,10 @@ function PilotPhotoSlot({
                 isDark ? "bg-white/5" : "bg-white"
               }`}
             >
-              <Camera
-                className={`h-5 w-5 ${
-                  isDark ? "text-zinc-400" : "text-zinc-500"
-                }`}
-              />
+              <Camera className={`h-5 w-5 ${isDark ? "text-zinc-400" : "text-zinc-500"}`} />
             </div>
             <p
-              className={`text-[11px] font-semibold uppercase tracking-[0.08em] ${
+              className={`text-[11px] font-semibold tracking-[0.08em] uppercase ${
                 isDark ? "text-zinc-400" : "text-zinc-500"
               }`}
             >
@@ -133,17 +126,12 @@ export default function PilotosPageContent() {
   const searchParams = useSearchParams();
   const { isDarkMode, categoria, campeonato } = useChampionship();
 
-  const { rankingData, rankingMeta, categories, loading, error, retry } =
-    useRankingData({ categoria, campeonato });
+  const { rankingData, rankingMeta, categories, loading, error, retry } = useRankingData({
+    categoria,
+    campeonato,
+  });
 
-  const {
-    category,
-    competition,
-    search,
-    setSearch,
-    filteredRanking,
-    leader,
-  } = useRankingFilters({
+  const { category, competition, search, setSearch, filteredRanking, leader } = useRankingFilters({
     rankingData,
     rankingMeta,
     categories,
@@ -157,8 +145,7 @@ export default function PilotosPageContent() {
     const pilotIdFromUrl = searchParams.get("pilotId");
     if (!pilotIdFromUrl || filteredRanking.length === 0) return;
 
-    const matchedPilot =
-      filteredRanking.find((item) => item.pilotoId === pilotIdFromUrl) || null;
+    const matchedPilot = filteredRanking.find((item) => item.pilotoId === pilotIdFromUrl) || null;
 
     if (matchedPilot) {
       setSelectedPilot(matchedPilot);
@@ -208,11 +195,13 @@ export default function PilotosPageContent() {
 
   // Quando selectedPilot está definido, resolvedSafePilot é garantidamente non-null
   // (os componentes de análise só renderizam no branch onde selectedPilot é truthy)
-  const resolvedSafePilot = pilotAnalysis?.pilot
-    ?? (selectedPilot as RankingItem);
+  const resolvedSafePilot = pilotAnalysis?.pilot ?? (selectedPilot as RankingItem);
   const selectedPilotGap = pilotAnalysis?.gapToLeader ?? "-";
   const selectedPilotAverage = pilotAnalysis?.averagePointsPerRace ?? 0;
-  const selectedPilotBestAttribute = pilotAnalysis?.bestAttribute ?? { label: "Sem dados", value: 0 };
+  const selectedPilotBestAttribute = pilotAnalysis?.bestAttribute ?? {
+    label: "Sem dados",
+    value: 0,
+  };
   const selectedPilotConsistency = pilotAnalysis?.consistencyLabel ?? "Sem leitura";
   const selectedPilotMomentum = pilotAnalysis?.momentumLabel ?? "Sem leitura";
   const selectedPilotVsLeader = pilotAnalysis?.performanceVsLeader ?? 0;
@@ -271,7 +260,11 @@ export default function PilotosPageContent() {
       setIsSharingPilotImage(true);
       const dataUrl = await generateImage(pilotShareCardRef.current);
       if (!dataUrl) {
-        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar a imagem do piloto." });
+        addToast({
+          type: "error",
+          title: "Erro ao gerar imagem",
+          message: "Não foi possível gerar a imagem do piloto.",
+        });
         return;
       }
 
@@ -285,10 +278,18 @@ export default function PilotosPageContent() {
         dataUrl,
         `piloto-${safePilotName}-${category.toLowerCase()}-${competition.toLowerCase()}.png`
       );
-      addToast({ type: "success", title: "Imagem salva", message: "Perfil do piloto exportado com sucesso." });
+      addToast({
+        type: "success",
+        title: "Imagem salva",
+        message: "Perfil do piloto exportado com sucesso.",
+      });
     } catch (err) {
       console.error(err);
-      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar a imagem do piloto." });
+      addToast({
+        type: "error",
+        title: "Erro ao gerar imagem",
+        message: "Não foi possível gerar a imagem do piloto.",
+      });
     } finally {
       setIsSharingPilotImage(false);
     }
@@ -303,14 +304,8 @@ export default function PilotosPageContent() {
             : "border-black/5 bg-white text-zinc-950"
         }`}
       >
-        <p className="text-xl font-semibold tracking-tight">
-          Carregando pilotos...
-        </p>
-        <p
-          className={`mt-2 text-sm ${
-            isDarkMode ? "text-zinc-400" : "text-zinc-500"
-          }`}
-        >
+        <p className="text-xl font-semibold tracking-tight">Carregando pilotos...</p>
+        <p className={`mt-2 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
           Preparando central de análise individual
         </p>
       </div>
@@ -327,13 +322,7 @@ export default function PilotosPageContent() {
         }`}
       >
         <p className="text-2xl font-semibold tracking-tight">Erro</p>
-        <p
-          className={`mt-2 ${
-            isDarkMode ? "text-zinc-300" : "text-zinc-600"
-          }`}
-        >
-          {error}
-        </p>
+        <p className={`mt-2 ${isDarkMode ? "text-zinc-300" : "text-zinc-600"}`}>{error}</p>
         <button
           onClick={handleRetry}
           className={`mt-5 w-full rounded-2xl px-4 py-3 text-sm font-semibold transition ${
@@ -352,306 +341,286 @@ export default function PilotosPageContent() {
     <PageTransition>
       <div className="mt-4 space-y-3 lg:space-y-4 xl:space-y-5">
         <RankingSearchCard
-        isDarkMode={isDarkMode}
-        theme={theme}
-        competition={competition}
-        competitionLabels={competitionLabels}
-        search={search}
-        onSearchChange={setSearch}
-      />
+          isDarkMode={isDarkMode}
+          theme={theme}
+          competition={competition}
+          competitionLabels={competitionLabels}
+          search={search}
+          onSearchChange={setSearch}
+        />
 
-      <Breadcrumb
-        items={[
-          { label: "Pilotos", href: "/pilotos" },
-        ]}
-        isDark={isDarkMode}
-      />
+        <Breadcrumb items={[{ label: "Pilotos", href: "/pilotos" }]} isDark={isDarkMode} />
 
-      {!selectedPilot ? (
-        <>
-          <RankingPilotEmptyState
-            isDarkMode={isDarkMode}
-            theme={theme}
-            UserIcon={User}
-          />
+        {!selectedPilot ? (
+          <>
+            <RankingPilotEmptyState isDarkMode={isDarkMode} theme={theme} UserIcon={User} />
 
-          <Card
-            className={`rounded-[24px] shadow-sm ${
-              isDarkMode
-                ? "border border-white/10 bg-[#111827]"
-                : "border-black/5 bg-white"
-            }`}
-          >
-            <CardContent className="p-3">
-              <div className="mb-3 flex items-center justify-between gap-3">
-                <div>
-                  <p
-                    className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
-                      isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                    }`}
-                  >
-                    Grade de pilotos
-                  </p>
-                  <h3
-                    className={`text-[20px] font-extrabold tracking-tight ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
-                    }`}
-                  >
-                    Selecione um piloto
-                  </h3>
-                </div>
+            <Card
+              className={`rounded-[24px] shadow-sm ${
+                isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
+              }`}
+            >
+              <CardContent className="p-3">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <div>
+                    <p
+                      className={`text-[10px] font-bold tracking-[0.16em] uppercase ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}
+                    >
+                      Grade de pilotos
+                    </p>
+                    <h3
+                      className={`text-[20px] font-extrabold tracking-tight ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}
+                    >
+                      Selecione um piloto
+                    </h3>
+                  </div>
 
-                <div
-                  className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
-                    isDarkMode
-                      ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                      : "border-black/5 bg-zinc-50 text-zinc-700"
-                  }`}
-                >
-                  {filteredRanking.length} piloto
-                  {filteredRanking.length === 1 ? "" : "s"}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                {filteredRanking.map((pilot, index) => (
-                  <button
-                    key={`${pilot.pilotoId || pilot.piloto}-${index}`}
-                    type="button"
-                    onClick={() => handleSelectPilot(pilot)}
-                    className={`w-full rounded-[18px] border px-3 py-3 text-left transition-all duration-200 ${
+                  <div
+                    className={`rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.12em] uppercase ${
                       isDarkMode
-                        ? "border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033]"
-                        : "border-black/5 bg-zinc-50/80 hover:bg-white"
+                        ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                        : "border-black/5 bg-zinc-50 text-zinc-700"
                     }`}
                   >
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="min-w-0">
-                        <p
-                          className={`truncate text-[14px] font-semibold tracking-tight ${
-                            isDarkMode ? "text-white" : "text-zinc-950"
-                          }`}
-                        >
-                          {getPilotFirstAndLastName(pilot.piloto)}
-                        </p>
-                        {getPilotWarNameDisplay(pilot) ? (
+                    {filteredRanking.length} piloto
+                    {filteredRanking.length === 1 ? "" : "s"}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  {filteredRanking.map((pilot, index) => (
+                    <button
+                      key={`${pilot.pilotoId || pilot.piloto}-${index}`}
+                      type="button"
+                      onClick={() => handleSelectPilot(pilot)}
+                      className={`w-full rounded-[18px] border px-3 py-3 text-left transition-all duration-200 ${
+                        isDarkMode
+                          ? "border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033]"
+                          : "border-black/5 bg-zinc-50/80 hover:bg-white"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0">
                           <p
-                            className={`mt-0.5 truncate text-[11px] italic ${
-                              isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                            className={`truncate text-[14px] font-semibold tracking-tight ${
+                              isDarkMode ? "text-white" : "text-zinc-950"
                             }`}
                           >
-                            {getPilotWarNameDisplay(pilot)}
+                            {getPilotFirstAndLastName(pilot.piloto)}
                           </p>
-                        ) : null}
-                      </div>
+                          {getPilotWarNameDisplay(pilot) ? (
+                            <p
+                              className={`mt-0.5 truncate text-[11px] italic ${
+                                isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                              }`}
+                            >
+                              {getPilotWarNameDisplay(pilot)}
+                            </p>
+                          ) : null}
+                        </div>
 
-                      <div className="shrink-0 text-right">
-                        <p
-                          className={`text-[14px] font-semibold ${
-                            isDarkMode ? theme.darkAccentText : "text-zinc-950"
-                          }`}
-                        >
-                          {pilot.pontos} pts
-                        </p>
-                        <p
-                          className={`text-[10px] font-semibold ${
-                            isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                          }`}
-                        >
-                          P{pilot.pos}
-                        </p>
+                        <div className="shrink-0 text-right">
+                          <p
+                            className={`text-[14px] font-semibold ${
+                              isDarkMode ? theme.darkAccentText : "text-zinc-950"
+                            }`}
+                          >
+                            {pilot.pontos} pts
+                          </p>
+                          <p
+                            className={`text-[10px] font-semibold ${
+                              isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                            }`}
+                          >
+                            P{pilot.pos}
+                          </p>
+                        </div>
                       </div>
+                    </button>
+                  ))}
+
+                  {filteredRanking.length === 0 ? (
+                    <div
+                      className={`rounded-[18px] border border-dashed px-4 py-8 text-center text-sm ${
+                        isDarkMode
+                          ? "border-white/10 bg-[#0f172a] text-zinc-400"
+                          : "border-black/10 bg-zinc-50 text-zinc-500"
+                      }`}
+                    >
+                      Nenhum piloto com pontos encontrado.
                     </div>
-                  </button>
-                ))}
+                  ) : null}
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        ) : (
+          <div className="space-y-3">
+            <div ref={pilotShareCardRef}>
+              <RankingPilotHeroCard
+                isDarkMode={isDarkMode}
+                theme={theme}
+                category={category}
+                categoryColors={categoryColors}
+                competition={competition}
+                competitionLabels={competitionLabels}
+                handleBackToRanking={handleBackToList}
+                handleSharePilotCard={handleSharePilotCard}
+                isSharingPilotImage={isSharingPilotImage}
+                selectedPilot={selectedPilot}
+                selectedPilotShortName={selectedPilotShortName}
+                selectedPilotWarName={selectedPilotWarName}
+                safeSelectedPilot={resolvedSafePilot}
+                selectedPilotGap={selectedPilotGap}
+                selectedPilotAverage={selectedPilotAverage}
+                selectedPilotConsistency={selectedPilotConsistency}
+                selectedPilotMomentum={selectedPilotMomentum}
+                selectedPilotBestAttribute={selectedPilotBestAttribute}
+                PilotPhotoSlot={PilotPhotoSlot}
+              />
+            </div>
 
-                {filteredRanking.length === 0 ? (
-                  <div
-                    className={`rounded-[18px] border border-dashed px-4 py-8 text-center text-sm ${
-                      isDarkMode
-                        ? "border-white/10 bg-[#0f172a] text-zinc-400"
-                        : "border-black/10 bg-zinc-50 text-zinc-500"
-                    }`}
-                  >
-                    Nenhum piloto com pontos encontrado.
-                  </div>
-                ) : null}
-              </div>
-            </CardContent>
-          </Card>
-        </>
-      ) : (
-        <div className="space-y-3">
-          <div ref={pilotShareCardRef}>
-            <RankingPilotHeroCard
+            <SectionDivider />
+
+            <RankingPilotComparisonCard
               isDarkMode={isDarkMode}
               theme={theme}
-              category={category}
-              categoryColors={categoryColors}
-              competition={competition}
-              competitionLabels={competitionLabels}
-              handleBackToRanking={handleBackToList}
-              handleSharePilotCard={handleSharePilotCard}
-              isSharingPilotImage={isSharingPilotImage}
-              selectedPilot={selectedPilot}
-              selectedPilotShortName={selectedPilotShortName}
-              selectedPilotWarName={selectedPilotWarName}
-              safeSelectedPilot={resolvedSafePilot}
+              selectedPilotLeaderGapValue={selectedPilotLeaderGapValue}
+              selectedPilotVsLeader={selectedPilotVsLeader}
               selectedPilotGap={selectedPilotGap}
-              selectedPilotAverage={selectedPilotAverage}
-              selectedPilotConsistency={selectedPilotConsistency}
-              selectedPilotMomentum={selectedPilotMomentum}
-              selectedPilotBestAttribute={selectedPilotBestAttribute}
-              PilotPhotoSlot={PilotPhotoSlot}
+              selectedPilotWinRate={selectedPilotWinRate}
+              selectedPilotWinRateLabel={selectedPilotWinRateLabel}
+              selectedPilotPodiumRate={selectedPilotPodiumRate}
+              selectedPilotPodiumRateLabel={selectedPilotPodiumRateLabel}
+              selectedPilotDiscipline={selectedPilotDiscipline}
+              selectedPilotDisciplineLabel={selectedPilotDisciplineLabel}
+              safeSelectedPilot={resolvedSafePilot}
+              TrophyIcon={Trophy}
+              CrownIcon={Crown}
+              MedalIcon={Medal}
+              GaugeIcon={Gauge}
             />
+
+            <SectionDivider />
+
+            <RankingPilotPerformanceBlocksCard
+              isDarkMode={isDarkMode}
+              theme={theme}
+              safeSelectedPilot={resolvedSafePilot}
+              selectedPilotAverage={selectedPilotAverage}
+              selectedPilotGap={selectedPilotGap}
+              selectedPilotLeaderGapValue={selectedPilotLeaderGapValue}
+              SwordsIcon={Swords}
+              BarChart3Icon={BarChart3}
+              TablePropertiesIcon={TableProperties}
+            />
+
+            <Card
+              className={`rounded-[24px] shadow-sm transition-all duration-200 hover:-translate-y-[1px] ${
+                isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
+              }`}
+            >
+              <CardContent className="p-4">
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <div>
+                    <p
+                      className={`text-[10px] font-bold tracking-[0.16em] uppercase ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}
+                    >
+                      Raio-x competitivo
+                    </p>
+                    <h3
+                      className={`text-[20px] font-extrabold tracking-tight ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}
+                    >
+                      Comparativo do piloto
+                    </h3>
+                  </div>
+
+                  <div
+                    className={`rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.12em] uppercase ${
+                      isDarkMode
+                        ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                        : "border-black/5 bg-zinc-50 text-zinc-700"
+                    }`}
+                  >
+                    leitura oficial
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <div
+                    className={`rounded-[20px] border p-3 ${
+                      isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50/70"
+                    }`}
+                  >
+                    <p
+                      className={`text-[10px] font-bold tracking-[0.14em] uppercase ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}
+                    >
+                      Próximo alvo
+                    </p>
+                    <p
+                      className={`mt-2 text-[20px] leading-tight font-semibold ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}
+                    >
+                      {selectedPilotRivalAhead
+                        ? getPilotFirstAndLastName(selectedPilotRivalAhead.piloto)
+                        : "Nenhum piloto acima"}
+                    </p>
+                    <p
+                      className={`mt-2 text-[12px] ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-600"
+                      }`}
+                    >
+                      {selectedPilotRivalAhead && selectedPilot
+                        ? `${selectedPilotRivalAhead.pontos - resolvedSafePilot.pontos} ponto(s) para avançar mais uma posição.`
+                        : "Piloto ocupa a liderança desta seleção."}
+                    </p>
+                  </div>
+
+                  <div
+                    className={`rounded-[20px] border p-3 ${
+                      isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50/70"
+                    }`}
+                  >
+                    <p
+                      className={`text-[10px] font-bold tracking-[0.14em] uppercase ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}
+                    >
+                      Destaque técnico
+                    </p>
+                    <p
+                      className={`mt-2 text-[20px] leading-tight font-semibold ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}
+                    >
+                      {selectedPilotBestAttribute.label}
+                    </p>
+                    <p
+                      className={`mt-2 text-[12px] ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-600"
+                      }`}
+                    >
+                      Melhor número individual do piloto nesta leitura:{" "}
+                      <span className="font-semibold">{selectedPilotBestAttribute.value}</span>.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-
-          <SectionDivider />
-
-          <RankingPilotComparisonCard
-            isDarkMode={isDarkMode}
-            theme={theme}
-            selectedPilotLeaderGapValue={selectedPilotLeaderGapValue}
-            selectedPilotVsLeader={selectedPilotVsLeader}
-            selectedPilotGap={selectedPilotGap}
-            selectedPilotWinRate={selectedPilotWinRate}
-            selectedPilotWinRateLabel={selectedPilotWinRateLabel}
-            selectedPilotPodiumRate={selectedPilotPodiumRate}
-            selectedPilotPodiumRateLabel={selectedPilotPodiumRateLabel}
-            selectedPilotDiscipline={selectedPilotDiscipline}
-            selectedPilotDisciplineLabel={selectedPilotDisciplineLabel}
-            safeSelectedPilot={resolvedSafePilot}
-            TrophyIcon={Trophy}
-            CrownIcon={Crown}
-            MedalIcon={Medal}
-            GaugeIcon={Gauge}
-          />
-
-          <SectionDivider />
-
-          <RankingPilotPerformanceBlocksCard
-            isDarkMode={isDarkMode}
-            theme={theme}
-            safeSelectedPilot={resolvedSafePilot}
-            selectedPilotAverage={selectedPilotAverage}
-            selectedPilotGap={selectedPilotGap}
-            selectedPilotLeaderGapValue={selectedPilotLeaderGapValue}
-            SwordsIcon={Swords}
-            BarChart3Icon={BarChart3}
-            TablePropertiesIcon={TableProperties}
-          />
-
-          <Card
-            className={`rounded-[24px] shadow-sm transition-all duration-200 hover:-translate-y-[1px] ${
-              isDarkMode
-                ? "border border-white/10 bg-[#111827]"
-                : "border-black/5 bg-white"
-            }`}
-          >
-            <CardContent className="p-4">
-              <div className="mb-4 flex items-center justify-between gap-3">
-                <div>
-                  <p
-                    className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
-                      isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                    }`}
-                  >
-                    Raio-x competitivo
-                  </p>
-                  <h3
-                    className={`text-[20px] font-extrabold tracking-tight ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
-                    }`}
-                  >
-                    Comparativo do piloto
-                  </h3>
-                </div>
-
-                <div
-                  className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
-                    isDarkMode
-                      ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                      : "border-black/5 bg-zinc-50 text-zinc-700"
-                  }`}
-                >
-                  leitura oficial
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                <div
-                  className={`rounded-[20px] border p-3 ${
-                    isDarkMode
-                      ? "border-white/10 bg-[#0f172a]"
-                      : "border-black/5 bg-zinc-50/70"
-                  }`}
-                >
-                  <p
-                    className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
-                      isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                    }`}
-                  >
-                    Próximo alvo
-                  </p>
-                  <p
-                    className={`mt-2 text-[20px] font-semibold leading-tight ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
-                    }`}
-                  >
-                    {selectedPilotRivalAhead
-                      ? getPilotFirstAndLastName(selectedPilotRivalAhead.piloto)
-                      : "Nenhum piloto acima"}
-                  </p>
-                  <p
-                    className={`mt-2 text-[12px] ${
-                      isDarkMode ? "text-zinc-400" : "text-zinc-600"
-                    }`}
-                  >
-                    {selectedPilotRivalAhead && selectedPilot
-                      ? `${selectedPilotRivalAhead.pontos - resolvedSafePilot.pontos} ponto(s) para avançar mais uma posição.`
-                      : "Piloto ocupa a liderança desta seleção."}
-                  </p>
-                </div>
-
-                <div
-                  className={`rounded-[20px] border p-3 ${
-                    isDarkMode
-                      ? "border-white/10 bg-[#0f172a]"
-                      : "border-black/5 bg-zinc-50/70"
-                  }`}
-                >
-                  <p
-                    className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
-                      isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                    }`}
-                  >
-                    Destaque técnico
-                  </p>
-                  <p
-                    className={`mt-2 text-[20px] font-semibold leading-tight ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
-                    }`}
-                  >
-                    {selectedPilotBestAttribute.label}
-                  </p>
-                  <p
-                    className={`mt-2 text-[12px] ${
-                      isDarkMode ? "text-zinc-400" : "text-zinc-600"
-                    }`}
-                  >
-                    Melhor número individual do piloto nesta leitura:{" "}
-                    <span className="font-semibold">
-                      {selectedPilotBestAttribute.value}
-                    </span>
-                    .
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
       <ScrollToTopButton isDark={isDarkMode} />
     </PageTransition>
   );

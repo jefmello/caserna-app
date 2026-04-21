@@ -47,18 +47,16 @@ export default function RankingClassificationShareCard({
               }`}
             >
               <Share2
-                className={`h-4.5 w-4.5 ${
-                  isDarkMode ? theme.darkAccentText : theme.searchIcon
-                }`}
+                className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.searchIcon}`}
               />
             </div>
 
             <div className="min-w-0 flex-1">
-              <p className="text-[8px] font-bold uppercase tracking-[0.18em] text-zinc-400">
+              <p className="text-[8px] font-bold tracking-[0.18em] text-zinc-400 uppercase">
                 Compartilhamento oficial
               </p>
               <p
-                className={`mt-0.5 text-[11px] font-semibold leading-tight ${
+                className={`mt-0.5 text-[11px] leading-tight font-semibold ${
                   isDarkMode ? "text-white" : "text-zinc-900"
                 }`}
               >
@@ -71,7 +69,7 @@ export default function RankingClassificationShareCard({
             type="button"
             onClick={onShare}
             disabled={isSharingImage || filteredRankingLength === 0}
-            className={`shrink-0 rounded-full border px-2.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.12em] transition-all duration-200 ${
+            className={`shrink-0 rounded-full border px-2.5 py-1.5 text-[9px] font-bold tracking-[0.12em] uppercase transition-all duration-200 ${
               isDarkMode
                 ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText} disabled:opacity-50`
                 : `${theme.searchBadge} disabled:opacity-50`

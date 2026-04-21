@@ -55,30 +55,24 @@ const navItems = [
   },
 ];
 
-export default function AppDesktopSidebar({
-  isDarkMode = false,
-}: AppDesktopSidebarProps) {
+export default function AppDesktopSidebar({ isDarkMode = false }: AppDesktopSidebarProps) {
   const pathname = usePathname();
 
   return (
     <aside className="sticky top-0 hidden h-screen w-[280px] shrink-0 lg:block">
       <div
         className={`flex h-full flex-col border-r px-5 py-6 ${
-          isDarkMode
-            ? "border-white/10 bg-[#0b1220]"
-            : "border-black/5 bg-white"
+          isDarkMode ? "border-white/10 bg-[#0b1220]" : "border-black/5 bg-white"
         }`}
       >
         <div className="mb-8">
           <div
             className={`rounded-[24px] border px-4 py-4 ${
-              isDarkMode
-                ? "border-white/10 bg-[#111827]"
-                : "border-black/5 bg-zinc-50"
+              isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50"
             }`}
           >
             <p
-              className={`text-[10px] font-bold uppercase tracking-[0.18em] ${
+              className={`text-[10px] font-bold tracking-[0.18em] uppercase ${
                 isDarkMode ? "text-zinc-500" : "text-zinc-400"
               }`}
             >
@@ -86,7 +80,7 @@ export default function AppDesktopSidebar({
             </p>
 
             <h1
-              className={`mt-2 text-[20px] font-extrabold leading-tight tracking-tight ${
+              className={`mt-2 text-[20px] leading-tight font-extrabold tracking-tight ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -106,10 +100,7 @@ export default function AppDesktopSidebar({
         <nav className="flex flex-1 flex-col gap-2">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive =
-              item.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(item.href);
+            const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
 
             return (
               <Link
@@ -140,9 +131,7 @@ export default function AppDesktopSidebar({
                 </div>
 
                 <div className="min-w-0">
-                  <p className="truncate text-[13px] font-bold tracking-tight">
-                    {item.label}
-                  </p>
+                  <p className="truncate text-[13px] font-bold tracking-tight">{item.label}</p>
                 </div>
               </Link>
             );
@@ -151,13 +140,11 @@ export default function AppDesktopSidebar({
 
         <div
           className={`mt-6 rounded-[22px] border px-4 py-4 ${
-            isDarkMode
-              ? "border-white/10 bg-[#111827]"
-              : "border-black/5 bg-zinc-50"
+            isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50"
           }`}
         >
           <p
-            className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+            className={`text-[10px] font-bold tracking-[0.16em] uppercase ${
               isDarkMode ? "text-zinc-500" : "text-zinc-400"
             }`}
           >
@@ -165,7 +152,7 @@ export default function AppDesktopSidebar({
           </p>
 
           <p
-            className={`mt-2 text-[13px] font-semibold leading-snug ${
+            className={`mt-2 text-[13px] leading-snug font-semibold ${
               isDarkMode ? "text-white" : "text-zinc-900"
             }`}
           >

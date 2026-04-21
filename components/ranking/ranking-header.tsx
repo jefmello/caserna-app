@@ -4,10 +4,11 @@ import React from "react";
 import Image from "next/image";
 import { Moon, Sun } from "lucide-react";
 import { useChampionship } from "@/context/championship-context";
+import type { CategoryTheme } from "@/lib/ranking/theme-utils";
 
 type RankingHeaderProps = {
   isDarkMode?: boolean;
-  theme: any;
+  theme: CategoryTheme;
   categories: string[];
   category: string;
   setCategory: React.Dispatch<React.SetStateAction<string>> | ((value: string) => void);
@@ -21,9 +22,9 @@ type RankingHeaderProps = {
 export default function RankingHeader({
   isDarkMode: isDarkModeProp,
   theme,
-  categories,
-  category,
-  setCategory,
+  categories: _categories,
+  category: _category,
+  setCategory: _setCategory,
   availableCompetitions,
   competition,
   setCompetition,
@@ -32,29 +33,24 @@ export default function RankingHeader({
 }: RankingHeaderProps) {
   const { isDarkMode: globalIsDarkMode, toggleTheme } = useChampionship();
 
-  const isDarkMode =
-    typeof isDarkModeProp === "boolean" ? isDarkModeProp : globalIsDarkMode;
+  const isDarkMode = typeof isDarkModeProp === "boolean" ? isDarkModeProp : globalIsDarkMode;
 
   const handleToggleDarkMode = toggleDarkMode ?? toggleTheme;
 
   return (
     <header
       className={`sticky top-0 z-20 mb-1.5 overflow-hidden rounded-[20px] shadow-[0_10px_25px_rgba(15,23,42,0.06)] ${
-        isDarkMode
-          ? "border border-white/10 bg-[#111827]"
-          : "border border-black/5 bg-white"
+        isDarkMode ? "border border-white/10 bg-[#111827]" : "border border-black/5 bg-white"
       }`}
     >
       <div
         className={`absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
       />
 
-      <div className="space-y-1 px-2.5 pb-1.5 pt-2">
+      <div className="space-y-1 px-2.5 pt-2 pb-1.5">
         <div
           className={`overflow-hidden rounded-[15px] ${
-            isDarkMode
-              ? "border border-white/10 bg-[#0f172a]"
-              : "border border-black/5 bg-zinc-50"
+            isDarkMode ? "border border-white/10 bg-[#0f172a]" : "border border-black/5 bg-zinc-50"
           }`}
         >
           <div className="relative h-[62px] w-full sm:h-[70px] md:h-[78px]">
@@ -79,7 +75,7 @@ export default function RankingHeader({
           >
             <div className="mb-0.5 flex items-center justify-between">
               <p
-                className={`text-[8px] font-bold uppercase tracking-[0.16em] ${
+                className={`text-[8px] font-bold tracking-[0.16em] uppercase ${
                   isDarkMode ? "text-zinc-400" : "text-zinc-400"
                 }`}
               >
@@ -102,7 +98,7 @@ export default function RankingHeader({
                     <button
                       key={comp}
                       onClick={() => setCompetition(comp)}
-                      className={`whitespace-nowrap rounded-full border px-3 py-1 text-[11px] font-semibold transition-all duration-200 ${
+                      className={`rounded-full border px-3 py-1 text-[11px] font-semibold whitespace-nowrap transition-all duration-200 ${
                         active
                           ? "border-yellow-400 bg-gradient-to-b from-[#fff8d2] to-[#f5e8a6] text-[#7a5600] shadow-[0_4px_10px_rgba(234,179,8,0.22)]"
                           : isDarkMode
@@ -124,18 +120,10 @@ export default function RankingHeader({
                     ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText} hover:opacity-90`
                     : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50"
                 }`}
-                aria-label={
-                  isDarkMode ? "Ativar modo diurno" : "Ativar modo noturno"
-                }
-                title={
-                  isDarkMode ? "Ativar modo diurno" : "Ativar modo noturno"
-                }
+                aria-label={isDarkMode ? "Ativar modo diurno" : "Ativar modo noturno"}
+                title={isDarkMode ? "Ativar modo diurno" : "Ativar modo noturno"}
               >
-                {isDarkMode ? (
-                  <Sun className="h-4.5 w-4.5" />
-                ) : (
-                  <Moon className="h-4.5 w-4.5" />
-                )}
+                {isDarkMode ? <Sun className="h-4.5 w-4.5" /> : <Moon className="h-4.5 w-4.5" />}
               </button>
             </div>
           </div>

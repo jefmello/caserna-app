@@ -33,11 +33,7 @@ const TAB_ITEMS = [
   },
 ] as const;
 
-export default function RankingTabs({
-  activeTab,
-  category,
-  isDarkMode,
-}: RankingTabsProps) {
+export default function RankingTabs({ activeTab, category, isDarkMode }: RankingTabsProps) {
   return (
     <TabsList className="relative z-10 mb-6 grid h-auto w-full grid-cols-4 gap-2.5 bg-transparent p-0 shadow-none">
       {TAB_ITEMS.map((tabItem) => {
@@ -106,7 +102,7 @@ export default function RankingTabs({
               </div>
 
               <span
-                className={`max-w-full text-center font-bold uppercase whitespace-nowrap ${
+                className={`max-w-full text-center font-bold whitespace-nowrap uppercase ${
                   tabItem.value === "classificacao"
                     ? "text-[8px] leading-none tracking-[0.06em]"
                     : "text-[9px] leading-none tracking-[0.1em]"

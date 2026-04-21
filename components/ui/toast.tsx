@@ -48,13 +48,7 @@ const STYLES: Record<ToastType, { wrap: string; icon: string }> = {
   },
 };
 
-function ToastView({
-  toast,
-  onClose,
-}: {
-  toast: ToastItem;
-  onClose: (id: string) => void;
-}) {
+function ToastView({ toast, onClose }: { toast: ToastItem; onClose: (id: string) => void }) {
   const Icon = ICONS[toast.type];
   const style = STYLES[toast.type];
 
@@ -70,9 +64,7 @@ function ToastView({
       <Icon className={`mt-0.5 h-5 w-5 shrink-0 ${style.icon}`} />
       <div className="min-w-0 flex-1">
         <p className="text-[13px] font-semibold">{toast.title}</p>
-        {toast.message && (
-          <p className="mt-0.5 text-[12px] opacity-70">{toast.message}</p>
-        )}
+        {toast.message && <p className="mt-0.5 text-[12px] opacity-70">{toast.message}</p>}
       </div>
       <button
         type="button"
@@ -107,7 +99,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     <ToastContext.Provider value={{ toasts, addToast, removeToast }}>
       {children}
       <div
-        className="pointer-events-none fixed bottom-24 left-4 right-4 z-50 mx-auto flex max-w-md flex-col gap-2 lg:bottom-8 lg:left-auto lg:right-8 lg:mx-0 lg:max-w-sm"
+        className="pointer-events-none fixed right-4 bottom-24 left-4 z-50 mx-auto flex max-w-md flex-col gap-2 lg:right-8 lg:bottom-8 lg:left-auto lg:mx-0 lg:max-w-sm"
         aria-live="polite"
       >
         <AnimatePresence>

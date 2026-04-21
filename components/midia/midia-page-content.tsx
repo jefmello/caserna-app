@@ -3,7 +3,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import {
-  Camera,
   ChevronRight,
   Clapperboard,
   ListOrdered,
@@ -33,7 +32,7 @@ import {
   getTrendVisual,
   normalizePilotName,
 } from "@/lib/ranking/ranking-utils";
-import type { RankingItem, RankingMetaPilot } from "@/types/ranking";
+import type { RankingMetaPilot } from "@/types/ranking";
 import PageTransition from "@/components/ui/page-transition";
 import { ScrollToTopButton } from "@/components/ui/scroll-to-top";
 import Breadcrumb from "@/components/ui/breadcrumb";
@@ -49,101 +48,13 @@ const RankingShareStoriesCanvas = dynamic(
   { ssr: false }
 );
 
-function PilotPhotoSlot({
-  pilot,
-  alt,
-  isDark = false,
-}: {
-  pilot?: unknown;
-  alt: string;
-  isDark?: boolean;
-}) {
-  const pilotoId =
-    pilot && typeof pilot === "object" && "pilotoId" in pilot
-      ? (pilot as { pilotoId?: string | null }).pilotoId
-      : null;
-
-  const src = pilotoId ? `/pilotos/${pilotoId}.jpg` : null;
-  const [hasError, setHasError] = useState(false);
-
-  useEffect(() => {
-    setHasError(false);
-  }, [src]);
-
-  const showImage = Boolean(src) && !hasError;
-
-  return (
-    <div
-      className={`relative h-full w-full overflow-hidden ${
-        isDark ? "bg-[#0f172a]" : "bg-zinc-50"
-      }`}
-    >
-      {showImage ? (
-        <>
-          <img
-            src={src || ""}
-            alt={alt}
-            className="absolute inset-0 h-full w-full scale-[1.18] object-cover object-center opacity-24 blur-2xl"
-            onError={() => setHasError(true)}
-          />
-          <div
-            className={`absolute inset-0 ${
-              isDark ? "bg-slate-950/18" : "bg-white/8"
-            }`}
-          />
-          <img
-            src={src || ""}
-            alt={alt}
-            className="relative z-[1] h-full w-full object-contain object-center"
-            onError={() => setHasError(true)}
-          />
-        </>
-      ) : (
-        <div
-          className={`flex h-full w-full items-center justify-center ${
-            isDark
-              ? "bg-gradient-to-b from-[#0f172a] to-[#111827]"
-              : "bg-gradient-to-b from-zinc-50 to-zinc-100"
-          }`}
-        >
-          <div className="text-center">
-            <div
-              className={`mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-2xl shadow-sm ${
-                isDark ? "bg-white/5" : "bg-white"
-              }`}
-            >
-              <Camera
-                className={`h-5 w-5 ${
-                  isDark ? "text-zinc-400" : "text-zinc-500"
-                }`}
-              />
-            </div>
-            <p
-              className={`text-[12px] font-semibold uppercase tracking-[0.08em] ${
-                isDark ? "text-zinc-400" : "text-zinc-500"
-              }`}
-            >
-              Espaço foto
-            </p>
-            <p
-              className={`mt-1 text-[10px] font-medium ${
-                isDark ? "text-zinc-500" : "text-zinc-500"
-              }`}
-            >
-              piloto 1:1
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
 export default function MidiaPageContent() {
   const { categoria, campeonato } = useChampionship();
 
-  const { rankingData, rankingMeta, categories, loading, error, retry } =
-    useRankingData({ categoria, campeonato });
+  const { rankingData, rankingMeta, categories, loading, error, retry } = useRankingData({
+    categoria,
+    campeonato,
+  });
 
   const {
     category,
@@ -186,15 +97,10 @@ export default function MidiaPageContent() {
   const whatsappSectionRef = useRef<HTMLDivElement | null>(null);
 
   const [isSharingImage, setIsSharingImage] = useState(false);
-  const [isSharingFullClassificationImage, setIsSharingFullClassificationImage] =
-    useState(false);
+  const [isSharingFullClassificationImage, setIsSharingFullClassificationImage] = useState(false);
   const [isSharingLeaderImage, setIsSharingLeaderImage] = useState(false);
   const [isSharingDuelImage, setIsSharingDuelImage] = useState(false);
   const [isSharingNarrativeImage, setIsSharingNarrativeImage] = useState(false);
-  const [isSharingPodiumImage, setIsSharingPodiumImage] = useState(false);
-  const [isSharingEvolutionImage, setIsSharingEvolutionImage] = useState(false);
-  const [isSharingStoriesPodiumImage, setIsSharingStoriesPodiumImage] = useState(false);
-  const [isSharingStoriesEvolutionImage, setIsSharingStoriesEvolutionImage] = useState(false);
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("caserna-theme");
@@ -207,30 +113,25 @@ export default function MidiaPageContent() {
     window.localStorage.setItem("caserna-theme", isDarkMode ? "dark" : "light");
   }, [isDarkMode]);
 
-  const { theme, pilotTrendMap, titleFightStatus } =
-    useRankingScreenController({
-      category,
-      competition,
-      isDarkMode,
-      filteredRanking,
-      rankingData,
-      leader,
-      currentCompetitionMeta,
-    });
+  const { theme, pilotTrendMap, titleFightStatus } = useRankingScreenController({
+    category,
+    competition,
+    isDarkMode,
+    filteredRanking,
+    rankingData,
+    leader,
+    currentCompetitionMeta,
+  });
 
   const comparePilotA = useMemo(
     () =>
-      filteredRanking.find(
-        (item) => (item.pilotoId || item.piloto) === comparePilotAId
-      ) || null,
+      filteredRanking.find((item) => (item.pilotoId || item.piloto) === comparePilotAId) || null,
     [filteredRanking, comparePilotAId]
   );
 
   const comparePilotB = useMemo(
     () =>
-      filteredRanking.find(
-        (item) => (item.pilotoId || item.piloto) === comparePilotBId
-      ) || null,
+      filteredRanking.find((item) => (item.pilotoId || item.piloto) === comparePilotBId) || null,
     [filteredRanking, comparePilotBId]
   );
 
@@ -292,27 +193,14 @@ export default function MidiaPageContent() {
     let scoreB = 0;
 
     duelMetrics.forEach((metric) => {
-      const winner = getComparisonWinner(
-        metric.a,
-        metric.b,
-        metric.lowerIsBetter
-      );
+      const winner = getComparisonWinner(metric.a, metric.b, metric.lowerIsBetter);
       if (winner === "a") scoreA += 1;
       if (winner === "b") scoreB += 1;
     });
 
-    const pointsWinner = getComparisonWinner(
-      comparePilotA.pontos,
-      comparePilotB.pontos,
-      false
-    );
-    const advWinner = getComparisonWinner(
-      comparePilotA.adv,
-      comparePilotB.adv,
-      true
-    );
-    const overallWinner =
-      scoreA === scoreB ? pointsWinner : scoreA > scoreB ? "a" : "b";
+    const pointsWinner = getComparisonWinner(comparePilotA.pontos, comparePilotB.pontos, false);
+    const advWinner = getComparisonWinner(comparePilotA.adv, comparePilotB.adv, true);
+    const overallWinner = scoreA === scoreB ? pointsWinner : scoreA > scoreB ? "a" : "b";
     const scoreDiff = Math.abs(scoreA - scoreB);
     const pointsDiff = Math.abs(comparePilotA.pontos - comparePilotB.pontos);
 
@@ -361,8 +249,7 @@ export default function MidiaPageContent() {
         tone: isDarkMode
           ? "border-blue-500/30 bg-blue-500/10 text-blue-300"
           : "border-blue-200 bg-blue-50 text-blue-700",
-        description:
-          "O duelo está equilibrado, mas com leve inclinação pontual.",
+        description: "O duelo está equilibrado, mas com leve inclinação pontual.",
       };
     }
 
@@ -372,8 +259,7 @@ export default function MidiaPageContent() {
         tone: isDarkMode
           ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
           : "border-emerald-200 bg-emerald-50 text-emerald-700",
-        description:
-          "Um dos lados domina a maior parte dos territórios do confronto.",
+        description: "Um dos lados domina a maior parte dos territórios do confronto.",
       };
     }
 
@@ -392,8 +278,7 @@ export default function MidiaPageContent() {
       tone: isDarkMode
         ? "border-orange-500/30 bg-orange-500/10 text-orange-300"
         : "border-orange-200 bg-orange-50 text-orange-700",
-      description:
-        "A disputa segue aberta e sensível a qualquer mudança de ritmo.",
+      description: "A disputa segue aberta e sensível a qualquer mudança de ritmo.",
     };
   }, [duelSummary, isDarkMode]);
 
@@ -410,20 +295,11 @@ export default function MidiaPageContent() {
         ? filteredRanking[5]?.pontos || 0
         : filteredRanking[totalPilots - 1]?.pontos || 0;
 
-    const totalPoints = filteredRanking.reduce(
-      (sum, item) => sum + item.pontos,
-      0
-    );
+    const totalPoints = filteredRanking.reduce((sum, item) => sum + item.pontos, 0);
     const avgPoints = totalPilots > 0 ? totalPoints / totalPilots : 0;
 
-    const totalVictories = filteredRanking.reduce(
-      (sum, item) => sum + item.vitorias,
-      0
-    );
-    const totalPodiums = filteredRanking.reduce(
-      (sum, item) => sum + item.podios,
-      0
-    );
+    const totalVictories = filteredRanking.reduce((sum, item) => sum + item.vitorias, 0);
+    const totalPodiums = filteredRanking.reduce((sum, item) => sum + item.podios, 0);
 
     return {
       totalPilots,
@@ -461,11 +337,7 @@ export default function MidiaPageContent() {
 
     const podiumPressure =
       filteredRanking.length >= 6
-        ? Math.max(
-            (filteredRanking[2]?.pontos || 0) -
-              (filteredRanking[5]?.pontos || 0),
-            0
-          )
+        ? Math.max((filteredRanking[2]?.pontos || 0) - (filteredRanking[5]?.pontos || 0), 0)
         : Math.max(
             (filteredRanking[0]?.pontos || 0) -
               (filteredRanking[filteredRanking.length - 1]?.pontos || 0),
@@ -493,10 +365,7 @@ export default function MidiaPageContent() {
       hottestLabel = "Ataque dominante";
     } else if ((hottestPilot?.podios || 0) >= 4) {
       hottestLabel = "Consistência premium";
-    } else if (
-      (hottestPilot?.poles || 0) >= 2 ||
-      (hottestPilot?.mv || 0) >= 2
-    ) {
+    } else if ((hottestPilot?.poles || 0) >= 2 || (hottestPilot?.mv || 0) >= 2) {
       hottestLabel = "Velocidade em alta";
     }
 
@@ -564,35 +433,44 @@ export default function MidiaPageContent() {
       setIsSharingImage(true);
       const dataUrl = await generateImage(shareCardRef.current);
       if (!dataUrl) {
-        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar a classificação." });
+        addToast({
+          type: "error",
+          title: "Erro ao gerar imagem",
+          message: "Não foi possível gerar a classificação.",
+        });
         return;
       }
 
-      download(
-        dataUrl,
-        `classificacao-${category.toLowerCase()}-${competition.toLowerCase()}.png`
-      );
-      addToast({ type: "success", title: "Imagem salva", message: "Classificação exportada com sucesso." });
+      download(dataUrl, `classificacao-${category.toLowerCase()}-${competition.toLowerCase()}.png`);
+      addToast({
+        type: "success",
+        title: "Imagem salva",
+        message: "Classificação exportada com sucesso.",
+      });
     } catch (err) {
       console.error(err);
-      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar a classificação." });
+      addToast({
+        type: "error",
+        title: "Erro ao gerar imagem",
+        message: "Não foi possível gerar a classificação.",
+      });
     } finally {
       setIsSharingImage(false);
     }
   };
 
   const handleShareFullClassification = async () => {
-    if (
-      !fullClassificationShareCardRef.current ||
-      isSharingFullClassificationImage
-    )
-      return;
+    if (!fullClassificationShareCardRef.current || isSharingFullClassificationImage) return;
 
     try {
       setIsSharingFullClassificationImage(true);
       const dataUrl = await generateImage(fullClassificationShareCardRef.current);
       if (!dataUrl) {
-        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar a classificação completa." });
+        addToast({
+          type: "error",
+          title: "Erro ao gerar imagem",
+          message: "Não foi possível gerar a classificação completa.",
+        });
         return;
       }
 
@@ -600,10 +478,18 @@ export default function MidiaPageContent() {
         dataUrl,
         `classificacao-completa-${category.toLowerCase()}-${competition.toLowerCase()}.png`
       );
-      addToast({ type: "success", title: "Imagem salva", message: "Classificação completa exportada com sucesso." });
+      addToast({
+        type: "success",
+        title: "Imagem salva",
+        message: "Classificação completa exportada com sucesso.",
+      });
     } catch (err) {
       console.error(err);
-      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar a classificação completa." });
+      addToast({
+        type: "error",
+        title: "Erro ao gerar imagem",
+        message: "Não foi possível gerar a classificação completa.",
+      });
     } finally {
       setIsSharingFullClassificationImage(false);
     }
@@ -617,7 +503,11 @@ export default function MidiaPageContent() {
       setIsSharingLeaderImage(true);
       const dataUrl = await generateImage(ref);
       if (!dataUrl) {
-        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card do líder." });
+        addToast({
+          type: "error",
+          title: "Erro ao gerar imagem",
+          message: "Não foi possível gerar o card do líder.",
+        });
         return;
       }
 
@@ -627,22 +517,27 @@ export default function MidiaPageContent() {
           ? `lider-stories-${category.toLowerCase()}-${competition.toLowerCase()}.png`
           : `lider-${category.toLowerCase()}-${competition.toLowerCase()}.png`
       );
-      addToast({ type: "success", title: "Imagem salva", message: "Card do líder exportado com sucesso." });
+      addToast({
+        type: "success",
+        title: "Imagem salva",
+        message: "Card do líder exportado com sucesso.",
+      });
     } catch (err) {
       console.error(err);
-      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card do líder." });
+      addToast({
+        type: "error",
+        title: "Erro ao gerar imagem",
+        message: "Não foi possível gerar o card do líder.",
+      });
     } finally {
       setIsSharingLeaderImage(false);
     }
   };
 
   const handleShareNarrativeCard = async () => {
-    const ref = shareFormat === "stories" ? storiesNarrativeRef.current : narrativeShareCardRef.current;
-    if (
-      !championshipNarrative ||
-      !ref ||
-      isSharingNarrativeImage
-    ) {
+    const ref =
+      shareFormat === "stories" ? storiesNarrativeRef.current : narrativeShareCardRef.current;
+    if (!championshipNarrative || !ref || isSharingNarrativeImage) {
       return;
     }
 
@@ -650,7 +545,11 @@ export default function MidiaPageContent() {
       setIsSharingNarrativeImage(true);
       const dataUrl = await generateImage(ref);
       if (!dataUrl) {
-        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card da narrativa." });
+        addToast({
+          type: "error",
+          title: "Erro ao gerar imagem",
+          message: "Não foi possível gerar o card da narrativa.",
+        });
         return;
       }
 
@@ -660,10 +559,18 @@ export default function MidiaPageContent() {
           ? `narrativa-stories-${category.toLowerCase()}-${competition.toLowerCase()}.png`
           : `narrativa-${category.toLowerCase()}-${competition.toLowerCase()}.png`
       );
-      addToast({ type: "success", title: "Imagem salva", message: "Card da narrativa exportado com sucesso." });
+      addToast({
+        type: "success",
+        title: "Imagem salva",
+        message: "Card da narrativa exportado com sucesso.",
+      });
     } catch (err) {
       console.error(err);
-      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card da narrativa." });
+      addToast({
+        type: "error",
+        title: "Erro ao gerar imagem",
+        message: "Não foi possível gerar o card da narrativa.",
+      });
     } finally {
       setIsSharingNarrativeImage(false);
     }
@@ -671,12 +578,7 @@ export default function MidiaPageContent() {
 
   const handleShareDuelCard = async () => {
     // Duelo não tem versão Stories — usa sempre landscape
-    if (
-      !comparePilotA ||
-      !comparePilotB ||
-      !duelShareCardRef.current ||
-      isSharingDuelImage
-    ) {
+    if (!comparePilotA || !comparePilotB || !duelShareCardRef.current || isSharingDuelImage) {
       return;
     }
 
@@ -684,74 +586,29 @@ export default function MidiaPageContent() {
       setIsSharingDuelImage(true);
       const dataUrl = await generateImage(duelShareCardRef.current);
       if (!dataUrl) {
-        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card do duelo." });
+        addToast({
+          type: "error",
+          title: "Erro ao gerar imagem",
+          message: "Não foi possível gerar o card do duelo.",
+        });
         return;
       }
 
-      download(
-        dataUrl,
-        `duelo-${category.toLowerCase()}-${competition.toLowerCase()}.png`
-      );
-      addToast({ type: "success", title: "Imagem salva", message: "Card do duelo exportado com sucesso." });
+      download(dataUrl, `duelo-${category.toLowerCase()}-${competition.toLowerCase()}.png`);
+      addToast({
+        type: "success",
+        title: "Imagem salva",
+        message: "Card do duelo exportado com sucesso.",
+      });
     } catch (err) {
       console.error(err);
-      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card do duelo." });
+      addToast({
+        type: "error",
+        title: "Erro ao gerar imagem",
+        message: "Não foi possível gerar o card do duelo.",
+      });
     } finally {
       setIsSharingDuelImage(false);
-    }
-  };
-
-  const handleSharePodiumCard = async () => {
-    const ref = shareFormat === "stories" ? storiesPodiumRef.current : podiumCardRef.current;
-    if (!ref || isSharingPodiumImage) return;
-
-    try {
-      setIsSharingPodiumImage(true);
-      const dataUrl = await generateImage(ref);
-      if (!dataUrl) {
-        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card do pódio." });
-        return;
-      }
-
-      download(
-        dataUrl,
-        shareFormat === "stories"
-          ? `podio-stories-${category.toLowerCase()}-${competition.toLowerCase()}.png`
-          : `podio-${category.toLowerCase()}-${competition.toLowerCase()}.png`
-      );
-      addToast({ type: "success", title: "Imagem salva", message: "Card do pódio exportado com sucesso." });
-    } catch (err) {
-      console.error(err);
-      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card do pódio." });
-    } finally {
-      setIsSharingPodiumImage(false);
-    }
-  };
-
-  const handleShareEvolutionCard = async () => {
-    const ref = shareFormat === "stories" ? storiesEvolutionRef.current : evolutionCardRef.current;
-    if (!ref || isSharingEvolutionImage) return;
-
-    try {
-      setIsSharingEvolutionImage(true);
-      const dataUrl = await generateImage(ref);
-      if (!dataUrl) {
-        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card da evolução." });
-        return;
-      }
-
-      download(
-        dataUrl,
-        shareFormat === "stories"
-          ? `evolucao-stories-${category.toLowerCase()}-${competition.toLowerCase()}.png`
-          : `evolucao-${category.toLowerCase()}-${competition.toLowerCase()}.png`
-      );
-      addToast({ type: "success", title: "Imagem salva", message: "Card da evolução exportado com sucesso." });
-    } catch (err) {
-      console.error(err);
-      addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card da evolução." });
-    } finally {
-      setIsSharingEvolutionImage(false);
     }
   };
 
@@ -777,21 +634,25 @@ ${getPilotFirstAndLastName(leader.piloto)} lidera ${category} - ${
 
 Caserna Kart Racing`,
       });
-      addToast({ type: "success", title: "Enviado para WhatsApp", message: "Card do líder compartilhado." });
+      addToast({
+        type: "success",
+        title: "Enviado para WhatsApp",
+        message: "Card do líder compartilhado.",
+      });
     } catch (err) {
       console.error(err);
-      addToast({ type: "error", title: "Erro ao enviar", message: "Não foi possível enviar para o WhatsApp." });
+      addToast({
+        type: "error",
+        title: "Erro ao enviar",
+        message: "Não foi possível enviar para o WhatsApp.",
+      });
     } finally {
       setIsSharingLeaderImage(false);
     }
   };
 
   const handleWhatsAppNarrativeCard = async () => {
-    if (
-      !championshipNarrative ||
-      !narrativeShareCardRef.current ||
-      isSharingNarrativeImage
-    ) {
+    if (!championshipNarrative || !narrativeShareCardRef.current || isSharingNarrativeImage) {
       return;
     }
 
@@ -799,7 +660,11 @@ Caserna Kart Racing`,
       setIsSharingNarrativeImage(true);
       const dataUrl = await generateImage(narrativeShareCardRef.current);
       if (!dataUrl) {
-        addToast({ type: "error", title: "Erro ao gerar imagem", message: "Não foi possível gerar o card da narrativa." });
+        addToast({
+          type: "error",
+          title: "Erro ao gerar imagem",
+          message: "Não foi possível gerar o card da narrativa.",
+        });
         return;
       }
 
@@ -813,22 +678,25 @@ ${championshipNarrative.body}
 ${category} - ${competitionLabels[competition] || competition}
 Caserna Kart Racing`,
       });
-      addToast({ type: "success", title: "Enviado para WhatsApp", message: "Card da narrativa compartilhado." });
+      addToast({
+        type: "success",
+        title: "Enviado para WhatsApp",
+        message: "Card da narrativa compartilhado.",
+      });
     } catch (err) {
       console.error(err);
-      addToast({ type: "error", title: "Erro ao enviar", message: "Não foi possível enviar para o WhatsApp." });
+      addToast({
+        type: "error",
+        title: "Erro ao enviar",
+        message: "Não foi possível enviar para o WhatsApp.",
+      });
     } finally {
       setIsSharingNarrativeImage(false);
     }
   };
 
   const handleWhatsAppDuelCard = async () => {
-    if (
-      !comparePilotA ||
-      !comparePilotB ||
-      !duelShareCardRef.current ||
-      isSharingDuelImage
-    ) {
+    if (!comparePilotA || !comparePilotB || !duelShareCardRef.current || isSharingDuelImage) {
       return;
     }
 
@@ -858,10 +726,18 @@ Caserna Kart Racing`;
         fileName: `duelo-${category.toLowerCase()}-${competition.toLowerCase()}.png`,
         text: duelText,
       });
-      addToast({ type: "success", title: "Enviado para WhatsApp", message: "Card do duelo compartilhado." });
+      addToast({
+        type: "success",
+        title: "Enviado para WhatsApp",
+        message: "Card do duelo compartilhado.",
+      });
     } catch (err) {
       console.error(err);
-      addToast({ type: "error", title: "Erro ao enviar", message: "Não foi possível enviar para o WhatsApp." });
+      addToast({
+        type: "error",
+        title: "Erro ao enviar",
+        message: "Não foi possível enviar para o WhatsApp.",
+      });
     } finally {
       setIsSharingDuelImage(false);
     }
@@ -876,14 +752,8 @@ Caserna Kart Racing`;
             : "border-black/5 bg-white text-zinc-950"
         }`}
       >
-        <p className="text-xl font-semibold tracking-tight">
-          Carregando central de mídia...
-        </p>
-        <p
-          className={`mt-2 text-sm ${
-            isDarkMode ? "text-zinc-400" : "text-zinc-500"
-          }`}
-        >
+        <p className="text-xl font-semibold tracking-tight">Carregando central de mídia...</p>
+        <p className={`mt-2 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
           Preparando artes e compartilhamentos oficiais
         </p>
       </div>
@@ -900,13 +770,7 @@ Caserna Kart Racing`;
         }`}
       >
         <p className="text-2xl font-semibold tracking-tight">Erro</p>
-        <p
-          className={`mt-2 ${
-            isDarkMode ? "text-zinc-300" : "text-zinc-600"
-          }`}
-        >
-          {error}
-        </p>
+        <p className={`mt-2 ${isDarkMode ? "text-zinc-300" : "text-zinc-600"}`}>{error}</p>
         <button
           onClick={handleRetry}
           className={`mt-5 w-full rounded-2xl px-4 py-3 text-sm font-semibold transition ${
@@ -925,205 +789,241 @@ Caserna Kart Racing`;
     <PageTransition>
       <div className="mt-4 space-y-4 lg:space-y-5 xl:space-y-6">
         <RankingHeader
-        isDarkMode={isDarkMode}
-        theme={theme}
-        categories={[]}
-        category={category}
-        setCategory={setCategory}
-        availableCompetitions={availableCompetitions}
-        competition={competition}
-        setCompetition={setCompetition}
-        competitionLabels={competitionLabels}
-        toggleDarkMode={handleToggleDarkMode}
-      />
+          isDarkMode={isDarkMode}
+          theme={theme}
+          categories={[]}
+          category={category}
+          setCategory={setCategory}
+          availableCompetitions={availableCompetitions}
+          competition={competition}
+          setCompetition={setCompetition}
+          competitionLabels={competitionLabels}
+          toggleDarkMode={handleToggleDarkMode}
+        />
 
-      <Breadcrumb
-        items={[
-          { label: "Mídia", href: "/midia" },
-        ]}
-        isDark={isDarkMode}
-      />
+        <Breadcrumb items={[{ label: "Mídia", href: "/midia" }]} isDark={isDarkMode} />
 
-      <Card
-        className={`rounded-[24px] shadow-sm ${
-          isDarkMode
-            ? "border border-white/10 bg-[#111827]"
-            : "border-black/5 bg-white"
-        }`}
-      >
-        <CardContent className="p-4">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p
-                className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
-                  isDarkMode ? "text-zinc-500" : "text-zinc-400"
+        <Card
+          className={`rounded-[24px] shadow-sm ${
+            isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
+          }`}
+        >
+          <CardContent className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p
+                  className={`text-[10px] font-bold tracking-[0.16em] uppercase ${
+                    isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                  }`}
+                >
+                  Centro de mídia
+                </p>
+                <h3
+                  className={`mt-1 text-[20px] font-extrabold tracking-tight ${
+                    isDarkMode ? "text-white" : "text-zinc-950"
+                  }`}
+                >
+                  Compartilhamento oficial do campeonato
+                </h3>
+                <p
+                  className={`mt-2 text-[12px] leading-snug ${
+                    isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                  }`}
+                >
+                  Gere cards da classificação, do líder, da narrativa e do duelo em um único módulo,
+                  sem poluir as telas principais do app.
+                </p>
+              </div>
+
+              <div
+                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
+                  isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                 }`}
               >
-                Centro de mídia
-              </p>
-              <h3
-                className={`mt-1 text-[20px] font-extrabold tracking-tight ${
-                  isDarkMode ? "text-white" : "text-zinc-950"
-                }`}
-              >
-                Compartilhamento oficial do campeonato
-              </h3>
-              <p
-                className={`mt-2 text-[12px] leading-snug ${
-                  isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                }`}
-              >
-                Gere cards da classificação, do líder, da narrativa e do duelo
-                em um único módulo, sem poluir as telas principais do app.
-              </p>
+                <Clapperboard
+                  className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
+                />
+              </div>
             </div>
+          </CardContent>
+        </Card>
 
-            <div
-              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
-                isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-              }`}
-            >
-              <Clapperboard
-                className={`h-5 w-5 ${
-                  isDarkMode ? theme.darkAccentText : theme.primaryIcon
+        {/* Format toggle: Landscape / Stories */}
+        <Card
+          className={`rounded-[24px] shadow-sm ${
+            isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
+          }`}
+        >
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p
+                  className={`text-[10px] font-bold tracking-[0.16em] uppercase ${
+                    isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                  }`}
+                >
+                  Formato do card
+                </p>
+                <h3
+                  className={`mt-1 text-[16px] font-bold tracking-tight ${
+                    isDarkMode ? "text-white" : "text-zinc-950"
+                  }`}
+                >
+                  Escolha o formato de compartilhamento
+                </h3>
+              </div>
+
+              <div
+                className={`flex overflow-hidden rounded-xl border ${
+                  isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50"
                 }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => setShareFormat("landscape")}
+                  className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold transition ${
+                    shareFormat === "landscape"
+                      ? isDarkMode
+                        ? `${theme.darkAccentBgSoft} ${theme.darkAccentText}`
+                        : `${theme.primaryIconWrap} ${theme.primaryIcon}`
+                      : isDarkMode
+                        ? "text-zinc-500 hover:text-zinc-300"
+                        : "text-zinc-400 hover:text-zinc-600"
+                  }`}
+                >
+                  <Monitor className="h-3.5 w-3.5" />
+                  Paisagem
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShareFormat("stories")}
+                  className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold transition ${
+                    shareFormat === "stories"
+                      ? isDarkMode
+                        ? `${theme.darkAccentBgSoft} ${theme.darkAccentText}`
+                        : `${theme.primaryIconWrap} ${theme.primaryIcon}`
+                      : isDarkMode
+                        ? "text-zinc-500 hover:text-zinc-300"
+                        : "text-zinc-400 hover:text-zinc-600"
+                  }`}
+                >
+                  <Smartphone className="h-3.5 w-3.5" />
+                  Stories
+                </button>
+              </div>
+            </div>
+            <p className={`mt-2 text-[11px] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+              {shareFormat === "stories"
+                ? "1080×1920 · Ideal para Instagram Stories"
+                : "1080px · Ideal para feed e grupos de WhatsApp"}
+            </p>
+          </CardContent>
+        </Card>
+
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+          <div className="space-y-4">
+            <div ref={classificationSectionRef} className="space-y-4">
+              <RankingClassificationShareCard
+                isDarkMode={isDarkMode}
+                theme={theme}
+                isSharingImage={isSharingImage}
+                filteredRankingLength={filteredRanking.length}
+                onShare={handleShareClassification}
               />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
-      {/* Format toggle: Landscape / Stories */}
-      <Card
-        className={`rounded-[24px] shadow-sm ${
-          isDarkMode
-            ? "border border-white/10 bg-[#111827]"
-            : "border-black/5 bg-white"
-        }`}
-      >
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p
-                className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
-                  isDarkMode ? "text-zinc-500" : "text-zinc-400"
+              <Card
+                className={`rounded-[24px] shadow-sm ${
+                  isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
                 }`}
               >
-                Formato do card
-              </p>
-              <h3
-                className={`mt-1 text-[16px] font-bold tracking-tight ${
-                  isDarkMode ? "text-white" : "text-zinc-950"
-                }`}
-              >
-                Escolha o formato de compartilhamento
-              </h3>
-            </div>
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p
+                        className={`text-[10px] font-bold tracking-[0.16em] uppercase ${
+                          isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                        }`}
+                      >
+                        Classificação completa
+                      </p>
+                      <h3
+                        className={`mt-1 text-[20px] font-extrabold tracking-tight ${
+                          isDarkMode ? "text-white" : "text-zinc-950"
+                        }`}
+                      >
+                        Compartilhar a tabela inteira
+                      </h3>
+                      <p
+                        className={`mt-2 text-[12px] leading-snug ${
+                          isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                        }`}
+                      >
+                        Gera uma screen de toda a classificação oficial do recorte atual, com todos
+                        os pilotos com pontos.
+                      </p>
+                    </div>
 
-            <div
-              className={`flex overflow-hidden rounded-xl border ${
-                isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50"
-              }`}
-            >
-              <button
-                type="button"
-                onClick={() => setShareFormat("landscape")}
-                className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold transition ${
-                  shareFormat === "landscape"
-                    ? isDarkMode
-                      ? `${theme.darkAccentBgSoft} ${theme.darkAccentText}`
-                      : `${theme.primaryIconWrap} ${theme.primaryIcon}`
-                    : isDarkMode
-                      ? "text-zinc-500 hover:text-zinc-300"
-                      : "text-zinc-400 hover:text-zinc-600"
-                }`}
-              >
-                <Monitor className="h-3.5 w-3.5" />
-                Paisagem
-              </button>
-              <button
-                type="button"
-                onClick={() => setShareFormat("stories")}
-                className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold transition ${
-                  shareFormat === "stories"
-                    ? isDarkMode
-                      ? `${theme.darkAccentBgSoft} ${theme.darkAccentText}`
-                      : `${theme.primaryIconWrap} ${theme.primaryIcon}`
-                    : isDarkMode
-                      ? "text-zinc-500 hover:text-zinc-300"
-                      : "text-zinc-400 hover:text-zinc-600"
-                }`}
-              >
-                <Smartphone className="h-3.5 w-3.5" />
-                Stories
-              </button>
-            </div>
-          </div>
-          <p
-            className={`mt-2 text-[11px] ${
-              isDarkMode ? "text-zinc-500" : "text-zinc-400"
-            }`}
-          >
-            {shareFormat === "stories"
-              ? "1080×1920 · Ideal para Instagram Stories"
-              : "1080px · Ideal para feed e grupos de WhatsApp"}
-          </p>
-        </CardContent>
-      </Card>
+                    <div
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${
+                        isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                      }`}
+                    >
+                      <ListOrdered
+                        className={`h-4.5 w-4.5 ${
+                          isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                        }`}
+                      />
+                    </div>
+                  </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-        <div className="space-y-4">
-          <div ref={classificationSectionRef} className="space-y-4">
-            <RankingClassificationShareCard
-              isDarkMode={isDarkMode}
-              theme={theme}
-              isSharingImage={isSharingImage}
-              filteredRankingLength={filteredRanking.length}
-              onShare={handleShareClassification}
-            />
+                  <button
+                    type="button"
+                    onClick={handleShareFullClassification}
+                    disabled={isSharingFullClassificationImage || filteredRanking.length === 0}
+                    className={`mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-[18px] border px-4 py-3 text-sm font-semibold transition ${
+                      isDarkMode
+                        ? "border-white/10 bg-[#0f172a] text-white hover:bg-[#162033] disabled:opacity-50"
+                        : "border-black/5 bg-zinc-50 text-zinc-950 hover:bg-white disabled:opacity-50"
+                    }`}
+                  >
+                    {isSharingFullClassificationImage
+                      ? "Gerando imagem completa..."
+                      : `Compartilhar classificação completa (${filteredRanking.length} pilotos)`}
+                  </button>
+                </CardContent>
+              </Card>
+            </div>
 
             <Card
               className={`rounded-[24px] shadow-sm ${
-                isDarkMode
-                  ? "border border-white/10 bg-[#111827]"
-                  : "border-black/5 bg-white"
+                isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
               }`}
             >
               <CardContent className="p-4">
-                <div className="flex items-start justify-between gap-3">
+                <div className="mb-4 flex items-start justify-between gap-3">
                   <div>
                     <p
-                      className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                      className={`text-[10px] font-bold tracking-[0.16em] uppercase ${
                         isDarkMode ? "text-zinc-500" : "text-zinc-400"
                       }`}
                     >
-                      Classificação completa
+                      Duelo premium
                     </p>
                     <h3
                       className={`mt-1 text-[20px] font-extrabold tracking-tight ${
                         isDarkMode ? "text-white" : "text-zinc-950"
                       }`}
                     >
-                      Compartilhar a tabela inteira
+                      Monte o confronto para mídia
                     </h3>
-                    <p
-                      className={`mt-2 text-[12px] leading-snug ${
-                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                      }`}
-                    >
-                      Gera uma screen de toda a classificação oficial do recorte
-                      atual, com todos os pilotos com pontos.
-                    </p>
                   </div>
 
                   <div
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${
-                      isDarkMode
-                        ? theme.darkAccentIconWrap
-                        : theme.primaryIconWrap
+                    className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
+                      isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                     }`}
                   >
-                    <ListOrdered
+                    <Swords
                       className={`h-4.5 w-4.5 ${
                         isDarkMode ? theme.darkAccentText : theme.primaryIcon
                       }`}
@@ -1131,388 +1031,326 @@ Caserna Kart Racing`;
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={handleShareFullClassification}
-                  disabled={
-                    isSharingFullClassificationImage ||
-                    filteredRanking.length === 0
-                  }
-                  className={`mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-[18px] border px-4 py-3 text-sm font-semibold transition ${
-                    isDarkMode
-                      ? "border-white/10 bg-[#0f172a] text-white hover:bg-[#162033] disabled:opacity-50"
-                      : "border-black/5 bg-zinc-50 text-zinc-950 hover:bg-white disabled:opacity-50"
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="compare-pilot-a"
+                      className={`mb-1.5 block text-[10px] font-bold tracking-[0.14em] uppercase ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}
+                    >
+                      Piloto A
+                    </label>
+                    <select
+                      id="compare-pilot-a"
+                      value={comparePilotAId}
+                      onChange={(e) => setComparePilotAId(e.target.value)}
+                      className={`w-full rounded-[16px] border px-3 py-3 text-sm font-medium transition outline-none ${
+                        isDarkMode
+                          ? "border-white/10 bg-[#0f172a] text-white"
+                          : "border-black/5 bg-zinc-50 text-zinc-950"
+                      }`}
+                    >
+                      <option value="">Selecione</option>
+                      {filteredRanking.map((pilot) => (
+                        <option
+                          key={`media-pilot-a-${pilot.pilotoId || pilot.piloto}`}
+                          value={pilot.pilotoId || pilot.piloto}
+                        >
+                          {getPilotFirstAndLastName(pilot.piloto)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="compare-pilot-b"
+                      className={`mb-1.5 block text-[10px] font-bold tracking-[0.14em] uppercase ${
+                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                      }`}
+                    >
+                      Piloto B
+                    </label>
+                    <select
+                      id="compare-pilot-b"
+                      value={comparePilotBId}
+                      onChange={(e) => setComparePilotBId(e.target.value)}
+                      className={`w-full rounded-[16px] border px-3 py-3 text-sm font-medium transition outline-none ${
+                        isDarkMode
+                          ? "border-white/10 bg-[#0f172a] text-white"
+                          : "border-black/5 bg-zinc-50 text-zinc-950"
+                      }`}
+                    >
+                      <option value="">Selecione</option>
+                      {filteredRanking.map((pilot) => (
+                        <option
+                          key={`media-pilot-b-${pilot.pilotoId || pilot.piloto}`}
+                          value={pilot.pilotoId || pilot.piloto}
+                        >
+                          {getPilotFirstAndLastName(pilot.piloto)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div
+                  className={`mt-4 rounded-[18px] border px-3 py-3 ${
+                    isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-zinc-50/80"
                   }`}
                 >
-                  {isSharingFullClassificationImage
-                    ? "Gerando imagem completa..."
-                    : `Compartilhar classificação completa (${filteredRanking.length} pilotos)`}
-                </button>
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p
+                        className={`text-[10px] font-bold tracking-[0.14em] uppercase ${
+                          isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                        }`}
+                      >
+                        Status do duelo
+                      </p>
+                      <p
+                        className={`mt-1 text-[14px] font-semibold ${
+                          isDarkMode ? "text-white" : "text-zinc-950"
+                        }`}
+                      >
+                        {comparePilotA && comparePilotB
+                          ? `${getPilotFirstAndLastName(
+                              comparePilotA.piloto
+                            )} x ${getPilotFirstAndLastName(comparePilotB.piloto)}`
+                          : "Selecione dois pilotos"}
+                      </p>
+                    </div>
+
+                    <div
+                      className={`rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.12em] uppercase ${duelIntensity.tone}`}
+                    >
+                      {duelIntensity.label}
+                    </div>
+                  </div>
+
+                  <p
+                    className={`mt-2 text-[12px] leading-snug ${
+                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                    }`}
+                  >
+                    {duelSummary
+                      ? duelSummary.narrative
+                      : "A comparação premium será liberada quando dois pilotos forem selecionados."}
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </div>
 
-          <Card
-            className={`rounded-[24px] shadow-sm ${
-              isDarkMode
-                ? "border border-white/10 bg-[#111827]"
-                : "border-black/5 bg-white"
-            }`}
-          >
-            <CardContent className="p-4">
-              <div className="mb-4 flex items-start justify-between gap-3">
-                <div>
-                  <p
-                    className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
-                      isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                    }`}
-                  >
-                    Duelo premium
-                  </p>
-                  <h3
-                    className={`mt-1 text-[20px] font-extrabold tracking-tight ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
-                    }`}
-                  >
-                    Monte o confronto para mídia
-                  </h3>
-                </div>
+          <div ref={premiumSectionRef}>
+            <div ref={whatsappSectionRef}>
+              <RankingSharePremiumSection
+                isDarkMode={isDarkMode}
+                theme={theme}
+                leader={leader}
+                championshipNarrative={championshipNarrative}
+                comparePilotA={comparePilotA}
+                comparePilotB={comparePilotB}
+                isSharingLeaderImage={isSharingLeaderImage}
+                isSharingNarrativeImage={isSharingNarrativeImage}
+                isSharingDuelImage={isSharingDuelImage}
+                onShareLeader={handleShareLeaderCard}
+                onShareNarrative={handleShareNarrativeCard}
+                onShareDuel={handleShareDuelCard}
+                onWhatsAppLeader={handleWhatsAppLeaderCard}
+                onWhatsAppNarrative={handleWhatsAppNarrativeCard}
+                onWhatsAppDuel={handleWhatsAppDuelCard}
+              />
+            </div>
+          </div>
+        </div>
 
-                <div
-                  className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
-                    isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                  }`}
-                >
-                  <Swords
-                    className={`h-4.5 w-4.5 ${
-                      isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                    }`}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                <div>
-                  <label
-                    className={`mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] ${
-                      isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                    }`}
-                  >
-                    Piloto A
-                  </label>
-                  <select
-                    value={comparePilotAId}
-                    onChange={(e) => setComparePilotAId(e.target.value)}
-                    className={`w-full rounded-[16px] border px-3 py-3 text-sm font-medium outline-none transition ${
-                      isDarkMode
-                        ? "border-white/10 bg-[#0f172a] text-white"
-                        : "border-black/5 bg-zinc-50 text-zinc-950"
-                    }`}
-                  >
-                    <option value="">Selecione</option>
-                    {filteredRanking.map((pilot) => (
-                      <option
-                        key={`media-pilot-a-${pilot.pilotoId || pilot.piloto}`}
-                        value={pilot.pilotoId || pilot.piloto}
-                      >
-                        {getPilotFirstAndLastName(pilot.piloto)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    className={`mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] ${
-                      isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                    }`}
-                  >
-                    Piloto B
-                  </label>
-                  <select
-                    value={comparePilotBId}
-                    onChange={(e) => setComparePilotBId(e.target.value)}
-                    className={`w-full rounded-[16px] border px-3 py-3 text-sm font-medium outline-none transition ${
-                      isDarkMode
-                        ? "border-white/10 bg-[#0f172a] text-white"
-                        : "border-black/5 bg-zinc-50 text-zinc-950"
-                    }`}
-                  >
-                    <option value="">Selecione</option>
-                    {filteredRanking.map((pilot) => (
-                      <option
-                        key={`media-pilot-b-${pilot.pilotoId || pilot.piloto}`}
-                        value={pilot.pilotoId || pilot.piloto}
-                      >
-                        {getPilotFirstAndLastName(pilot.piloto)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div
-                className={`mt-4 rounded-[18px] border px-3 py-3 ${
-                  isDarkMode
-                    ? "border-white/10 bg-[#0f172a]"
-                    : "border-black/5 bg-zinc-50/80"
+        <Card
+          className={`rounded-[24px] shadow-sm ${
+            isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
+          }`}
+        >
+          <CardContent className="p-4">
+            <div className="mb-3 flex items-center gap-2">
+              <Share2
+                className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
+              />
+              <p
+                className={`text-[12px] font-bold tracking-[0.14em] uppercase ${
+                  isDarkMode ? "text-zinc-400" : "text-zinc-500"
                 }`}
               >
-                <div className="flex items-center justify-between gap-3">
+                Operação da central de mídia
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+              <button
+                type="button"
+                onClick={() => scrollToSection(classificationSectionRef)}
+                className={`group rounded-[18px] border px-3 py-3 text-left transition-all duration-200 ${
+                  isDarkMode
+                    ? "border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033]"
+                    : "border-black/5 bg-zinc-50/80 hover:bg-white"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-3">
                   <div>
                     <p
-                      className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
-                        isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                      }`}
-                    >
-                      Status do duelo
-                    </p>
-                    <p
-                      className={`mt-1 text-[14px] font-semibold ${
+                      className={`text-[12px] font-semibold ${
                         isDarkMode ? "text-white" : "text-zinc-950"
                       }`}
                     >
-                      {comparePilotA && comparePilotB
-                        ? `${getPilotFirstAndLastName(
-                            comparePilotA.piloto
-                          )} x ${getPilotFirstAndLastName(comparePilotB.piloto)}`
-                        : "Selecione dois pilotos"}
+                      Classificação
+                    </p>
+                    <p
+                      className={`mt-1 text-[12px] leading-snug ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}
+                    >
+                      Use para gerar a arte da grade oficial e também a classificação completa.
                     </p>
                   </div>
 
-                  <div
-                    className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${duelIntensity.tone}`}
-                  >
-                    {duelIntensity.label}
+                  <ChevronRight
+                    className={`mt-0.5 h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 ${
+                      isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                    }`}
+                  />
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => scrollToSection(premiumSectionRef)}
+                className={`group rounded-[18px] border px-3 py-3 text-left transition-all duration-200 ${
+                  isDarkMode
+                    ? "border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033]"
+                    : "border-black/5 bg-zinc-50/80 hover:bg-white"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p
+                      className={`text-[12px] font-semibold ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}
+                    >
+                      Narrativa e líder
+                    </p>
+                    <p
+                      className={`mt-1 text-[12px] leading-snug ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}
+                    >
+                      Ideal para cards rápidos de contexto e liderança do campeonato.
+                    </p>
                   </div>
+
+                  <ChevronRight
+                    className={`mt-0.5 h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 ${
+                      isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                    }`}
+                  />
                 </div>
+              </button>
 
-                <p
-                  className={`mt-2 text-[12px] leading-snug ${
-                    isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                  }`}
-                >
-                  {duelSummary
-                    ? duelSummary.narrative
-                    : "A comparação premium será liberada quando dois pilotos forem selecionados."}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              <button
+                type="button"
+                onClick={() => scrollToSection(whatsappSectionRef)}
+                className={`group rounded-[18px] border px-3 py-3 text-left transition-all duration-200 ${
+                  isDarkMode
+                    ? "border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033]"
+                    : "border-black/5 bg-zinc-50/80 hover:bg-white"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p
+                      className={`text-[12px] font-semibold ${
+                        isDarkMode ? "text-white" : "text-zinc-950"
+                      }`}
+                    >
+                      WhatsApp
+                    </p>
+                    <p
+                      className={`mt-1 text-[12px] leading-snug ${
+                        isDarkMode ? "text-zinc-400" : "text-zinc-500"
+                      }`}
+                    >
+                      Envie direto os cards do líder, da narrativa e do duelo para uso rápido.
+                    </p>
+                  </div>
 
-        <div ref={premiumSectionRef}>
-          <div ref={whatsappSectionRef}>
-            <RankingSharePremiumSection
-              isDarkMode={isDarkMode}
-              theme={theme}
-              leader={leader}
-              championshipNarrative={championshipNarrative}
-              comparePilotA={comparePilotA}
-              comparePilotB={comparePilotB}
-              isSharingLeaderImage={isSharingLeaderImage}
-              isSharingNarrativeImage={isSharingNarrativeImage}
-              isSharingDuelImage={isSharingDuelImage}
-              onShareLeader={handleShareLeaderCard}
-              onShareNarrative={handleShareNarrativeCard}
-              onShareDuel={handleShareDuelCard}
-              onWhatsAppLeader={handleWhatsAppLeaderCard}
-              onWhatsAppNarrative={handleWhatsAppNarrativeCard}
-              onWhatsAppDuel={handleWhatsAppDuelCard}
-            />
-          </div>
+                  <ChevronRight
+                    className={`mt-0.5 h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 ${
+                      isDarkMode ? "text-zinc-500" : "text-zinc-400"
+                    }`}
+                  />
+                </div>
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="pointer-events-none fixed top-0 -left-[9999px] z-[-1] opacity-0">
+          <RankingShareCanvas
+            isDarkMode={isDarkMode}
+            theme={theme}
+            category={category}
+            competition={competition}
+            competitionLabels={competitionLabels}
+            leader={leader}
+            statsSummary={statsSummary}
+            championshipNarrative={championshipNarrative}
+            comparePilotA={comparePilotA}
+            comparePilotB={comparePilotB}
+            duelSummary={duelSummary}
+            duelIntensity={duelIntensity}
+            filteredRanking={filteredRanking}
+            pilotTrendMap={pilotTrendMap}
+            getPilotFirstAndLastName={getPilotFirstAndLastName}
+            getPilotWarNameDisplay={getPilotWarNameDisplay}
+            getTop6RowStyles={getTop6RowStyles}
+            getTrendVisual={getTrendVisual}
+            normalizePilotName={normalizePilotName}
+            refs={{
+              leaderShareCardRef,
+              narrativeShareCardRef,
+              duelShareCardRef,
+              shareCardRef,
+              fullClassificationShareCardRef,
+              podiumCardRef,
+              evolutionCardRef,
+            }}
+          />
+          <RankingShareStoriesCanvas
+            isDarkMode={isDarkMode}
+            theme={theme}
+            category={category}
+            competition={competition}
+            competitionLabels={competitionLabels}
+            leader={leader}
+            statsSummary={statsSummary}
+            championshipNarrative={championshipNarrative}
+            filteredRanking={filteredRanking}
+            pilotTrendMap={pilotTrendMap}
+            getPilotFirstAndLastName={getPilotFirstAndLastName}
+            getPilotWarNameDisplay={getPilotWarNameDisplay}
+            getTop6RowStyles={getTop6RowStyles}
+            getTrendVisual={getTrendVisual}
+            normalizePilotName={normalizePilotName}
+            refs={{
+              storiesLeaderRef,
+              storiesNarrativeRef,
+              storiesClassificationRef,
+              storiesPodiumRef,
+              storiesEvolutionRef,
+            }}
+          />
         </div>
       </div>
-
-      <Card
-        className={`rounded-[24px] shadow-sm ${
-          isDarkMode
-            ? "border border-white/10 bg-[#111827]"
-            : "border-black/5 bg-white"
-        }`}
-      >
-        <CardContent className="p-4">
-          <div className="mb-3 flex items-center gap-2">
-            <Share2
-              className={`h-4.5 w-4.5 ${
-                isDarkMode ? theme.darkAccentText : theme.primaryIcon
-              }`}
-            />
-            <p
-              className={`text-[12px] font-bold uppercase tracking-[0.14em] ${
-                isDarkMode ? "text-zinc-400" : "text-zinc-500"
-              }`}
-            >
-              Operação da central de mídia
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-            <button
-              type="button"
-              onClick={() => scrollToSection(classificationSectionRef)}
-              className={`group rounded-[18px] border px-3 py-3 text-left transition-all duration-200 ${
-                isDarkMode
-                  ? "border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033]"
-                  : "border-black/5 bg-zinc-50/80 hover:bg-white"
-              }`}
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p
-                    className={`text-[12px] font-semibold ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
-                    }`}
-                  >
-                    Classificação
-                  </p>
-                  <p
-                    className={`mt-1 text-[12px] leading-snug ${
-                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                    }`}
-                  >
-                    Use para gerar a arte da grade oficial e também a classificação completa.
-                  </p>
-                </div>
-
-                <ChevronRight
-                  className={`mt-0.5 h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 ${
-                    isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                  }`}
-                />
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => scrollToSection(premiumSectionRef)}
-              className={`group rounded-[18px] border px-3 py-3 text-left transition-all duration-200 ${
-                isDarkMode
-                  ? "border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033]"
-                  : "border-black/5 bg-zinc-50/80 hover:bg-white"
-              }`}
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p
-                    className={`text-[12px] font-semibold ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
-                    }`}
-                  >
-                    Narrativa e líder
-                  </p>
-                  <p
-                    className={`mt-1 text-[12px] leading-snug ${
-                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                    }`}
-                  >
-                    Ideal para cards rápidos de contexto e liderança do campeonato.
-                  </p>
-                </div>
-
-                <ChevronRight
-                  className={`mt-0.5 h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 ${
-                    isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                  }`}
-                />
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => scrollToSection(whatsappSectionRef)}
-              className={`group rounded-[18px] border px-3 py-3 text-left transition-all duration-200 ${
-                isDarkMode
-                  ? "border-white/10 bg-[#0f172a] hover:border-white/20 hover:bg-[#162033]"
-                  : "border-black/5 bg-zinc-50/80 hover:bg-white"
-              }`}
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p
-                    className={`text-[12px] font-semibold ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
-                    }`}
-                  >
-                    WhatsApp
-                  </p>
-                  <p
-                    className={`mt-1 text-[12px] leading-snug ${
-                      isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                    }`}
-                  >
-                    Envie direto os cards do líder, da narrativa e do duelo para uso rápido.
-                  </p>
-                </div>
-
-                <ChevronRight
-                  className={`mt-0.5 h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 ${
-                    isDarkMode ? "text-zinc-500" : "text-zinc-400"
-                  }`}
-                />
-              </div>
-            </button>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="pointer-events-none fixed -left-[9999px] top-0 z-[-1] opacity-0">
-        <RankingShareCanvas
-          isDarkMode={isDarkMode}
-          theme={theme}
-          category={category}
-          competition={competition}
-          competitionLabels={competitionLabels}
-          leader={leader}
-          statsSummary={statsSummary}
-          championshipNarrative={championshipNarrative}
-          comparePilotA={comparePilotA}
-          comparePilotB={comparePilotB}
-          duelSummary={duelSummary}
-          duelIntensity={duelIntensity}
-          filteredRanking={filteredRanking}
-          pilotTrendMap={pilotTrendMap}
-          getPilotFirstAndLastName={getPilotFirstAndLastName}
-          getPilotWarNameDisplay={getPilotWarNameDisplay}
-          getTop6RowStyles={getTop6RowStyles}
-          getTrendVisual={getTrendVisual}
-          normalizePilotName={normalizePilotName}
-          refs={{
-            leaderShareCardRef,
-            narrativeShareCardRef,
-            duelShareCardRef,
-            shareCardRef,
-            fullClassificationShareCardRef,
-            podiumCardRef,
-            evolutionCardRef,
-          }}
-        />
-        <RankingShareStoriesCanvas
-          isDarkMode={isDarkMode}
-          theme={theme}
-          category={category}
-          competition={competition}
-          competitionLabels={competitionLabels}
-          leader={leader}
-          statsSummary={statsSummary}
-          championshipNarrative={championshipNarrative}
-          filteredRanking={filteredRanking}
-          pilotTrendMap={pilotTrendMap}
-          getPilotFirstAndLastName={getPilotFirstAndLastName}
-          getPilotWarNameDisplay={getPilotWarNameDisplay}
-          getTop6RowStyles={getTop6RowStyles}
-          getTrendVisual={getTrendVisual}
-          normalizePilotName={normalizePilotName}
-          refs={{
-            storiesLeaderRef,
-            storiesNarrativeRef,
-            storiesClassificationRef,
-            storiesPodiumRef,
-            storiesEvolutionRef,
-          }}
-        />
-      </div>
-    </div>
       <ScrollToTopButton isDark={isDarkMode} />
     </PageTransition>
   );

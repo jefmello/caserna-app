@@ -8,11 +8,7 @@ export const metadata: Metadata = {
     "Análise estatística completa do campeonato Caserna Kart Racing. Eficiência, consistência, momentum e tendências dos pilotos.",
 };
 
-export default function EstatisticasLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function EstatisticasLayout({ children }: { children: React.ReactNode }) {
   return (
     <AppMainLayout>
       <AppSectionShell>{children}</AppSectionShell>

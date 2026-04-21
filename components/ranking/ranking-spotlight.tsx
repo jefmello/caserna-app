@@ -88,22 +88,20 @@ export default function RankingSpotlight({
               }`}
             >
               <Trophy
-                className={`h-5.5 w-5.5 ${
-                  isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                }`}
+                className={`h-5.5 w-5.5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
               />
             </div>
 
             <div className="flex flex-col justify-center">
               <p
-                className={`text-[20px] font-black uppercase leading-none tracking-[0.14em] ${
+                className={`text-[20px] leading-none font-black tracking-[0.14em] uppercase ${
                   isDarkMode ? "text-white" : "text-zinc-950"
                 }`}
               >
                 PILOTO DESTAQUE
               </p>
               <p
-                className={`mt-1 whitespace-nowrap text-[8.5px] font-semibold uppercase tracking-[0.08em] sm:text-[9px] ${
+                className={`mt-1 text-[8.5px] font-semibold tracking-[0.08em] whitespace-nowrap uppercase sm:text-[9px] ${
                   isDarkMode ? "text-zinc-400" : "text-zinc-500"
                 }`}
               >
@@ -141,7 +139,7 @@ export default function RankingSpotlight({
                         : spotlightStyles.badge
                     }`}
                   >
-                    <p className="truncate whitespace-nowrap text-[9.5px] font-black uppercase tracking-[0.12em]">
+                    <p className="truncate text-[9.5px] font-black tracking-[0.12em] whitespace-nowrap uppercase">
                       {getPilotWarName(leader)
                         ? getPilotWarName(leader).toUpperCase()
                         : getPilotHighlightName(leader?.piloto)}
@@ -163,7 +161,7 @@ export default function RankingSpotlight({
               <div className="flex h-full w-full flex-col items-center justify-center text-center">
                 <div className="mb-2 flex items-center justify-center gap-2">
                   <p
-                    className={`text-[8px] font-bold uppercase tracking-[0.22em] ${
+                    className={`text-[8px] font-bold tracking-[0.22em] uppercase ${
                       isDarkMode ? "text-zinc-400" : spotlightStyles.label
                     }`}
                   >
@@ -207,7 +205,7 @@ export default function RankingSpotlight({
                         : spotlightStyles.badge
                     }`}
                   >
-                    <p className="text-[10.5px] font-black leading-none">
+                    <p className="text-[10.5px] leading-none font-black">
                       {leader?.pontos || 0} pontos
                     </p>
                   </div>
@@ -251,16 +249,16 @@ export default function RankingSpotlight({
               >
                 <CardContent className="relative h-full p-3">
                   <div className="flex h-full items-center justify-between gap-2">
-                    <div className="flex min-w-0 w-[40%] flex-col items-center justify-center text-center">
+                    <div className="flex w-[40%] min-w-0 flex-col items-center justify-center text-center">
                       <p
-                        className={`text-[10px] font-bold uppercase tracking-[0.18em] ${
+                        className={`text-[10px] font-bold tracking-[0.18em] uppercase ${
                           isDarkMode ? "text-white/72" : "text-white/92"
                         }`}
                       >
                         {item.title}
                       </p>
                       <p
-                        className={`mt-2 text-[30px] font-black leading-none tracking-tight ${
+                        className={`mt-2 text-[30px] leading-none font-black tracking-tight ${
                           isDarkMode ? "text-white" : "text-white"
                         }`}
                       >
@@ -268,7 +266,7 @@ export default function RankingSpotlight({
                       </p>
                     </div>
 
-                    <div className="flex min-w-0 w-[44%] flex-col items-end justify-center gap-2 pr-1">
+                    <div className="flex w-[44%] min-w-0 flex-col items-end justify-center gap-2 pr-1">
                       <div
                         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
                           isDarkMode
@@ -280,7 +278,7 @@ export default function RankingSpotlight({
                       </div>
 
                       <p
-                        className={`max-w-[82px] text-right text-[8.5px] font-semibold uppercase leading-[1.15] tracking-[0.08em] ${
+                        className={`max-w-[82px] text-right text-[8.5px] leading-[1.15] font-semibold tracking-[0.08em] uppercase ${
                           isDarkMode ? "text-white/68" : "text-white/86"
                         }`}
                       >

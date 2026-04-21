@@ -81,14 +81,14 @@ export default function RankingStatsRadarCard({
             }`}
           >
             <p
-              className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+              className={`text-[9px] font-bold tracking-[0.14em] uppercase ${
                 isDarkMode ? "text-zinc-500" : "text-zinc-400"
               }`}
             >
               Momento do grid
             </p>
             <p
-              className={`mt-1 text-[15px] font-extrabold leading-tight ${
+              className={`mt-1 text-[15px] leading-tight font-extrabold ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -111,14 +111,14 @@ export default function RankingStatsRadarCard({
             }`}
           >
             <p
-              className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+              className={`text-[9px] font-bold tracking-[0.14em] uppercase ${
                 isDarkMode ? "text-zinc-500" : "text-zinc-400"
               }`}
             >
               Temperatura do título
             </p>
             <p
-              className={`mt-1 text-[15px] font-extrabold leading-tight ${
+              className={`mt-1 text-[15px] leading-tight font-extrabold ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -141,14 +141,14 @@ export default function RankingStatsRadarCard({
             }`}
           >
             <p
-              className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+              className={`text-[9px] font-bold tracking-[0.14em] uppercase ${
                 isDarkMode ? "text-zinc-500" : "text-zinc-400"
               }`}
             >
               Pressão do Top 6
             </p>
             <p
-              className={`mt-1 text-[15px] font-extrabold leading-tight ${
+              className={`mt-1 text-[15px] leading-tight font-extrabold ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -169,14 +169,14 @@ export default function RankingStatsRadarCard({
             }`}
           >
             <p
-              className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+              className={`text-[9px] font-bold tracking-[0.14em] uppercase ${
                 isDarkMode ? "text-zinc-500" : "text-zinc-400"
               }`}
             >
               Eficiência oficial
             </p>
             <p
-              className={`mt-1 text-[15px] font-extrabold leading-tight ${
+              className={`mt-1 text-[15px] leading-tight font-extrabold ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >

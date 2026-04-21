@@ -53,10 +53,7 @@ export function buildNextStageScenarios({
     const winProjection = buildTitleProbabilityCandidates({
       ranking: filteredRanking,
       competition,
-      titlePointsStillAvailable: Math.max(
-        titlePointsStillAvailable - nextStageWinPoints,
-        0
-      ),
+      titlePointsStillAvailable: Math.max(titlePointsStillAvailable - nextStageWinPoints, 0),
       pointsOverrides: {
         [key]: candidate.pilot.pontos + nextStageWinPoints,
       },
@@ -65,10 +62,7 @@ export function buildNextStageScenarios({
     const podiumProjection = buildTitleProbabilityCandidates({
       ranking: filteredRanking,
       competition,
-      titlePointsStillAvailable: Math.max(
-        titlePointsStillAvailable - nextStagePodiumPoints,
-        0
-      ),
+      titlePointsStillAvailable: Math.max(titlePointsStillAvailable - nextStagePodiumPoints, 0),
       pointsOverrides: {
         [key]: candidate.pilot.pontos + nextStagePodiumPoints,
       },

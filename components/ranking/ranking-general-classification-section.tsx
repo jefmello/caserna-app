@@ -120,7 +120,7 @@ export default function RankingGeneralClassificationSection({
                   }`}
                 >
                   <h2
-                    className={`truncate text-[17px] font-extrabold uppercase leading-none tracking-[0.05em] ${
+                    className={`truncate text-[17px] leading-none font-extrabold tracking-[0.05em] uppercase ${
                       isDarkMode ? "text-white" : theme.titlePillText
                     }`}
                   >
@@ -129,7 +129,7 @@ export default function RankingGeneralClassificationSection({
                 </div>
 
                 <p
-                  className={`mt-2.5 w-[245px] max-w-full text-center text-[9px] font-semibold uppercase tracking-[0.12em] ${
+                  className={`mt-2.5 w-[245px] max-w-full text-center text-[9px] font-semibold tracking-[0.12em] uppercase ${
                     isDarkMode ? "text-zinc-500" : theme.titleSub
                   }`}
                 >
@@ -146,9 +146,7 @@ export default function RankingGeneralClassificationSection({
               }`}
             >
               <TableProperties
-                className={`h-5 w-5 ${
-                  isDarkMode ? theme.darkAccentText : theme.titleIcon
-                }`}
+                className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.titleIcon}`}
               />
             </div>
           </div>
@@ -176,15 +174,13 @@ export default function RankingGeneralClassificationSection({
                   }`}
                 >
                   <TableProperties
-                    className={`h-4.5 w-4.5 ${
-                      isDarkMode ? theme.darkAccentText : theme.titleIcon
-                    }`}
+                    className={`h-4.5 w-4.5 ${isDarkMode ? theme.darkAccentText : theme.titleIcon}`}
                   />
                 </div>
 
                 <div className="min-w-0">
                   <p
-                    className={`text-[8px] font-bold uppercase tracking-[0.18em] ${
+                    className={`text-[8px] font-bold tracking-[0.18em] uppercase ${
                       isDarkMode ? "text-zinc-500" : "text-zinc-400"
                     }`}
                   >
@@ -220,7 +216,7 @@ export default function RankingGeneralClassificationSection({
                 </div>
 
                 <div
-                  className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${titleFightStatus.tone}`}
+                  className={`rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.12em] uppercase ${titleFightStatus.tone}`}
                 >
                   {titleFightStatus.label}
                 </div>
@@ -230,13 +226,11 @@ export default function RankingGeneralClassificationSection({
             <div className="mt-3 grid grid-cols-3 gap-2">
               <div
                 className={`rounded-xl border px-3 py-2 ${
-                  isDarkMode
-                    ? "border-white/10 bg-[#0f172a]"
-                    : "border-black/5 bg-white"
+                  isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
                 }`}
               >
                 <p
-                  className={`text-[9px] font-bold uppercase tracking-[0.16em] ${
+                  className={`text-[9px] font-bold tracking-[0.16em] uppercase ${
                     isDarkMode ? "text-zinc-500" : "text-zinc-400"
                   }`}
                 >
@@ -260,13 +254,11 @@ export default function RankingGeneralClassificationSection({
 
               <div
                 className={`rounded-xl border px-3 py-2 ${
-                  isDarkMode
-                    ? "border-white/10 bg-[#0f172a]"
-                    : "border-black/5 bg-white"
+                  isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
                 }`}
               >
                 <p
-                  className={`text-[9px] font-bold uppercase tracking-[0.16em] ${
+                  className={`text-[9px] font-bold tracking-[0.16em] uppercase ${
                     isDarkMode ? "text-zinc-500" : "text-zinc-400"
                   }`}
                 >
@@ -290,13 +282,11 @@ export default function RankingGeneralClassificationSection({
 
               <div
                 className={`rounded-xl border px-3 py-2 ${
-                  isDarkMode
-                    ? "border-white/10 bg-[#0f172a]"
-                    : "border-black/5 bg-white"
+                  isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
                 }`}
               >
                 <p
-                  className={`text-[9px] font-bold uppercase tracking-[0.16em] ${
+                  className={`text-[9px] font-bold tracking-[0.16em] uppercase ${
                     isDarkMode ? "text-zinc-500" : "text-zinc-400"
                   }`}
                 >
@@ -336,19 +326,19 @@ export default function RankingGeneralClassificationSection({
 
               <thead className="sticky top-0 z-10">
                 <tr
-                  className={`text-[10px] font-bold uppercase tracking-[0.14em] backdrop-blur ${
+                  className={`text-[10px] font-bold tracking-[0.14em] uppercase backdrop-blur ${
                     isDarkMode
                       ? `border-b border-white/10 bg-[#161e2b] ${theme.darkAccentText}`
                       : `border-b border-black/5 ${theme.tableHeadBg} text-zinc-500`
                   }`}
                 >
-                  <th className="whitespace-nowrap px-1 py-2.5 text-center">Pos</th>
-                  <th className="whitespace-nowrap px-2 py-2.5 text-left">Piloto</th>
-                  <th className="whitespace-nowrap px-0.5 py-2.5 text-center">Pts</th>
-                  <th className="whitespace-nowrap px-0.5 py-2.5 text-center">Vit</th>
-                  <th className="whitespace-nowrap px-0.5 py-2.5 text-center">Pol</th>
-                  <th className="whitespace-nowrap px-0.5 py-2.5 text-center">VMR</th>
-                  <th className="whitespace-nowrap px-0.5 py-2.5 text-center">PDS</th>
+                  <th className="px-1 py-2.5 text-center whitespace-nowrap">Pos</th>
+                  <th className="px-2 py-2.5 text-left whitespace-nowrap">Piloto</th>
+                  <th className="px-0.5 py-2.5 text-center whitespace-nowrap">Pts</th>
+                  <th className="px-0.5 py-2.5 text-center whitespace-nowrap">Vit</th>
+                  <th className="px-0.5 py-2.5 text-center whitespace-nowrap">Pol</th>
+                  <th className="px-0.5 py-2.5 text-center whitespace-nowrap">VMR</th>
+                  <th className="px-0.5 py-2.5 text-center whitespace-nowrap">PDS</th>
                 </tr>
               </thead>
 
@@ -360,8 +350,7 @@ export default function RankingGeneralClassificationSection({
                   const isLeader = index === 0;
                   const styles = getTop6RowStyles(index + 1);
                   const trendStatus =
-                    pilotTrendMap[item.pilotoId || normalizePilotName(item.piloto)] ||
-                    "stable";
+                    pilotTrendMap[item.pilotoId || normalizePilotName(item.piloto)] || "stable";
                   const trendVisual = getTrendVisual(trendStatus, isDarkMode);
                   const TrendIcon = trendVisual.Icon;
 
@@ -382,7 +371,7 @@ export default function RankingGeneralClassificationSection({
                   return (
                     <tr
                       key={`${category}-${competition}-table-${item.pos}-${item.piloto}`}
-                      className={`group transition cursor-pointer ${
+                      className={`group cursor-pointer transition ${
                         isDarkMode
                           ? darkRow
                           : isTop6
@@ -415,7 +404,7 @@ export default function RankingGeneralClassificationSection({
                           }`}
                         >
                           {isLeader ? (
-                            <Star className="absolute -right-1 -top-1 h-3 w-3 fill-yellow-300 text-yellow-500" />
+                            <Star className="absolute -top-1 -right-1 h-3 w-3 fill-yellow-300 text-yellow-500" />
                           ) : null}
                           {index + 1}
                         </span>
@@ -425,7 +414,7 @@ export default function RankingGeneralClassificationSection({
                         <div className="min-w-0">
                           <div className="flex items-start justify-between gap-1.5">
                             <span
-                              className={`block min-w-0 flex-1 whitespace-normal break-words text-[12px] font-extrabold leading-[1.1] tracking-tight ${
+                              className={`block min-w-0 flex-1 text-[12px] leading-[1.1] font-extrabold tracking-tight break-words whitespace-normal ${
                                 isDarkMode ? "text-white" : styles.name
                               }`}
                             >
@@ -433,7 +422,7 @@ export default function RankingGeneralClassificationSection({
                             </span>
 
                             <span
-                              className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.08em] ${trendVisual.className}`}
+                              className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-1.5 py-0.5 text-[8px] font-bold tracking-[0.08em] uppercase ${trendVisual.className}`}
                             >
                               <TrendIcon className="h-3 w-3" />
                               {trendVisual.label}
@@ -443,7 +432,7 @@ export default function RankingGeneralClassificationSection({
                           {nomeLinha2 ? (
                             <div className="mt-0.5 flex items-center gap-1">
                               <span
-                                className={`inline-flex max-w-full whitespace-normal break-words rounded-full border px-1.5 py-0.5 text-[9px] font-semibold italic tracking-[0.02em] ${
+                                className={`inline-flex max-w-full rounded-full border px-1.5 py-0.5 text-[9px] font-semibold tracking-[0.02em] break-words whitespace-normal italic ${
                                   isDarkMode
                                     ? `${theme.darkAccentBorder} ${theme.darkAccentBg} text-zinc-200`
                                     : styles.chip

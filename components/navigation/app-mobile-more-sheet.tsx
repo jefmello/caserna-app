@@ -115,19 +115,17 @@ export default function AppMobileMoreSheet({
             : "border-black/5 bg-white text-zinc-950"
         }`}
       >
-        <div className="px-4 pb-7 pt-4">
+        <div className="px-4 pt-4 pb-7">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
               <p
-                className={`text-[10px] font-bold uppercase tracking-[0.18em] ${
+                className={`text-[10px] font-bold tracking-[0.18em] uppercase ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >
                 Navegação expandida
               </p>
-              <h3 className="mt-1 text-[20px] font-extrabold tracking-tight">
-                Mais opções
-              </h3>
+              <h3 className="mt-1 text-[20px] font-extrabold tracking-tight">Mais opções</h3>
             </div>
 
             <button
@@ -146,7 +144,7 @@ export default function AppMobileMoreSheet({
           <div className="space-y-3">
             <div>
               <p
-                className={`mb-2 text-[10px] font-bold uppercase tracking-[0.16em] ${
+                className={`mb-2 text-[10px] font-bold tracking-[0.16em] uppercase ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >
@@ -207,7 +205,7 @@ export default function AppMobileMoreSheet({
 
             <div>
               <p
-                className={`mb-2 text-[10px] font-bold uppercase tracking-[0.16em] ${
+                className={`mb-2 text-[10px] font-bold tracking-[0.16em] uppercase ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >

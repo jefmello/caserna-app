@@ -45,9 +45,7 @@ export default function usePilotAnalysis({
   const analysis = useMemo<PilotAnalysis | null>(() => {
     if (!selectedPilot) return null;
 
-    const gapToLeader = leader
-      ? getGapToLeader(leader.pontos, selectedPilot.pontos)
-      : "-";
+    const gapToLeader = leader ? getGapToLeader(leader.pontos, selectedPilot.pontos) : "-";
 
     const averagePointsPerRace = getPilotEfficiency(selectedPilot);
     const bestAttribute = getSelectedPilotBestAttribute(selectedPilot);
@@ -64,35 +62,23 @@ export default function usePilotAnalysis({
 
     const podiumRate =
       selectedPilot.participacoes > 0
-        ? getPerformancePercentage(
-            selectedPilot.podios,
-            selectedPilot.participacoes
-          )
+        ? getPerformancePercentage(selectedPilot.podios, selectedPilot.participacoes)
         : 0;
 
     const winRate =
       selectedPilot.participacoes > 0
-        ? getPerformancePercentage(
-            selectedPilot.vitorias,
-            selectedPilot.participacoes
-          )
+        ? getPerformancePercentage(selectedPilot.vitorias, selectedPilot.participacoes)
         : 0;
 
     const discipline =
       selectedPilot.participacoes > 0
         ? Math.max(
             0,
-            100 -
-              getPerformancePercentage(
-                selectedPilot.adv,
-                selectedPilot.participacoes
-              )
+            100 - getPerformancePercentage(selectedPilot.adv, selectedPilot.participacoes)
           )
         : 100;
 
-    const leaderGapValue = leader
-      ? Math.max(0, leader.pontos - selectedPilot.pontos)
-      : 0;
+    const leaderGapValue = leader ? Math.max(0, leader.pontos - selectedPilot.pontos) : 0;
 
     const winRateLabel =
       selectedPilot.participacoes <= 0
@@ -157,8 +143,7 @@ function findRivalAhead(
 ): RankingItem | null {
   const pilotIndex = filteredRanking.findIndex(
     (item) =>
-      item.pilotoId === selectedPilot.pilotoId &&
-      item.competicao === selectedPilot.competicao
+      item.pilotoId === selectedPilot.pilotoId && item.competicao === selectedPilot.competicao
   );
 
   if (pilotIndex <= 0) return null;

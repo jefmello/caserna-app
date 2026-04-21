@@ -8,11 +8,7 @@ export const metadata: Metadata = {
     "Simule cenários personalizados do campeonato Caserna Kart Racing. Teste diferentes resultados e veja como ficaria a classificação.",
 };
 
-export default function SimulacoesLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function SimulacoesLayout({ children }: { children: React.ReactNode }) {
   return (
     <AppMainLayout>
       <AppSectionShell>{children}</AppSectionShell>

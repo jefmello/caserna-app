@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Skeleton, SkeletonCard } from "@/components/ui/skeleton";
+import { SkeletonCard } from "@/components/ui/skeleton";
 import SimulacoesPageContent from "@/components/simulacoes/simulacoes-page-content";
 
 export default function SimulacoesPage() {

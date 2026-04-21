@@ -21,9 +21,7 @@ export default function AppSectionHeader({
         </h2>
 
         {subtitle && (
-          <p
-            className={`mt-1 text-sm ${isDarkMode ? "text-white/50" : "text-zinc-500"}`}
-          >
+          <p className={`mt-1 text-sm ${isDarkMode ? "text-white/50" : "text-zinc-500"}`}>
             {subtitle}
           </p>
         )}

@@ -54,8 +54,7 @@ export default function useEditorialCards({
 
     const vice = filteredRanking[1] || null;
     const leaderAdvantage =
-      statsSummary?.leaderAdvantage ??
-      Math.max((leader.pontos || 0) - (vice?.pontos || 0), 0);
+      statsSummary?.leaderAdvantage ?? Math.max((leader.pontos || 0) - (vice?.pontos || 0), 0);
     const podiumPressure = statsRadar?.podiumPressure ?? 0;
     const hottestPilot = statsRadar?.hottestPilot ?? null;
     const hottestLabel = statsRadar?.hottestLabel ?? "momento competitivo";

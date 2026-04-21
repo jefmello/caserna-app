@@ -3,32 +3,13 @@
 import React from "react";
 import { ChevronRight, Swords } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-
-type RankingItem = {
-  pos: number;
-  pilotoId: string;
-  piloto: string;
-  nomeGuerra: string;
-  pontos: number;
-  adv: number;
-  participacoes: number;
-  vitorias: number;
-  poles: number;
-  mv: number;
-  podios: number;
-  descarte: number;
-  categoriaAtual: string;
-  competicao: string;
-  categoria: string;
-};
+import type { RankingItem, TitleFightStatus } from "@/types/ranking";
+import type { CategoryTheme } from "@/lib/ranking/theme-utils";
 
 type RankingTitleFightCardProps = {
   isDarkMode: boolean;
-  theme: any;
-  titleFightStatus: {
-    label: string;
-    tone: string;
-  };
+  theme: CategoryTheme;
+  titleFightStatus: TitleFightStatus;
   top3TitleFight: RankingItem[];
   category: string;
   handleSelectPilot: (pilot: RankingItem) => void;
@@ -72,15 +53,13 @@ export default function RankingTitleFightCard({
                 }`}
               >
                 <Swords
-                  className={`h-5 w-5 ${
-                    isDarkMode ? theme.darkAccentText : theme.titleIcon
-                  }`}
+                  className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.titleIcon}`}
                 />
               </div>
 
               <div className="min-w-0">
                 <p
-                  className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                  className={`text-[10px] font-bold tracking-[0.16em] uppercase ${
                     isDarkMode ? "text-zinc-500" : "text-zinc-400"
                   }`}
                 >
@@ -97,7 +76,7 @@ export default function RankingTitleFightCard({
             </div>
 
             <div
-              className={`w-fit rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${titleFightStatus.tone}`}
+              className={`w-fit rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.12em] uppercase ${titleFightStatus.tone}`}
             >
               {titleFightStatus.label}
             </div>
@@ -115,7 +94,7 @@ export default function RankingTitleFightCard({
             </div>
           ) : (
             <div className="relative">
-              <div className="pointer-events-none absolute left-[21px] top-[36px] bottom-[36px] w-[2px]">
+              <div className="pointer-events-none absolute top-[36px] bottom-[36px] left-[21px] w-[2px]">
                 <div
                   className={`absolute inset-0 rounded-full ${
                     isDarkMode
@@ -124,7 +103,7 @@ export default function RankingTitleFightCard({
                   }`}
                 />
                 <div
-                  className={`absolute left-1/2 top-0 h-full w-[10px] -translate-x-1/2 rounded-full blur-md ${
+                  className={`absolute top-0 left-1/2 h-full w-[10px] -translate-x-1/2 rounded-full blur-md ${
                     isDarkMode ? theme.darkAccentBg : theme.lineGlow
                   }`}
                 />
@@ -133,10 +112,7 @@ export default function RankingTitleFightCard({
               <div className="space-y-3">
                 {top3TitleFight.map((pilot, index) => {
                   const isLeader = index === 0;
-                  const gapLabel = getGapToLeader(
-                    top3TitleFight[0]?.pontos || 0,
-                    pilot.pontos
-                  );
+                  const gapLabel = getGapToLeader(top3TitleFight[0]?.pontos || 0, pilot.pontos);
                   const pilotName = getPilotFirstAndLastName(pilot.piloto);
                   const warName = getPilotWarNameDisplay(pilot);
 
@@ -155,9 +131,7 @@ export default function RankingTitleFightCard({
 
                   const cardPadding = isLeader ? "py-4" : "py-3";
                   const cardRadius = isLeader ? "rounded-[24px]" : "rounded-[22px]";
-                  const positionSize = isLeader
-                    ? "h-14 w-14 text-[18px]"
-                    : "h-11 w-11 text-sm";
+                  const positionSize = isLeader ? "h-14 w-14 text-[18px]" : "h-11 w-11 text-sm";
                   const nameSize = isLeader ? "text-[13px] sm:text-[14px]" : "text-[13px]";
                   const pointsValueSize = isLeader ? "text-[28px]" : "text-[20px]";
                   const pointsLabelSize = isLeader ? "text-[11px]" : "text-[10px]";
@@ -170,11 +144,8 @@ export default function RankingTitleFightCard({
                         : "bg-yellow-400";
 
                   return (
-                    <div
-                      key={`title-fight-${pilot.pilotoId}-${index}`}
-                      className="relative pl-10"
-                    >
-                      <div className="absolute left-[12px] top-1/2 z-10 -translate-y-1/2">
+                    <div key={`title-fight-${pilot.pilotoId}-${index}`} className="relative pl-10">
+                      <div className="absolute top-1/2 left-[12px] z-10 -translate-y-1/2">
                         <div
                           className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
                             isDarkMode ? "bg-[#111827]" : "bg-white"
@@ -233,7 +204,7 @@ export default function RankingTitleFightCard({
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-2">
                                   <p
-                                    className={`min-w-0 truncate font-extrabold leading-none tracking-tight ${
+                                    className={`min-w-0 truncate leading-none font-extrabold tracking-tight ${
                                       isDarkMode ? "text-white" : "text-zinc-950"
                                     } ${nameSize}`}
                                   >
@@ -266,7 +237,7 @@ export default function RankingTitleFightCard({
                                     ) : null}
 
                                     <span
-                                      className={`inline-flex w-fit max-w-full whitespace-nowrap rounded-full border px-2.5 py-1 text-[10px] font-semibold ${
+                                      className={`inline-flex w-fit max-w-full rounded-full border px-2.5 py-1 text-[10px] font-semibold whitespace-nowrap ${
                                         isDarkMode
                                           ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                                           : "border-zinc-200 bg-white text-zinc-600"
@@ -282,7 +253,7 @@ export default function RankingTitleFightCard({
                                 {isLeader ? (
                                   <div className="flex min-w-[88px] flex-col items-end gap-2">
                                     <span
-                                      className={`inline-flex rounded-full border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.1em] ${
+                                      className={`inline-flex rounded-full border px-2.5 py-0.5 text-[9px] font-bold tracking-[0.1em] uppercase ${
                                         isDarkMode
                                           ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                                           : theme.heroChip
@@ -294,14 +265,14 @@ export default function RankingTitleFightCard({
                                     <div className="flex items-center gap-2">
                                       <div className="min-w-[62px] text-right">
                                         <p
-                                          className={`font-bold uppercase tracking-[0.12em] ${
+                                          className={`font-bold tracking-[0.12em] uppercase ${
                                             isDarkMode ? "text-zinc-500" : "text-zinc-400"
                                           } ${pointsLabelSize}`}
                                         >
                                           Pontos
                                         </p>
                                         <p
-                                          className={`font-extrabold leading-none tracking-tight ${
+                                          className={`leading-none font-extrabold tracking-tight ${
                                             isDarkMode ? "text-white" : "text-zinc-950"
                                           } ${pointsValueSize}`}
                                         >
@@ -311,16 +282,12 @@ export default function RankingTitleFightCard({
 
                                       <div
                                         className={`flex h-8 w-8 items-center justify-center rounded-[18px] ${
-                                          isDarkMode
-                                            ? theme.darkAccentIconWrap
-                                            : "bg-zinc-100"
+                                          isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
                                         }`}
                                       >
                                         <ChevronRight
                                           className={`h-4 w-4 ${
-                                            isDarkMode
-                                              ? theme.darkAccentText
-                                              : "text-zinc-500"
+                                            isDarkMode ? theme.darkAccentText : "text-zinc-500"
                                           }`}
                                         />
                                       </div>
@@ -330,14 +297,14 @@ export default function RankingTitleFightCard({
                                   <div className="flex items-center gap-2">
                                     <div className="min-w-[62px] text-right">
                                       <p
-                                        className={`font-bold uppercase tracking-[0.12em] ${
+                                        className={`font-bold tracking-[0.12em] uppercase ${
                                           isDarkMode ? "text-zinc-500" : "text-zinc-400"
                                         } ${pointsLabelSize}`}
                                       >
                                         Pontos
                                       </p>
                                       <p
-                                        className={`font-extrabold leading-none tracking-tight ${
+                                        className={`leading-none font-extrabold tracking-tight ${
                                           isDarkMode ? "text-white" : "text-zinc-950"
                                         } ${pointsValueSize}`}
                                       >
@@ -347,16 +314,12 @@ export default function RankingTitleFightCard({
 
                                     <div
                                       className={`flex h-8 w-8 items-center justify-center rounded-[18px] ${
-                                        isDarkMode
-                                          ? theme.darkAccentIconWrap
-                                          : "bg-zinc-100"
+                                        isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
                                       }`}
                                     >
                                       <ChevronRight
                                         className={`h-4 w-4 ${
-                                          isDarkMode
-                                            ? theme.darkAccentText
-                                            : "text-zinc-500"
+                                          isDarkMode ? theme.darkAccentText : "text-zinc-500"
                                         }`}
                                       />
                                     </div>

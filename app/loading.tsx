@@ -3,7 +3,11 @@ import { SkeletonCard } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
-    <div className="flex min-h-screen items-center justify-center p-4" role="status" aria-label="Carregando">
+    <div
+      className="flex min-h-screen items-center justify-center p-4"
+      role="status"
+      aria-label="Carregando"
+    >
       <div className="w-full max-w-2xl space-y-4">
         <div className="flex items-center gap-3">
           <Loader2 className="h-6 w-6 animate-spin text-zinc-400" aria-hidden="true" />

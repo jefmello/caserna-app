@@ -6,7 +6,7 @@
 
 export type CategoryAccent = "base" | "graduados" | "elite" | "neutral";
 
-type CategoryTheme = {
+export type CategoryTheme = {
   shellGlow: string;
   primaryBorder: string;
   primaryRing: string;
@@ -234,10 +234,7 @@ export function getCategoryTheme(category: string): CategoryTheme {
 /**
  * Retorna estilos específicos para o card spotlight (destaque do líder).
  */
-export function getSpotlightCategoryStyles(
-  category: string,
-  isDark: boolean
-) {
+export function getSpotlightCategoryStyles(category: string, isDark: boolean) {
   if (isDark) {
     if (category === "Base") {
       return {
@@ -288,8 +285,7 @@ export function getSpotlightCategoryStyles(
     return {
       leftCard:
         "border-orange-200 bg-[linear-gradient(180deg,#fff7ed_0%,#ffedd5_46%,#fed7aa_100%)]",
-      leftSubcard:
-        "border-orange-200 bg-[linear-gradient(180deg,#fff7ed_0%,#ffffff_100%)]",
+      leftSubcard: "border-orange-200 bg-[linear-gradient(180deg,#fff7ed_0%,#ffffff_100%)]",
       badge:
         "border-orange-300 bg-[linear-gradient(180deg,#fb923c_0%,#ea580c_100%)] text-white shadow-[0_14px_24px_rgba(249,115,22,0.20)]",
       statCard:
@@ -301,28 +297,22 @@ export function getSpotlightCategoryStyles(
 
   if (category === "Graduados") {
     return {
-      leftCard:
-        "border-blue-200 bg-[linear-gradient(180deg,#eff6ff_0%,#dbeafe_46%,#bfdbfe_100%)]",
-      leftSubcard:
-        "border-blue-200 bg-[linear-gradient(180deg,#eff6ff_0%,#ffffff_100%)]",
+      leftCard: "border-blue-200 bg-[linear-gradient(180deg,#eff6ff_0%,#dbeafe_46%,#bfdbfe_100%)]",
+      leftSubcard: "border-blue-200 bg-[linear-gradient(180deg,#eff6ff_0%,#ffffff_100%)]",
       badge:
         "border-blue-300 bg-[linear-gradient(180deg,#6ea0ff_0%,#3b82f6_100%)] text-white shadow-[0_14px_24px_rgba(59,130,246,0.20)]",
-      statCard:
-        "border-blue-200 bg-[linear-gradient(135deg,#4f7fdb_0%,#6e9bf1_52%,#456fc3_100%)]",
+      statCard: "border-blue-200 bg-[linear-gradient(135deg,#4f7fdb_0%,#6e9bf1_52%,#456fc3_100%)]",
       label: "text-blue-600",
       iconBubble: "border border-white/20 bg-white/18 text-white",
     };
   }
 
   return {
-    leftCard:
-      "border-yellow-200 bg-[linear-gradient(180deg,#fefce8_0%,#fef3c7_46%,#fde68a_100%)]",
-    leftSubcard:
-      "border-yellow-200 bg-[linear-gradient(180deg,#fefce8_0%,#ffffff_100%)]",
+    leftCard: "border-yellow-200 bg-[linear-gradient(180deg,#fefce8_0%,#fef3c7_46%,#fde68a_100%)]",
+    leftSubcard: "border-yellow-200 bg-[linear-gradient(180deg,#fefce8_0%,#ffffff_100%)]",
     badge:
       "border-yellow-300 bg-[linear-gradient(180deg,#f5cd3a_0%,#d4a614_100%)] text-white shadow-[0_14px_24px_rgba(234,179,8,0.20)]",
-    statCard:
-      "border-yellow-200 bg-[linear-gradient(135deg,#b88a10_0%,#d4a614_52%,#9a7410_100%)]",
+    statCard: "border-yellow-200 bg-[linear-gradient(135deg,#b88a10_0%,#d4a614_52%,#9a7410_100%)]",
     label: "text-yellow-700",
     iconBubble: "border border-white/20 bg-white/18 text-white",
   };
@@ -332,7 +322,9 @@ export function getSpotlightCategoryStyles(
  * Normaliza uma categoria para o identificador de accent CSS.
  * Usado por múltiplos componentes para reagir a mudanças de categoria.
  */
-export function normalizeCategoryAccent(category?: string | null): "base" | "graduados" | "elite" | "neutral" {
+export function normalizeCategoryAccent(
+  category?: string | null
+): "base" | "graduados" | "elite" | "neutral" {
   if (!category) return "neutral";
 
   const normalized = category

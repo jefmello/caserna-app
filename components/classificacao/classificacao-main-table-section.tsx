@@ -10,19 +10,17 @@ import {
   getTrendVisual,
   normalizePilotName,
 } from "@/lib/ranking/ranking-utils";
-import type { RankingItem } from "@/types/ranking";
+import type { RankingItem, TitleFightStatus } from "@/types/ranking";
+import type { CategoryTheme } from "@/lib/ranking/theme-utils";
 
 type ClassificacaoMainTableSectionProps = {
   isDarkMode: boolean;
-  theme: any;
+  theme: CategoryTheme;
   category: string;
   competition: string;
   filteredRanking: RankingItem[];
   leader: RankingItem | null;
-  titleFightStatus: {
-    label: string;
-    tone: string;
-  };
+  titleFightStatus: TitleFightStatus;
   pilotTrendMap: Record<string, string>;
   onSelectPilot: (pilot: RankingItem) => void;
 };
@@ -57,13 +55,11 @@ export default function ClassificacaoMainTableSection({
               <div className="flex flex-col items-center">
                 <div
                   className={`inline-flex max-w-full items-center justify-center rounded-[18px] border px-4 py-2 shadow-[0_4px_10px_rgba(0,0,0,0.08)] ${
-                    isDarkMode
-                      ? `${theme.darkAccentBorder} bg-[#111827]`
-                      : theme.titlePill
+                    isDarkMode ? `${theme.darkAccentBorder} bg-[#111827]` : theme.titlePill
                   }`}
                 >
                   <h2
-                    className={`truncate text-[16px] font-extrabold uppercase leading-none tracking-[0.08em] ${
+                    className={`truncate text-[16px] leading-none font-extrabold tracking-[0.08em] uppercase ${
                       isDarkMode ? "text-white" : theme.titlePillText
                     }`}
                   >
@@ -72,7 +68,7 @@ export default function ClassificacaoMainTableSection({
                 </div>
 
                 <p
-                  className={`mt-2.5 w-[245px] max-w-full text-center text-[9px] font-semibold uppercase tracking-[0.12em] ${
+                  className={`mt-2.5 w-[245px] max-w-full text-center text-[9px] font-semibold tracking-[0.12em] uppercase ${
                     isDarkMode ? "text-zinc-500" : theme.titleSub
                   }`}
                 >
@@ -89,9 +85,7 @@ export default function ClassificacaoMainTableSection({
               }`}
             >
               <TableProperties
-                className={`h-5 w-5 ${
-                  isDarkMode ? theme.darkAccentText : theme.titleIcon
-                }`}
+                className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.titleIcon}`}
               />
             </div>
           </div>
@@ -100,9 +94,7 @@ export default function ClassificacaoMainTableSection({
 
       <Card
         className={`overflow-hidden rounded-[22px] shadow-sm transition-all duration-200 hover:-translate-y-px ${
-          isDarkMode
-            ? "border border-white/10 bg-[#0f172a]"
-            : "border-black/5 bg-white"
+          isDarkMode ? "border border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
         }`}
       >
         <CardContent className="p-0">
@@ -129,7 +121,7 @@ export default function ClassificacaoMainTableSection({
 
                 <div className="min-w-0">
                   <p
-                    className={`text-[8px] font-bold uppercase tracking-[0.18em] ${
+                    className={`text-[8px] font-bold tracking-[0.18em] uppercase ${
                       isDarkMode ? "text-zinc-500" : "text-zinc-400"
                     }`}
                   >
@@ -165,7 +157,7 @@ export default function ClassificacaoMainTableSection({
                 </div>
 
                 <div
-                  className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${titleFightStatus.tone}`}
+                  className={`rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.12em] uppercase ${titleFightStatus.tone}`}
                 >
                   {titleFightStatus.label}
                 </div>
@@ -175,13 +167,11 @@ export default function ClassificacaoMainTableSection({
             <div className="mt-3 grid grid-cols-3 gap-2">
               <div
                 className={`rounded-[16px] border px-3 py-2 ${
-                  isDarkMode
-                    ? "border-white/10 bg-[#111827]"
-                    : "border-black/5 bg-white"
+                  isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"
                 }`}
               >
                 <p
-                  className={`text-[9px] font-bold uppercase tracking-[0.16em] ${
+                  className={`text-[9px] font-bold tracking-[0.16em] uppercase ${
                     isDarkMode ? "text-zinc-500" : "text-zinc-400"
                   }`}
                 >
@@ -205,13 +195,11 @@ export default function ClassificacaoMainTableSection({
 
               <div
                 className={`rounded-[16px] border px-3 py-2 ${
-                  isDarkMode
-                    ? "border-white/10 bg-[#111827]"
-                    : "border-black/5 bg-white"
+                  isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"
                 }`}
               >
                 <p
-                  className={`text-[9px] font-bold uppercase tracking-[0.16em] ${
+                  className={`text-[9px] font-bold tracking-[0.16em] uppercase ${
                     isDarkMode ? "text-zinc-500" : "text-zinc-400"
                   }`}
                 >
@@ -235,13 +223,11 @@ export default function ClassificacaoMainTableSection({
 
               <div
                 className={`rounded-[16px] border px-3 py-2 ${
-                  isDarkMode
-                    ? "border-white/10 bg-[#111827]"
-                    : "border-black/5 bg-white"
+                  isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"
                 }`}
               >
                 <p
-                  className={`text-[9px] font-bold uppercase tracking-[0.16em] ${
+                  className={`text-[9px] font-bold tracking-[0.16em] uppercase ${
                     isDarkMode ? "text-zinc-500" : "text-zinc-400"
                   }`}
                 >
@@ -253,10 +239,7 @@ export default function ClassificacaoMainTableSection({
                   }`}
                 >
                   {filteredRanking[1]
-                    ? `${Math.max(
-                        (leader?.pontos || 0) - filteredRanking[1].pontos,
-                        0
-                      )} pts`
+                    ? `${Math.max((leader?.pontos || 0) - filteredRanking[1].pontos, 0)} pts`
                     : "0 pts"}
                 </p>
                 <p
@@ -284,33 +267,19 @@ export default function ClassificacaoMainTableSection({
 
               <thead className="sticky top-0 z-10">
                 <tr
-                  className={`text-[10px] font-bold uppercase tracking-[0.14em] backdrop-blur ${
+                  className={`text-[10px] font-bold tracking-[0.14em] uppercase backdrop-blur ${
                     isDarkMode
                       ? `border-b border-white/10 bg-[#111827] ${theme.darkAccentText}`
                       : `border-b border-black/5 ${theme.tableHeadBg} text-zinc-500`
                   }`}
                 >
-                  <th className="whitespace-nowrap px-1 py-2.5 text-center">
-                    Pos
-                  </th>
-                  <th className="whitespace-nowrap px-2 py-2.5 text-left">
-                    Piloto
-                  </th>
-                  <th className="whitespace-nowrap px-0.5 py-2.5 text-center">
-                    Pts
-                  </th>
-                  <th className="whitespace-nowrap px-0.5 py-2.5 text-center">
-                    Vit
-                  </th>
-                  <th className="whitespace-nowrap px-0.5 py-2.5 text-center">
-                    Pol
-                  </th>
-                  <th className="whitespace-nowrap px-0.5 py-2.5 text-center">
-                    VMR
-                  </th>
-                  <th className="whitespace-nowrap px-0.5 py-2.5 text-center">
-                    PDS
-                  </th>
+                  <th className="px-1 py-2.5 text-center whitespace-nowrap">Pos</th>
+                  <th className="px-2 py-2.5 text-left whitespace-nowrap">Piloto</th>
+                  <th className="px-0.5 py-2.5 text-center whitespace-nowrap">Pts</th>
+                  <th className="px-0.5 py-2.5 text-center whitespace-nowrap">Vit</th>
+                  <th className="px-0.5 py-2.5 text-center whitespace-nowrap">Pol</th>
+                  <th className="px-0.5 py-2.5 text-center whitespace-nowrap">VMR</th>
+                  <th className="px-0.5 py-2.5 text-center whitespace-nowrap">PDS</th>
                 </tr>
               </thead>
 
@@ -320,12 +289,8 @@ export default function ClassificacaoMainTableSection({
                   const nomeLinha2 = getPilotWarNameDisplay(item);
                   const isLeaderRow = index === 0;
                   const trendStatus =
-                    pilotTrendMap[item.pilotoId || normalizePilotName(item.piloto)] ||
-                    "stable";
-                  const trendVisual = getTrendVisual(
-                    trendStatus as never,
-                    isDarkMode
-                  );
+                    pilotTrendMap[item.pilotoId || normalizePilotName(item.piloto)] || "stable";
+                  const trendVisual = getTrendVisual(trendStatus as never, isDarkMode);
                   const TrendIcon = trendVisual.Icon;
 
                   const darkRow = isLeaderRow
@@ -366,7 +331,7 @@ export default function ClassificacaoMainTableSection({
                       <td className="px-2 py-2.5 align-middle">
                         <div className="min-w-0">
                           <p
-                            className={`truncate text-[12px] font-semibold leading-tight ${
+                            className={`truncate text-[12px] leading-tight font-semibold ${
                               isDarkMode ? "text-white" : "text-zinc-950"
                             }`}
                           >

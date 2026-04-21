@@ -50,15 +50,13 @@ export default function RankingStatsHeader({
               }`}
             >
               <BarChart3
-                className={`h-5 w-5 ${
-                  isDarkMode ? theme.darkAccentText : theme.statsIcon
-                }`}
+                className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.statsIcon}`}
               />
             </div>
 
             <div className="min-w-0">
               <p
-                className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                className={`text-[10px] font-bold tracking-[0.16em] uppercase ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >
@@ -82,7 +80,7 @@ export default function RankingStatsHeader({
           </div>
 
           <div
-            className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+            className={`rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.12em] uppercase ${
               isDarkMode
                 ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                 : theme.headerChip

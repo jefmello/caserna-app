@@ -12,11 +12,7 @@ import {
   getTitleFightStatus,
   type PilotTrendStatus,
 } from "@/lib/ranking/ranking-utils";
-import type {
-  RankingCompetitionMeta,
-  RankingData,
-  RankingItem,
-} from "@/types/ranking";
+import type { RankingCompetitionMeta, RankingData, RankingItem } from "@/types/ranking";
 
 type UseRankingScreenControllerParams = {
   category: string;
@@ -84,10 +80,7 @@ export default function useRankingScreenController({
     [filteredRanking]
   );
 
-  const topMv = useMemo(
-    () => getTopMetricRanking(filteredRanking, "mv", 5),
-    [filteredRanking]
-  );
+  const topMv = useMemo(() => getTopMetricRanking(filteredRanking, "mv", 5), [filteredRanking]);
 
   const topPodios = useMemo(
     () => getTopMetricRanking(filteredRanking, "podios", 5),

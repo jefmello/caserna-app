@@ -15,10 +15,22 @@ type ErrorBannerProps = {
  * antes de serem exibidas ao usuário final.
  */
 const KNOWN_TECHNICAL_ERRORS: [RegExp, string][] = [
-  [/SyntaxError|Unexpected token|JSON|parse/i, "Erro ao processar os dados recebidos. Tente novamente."],
-  [/AbortError|abort|signal/i, "A conexão foi interrompida. Verifique sua internet e tente novamente."],
-  [/TypeError: Failed to fetch|NetworkError|fetch/i, "Não foi possível conectar ao servidor. Verifique sua internet."],
-  [/timeout|Timeout|excedido/i, "O tempo de resposta excedeu o limite. Tente novamente em instantes."],
+  [
+    /SyntaxError|Unexpected token|JSON|parse/i,
+    "Erro ao processar os dados recebidos. Tente novamente.",
+  ],
+  [
+    /AbortError|abort|signal/i,
+    "A conexão foi interrompida. Verifique sua internet e tente novamente.",
+  ],
+  [
+    /TypeError: Failed to fetch|NetworkError|fetch/i,
+    "Não foi possível conectar ao servidor. Verifique sua internet.",
+  ],
+  [
+    /timeout|Timeout|excedido/i,
+    "O tempo de resposta excedeu o limite. Tente novamente em instantes.",
+  ],
   [/ENOENT|not found|404/i, "Recurso não encontrado."],
 ];
 
@@ -58,11 +70,7 @@ export default function ErrorBanner({
         <p className="text-lg font-semibold">{friendlyMessage}</p>
 
         {hint && (
-          <p
-            className={`text-xs ${isDarkMode ? "text-red-300/60" : "text-red-500"}`}
-          >
-            {hint}
-          </p>
+          <p className={`text-xs ${isDarkMode ? "text-red-300/60" : "text-red-500"}`}>{hint}</p>
         )}
       </div>
 

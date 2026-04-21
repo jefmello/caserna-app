@@ -69,13 +69,7 @@ export function StaggerContainer({
  * StaggerItem — item individual dentro de StaggerContainer.
  * Aplica fade-in + slide-up sequencial.
  */
-export function StaggerItem({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
+export function StaggerItem({ children, className }: { children: ReactNode; className?: string }) {
   return (
     <motion.div
       className={className}

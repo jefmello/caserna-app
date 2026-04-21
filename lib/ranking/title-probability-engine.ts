@@ -13,10 +13,7 @@ export type TitleProbabilityCandidate = {
   scenarioLabel: string;
 };
 
-export function getTitleProbabilityScenarioLabel(
-  probability: number,
-  pointsBehindLeader: number
-) {
+export function getTitleProbabilityScenarioLabel(probability: number, pointsBehindLeader: number) {
   if (probability >= 34) {
     return pointsBehindLeader === 0
       ? "controla a corrida pelo título"
@@ -102,13 +99,9 @@ export function buildTitleProbabilityCandidates({
     const titleReach = projectedTotal - leaderPoints;
     const canStillReachLeader = projectedTotal >= leaderPoints;
     const reachFactor = Math.max(titleReach, 0);
-    const discardProtection =
-      competition === "GERAL" ? Math.max(pilot.descarte || 0, 0) : 0;
+    const discardProtection = competition === "GERAL" ? Math.max(pilot.descarte || 0, 0) : 0;
     const momentumBoost =
-      pilot.vitorias * 3 +
-      pilot.podios * 1.4 +
-      pilot.poles * 0.9 +
-      pilot.mv * 0.9;
+      pilot.vitorias * 3 + pilot.podios * 1.4 + pilot.poles * 0.9 + pilot.mv * 0.9;
     const score =
       projectedTotal * 0.58 +
       adjustedPoints * 0.26 +
@@ -127,10 +120,7 @@ export function buildTitleProbabilityCandidates({
     };
   });
 
-  const totalScore = rawCandidates.reduce(
-    (sum, candidate) => sum + candidate.rawScore,
-    0
-  );
+  const totalScore = rawCandidates.reduce((sum, candidate) => sum + candidate.rawScore, 0);
 
   return rawCandidates
     .map((candidate) => {
@@ -146,10 +136,7 @@ export function buildTitleProbabilityCandidates({
         canStillReachLeader: candidate.canStillReachLeader,
         label,
         tone,
-        scenarioLabel: getTitleProbabilityScenarioLabel(
-          probability,
-          candidate.pointsBehindLeader
-        ),
+        scenarioLabel: getTitleProbabilityScenarioLabel(probability, candidate.pointsBehindLeader),
       };
     })
     .sort((a, b) => b.probability - a.probability);

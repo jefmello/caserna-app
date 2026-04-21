@@ -16,10 +16,7 @@ type RankingResponse = {
   };
 };
 
-export async function getLeader(
-  categoria: string,
-  campeonato: string
-) {
+export async function getLeader(categoria: string, campeonato: string) {
   try {
     const res = await fetch("/api/ranking", {
       cache: "no-store",

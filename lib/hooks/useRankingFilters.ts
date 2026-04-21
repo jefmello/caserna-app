@@ -16,8 +16,7 @@ export default function useRankingFilters({
   rankingMeta,
   categories,
 }: UseRankingFiltersProps) {
-  const { categoria, campeonato, setCategoria, setCampeonato } =
-    useChampionship();
+  const { categoria, campeonato, setCategoria, setCampeonato } = useChampionship();
 
   const [search, setSearch] = useState("");
 
@@ -56,9 +55,7 @@ export default function useRankingFilters({
     return currentCompetitionList.filter(
       (item) =>
         item.pontos > 0 &&
-        normalizePilotName(item.piloto)
-          .toLowerCase()
-          .includes(search.toLowerCase())
+        normalizePilotName(item.piloto).toLowerCase().includes(search.toLowerCase())
     );
   }, [currentCompetitionList, search]);
 

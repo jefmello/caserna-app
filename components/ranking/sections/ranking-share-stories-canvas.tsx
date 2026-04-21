@@ -8,6 +8,7 @@ import {
   normalizePilotName as defaultNormalizePilotName,
 } from "@/lib/ranking/ranking-utils";
 import type { RankingItem, RankingMetaPilot } from "@/types/ranking";
+import type { PilotTrendStatus } from "@/lib/ranking/pilot-trend";
 
 type PilotLike = RankingItem | RankingMetaPilot;
 
@@ -86,12 +87,19 @@ export default function RankingShareStoriesCanvas({
   filteredRanking,
   pilotTrendMap,
   getPilotFirstAndLastName,
-  getPilotWarNameDisplay,
+  getPilotWarNameDisplay: _getPilotWarNameDisplay,
   getTop6RowStyles = defaultGetTop6RowStyles,
   getTrendVisual = defaultGetTrendVisual,
   normalizePilotName = defaultNormalizePilotName,
   refs,
 }: RankingShareStoriesCanvasProps) {
+  const {
+    storiesLeaderRef,
+    storiesNarrativeRef,
+    storiesClassificationRef,
+    storiesPodiumRef,
+    storiesEvolutionRef,
+  } = refs;
   const top6 = filteredRanking.filter((p) => p.pontos > 0).slice(0, 6);
 
   const textPrimary = isDarkMode ? "text-white" : "text-zinc-950";
@@ -103,10 +111,10 @@ export default function RankingShareStoriesCanvas({
   const timeStr = now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
   return (
-    <div className="fixed -left-[9999px] top-0 z-[-1]" aria-hidden="true">
+    <div className="fixed top-0 -left-[9999px] z-[-1]" aria-hidden="true">
       {/* Stories: Líder (1080x1920) */}
       <div
-        ref={refs.storiesLeaderRef}
+        ref={storiesLeaderRef}
         className={`relative flex w-[1080px] flex-col ${isDarkMode ? "bg-[#0b0f16]" : "bg-white"}`}
         style={{ height: 1920 }}
       >
@@ -121,15 +129,22 @@ export default function RankingShareStoriesCanvas({
 
         {/* Spotlight effect on leader */}
         {leader && (
-          <div className={`absolute inset-0 ${
-            isDarkMode
-              ? "bg-[radial-gradient(circle_at_50%_30%,rgba(255,255,255,0.04),transparent_60%)]"
-              : "bg-[radial-gradient(circle_at_50%_30%,rgba(0,0,0,0.02),transparent_60%)]"
-          }`} />
+          <div
+            className={`absolute inset-0 ${
+              isDarkMode
+                ? "bg-[radial-gradient(circle_at_50%_30%,rgba(255,255,255,0.04),transparent_60%)]"
+                : "bg-[radial-gradient(circle_at_50%_30%,rgba(0,0,0,0.02),transparent_60%)]"
+            }`}
+          />
         )}
 
         {/* Noise texture overlay */}
-        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          }}
+        />
 
         {/* Progress dots */}
         <div className="relative z-10 flex justify-center gap-2 pt-8">
@@ -138,8 +153,12 @@ export default function RankingShareStoriesCanvas({
               key={`prog-dot-${i}`}
               className={`h-2.5 w-2.5 rounded-full ${
                 i === 0
-                  ? isDarkMode ? "bg-white/80" : "bg-zinc-800"
-                  : isDarkMode ? "bg-white/20" : "bg-zinc-200"
+                  ? isDarkMode
+                    ? "bg-white/80"
+                    : "bg-zinc-800"
+                  : isDarkMode
+                    ? "bg-white/20"
+                    : "bg-zinc-200"
               }`}
             />
           ))}
@@ -147,11 +166,13 @@ export default function RankingShareStoriesCanvas({
 
         {/* Top badge */}
         <div className="relative z-10 mt-12 flex items-center justify-center gap-3">
-          <div className={`rounded-full px-6 py-3 text-lg font-bold uppercase tracking-[0.2em] ${
-            isDarkMode
-              ? `${theme.darkAccentBgSoft} border ${theme.darkAccentBorder} ${textAccent}`
-              : `border ${theme.primaryBorder} bg-zinc-50 ${theme.primaryIcon}`
-          }`}>
+          <div
+            className={`rounded-full px-6 py-3 text-lg font-bold tracking-[0.2em] uppercase ${
+              isDarkMode
+                ? `${theme.darkAccentBgSoft} border ${theme.darkAccentBorder} ${textAccent}`
+                : `border ${theme.primaryBorder} bg-zinc-50 ${theme.primaryIcon}`
+            }`}
+          >
             Líder da Classificação
           </div>
         </div>
@@ -192,21 +213,25 @@ export default function RankingShareStoriesCanvas({
 
         {/* Vantagem */}
         {statsSummary.leaderAdvantage > 0 && leader && (
-          <div className={`relative z-10 mt-12 rounded-2xl border px-8 py-4 ${
-            isDarkMode
-              ? `border-yellow-500/30 bg-yellow-500/10`
-              : `border-yellow-200 bg-yellow-50`
-          }`}>
-            <p className={`text-center text-2xl font-bold ${
-              isDarkMode ? "text-yellow-300" : "text-yellow-700"
-            }`}>
+          <div
+            className={`relative z-10 mt-12 rounded-2xl border px-8 py-4 ${
+              isDarkMode
+                ? `border-yellow-500/30 bg-yellow-500/10`
+                : `border-yellow-200 bg-yellow-50`
+            }`}
+          >
+            <p
+              className={`text-center text-2xl font-bold ${
+                isDarkMode ? "text-yellow-300" : "text-yellow-700"
+              }`}
+            >
               +{statsSummary.leaderAdvantage} pts de vantagem
             </p>
           </div>
         )}
 
         {/* Watermark */}
-        <div className="absolute bottom-24 left-0 right-0 z-10 text-center">
+        <div className="absolute right-0 bottom-24 left-0 z-10 text-center">
           <p className={`text-lg font-semibold ${textSecondary}`}>
             Caserna Kart Racing · {competitionLabels[competition] || competition} · {category}
           </p>
@@ -218,7 +243,7 @@ export default function RankingShareStoriesCanvas({
 
       {/* Stories: Narrativa (1080x1920) */}
       <div
-        ref={refs.storiesNarrativeRef}
+        ref={storiesNarrativeRef}
         className={`relative flex w-[1080px] flex-col ${isDarkMode ? "bg-[#0b0f16]" : "bg-white"}`}
         style={{ height: 1920 }}
       >
@@ -232,7 +257,12 @@ export default function RankingShareStoriesCanvas({
         />
 
         {/* Noise texture overlay */}
-        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          }}
+        />
 
         {/* Progress dots */}
         <div className="relative z-10 flex justify-center gap-2 pt-8">
@@ -241,8 +271,12 @@ export default function RankingShareStoriesCanvas({
               key={`narr-prog-dot-${i}`}
               className={`h-2.5 w-2.5 rounded-full ${
                 i === 1
-                  ? isDarkMode ? "bg-white/80" : "bg-zinc-800"
-                  : isDarkMode ? "bg-white/20" : "bg-zinc-200"
+                  ? isDarkMode
+                    ? "bg-white/80"
+                    : "bg-zinc-800"
+                  : isDarkMode
+                    ? "bg-white/20"
+                    : "bg-zinc-200"
               }`}
             />
           ))}
@@ -250,12 +284,14 @@ export default function RankingShareStoriesCanvas({
 
         {/* Kicker */}
         <div className={`relative z-10 mt-12 mb-8 flex justify-center`}>
-          <div className={`rounded-full border px-8 py-3 ${
-            isDarkMode
-              ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft} ${textAccent}`
-              : `border ${theme.primaryBorder} bg-zinc-50 ${theme.primaryIcon}`
-          }`}>
-            <p className="text-xl font-bold uppercase tracking-[0.2em]">
+          <div
+            className={`rounded-full border px-8 py-3 ${
+              isDarkMode
+                ? `${theme.darkAccentBorder} ${theme.darkAccentBgSoft} ${textAccent}`
+                : `border ${theme.primaryBorder} bg-zinc-50 ${theme.primaryIcon}`
+            }`}
+          >
+            <p className="text-xl font-bold tracking-[0.2em] uppercase">
               {championshipNarrative.kicker}
             </p>
           </div>
@@ -263,7 +299,7 @@ export default function RankingShareStoriesCanvas({
 
         {/* Headline */}
         <div className="relative z-10 px-20 text-center">
-          <p className={`text-5xl font-black leading-tight ${textPrimary}`}>
+          <p className={`text-5xl leading-tight font-black ${textPrimary}`}>
             {championshipNarrative.headline}
           </p>
         </div>
@@ -276,28 +312,24 @@ export default function RankingShareStoriesCanvas({
         </div>
 
         {/* Badges */}
-        <div className="relative z-10 mt-16 flex justify-center gap-6 flex-wrap px-8">
+        <div className="relative z-10 mt-16 flex flex-wrap justify-center gap-6 px-8">
           {championshipNarrative.badges.map((badge) => (
             <div
               key={badge.label}
               className={`rounded-2xl border px-6 py-4 text-center ${
-                isDarkMode
-                  ? "border-white/10 bg-[#111827]"
-                  : "border-black/5 bg-zinc-50"
+                isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50"
               }`}
             >
-              <p className={`text-sm font-bold uppercase tracking-wider ${textSecondary}`}>
+              <p className={`text-sm font-bold tracking-wider uppercase ${textSecondary}`}>
                 {badge.label}
               </p>
-              <p className={`mt-1 text-xl font-extrabold ${textPrimary}`}>
-                {badge.value}
-              </p>
+              <p className={`mt-1 text-xl font-extrabold ${textPrimary}`}>{badge.value}</p>
             </div>
           ))}
         </div>
 
         {/* Watermark */}
-        <div className="absolute bottom-24 left-0 right-0 z-10 text-center">
+        <div className="absolute right-0 bottom-24 left-0 z-10 text-center">
           <p className={`text-lg font-semibold ${textSecondary}`}>
             Caserna Kart Racing · {competitionLabels[competition] || competition} · {category}
           </p>
@@ -309,7 +341,7 @@ export default function RankingShareStoriesCanvas({
 
       {/* Stories: Classificação Top 6 (1080x1920) */}
       <div
-        ref={refs.storiesClassificationRef}
+        ref={storiesClassificationRef}
         className={`relative flex w-[1080px] flex-col ${isDarkMode ? "bg-[#0b0f16]" : "bg-white"}`}
         style={{ height: 1920 }}
       >
@@ -323,7 +355,12 @@ export default function RankingShareStoriesCanvas({
         />
 
         {/* Noise texture overlay */}
-        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          }}
+        />
 
         {/* Progress dots */}
         <div className="relative z-10 flex justify-center gap-2 pt-8">
@@ -332,8 +369,12 @@ export default function RankingShareStoriesCanvas({
               key={`class-prog-dot-${i}`}
               className={`h-2.5 w-2.5 rounded-full ${
                 i === 2
-                  ? isDarkMode ? "bg-white/80" : "bg-zinc-800"
-                  : isDarkMode ? "bg-white/20" : "bg-zinc-200"
+                  ? isDarkMode
+                    ? "bg-white/80"
+                    : "bg-zinc-800"
+                  : isDarkMode
+                    ? "bg-white/20"
+                    : "bg-zinc-200"
               }`}
             />
           ))}
@@ -342,16 +383,20 @@ export default function RankingShareStoriesCanvas({
         {/* Header */}
         <div className={`relative z-10 flex w-full items-center justify-between px-12 pt-8 pb-8`}>
           <div>
-            <p className={`text-lg font-bold uppercase tracking-[0.16em] ${textSecondary}`}>
+            <p className={`text-lg font-bold tracking-[0.16em] uppercase ${textSecondary}`}>
               Classificação Oficial
             </p>
             <p className={`mt-1 text-3xl font-extrabold ${textPrimary}`}>
               {competitionLabels[competition] || competition} · {category}
             </p>
           </div>
-          <div className={`rounded-full px-4 py-2 text-sm font-bold ${
-            isDarkMode ? `${theme.darkAccentBgSoft} ${textAccent}` : `bg-zinc-100 ${theme.primaryIcon}`
-          }`}>
+          <div
+            className={`rounded-full px-4 py-2 text-sm font-bold ${
+              isDarkMode
+                ? `${theme.darkAccentBgSoft} ${textAccent}`
+                : `bg-zinc-100 ${theme.primaryIcon}`
+            }`}
+          >
             Top 6
           </div>
         </div>
@@ -359,21 +404,15 @@ export default function RankingShareStoriesCanvas({
         {/* Stats row */}
         <div className="relative z-10 flex justify-around px-12 py-8">
           <div className="text-center">
-            <p className={`text-5xl font-black ${textPrimary}`}>
-              {leader?.pontos ?? 0}
-            </p>
+            <p className={`text-5xl font-black ${textPrimary}`}>{leader?.pontos ?? 0}</p>
             <p className={`mt-1 text-lg ${textSecondary}`}>Pts do líder</p>
           </div>
           <div className="text-center">
-            <p className={`text-5xl font-black ${textPrimary}`}>
-              {statsSummary.totalPilots}
-            </p>
+            <p className={`text-5xl font-black ${textPrimary}`}>{statsSummary.totalPilots}</p>
             <p className={`mt-1 text-lg ${textSecondary}`}>Pilotos</p>
           </div>
           <div className="text-center">
-            <p className={`text-5xl font-black ${textPrimary}`}>
-              +{statsSummary.leaderAdvantage}
-            </p>
+            <p className={`text-5xl font-black ${textPrimary}`}>+{statsSummary.leaderAdvantage}</p>
             <p className={`mt-1 text-lg ${textSecondary}`}>Vantagem</p>
           </div>
         </div>
@@ -384,7 +423,7 @@ export default function RankingShareStoriesCanvas({
             const styles = getTop6RowStyles(index + 1);
             const trendKey = pilot.pilotoId || normalizePilotName(pilot.piloto);
             const trend = pilotTrendMap[trendKey];
-            const trendInfo = trend ? getTrendVisual(trend as any, isDarkMode) : null;
+            const trendInfo = trend ? getTrendVisual(trend as PilotTrendStatus, isDarkMode) : null;
 
             return (
               <div
@@ -392,7 +431,9 @@ export default function RankingShareStoriesCanvas({
                 className={`mb-4 flex items-center justify-between rounded-2xl border px-6 py-5 ${styles.row}`}
               >
                 <div className="flex items-center gap-4">
-                  <span className={`flex h-14 w-14 items-center justify-center rounded-full text-2xl font-black ${styles.badge}`}>
+                  <span
+                    className={`flex h-14 w-14 items-center justify-center rounded-full text-2xl font-black ${styles.badge}`}
+                  >
                     {index + 1}
                   </span>
                   <div>
@@ -400,7 +441,9 @@ export default function RankingShareStoriesCanvas({
                       {getPilotFirstAndLastName(pilot.piloto)}
                     </p>
                     {trendInfo && (
-                      <span className={`mt-1 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-sm font-bold ${trendInfo.className}`}>
+                      <span
+                        className={`mt-1 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-sm font-bold ${trendInfo.className}`}
+                      >
                         <trendInfo.Icon className="h-3 w-3" />
                         {trendInfo.label}
                       </span>
@@ -422,9 +465,7 @@ export default function RankingShareStoriesCanvas({
 
         {/* Watermark */}
         <div className="relative z-10 px-12 py-8 text-center">
-          <p className={`text-lg font-semibold ${textSecondary}`}>
-            CASERNA KART RACING
-          </p>
+          <p className={`text-lg font-semibold ${textSecondary}`}>CASERNA KART RACING</p>
           <p className={`mt-1 text-sm ${isDarkMode ? "text-zinc-600" : "text-zinc-300"}`}>
             {dateStr} às {timeStr}
           </p>
@@ -433,7 +474,7 @@ export default function RankingShareStoriesCanvas({
 
       {/* Stories: Pódio (1080x1920) */}
       <div
-        ref={refs.storiesPodiumRef}
+        ref={storiesPodiumRef}
         className={`relative flex w-[1080px] flex-col items-center ${isDarkMode ? "bg-[#0b0f16]" : "bg-white"}`}
         style={{ height: 1920 }}
       >
@@ -447,7 +488,12 @@ export default function RankingShareStoriesCanvas({
         />
 
         {/* Noise texture overlay */}
-        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          }}
+        />
 
         {/* Progress dots */}
         <div className="relative z-10 flex justify-center gap-2 pt-8">
@@ -456,8 +502,12 @@ export default function RankingShareStoriesCanvas({
               key={`podium-prog-dot-${i}`}
               className={`h-2.5 w-2.5 rounded-full ${
                 i === 0
-                  ? isDarkMode ? "bg-white/80" : "bg-zinc-800"
-                  : isDarkMode ? "bg-white/20" : "bg-zinc-200"
+                  ? isDarkMode
+                    ? "bg-white/80"
+                    : "bg-zinc-800"
+                  : isDarkMode
+                    ? "bg-white/20"
+                    : "bg-zinc-200"
               }`}
             />
           ))}
@@ -465,12 +515,10 @@ export default function RankingShareStoriesCanvas({
 
         {/* Title */}
         <div className="relative z-10 mt-8 mb-6 text-center">
-          <p className={`text-xl font-bold uppercase tracking-[0.2em] ${textSecondary}`}>
+          <p className={`text-xl font-bold tracking-[0.2em] uppercase ${textSecondary}`}>
             Pódio Oficial
           </p>
-          <p className={`mt-2 text-5xl font-black ${textPrimary}`}>
-            Top 6 · {category}
-          </p>
+          <p className={`mt-2 text-5xl font-black ${textPrimary}`}>Top 6 · {category}</p>
           <p className={`mt-2 text-2xl font-semibold ${textSecondary}`}>
             {competitionLabels[competition] || competition}
           </p>
@@ -484,7 +532,7 @@ export default function RankingShareStoriesCanvas({
             const podiumBadges = [
               "from-yellow-400 to-amber-500",
               "from-gray-300 to-gray-400",
-              "from-amber-600 to-amber-800"
+              "from-amber-600 to-amber-800",
             ];
             const posLabels = ["1°", "2°", "3°"];
             const heights = ["h-[280px]", "h-[240px]", "h-[200px]"];
@@ -493,20 +541,24 @@ export default function RankingShareStoriesCanvas({
               <div
                 key={`stories-podium-${idx}`}
                 className={`flex w-1/3 flex-col items-center justify-end rounded-2xl border px-4 py-6 ${heights[idx]} ${
-                  isDarkMode
-                    ? "border-white/10 bg-[#0f172a]"
-                    : "border-black/5 bg-white"
+                  isDarkMode ? "border-white/10 bg-[#0f172a]" : "border-black/5 bg-white"
                 }`}
               >
-                <div className={`flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br text-xl font-black text-white shadow-lg ${podiumBadges[idx]}`}>
+                <div
+                  className={`flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br text-xl font-black text-white shadow-lg ${podiumBadges[idx]}`}
+                >
                   {posLabels[idx]}
                 </div>
-                <p className={`mt-3 text-center text-xl font-extrabold leading-tight ${textPrimary}`}>
+                <p
+                  className={`mt-3 text-center text-xl leading-tight font-extrabold ${textPrimary}`}
+                >
                   {getPilotFirstAndLastName(pilot.piloto)}
                 </p>
-                <p className={`mt-1 text-3xl font-black tabular-nums ${
-                  isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                }`}>
+                <p
+                  className={`mt-1 text-3xl font-black tabular-nums ${
+                    isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                  }`}
+                >
                   {pilot.pontos} pts
                 </p>
                 <p className={`mt-1 text-sm ${textSecondary}`}>
@@ -527,7 +579,7 @@ export default function RankingShareStoriesCanvas({
             const bottomBadges = [
               "from-sky-400 to-blue-500",
               "from-violet-400 to-purple-500",
-              "from-emerald-400 to-green-500"
+              "from-emerald-400 to-green-500",
             ];
 
             return (
@@ -536,16 +588,20 @@ export default function RankingShareStoriesCanvas({
                 className={`mb-3 flex items-center justify-between rounded-2xl border px-6 py-4 ${styles.row}`}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br text-base font-black text-white shadow ${bottomBadges[idx - 3]}`}>
+                  <div
+                    className={`flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br text-base font-black text-white shadow ${bottomBadges[idx - 3]}`}
+                  >
                     {posLabels[idx - 3]}
                   </div>
                   <p className={`text-2xl font-extrabold ${textPrimary}`}>
                     {getPilotFirstAndLastName(pilot.piloto)}
                   </p>
                 </div>
-                <p className={`text-3xl font-black tabular-nums ${
-                  isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                }`}>
+                <p
+                  className={`text-3xl font-black tabular-nums ${
+                    isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                  }`}
+                >
                   {pilot.pontos} pts
                 </p>
               </div>
@@ -554,10 +610,8 @@ export default function RankingShareStoriesCanvas({
         </div>
 
         {/* Watermark */}
-        <div className="absolute bottom-24 left-0 right-0 z-10 text-center">
-          <p className={`text-lg font-semibold ${textSecondary}`}>
-            CASERNA KART RACING
-          </p>
+        <div className="absolute right-0 bottom-24 left-0 z-10 text-center">
+          <p className={`text-lg font-semibold ${textSecondary}`}>CASERNA KART RACING</p>
           <p className={`mt-1 text-sm ${isDarkMode ? "text-zinc-600" : "text-zinc-300"}`}>
             {dateStr} às {timeStr}
           </p>
@@ -566,7 +620,7 @@ export default function RankingShareStoriesCanvas({
 
       {/* Stories: Evolução do Campeonato (1080x1920) */}
       <div
-        ref={refs.storiesEvolutionRef}
+        ref={storiesEvolutionRef}
         className={`relative flex w-[1080px] flex-col ${isDarkMode ? "bg-[#0b0f16]" : "bg-white"}`}
         style={{ height: 1920 }}
       >
@@ -580,7 +634,12 @@ export default function RankingShareStoriesCanvas({
         />
 
         {/* Noise texture overlay */}
-        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          }}
+        />
 
         {/* Progress dots */}
         <div className="relative z-10 flex justify-center gap-2 pt-8">
@@ -589,8 +648,12 @@ export default function RankingShareStoriesCanvas({
               key={`evo-prog-dot-${i}`}
               className={`h-2.5 w-2.5 rounded-full ${
                 i === 1
-                  ? isDarkMode ? "bg-white/80" : "bg-zinc-800"
-                  : isDarkMode ? "bg-white/20" : "bg-zinc-200"
+                  ? isDarkMode
+                    ? "bg-white/80"
+                    : "bg-zinc-800"
+                  : isDarkMode
+                    ? "bg-white/20"
+                    : "bg-zinc-200"
               }`}
             />
           ))}
@@ -598,23 +661,21 @@ export default function RankingShareStoriesCanvas({
 
         {/* Title */}
         <div className="relative z-10 mt-8 mb-6 px-10 text-center">
-          <p className={`text-xl font-bold uppercase tracking-[0.2em] ${textSecondary}`}>
+          <p className={`text-xl font-bold tracking-[0.2em] uppercase ${textSecondary}`}>
             Panorama do Campeonato
           </p>
-          <p className={`mt-2 text-4xl font-black leading-tight ${textPrimary}`}>
+          <p className={`mt-2 text-4xl leading-tight font-black ${textPrimary}`}>
             {category} · {competitionLabels[competition] || competition}
           </p>
         </div>
 
         {/* Championship headline */}
-        <div className={`relative z-10 mx-10 rounded-2xl border px-6 py-4 ${
-          isDarkMode
-            ? "border-white/10 bg-[#111827]"
-            : "border-black/5 bg-zinc-50"
-        }`}>
-          <p className={`text-xl font-bold ${textPrimary}`}>
-            {championshipNarrative.headline}
-          </p>
+        <div
+          className={`relative z-10 mx-10 rounded-2xl border px-6 py-4 ${
+            isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-zinc-50"
+          }`}
+        >
+          <p className={`text-xl font-bold ${textPrimary}`}>{championshipNarrative.headline}</p>
           <p className={`mt-2 text-lg leading-relaxed ${textSecondary}`}>
             {championshipNarrative.body}
           </p>
@@ -625,8 +686,7 @@ export default function RankingShareStoriesCanvas({
           {filteredRanking.slice(0, 6).map((item, index) => {
             const styles = getTop6RowStyles(index + 1);
             const trendStatus =
-              pilotTrendMap[item.pilotoId || normalizePilotName(item.piloto)] ||
-              "stable";
+              pilotTrendMap[item.pilotoId || normalizePilotName(item.piloto)] || "stable";
             const trendInfo = getTrendVisual(trendStatus as never, isDarkMode);
             const TrendI = trendInfo.Icon;
 
@@ -636,7 +696,9 @@ export default function RankingShareStoriesCanvas({
                 className={`mb-3 flex items-center justify-between rounded-2xl border px-6 py-4 ${styles.row}`}
               >
                 <div className="flex items-center gap-3">
-                  <span className={`flex h-12 w-12 items-center justify-center rounded-full text-xl font-black ${styles.badge}`}>
+                  <span
+                    className={`flex h-12 w-12 items-center justify-center rounded-full text-xl font-black ${styles.badge}`}
+                  >
                     {index + 1}
                   </span>
                   <p className={`text-2xl font-extrabold ${styles.name}`}>
@@ -644,13 +706,17 @@ export default function RankingShareStoriesCanvas({
                   </p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-bold ${trendInfo.className}`}>
+                  <span
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-bold ${trendInfo.className}`}
+                  >
                     <TrendI className="h-3.5 w-3.5" />
                     {trendInfo.label}
                   </span>
-                  <p className={`text-3xl font-black tabular-nums ${
-                    isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                  }`}>
+                  <p
+                    className={`text-3xl font-black tabular-nums ${
+                      isDarkMode ? theme.darkAccentText : theme.primaryIcon
+                    }`}
+                  >
                     {item.pontos} pts
                   </p>
                 </div>
@@ -662,9 +728,7 @@ export default function RankingShareStoriesCanvas({
         {/* Aggregate stats */}
         <div className="relative z-10 mt-6 flex justify-around px-8">
           <div className="text-center">
-            <p className={`text-4xl font-black ${textPrimary}`}>
-              {statsSummary.totalPilots}
-            </p>
+            <p className={`text-4xl font-black ${textPrimary}`}>{statsSummary.totalPilots}</p>
             <p className={`mt-1 text-sm ${textSecondary}`}>Pilotos</p>
           </div>
           <div className="text-center">
@@ -674,18 +738,14 @@ export default function RankingShareStoriesCanvas({
             <p className={`mt-1 text-sm ${textSecondary}`}>Vitórias</p>
           </div>
           <div className="text-center">
-            <p className={`text-4xl font-black ${textPrimary}`}>
-              {statsSummary.totalPodiums || 0}
-            </p>
+            <p className={`text-4xl font-black ${textPrimary}`}>{statsSummary.totalPodiums || 0}</p>
             <p className={`mt-1 text-sm ${textSecondary}`}>Pódios</p>
           </div>
         </div>
 
         {/* Watermark */}
-        <div className="absolute bottom-24 left-0 right-0 z-10 text-center">
-          <p className={`text-lg font-semibold ${textSecondary}`}>
-            CASERNA KART RACING
-          </p>
+        <div className="absolute right-0 bottom-24 left-0 z-10 text-center">
+          <p className={`text-lg font-semibold ${textSecondary}`}>CASERNA KART RACING</p>
           <p className={`mt-1 text-sm ${isDarkMode ? "text-zinc-600" : "text-zinc-300"}`}>
             {dateStr} às {timeStr}
           </p>

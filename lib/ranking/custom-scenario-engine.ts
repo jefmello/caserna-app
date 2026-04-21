@@ -75,7 +75,7 @@ export function runCustomScenario({
   polePilotKey,
   vmrPilotKey,
   stageNumber,
-  competition,
+  competition: _competition,
 }: {
   ranking: RankingItem[];
   assignments: CustomScenarioAssignment;
@@ -92,12 +92,10 @@ export function runCustomScenario({
     const assignedPosition = assignments[key];
 
     // Pontos base da posição de chegada
-    const basePoints = assignedPosition
-      ? getBasePositionPoints(assignedPosition)
-      : 0;
+    const basePoints = assignedPosition ? getBasePositionPoints(assignedPosition) : 0;
 
     // Pontos bônus: pole e VMR são independentes da posição
-    const poleBonus = (hasPoleStage && polePilotKey === key) ? 1 : 0;
+    const poleBonus = hasPoleStage && polePilotKey === key ? 1 : 0;
     const vmrBonus = vmrPilotKey === key ? 1 : 0;
 
     const pointsGained = basePoints + poleBonus + vmrBonus;
@@ -146,22 +144,22 @@ export function runCustomScenario({
   const leaderChange = {
     oldLeader: oldLeader?.piloto || null,
     newLeader: newLeader?.piloto || null,
-    pointsDiff: newLeader && oldLeader
-      ? newLeader.projectedPoints - oldLeader.pontos
-      : 0,
+    pointsDiff: newLeader && oldLeader ? newLeader.projectedPoints - oldLeader.pontos : 0,
   };
 
   // Maior ganhador (com pontos positivos)
   const withPointsGained = sorted.filter((p) => p.pointsGained > 0);
-  const biggestGainer = withPointsGained.length > 0
-    ? withPointsGained.reduce((best, p) => p.pointsGained > best.pointsGained ? p : best)
-    : null;
+  const biggestGainer =
+    withPointsGained.length > 0
+      ? withPointsGained.reduce((best, p) => (p.pointsGained > best.pointsGained ? p : best))
+      : null;
 
   // Maior perdedor (pontos = 0, mas perdeu posições)
   const withPointsLost = sorted.filter((p) => p.pointsGained === 0 && p.positionChange < 0);
-  const biggestLoser = withPointsLost.length > 0
-    ? withPointsLost.reduce((worst, p) => p.positionChange < worst.positionChange ? p : worst)
-    : null;
+  const biggestLoser =
+    withPointsLost.length > 0
+      ? withPointsLost.reduce((worst, p) => (p.positionChange < worst.positionChange ? p : worst))
+      : null;
 
   return {
     projectedRanking: sorted,

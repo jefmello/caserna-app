@@ -57,7 +57,7 @@ function RankingSharePremiumSection({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <p
-              className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
+              className={`text-[9px] font-bold tracking-[0.18em] uppercase ${
                 isDarkMode ? "text-zinc-500" : "text-zinc-400"
               }`}
             >
@@ -75,12 +75,13 @@ function RankingSharePremiumSection({
                 isDarkMode ? "text-zinc-400" : "text-zinc-500"
               }`}
             >
-              Gere artes do líder, da narrativa oficial e do duelo da rodada com visual premium do campeonato.
+              Gere artes do líder, da narrativa oficial e do duelo da rodada com visual premium do
+              campeonato.
             </p>
           </div>
 
           <div
-            className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+            className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.12em] uppercase ${
               isDarkMode
                 ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
                 : theme.searchBadge
@@ -108,10 +109,12 @@ function RankingSharePremiumSection({
                   isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                 }`}
               >
-                <Crown className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                <Crown
+                  className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
+                />
               </div>
               <span
-                className={`text-[10px] font-bold uppercase tracking-[0.12em] ${
+                className={`text-[10px] font-bold tracking-[0.12em] uppercase ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >
@@ -150,10 +153,12 @@ function RankingSharePremiumSection({
                   isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                 }`}
               >
-                <BarChart3 className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                <BarChart3
+                  className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
+                />
               </div>
               <span
-                className={`text-[10px] font-bold uppercase tracking-[0.12em] ${
+                className={`text-[10px] font-bold tracking-[0.12em] uppercase ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >
@@ -192,10 +197,12 @@ function RankingSharePremiumSection({
                   isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                 }`}
               >
-                <Swords className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                <Swords
+                  className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
+                />
               </div>
               <span
-                className={`text-[10px] font-bold uppercase tracking-[0.12em] ${
+                className={`text-[10px] font-bold tracking-[0.12em] uppercase ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >

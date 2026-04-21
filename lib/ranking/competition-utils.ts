@@ -143,26 +143,18 @@ export function getDuelProfileLabel({
 }): string {
   if (scoreA === scoreB) {
     if (pointsWinner === "tie") return "Confronto espelhado";
-    return pointsWinner === "a"
-      ? "A lidera nos detalhes"
-      : "B lidera nos detalhes";
+    return pointsWinner === "a" ? "A lidera nos detalhes" : "B lidera nos detalhes";
   }
 
   const leader = scoreA > scoreB ? "a" : "b";
 
   if (pointsWinner === leader && advWinner === leader) {
-    return leader === "a"
-      ? "A domina desempenho e disciplina"
-      : "B domina desempenho e disciplina";
+    return leader === "a" ? "A domina desempenho e disciplina" : "B domina desempenho e disciplina";
   }
 
   if (pointsWinner === leader) {
-    return leader === "a"
-      ? "A vence no pacote competitivo"
-      : "B vence no pacote competitivo";
+    return leader === "a" ? "A vence no pacote competitivo" : "B vence no pacote competitivo";
   }
 
-  return leader === "a"
-    ? "A compensa na regularidade"
-    : "B compensa na regularidade";
+  return leader === "a" ? "A compensa na regularidade" : "B compensa na regularidade";
 }

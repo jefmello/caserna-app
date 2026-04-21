@@ -30,24 +30,14 @@ export default function RankingPilotEmptyState({
             isDarkMode ? theme.darkAccentIconWrap : "bg-zinc-100"
           }`}
         >
-          <UserIcon
-            className={`h-7 w-7 ${
-              isDarkMode ? theme.darkAccentText : "text-zinc-500"
-            }`}
-          />
+          <UserIcon className={`h-7 w-7 ${isDarkMode ? theme.darkAccentText : "text-zinc-500"}`} />
         </div>
         <p
-          className={`mt-4 text-base font-semibold ${
-            isDarkMode ? "text-white" : "text-zinc-950"
-          }`}
+          className={`mt-4 text-base font-semibold ${isDarkMode ? "text-white" : "text-zinc-950"}`}
         >
           Nenhum piloto selecionado
         </p>
-        <p
-          className={`mt-2 text-sm ${
-            isDarkMode ? "text-zinc-400" : "text-zinc-500"
-          }`}
-        >
+        <p className={`mt-2 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
           Toque em um piloto na classificação para abrir o perfil.
         </p>
 
@@ -60,14 +50,10 @@ export default function RankingPilotEmptyState({
             }`}
           >
             <Trophy
-              className={`h-5 w-5 shrink-0 ${
-                isDarkMode ? "text-zinc-500" : "text-zinc-400"
-              }`}
+              className={`h-5 w-5 shrink-0 ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}
             />
             <span
-              className={`text-xs font-medium ${
-                isDarkMode ? "text-zinc-400" : "text-zinc-600"
-              }`}
+              className={`text-xs font-medium ${isDarkMode ? "text-zinc-400" : "text-zinc-600"}`}
             >
               Clique em qualquer piloto na tabela acima
             </span>
@@ -81,14 +67,10 @@ export default function RankingPilotEmptyState({
             }`}
           >
             <Swords
-              className={`h-5 w-5 shrink-0 ${
-                isDarkMode ? "text-zinc-500" : "text-zinc-400"
-              }`}
+              className={`h-5 w-5 shrink-0 ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}
             />
             <span
-              className={`text-xs font-medium ${
-                isDarkMode ? "text-zinc-400" : "text-zinc-600"
-              }`}
+              className={`text-xs font-medium ${isDarkMode ? "text-zinc-400" : "text-zinc-600"}`}
             >
               Selecione dois pilotos na aba Duelos para comparar
             </span>

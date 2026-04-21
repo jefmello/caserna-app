@@ -33,9 +33,7 @@ export default function RankingShareNarrativeCard({
 
         <p className="mt-3 text-sm opacity-80">{narrative}</p>
 
-        <div className="mt-4 text-[10px] opacity-50">
-          Caserna Kart Racing
-        </div>
+        <div className="mt-4 text-[10px] opacity-50">Caserna Kart Racing</div>
       </div>
 
       <button

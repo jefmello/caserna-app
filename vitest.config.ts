@@ -11,13 +11,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
-      exclude: [
-        "node_modules/",
-        "**/__tests__/",
-        ".next/",
-        "out/",
-        "**/*.config.*",
-      ],
+      exclude: ["node_modules/", "**/__tests__/", ".next/", "out/", "**/*.config.*"],
     },
   },
   resolve: {

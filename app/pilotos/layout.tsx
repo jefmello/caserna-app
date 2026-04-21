@@ -8,11 +8,7 @@ export const metadata: Metadata = {
     "Conheça os pilotos do campeonato Caserna Kart Racing. Perfis individuais, estatísticas e histórico de cada competidor.",
 };
 
-export default function PilotosLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function PilotosLayout({ children }: { children: React.ReactNode }) {
   return (
     <AppMainLayout>
       <AppSectionShell section="default">{children}</AppSectionShell>

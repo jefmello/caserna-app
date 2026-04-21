@@ -17,7 +17,7 @@ export default function NotFound() {
 
         <Link
           href="/"
-          className="inline-flex items-center gap-2 rounded-xl border border-zinc-600 bg-zinc-800 px-5 py-2.5 text-sm font-medium text-zinc-200 transition-all duration-200 hover:bg-zinc-700 hover:scale-[1.03] active:scale-[0.98]"
+          className="inline-flex items-center gap-2 rounded-xl border border-zinc-600 bg-zinc-800 px-5 py-2.5 text-sm font-medium text-zinc-200 transition-all duration-200 hover:scale-[1.03] hover:bg-zinc-700 active:scale-[0.98]"
         >
           <Home className="h-4 w-4" aria-hidden="true" />
           Voltar ao início

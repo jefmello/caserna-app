@@ -104,14 +104,20 @@ export default function RankingEditorialCards({
     <section className="space-y-2.5 lg:space-y-3">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className={`text-[9px] font-bold uppercase tracking-[0.18em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+          <p
+            className={`text-[9px] font-bold tracking-[0.18em] uppercase ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}
+          >
             Leitura editorial
           </p>
-          <h3 className={`mt-1 text-[16px] font-semibold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+          <h3
+            className={`mt-1 text-[16px] font-semibold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}
+          >
             Cards automáticos do campeonato
           </h3>
         </div>
-        <div className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${isDarkMode ? `${theme.darkAccentBorder || "border-white/10"} bg-white/5 ${theme.darkAccentText || "text-zinc-200"}` : "border-black/5 bg-white text-zinc-700"}`}>
+        <div
+          className={`rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.12em] uppercase ${isDarkMode ? `${theme.darkAccentBorder || "border-white/10"} bg-white/5 ${theme.darkAccentText || "text-zinc-200"}` : "border-black/5 bg-white text-zinc-700"}`}
+        >
           atualização dinâmica
         </div>
       </div>
@@ -128,28 +134,40 @@ export default function RankingEditorialCards({
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
-                  <p className={`text-[9px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                  <p
+                    className={`text-[9px] font-bold tracking-[0.16em] uppercase ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}
+                  >
                     {card.eyebrow}
                   </p>
-                  <h4 className={`mt-1 text-[16px] font-bold leading-tight tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                  <h4
+                    className={`mt-1 text-[16px] leading-tight font-bold tracking-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}
+                  >
                     {card.title}
                   </h4>
                 </div>
 
-                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${tone.iconWrap}`}>
+                <div
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${tone.iconWrap}`}
+                >
                   <Icon className={`h-4.5 w-4.5 ${tone.icon}`} />
                 </div>
               </div>
 
-              <p className={`mt-3 text-[12px] leading-relaxed ${isDarkMode ? "text-zinc-300" : "text-zinc-600"}`}>
+              <p
+                className={`mt-3 text-[12px] leading-relaxed ${isDarkMode ? "text-zinc-300" : "text-zinc-600"}`}
+              >
                 {card.description}
               </p>
 
               <div className="mt-4 flex items-center justify-between gap-3">
-                <div className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${tone.badge}`}>
+                <div
+                  className={`rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.12em] uppercase ${tone.badge}`}
+                >
                   {card.badge}
                 </div>
-                <div className={`text-[10px] font-semibold uppercase tracking-[0.12em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                <div
+                  className={`text-[10px] font-semibold tracking-[0.12em] uppercase ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}
+                >
                   card editorial
                 </div>
               </div>

@@ -8,11 +8,7 @@ export const metadata: Metadata = {
     "Galeria de imagens e conteúdo visual do campeonato Caserna Kart Racing. Fotos, gráficos e destaques das etapas.",
 };
 
-export default function MidiaLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function MidiaLayout({ children }: { children: React.ReactNode }) {
   return (
     <AppMainLayout>
       <AppSectionShell>{children}</AppSectionShell>

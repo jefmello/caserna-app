@@ -9,11 +9,13 @@ export type Season = {
   isActive: boolean;
   startDate: string;
   endDate: string | null;
-  champion: {
-    categoria: string;
-    piloto: string;
-    pontos: number;
-  }[] | null;
+  champion:
+    | {
+        categoria: string;
+        piloto: string;
+        pontos: number;
+      }[]
+    | null;
 };
 
 /**
@@ -128,8 +130,6 @@ export function getArchivedSeasons(): ArchivedSeasonData[] {
  */
 export function getCombinedSeasons(): (Season | ArchivedSeasonData["season"])[] {
   const archived = getArchivedSeasons().map((a) => a.season);
-  const defined = SEASONS.filter(
-    (s) => !archived.some((a) => a.year === s.year)
-  );
+  const defined = SEASONS.filter((s) => !archived.some((a) => a.year === s.year));
   return [...archived, ...defined].sort((a, b) => b.year - a.year);
 }

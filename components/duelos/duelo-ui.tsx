@@ -14,7 +14,7 @@ export function DuelSelectorCard({
   onChange,
   options,
   isDarkMode,
-  theme,
+  theme: _theme,
 }: {
   title: string;
   value: string;
@@ -26,14 +26,12 @@ export function DuelSelectorCard({
   return (
     <Card
       className={`rounded-[22px] shadow-sm ${
-        isDarkMode
-          ? "border border-white/10 bg-[#111827]"
-          : "border-black/5 bg-white"
+        isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
       }`}
     >
       <CardContent className="p-4">
         <p
-          className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+          className={`text-[10px] font-bold tracking-[0.16em] uppercase ${
             isDarkMode ? "text-zinc-500" : "text-zinc-400"
           }`}
         >
@@ -43,7 +41,7 @@ export function DuelSelectorCard({
         <select
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={`mt-3 w-full rounded-[16px] border px-3 py-3 text-sm font-medium outline-none transition ${
+          className={`mt-3 w-full rounded-[16px] border px-3 py-3 text-sm font-medium transition outline-none ${
             isDarkMode
               ? "border-white/10 bg-[#0f172a] text-white"
               : "border-black/5 bg-zinc-50 text-zinc-950"
@@ -105,14 +103,14 @@ export function PilotInfoCard({
         <div className="flex items-start justify-between gap-3">
           <div>
             <p
-              className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+              className={`text-[10px] font-bold tracking-[0.16em] uppercase ${
                 isDarkMode ? "text-zinc-500" : "text-zinc-400"
               }`}
             >
               {title}
             </p>
             <p
-              className={`mt-2 text-[20px] font-bold leading-tight ${
+              className={`mt-2 text-[20px] leading-tight font-bold ${
                 isDarkMode ? "text-white" : "text-zinc-950"
               }`}
             >
@@ -159,7 +157,7 @@ export function PilotInfoCard({
               }`}
             >
               <p
-                className={`text-[9px] font-bold uppercase tracking-[0.14em] ${
+                className={`text-[9px] font-bold tracking-[0.14em] uppercase ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >
@@ -204,14 +202,12 @@ export function MetricRow({
   return (
     <div
       className={`grid grid-cols-[72px_1fr_56px_56px] items-center gap-2 rounded-[18px] border px-3 py-3 ${
-        isDarkMode
-          ? "border-white/10 bg-[#111827]"
-          : "border-black/5 bg-white"
+        isDarkMode ? "border-white/10 bg-[#111827]" : "border-black/5 bg-white"
       }`}
     >
       <div>
         <p
-          className={`text-[10px] font-bold uppercase tracking-[0.14em] ${
+          className={`text-[10px] font-bold tracking-[0.14em] uppercase ${
             isDarkMode ? "text-zinc-500" : "text-zinc-400"
           }`}
         >
@@ -220,11 +216,7 @@ export function MetricRow({
       </div>
 
       <div className="min-w-0">
-        <p
-          className={`text-[14px] font-bold ${
-            isDarkMode ? "text-white" : "text-zinc-950"
-          }`}
-        >
+        <p className={`text-[14px] font-bold ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
           {metric.label}
         </p>
         <p
@@ -260,10 +252,14 @@ export function MetricRow({
         )}
         {metric.a + metric.b > 0 && (
           <div className="mt-0.5 flex justify-between">
-            <span className={`text-[9px] font-semibold ${isDarkMode ? "text-zinc-600" : "text-zinc-400"}`}>
+            <span
+              className={`text-[9px] font-semibold ${isDarkMode ? "text-zinc-600" : "text-zinc-400"}`}
+            >
               {pilotAName}
             </span>
-            <span className={`text-[9px] font-semibold ${isDarkMode ? "text-zinc-600" : "text-zinc-400"}`}>
+            <span
+              className={`text-[9px] font-semibold ${isDarkMode ? "text-zinc-600" : "text-zinc-400"}`}
+            >
               {pilotBName}
             </span>
           </div>

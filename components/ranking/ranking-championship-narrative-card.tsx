@@ -1,10 +1,11 @@
 import { Newspaper, Crown, Gauge, Trophy, TrendingUp, Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import type { ChampionshipNarrative } from "@/lib/hooks/useChampionshipNarrative";
+import type { CategoryTheme } from "@/lib/ranking/theme-utils";
 
 type Props = {
   isDarkMode: boolean;
-  theme: any;
+  theme: CategoryTheme;
   category: string;
   competitionLabel: string;
   narrative: ChampionshipNarrative;
@@ -56,33 +57,35 @@ export default function RankingChampionshipNarrativeCard({
                 isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
               }`}
             >
-              <Newspaper className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+              <Newspaper
+                className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
+              />
             </div>
 
             <div className="min-w-0">
               <p
-                className={`text-[9px] font-bold uppercase tracking-[0.18em] ${
+                className={`text-[9px] font-bold tracking-[0.18em] uppercase ${
                   isDarkMode ? "text-zinc-500" : "text-zinc-400"
                 }`}
               >
                 Narrativa oficial
               </p>
               <p
-                className={`mt-1 text-[12px] font-semibold uppercase tracking-[0.14em] ${
+                className={`mt-1 text-[12px] font-semibold tracking-[0.14em] uppercase ${
                   isDarkMode ? theme.darkAccentText : "text-zinc-600"
                 }`}
               >
                 {narrative.kicker}
               </p>
               <h3
-                className={`mt-1 text-[20px] font-black leading-tight tracking-[0.01em] ${
+                className={`mt-1 text-[20px] leading-tight font-black tracking-[0.01em] ${
                   isDarkMode ? "text-white" : "text-zinc-950"
                 }`}
               >
                 {narrative.headline}
               </h3>
               <p
-                className={`mt-1 text-[12px] font-semibold uppercase tracking-[0.12em] ${
+                className={`mt-1 text-[12px] font-semibold tracking-[0.12em] uppercase ${
                   isDarkMode ? "text-zinc-400" : "text-zinc-500"
                 }`}
               >
@@ -92,7 +95,7 @@ export default function RankingChampionshipNarrativeCard({
           </div>
 
           <div
-            className={`shrink-0 rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${getBadgeTone(
+            className={`shrink-0 rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.12em] uppercase ${getBadgeTone(
               isDarkMode,
               narrative.tone
             )}`}
@@ -105,7 +108,7 @@ export default function RankingChampionshipNarrativeCard({
           {narrative.badges.map((badge) => (
             <div
               key={`${badge.label}-${badge.value}`}
-              className={`rounded-full border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] ${getBadgeTone(
+              className={`rounded-full border px-3 py-1.5 text-[10px] font-bold tracking-[0.12em] uppercase ${getBadgeTone(
                 isDarkMode,
                 badge.tone
               )}`}
@@ -126,9 +129,13 @@ export default function RankingChampionshipNarrativeCard({
                 isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
               }`}
             >
-              <Sparkles className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+              <Sparkles
+                className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
+              />
             </div>
-            <p className={`text-[10px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+            <p
+              className={`text-[10px] font-bold tracking-[0.16em] uppercase ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}
+            >
               Leitura do momento
             </p>
           </div>
@@ -153,13 +160,19 @@ export default function RankingChampionshipNarrativeCard({
                       isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
                     }`}
                   >
-                    <Icon className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`} />
+                    <Icon
+                      className={`h-4 w-4 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
+                    />
                   </div>
-                  <p className={`text-[9px] font-bold uppercase tracking-[0.16em] ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                  <p
+                    className={`text-[9px] font-bold tracking-[0.16em] uppercase ${isDarkMode ? "text-zinc-500" : "text-zinc-400"}`}
+                  >
                     {item.label}
                   </p>
                 </div>
-                <p className={`mt-2 text-[14px] font-bold leading-tight ${isDarkMode ? "text-white" : "text-zinc-950"}`}>
+                <p
+                  className={`mt-2 text-[14px] leading-tight font-bold ${isDarkMode ? "text-white" : "text-zinc-950"}`}
+                >
                   {item.value}
                 </p>
               </div>

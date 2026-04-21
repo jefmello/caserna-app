@@ -30,11 +30,7 @@ export default function useRankingShare({ isDarkMode }: UseRankingShareParams) {
     link.click();
   }
 
-  async function shareDataUrlToWhatsApp({
-    dataUrl,
-    fileName,
-    text,
-  }: ShareWhatsAppParams) {
+  async function shareDataUrlToWhatsApp({ dataUrl, fileName, text }: ShareWhatsAppParams) {
     try {
       const response = await fetch(dataUrl);
       const blob = await response.blob();

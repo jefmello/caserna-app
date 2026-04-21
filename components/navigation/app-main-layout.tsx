@@ -5,11 +5,7 @@ import { Menu } from "lucide-react";
 import { useChampionship } from "@/context/championship-context";
 import AppSidebar from "./app-sidebar";
 
-function AppMainLayoutContent({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function AppMainLayoutContent({ children }: { children: React.ReactNode }) {
   const { themeMode, isDarkMode } = useChampionship();
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
@@ -28,9 +24,7 @@ function AppMainLayoutContent({
     <div
       data-theme={themeMode}
       className={`relative min-h-screen w-full overflow-x-clip transition-colors duration-300 ${
-        isDarkMode
-          ? "bg-[#05070a] text-white"
-          : "bg-[#f3f4f6] text-zinc-900"
+        isDarkMode ? "bg-[#05070a] text-white" : "bg-[#f3f4f6] text-zinc-900"
       }`}
     >
       <div
@@ -51,7 +45,7 @@ function AppMainLayoutContent({
         aria-hidden="true"
         className={`pointer-events-none fixed inset-0 transition-opacity duration-300 ${
           isDarkMode ? "opacity-100" : "opacity-0"
-        } bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(circle_at_center,black,transparent_88%)]`}
+        } bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] [mask-image:radial-gradient(circle_at_center,black,transparent_88%)] bg-[size:24px_24px]`}
       />
 
       <div
@@ -72,7 +66,7 @@ function AppMainLayoutContent({
         aria-hidden="true"
         className={`pointer-events-none fixed inset-0 transition-opacity duration-300 ${
           isDarkMode ? "opacity-0" : "opacity-100"
-        } bg-[linear-gradient(rgba(15,23,42,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.02)_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(circle_at_center,black,transparent_88%)]`}
+        } bg-[linear-gradient(rgba(15,23,42,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.02)_1px,transparent_1px)] [mask-image:radial-gradient(circle_at_center,black,transparent_88%)] bg-[size:24px_24px]`}
       />
 
       <div
@@ -85,7 +79,7 @@ function AppMainLayoutContent({
       <button
         type="button"
         onClick={() => setIsMobileSidebarOpen(true)}
-        className={`fixed left-3 top-3 z-[70] inline-flex h-11 w-11 items-center justify-center rounded-2xl border shadow-[0_14px_28px_rgba(0,0,0,0.18)] backdrop-blur-xl transition-all duration-300 lg:hidden ${
+        className={`fixed top-3 left-3 z-[70] inline-flex h-11 w-11 items-center justify-center rounded-2xl border shadow-[0_14px_28px_rgba(0,0,0,0.18)] backdrop-blur-xl transition-all duration-300 lg:hidden ${
           isDarkMode
             ? "border-white/10 bg-[#0f172a]/88 text-white hover:bg-[#131c2c]"
             : "border-black/5 bg-white/90 text-zinc-900 hover:bg-white"
@@ -108,10 +102,6 @@ function AppMainLayoutContent({
   );
 }
 
-export default function AppMainLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AppMainLayout({ children }: { children: React.ReactNode }) {
   return <AppMainLayoutContent>{children}</AppMainLayoutContent>;
 }

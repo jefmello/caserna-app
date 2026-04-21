@@ -18,7 +18,8 @@ export default function ErrorPage({
     }
   }, [error]);
 
-  const isNetworkError = error.message.includes("fetch") ||
+  const isNetworkError =
+    error.message.includes("fetch") ||
     error.message.includes("network") ||
     error.message.includes("AbortError") ||
     error.message.includes("timeout");
@@ -33,9 +34,7 @@ export default function ErrorPage({
         <AlertTriangle className="h-12 w-12 text-red-400" aria-hidden="true" />
 
         <div className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold text-red-200">
-            Algo deu errado
-          </h2>
+          <h2 className="text-xl font-semibold text-red-200">Algo deu errado</h2>
           <p className="text-sm text-red-300/80">
             {isNetworkError
               ? "Não foi possível carregar os dados. Verifique sua conexão e tente novamente."
@@ -47,7 +46,7 @@ export default function ErrorPage({
           <button
             type="button"
             onClick={reset}
-            className="inline-flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-900/50 px-4 py-2.5 text-sm font-medium text-red-100 transition-all duration-200 hover:bg-red-900/70 hover:scale-[1.03] active:scale-[0.98]"
+            className="inline-flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-900/50 px-4 py-2.5 text-sm font-medium text-red-100 transition-all duration-200 hover:scale-[1.03] hover:bg-red-900/70 active:scale-[0.98]"
           >
             <RefreshCw className="h-4 w-4" aria-hidden="true" />
             Tentar novamente
@@ -55,7 +54,7 @@ export default function ErrorPage({
 
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-xl border border-zinc-600 bg-zinc-800 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-all duration-200 hover:bg-zinc-700 hover:scale-[1.03] active:scale-[0.98]"
+            className="inline-flex items-center gap-2 rounded-xl border border-zinc-600 bg-zinc-800 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-all duration-200 hover:scale-[1.03] hover:bg-zinc-700 active:scale-[0.98]"
           >
             <Home className="h-4 w-4" aria-hidden="true" />
             Ir para o início
@@ -63,9 +62,7 @@ export default function ErrorPage({
         </div>
 
         {error.digest && process.env.NODE_ENV === "development" && (
-          <p className="text-xs text-red-400/50 font-mono break-all">
-            {error.digest}
-          </p>
+          <p className="font-mono text-xs break-all text-red-400/50">{error.digest}</p>
         )}
       </div>
     </div>

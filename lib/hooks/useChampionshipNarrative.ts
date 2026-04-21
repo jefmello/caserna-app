@@ -66,7 +66,7 @@ export default function useChampionshipNarrative({
   category,
   competitionLabel,
   leader,
-  titleFightStatus,
+  titleFightStatus: _titleFightStatus,
   statsSummary,
   statsRadar,
   bestEfficiencyPilot,
@@ -163,7 +163,13 @@ export default function useChampionshipNarrative({
                 ? "Disputa aberta"
                 : "Corte estável"
           : "Grid em formação",
-        tone: hasTop6Battle ? (top6Pressure <= 6 ? "hot" : top6Pressure <= 10 ? "alert" : "stable") : "neutral",
+        tone: hasTop6Battle
+          ? top6Pressure <= 6
+            ? "hot"
+            : top6Pressure <= 10
+              ? "alert"
+              : "stable"
+          : "neutral",
       },
       {
         label: "Momento",
@@ -185,13 +191,5 @@ export default function useChampionshipNarrative({
         { label: "Top 6", value: `${statsSummary.top6CutPoints} pts` },
       ],
     };
-  }, [
-    bestEfficiencyPilot,
-    category,
-    competitionLabel,
-    leader,
-    statsRadar,
-    statsSummary,
-    titleFightStatus,
-  ]);
+  }, [bestEfficiencyPilot, category, competitionLabel, leader, statsRadar, statsSummary]);
 }
