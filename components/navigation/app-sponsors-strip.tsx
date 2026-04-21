@@ -85,96 +85,37 @@ function normalizeSponsorName(name: string) {
 function getSponsorLogoClassName(sponsor: SponsorLogoItem, isDarkMode: boolean) {
   const name = normalizeSponsorName(sponsor.name);
 
-  const base = "h-auto w-auto object-contain transition-all duration-300 group-hover:scale-[1.055]";
+  // Tamanhos consistentes: todos cabem dentro do card 88-92px com folga.
+  // Logos muito quadrados (lazykart, astera) recebem tamanho levemente menor
+  // para não dominar visualmente ao lado dos logos horizontais (lumine, precision...).
+  const base =
+    "h-auto w-auto object-contain transition-transform duration-300 group-hover:scale-[1.04]";
 
-  if (isDarkMode) {
-    switch (name) {
-      case "lazykart":
-        return `${base} max-h-[48px] max-w-[76%] brightness-[1.04] contrast-[1.16] saturate-[1.03] drop-shadow-[0_4px_12px_rgba(255,255,255,0.08)] md:max-h-[54px]`;
-      case "lumine":
-        return `${base} max-h-[76px] max-w-[97%] brightness-[1.1] contrast-[1.22] saturate-[1.08] drop-shadow-[0_4px_14px_rgba(251,191,36,0.16)] md:max-h-[86px]`;
-      case "precision":
-        return `${base} max-h-[116px] max-w-[148%] brightness-[1.08] contrast-[1.22] saturate-[1.05] drop-shadow-[0_4px_12px_rgba(255,255,255,0.08)] md:max-h-[128px]`;
-      case "skyflow":
-        return `${base} max-h-[118px] max-w-[152%] brightness-[1.12] contrast-[1.28] saturate-[1.06] drop-shadow-[0_4px_12px_rgba(255,255,255,0.1)] md:max-h-[130px]`;
-      case "vits":
-        return `${base} max-h-[114px] max-w-[144%] brightness-[1.06] contrast-[1.18] saturate-[1.08] drop-shadow-[0_4px_12px_rgba(239,68,68,0.1)] md:max-h-[126px]`;
-      case "astera":
-        return `${base} max-h-[52px] max-w-[80%] brightness-[1.08] contrast-[1.2] saturate-[1.1] drop-shadow-[0_4px_14px_rgba(250,204,21,0.18)] md:max-h-[58px]`;
-      default:
-        return `${base} max-h-[74px] max-w-[96%] brightness-[1.06] contrast-[1.14] saturate-[1.04] md:max-h-[84px]`;
-    }
-  }
+  const compactLogos = new Set(["lazykart", "astera"]);
+  const size = compactLogos.has(name)
+    ? "max-h-[44px] max-w-[78%] md:max-h-[50px]"
+    : "max-h-[56px] max-w-[88%] md:max-h-[64px]";
 
-  switch (name) {
-    case "lazykart":
-      return `${base} max-h-[46px] max-w-[74%] brightness-[0.58] contrast-[1.92] saturate-[1.04] drop-shadow-[0_3px_8px_rgba(15,23,42,0.14)] md:max-h-[52px]`;
-    case "lumine":
-      return `${base} max-h-[76px] max-w-[97%] brightness-[0.96] contrast-[1.54] saturate-[1.22] drop-shadow-[0_4px_12px_rgba(0,0,0,0.18)] md:max-h-[86px]`;
-    case "precision":
-      return `${base} max-h-[118px] max-w-[150%] brightness-[0.82] contrast-[1.6] saturate-[1.08] drop-shadow-[0_3px_8px_rgba(15,23,42,0.14)] md:max-h-[130px]`;
-    case "skyflow":
-      return `${base} max-h-[120px] max-w-[154%] brightness-[0.54] contrast-[2.12] saturate-[1.14] drop-shadow-[0_4px_12px_rgba(0,0,0,0.18)] md:max-h-[132px]`;
-    case "vits":
-      return `${base} max-h-[116px] max-w-[146%] brightness-[0.94] contrast-[1.46] saturate-[1.14] drop-shadow-[0_3px_8px_rgba(127,29,29,0.10)] md:max-h-[128px]`;
-    case "astera":
-      return `${base} max-h-[50px] max-w-[78%] brightness-[0.95] contrast-[1.58] saturate-[1.22] drop-shadow-[0_4px_12px_rgba(0,0,0,0.18)] md:max-h-[56px]`;
-    default:
-      return `${base} max-h-[74px] max-w-[96%] brightness-[0.78] contrast-[1.46] saturate-[1.08] drop-shadow-[0_3px_8px_rgba(15,23,42,0.10)] md:max-h-[84px]`;
-  }
+  // Dropshadow sutil para dar lift sem alterar cor real do logo.
+  const shadow = isDarkMode
+    ? "drop-shadow-[0_2px_6px_rgba(0,0,0,0.55)]"
+    : "drop-shadow-[0_2px_6px_rgba(15,23,42,0.08)]";
+
+  return `${base} ${size} ${shadow}`;
 }
 
-function getSponsorInnerSurfaceClassName(sponsor: SponsorLogoItem, isDarkMode: boolean) {
-  const name = normalizeSponsorName(sponsor.name);
-
-  if (isDarkMode) {
-    switch (name) {
-      case "lumine":
-        return "bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.09),rgba(255,255,255,0.02)_42%,transparent_78%)]";
-      case "astera":
-        return "bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.09),rgba(255,255,255,0.02)_42%,transparent_78%)]";
-      case "vits":
-        return "bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.065),rgba(255,255,255,0.02)_42%,transparent_78%)]";
-      case "skyflow":
-        return "bg-[radial-gradient(circle_at_center,rgba(148,163,184,0.06),rgba(255,255,255,0.02)_42%,transparent_78%)]";
-      default:
-        return "bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05),transparent_76%)]";
-    }
-  }
-
-  switch (name) {
-    case "lumine":
-      return "bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.18),rgba(255,255,255,0.18)_38%,transparent_78%)]";
-    case "astera":
-      return "bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.18),rgba(255,255,255,0.18)_38%,transparent_78%)]";
-    case "vits":
-      return "bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.10),rgba(255,255,255,0.34)_38%,transparent_78%)]";
-    case "skyflow":
-      return "bg-[radial-gradient(circle_at_center,rgba(148,163,184,0.12),rgba(255,255,255,0.16)_38%,transparent_78%)]";
-    default:
-      return "bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.92),rgba(255,255,255,0.32)_40%,transparent_76%)]";
-  }
+function getSponsorInnerSurfaceClassName(_sponsor: SponsorLogoItem, isDarkMode: boolean) {
+  // Surface neutra por cima do card. Sem tint colorido (evita interferir
+  // na cor real do logo). Spotlight branco sutil no centro ajuda legibilidade.
+  return isDarkMode
+    ? "bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.035),transparent_72%)]"
+    : "bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.85),rgba(255,255,255,0.4)_55%,transparent_80%)]";
 }
 
-function getSponsorContentClassName(sponsor: SponsorLogoItem) {
-  const name = normalizeSponsorName(sponsor.name);
-
-  switch (name) {
-    case "precision":
-      return "px-0 py-0 md:px-0";
-    case "skyflow":
-      return "px-0 py-0 md:px-0";
-    case "vits":
-      return "px-0 py-0 md:px-0";
-    case "lazykart":
-      return "px-6 py-1 md:px-7";
-    case "astera":
-      return "px-5 py-1 md:px-6";
-    case "lumine":
-      return "px-2 py-0.5 md:px-3";
-    default:
-      return `${sponsor.wrapper} md:px-3`;
-  }
+function getSponsorContentClassName(_sponsor: SponsorLogoItem) {
+  // Padding único e consistente. Evita cada sponsor ter seu próprio layout
+  // que fazia logos "vazarem" do card ou ficarem mal centralizados.
+  return "px-4 py-2 md:px-5";
 }
 
 function SponsorMarqueeCard({
