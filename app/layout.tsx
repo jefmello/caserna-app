@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ChampionshipProvider } from "@/context/championship-context";
 import { ToastProvider } from "@/components/ui/toast";
 import { QueryProvider } from "@/components/providers/query-provider";
+import RacingBackground from "@/components/ui/racing-background";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
+        <RacingBackground opacity={0.85} />
         <QueryProvider>
           <ChampionshipProvider>
             <ToastProvider>{children}</ToastProvider>
