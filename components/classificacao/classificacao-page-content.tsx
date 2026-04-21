@@ -268,7 +268,7 @@ export default function ClassificacaoPageContent() {
 
   if (loading) {
     return (
-      <div className={`min-h-screen ${isDarkMode ? "bg-[#05070a]" : ""}`}>
+      <div className="min-h-screen">
         <div className="relative mx-auto mt-4 w-full max-w-[1600px] space-y-4 px-4 py-6">
           <LeaderHeroSkeleton isDark={isDarkMode} />
           <ClassificationSkeleton rows={10} isDark={isDarkMode} />
@@ -279,7 +279,7 @@ export default function ClassificacaoPageContent() {
 
   if (error) {
     return (
-      <div className={`min-h-screen ${isDarkMode ? "bg-[#05070a]" : ""}`}>
+      <div className="min-h-screen">
         <div className="relative mx-auto mt-4 w-full max-w-[1600px]">
           <div className="pointer-events-none absolute inset-x-0 top-0 h-32 rounded-[32px] bg-[radial-gradient(circle_at_top,rgba(239,68,68,0.1),transparent_60%)]" />
           <div
@@ -312,11 +312,10 @@ export default function ClassificacaoPageContent() {
 
   return (
     <PageTransition>
-      <div className={`min-h-screen ${isDarkMode ? "bg-[#05070a] text-white" : ""}`}>
+      <div className={`min-h-screen ${isDarkMode ? "text-white" : ""}`}>
         <div className="relative mx-auto mt-4 w-full max-w-[1600px]">
           {isDarkMode && (
             <>
-              <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(180deg,#05070a_0%,#070b11_38%,#05070a_100%)]" />
               <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-40 rounded-[36px] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.045),transparent_62%)]" />
               <div className="pointer-events-none absolute top-8 right-0 -z-10 h-28 w-28 rounded-full bg-amber-300/4 blur-3xl" />
             </>

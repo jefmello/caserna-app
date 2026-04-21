@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
 import { useChampionship } from "@/context/championship-context";
 import AppSidebar from "./app-sidebar";
+import RacingBackground from "@/components/ui/racing-background";
 
 function AppMainLayoutContent({ children }: { children: React.ReactNode }) {
   const { themeMode, isDarkMode } = useChampionship();
@@ -24,15 +25,11 @@ function AppMainLayoutContent({ children }: { children: React.ReactNode }) {
     <div
       data-theme={themeMode}
       className={`relative min-h-screen w-full overflow-x-clip transition-colors duration-300 ${
-        isDarkMode ? "bg-[#05070a] text-white" : "bg-[#f3f4f6] text-zinc-900"
+        isDarkMode ? "text-white" : "text-zinc-900"
       }`}
     >
-      <div
-        aria-hidden="true"
-        className={`pointer-events-none fixed inset-0 transition-opacity duration-300 ${
-          isDarkMode ? "opacity-100" : "opacity-0"
-        } bg-[linear-gradient(180deg,#040609_0%,#070b11_22%,#0a1017_48%,#070b11_76%,#05070a_100%)]`}
-      />
+      {/* Animated racing background (fixed, behind all content) */}
+      <RacingBackground opacity={isDarkMode ? 0.9 : 0.5} />
 
       <div
         aria-hidden="true"
@@ -46,13 +43,6 @@ function AppMainLayoutContent({ children }: { children: React.ReactNode }) {
         className={`pointer-events-none fixed inset-0 transition-opacity duration-300 ${
           isDarkMode ? "opacity-100" : "opacity-0"
         } bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] [mask-image:radial-gradient(circle_at_center,black,transparent_88%)] bg-[size:24px_24px]`}
-      />
-
-      <div
-        aria-hidden="true"
-        className={`pointer-events-none fixed inset-0 transition-opacity duration-300 ${
-          isDarkMode ? "opacity-0" : "opacity-100"
-        } bg-[linear-gradient(180deg,#f8fafc_0%,#f3f4f6_38%,#eef2f7_100%)]`}
       />
 
       <div
