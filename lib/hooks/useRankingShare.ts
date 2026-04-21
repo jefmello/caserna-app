@@ -8,6 +8,15 @@ type ShareWhatsAppParams = {
   text: string;
 };
 
+type ShareNativeParams = {
+  dataUrl: string;
+  fileName: string;
+  title?: string;
+  text?: string;
+};
+
+type ShareNativeResult = "shared" | "downloaded" | "cancelled" | "error";
+
 type UseRankingShareParams = {
   isDarkMode: boolean;
 };
@@ -65,9 +74,50 @@ export default function useRankingShare({ isDarkMode }: UseRankingShareParams) {
     }
   }
 
+  /**
+   * Native Web Share for image files. Opens OS share sheet (WhatsApp, Instagram,
+   * Telegram, AirDrop, etc.) when supported. Falls back to download otherwise.
+   * Prefer this over shareDataUrlToWhatsApp for general-purpose sharing.
+   */
+  async function share({
+    dataUrl,
+    fileName,
+    title,
+    text,
+  }: ShareNativeParams): Promise<ShareNativeResult> {
+    try {
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+      const file = new File([blob], fileName, { type: blob.type || "image/png" });
+
+      const canShareFiles =
+        typeof navigator !== "undefined" &&
+        typeof navigator.share === "function" &&
+        typeof navigator.canShare === "function" &&
+        navigator.canShare({ files: [file] });
+
+      if (canShareFiles) {
+        try {
+          await navigator.share({ title, text, files: [file] });
+          return "shared";
+        } catch (err) {
+          if (err instanceof Error && err.name === "AbortError") return "cancelled";
+          // fall through to download
+        }
+      }
+
+      download(dataUrl, fileName);
+      return "downloaded";
+    } catch (err) {
+      console.error(err);
+      return "error";
+    }
+  }
+
   return {
     generateImage,
     download,
+    share,
     shareDataUrlToWhatsApp,
   };
 }

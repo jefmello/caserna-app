@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import useThemeVariant from "@/lib/hooks/useThemeVariant";
+import { THEME_VARIANTS } from "@/lib/theme-variants";
 
 type Props = {
   /** Number of speed streaks. Higher = denser motion. */
@@ -33,6 +35,8 @@ export default function RacingBackground({ streakCount = 140, speed = 1, opacity
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const streaksRef = useRef<Streak[]>([]);
+  const { variant } = useThemeVariant();
+  const variantTokens = THEME_VARIANTS[variant];
   const [isDark, setIsDark] = useState(true);
   const [reducedMotion, setReducedMotion] = useState(() => {
     if (typeof window === "undefined") return false;
@@ -155,7 +159,8 @@ export default function RacingBackground({ streakCount = 140, speed = 1, opacity
       ctx.globalAlpha = 1;
 
       // Speed streaks flying outward from vanishing point
-      const streakBase = isDark ? "255, 255, 255" : "15, 23, 42";
+      // Dark mode uses the variant accent for livery flavor; light mode stays slate.
+      const streakBase = isDark ? variantTokens.accent : "15, 23, 42";
       const streaks = streaksRef.current;
       for (let i = 0; i < streaks.length; i++) {
         const s = streaks[i];
@@ -212,12 +217,12 @@ export default function RacingBackground({ streakCount = 140, speed = 1, opacity
       document.removeEventListener("visibilitychange", onVisibility);
       stop();
     };
-  }, [isDark, speed, reducedMotion]);
+  }, [isDark, speed, reducedMotion, variantTokens.accent]);
 
-  // Static gradient fallback for reduced motion.
+  // Static gradient fallback for reduced motion and light mode.
   const staticBg = isDark
-    ? "linear-gradient(180deg,#04060b_0%,#0a0f1c_55%,#05070a_100%)"
-    : "linear-gradient(180deg,#f5f7fb_0%,#eef2f8_60%,#e5e9f0_100%)";
+    ? variantTokens.bgGradient
+    : "linear-gradient(180deg,#f5f7fb 0%,#eef2f8 60%,#e5e9f0 100%)";
 
   return (
     <div

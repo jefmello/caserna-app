@@ -4,6 +4,7 @@ import React from "react";
 import { ArrowLeft, Share2, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import PodiumBadge from "@/components/ui/podium-badge";
 import type { CategoryTheme } from "@/lib/ranking/theme-utils";
 import type { RankingItem } from "@/types/ranking";
 
@@ -129,94 +130,133 @@ export default function RankingPilotHeroCard({
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-[132px_1fr]">
-                <div
-                  className={`relative overflow-hidden rounded-[24px] shadow-[0_12px_28px_rgba(15,23,42,0.10)] ${
-                    isDarkMode
-                      ? `border ${theme.darkAccentBorder} bg-[#0f172a]`
-                      : `${theme.heroBorder} bg-gradient-to-b ${theme.heroBg}`
-                  }`}
-                >
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-[200px_1fr]">
+                {/* Premium photo frame: blurred backdrop + metallic ring + motion streaks */}
+                <div className="relative">
+                  {/* Blurred backdrop of same photo — fills column edges with motion blur feel */}
+                  <div className="pointer-events-none absolute -inset-4 overflow-hidden rounded-[36px] opacity-70">
+                    <div className="absolute inset-0 scale-[1.6] blur-3xl saturate-[1.2]">
+                      <PilotPhotoSlot pilot={selectedPilot} alt="" isDark={isDarkMode} />
+                    </div>
+                    <div
+                      className={`absolute inset-0 ${
+                        isDarkMode
+                          ? "bg-[radial-gradient(circle_at_center,transparent_0%,rgba(5,7,10,0.72)_80%)]"
+                          : "bg-[radial-gradient(circle_at_center,transparent_0%,rgba(248,250,252,0.78)_80%)]"
+                      }`}
+                    />
+                  </div>
+
+                  {/* Motion-blur streaks (horizontal) — racing feel */}
                   <div
-                    className={`pointer-events-none absolute inset-x-6 top-0 z-10 h-[2px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
+                    aria-hidden="true"
+                    className={`pointer-events-none absolute top-1/2 -left-6 h-12 w-6 -translate-y-1/2 rounded-full blur-md ${
+                      isDarkMode
+                        ? `${theme.darkAccentBgSoft} opacity-60`
+                        : `${theme.primaryIconWrap} opacity-70`
+                    }`}
+                  />
+                  <div
+                    aria-hidden="true"
+                    className={`pointer-events-none absolute top-1/3 -right-5 h-10 w-4 rounded-full blur-md ${
+                      isDarkMode
+                        ? `${theme.darkAccentBgSoft} opacity-50`
+                        : `${theme.primaryIconWrap} opacity-60`
+                    }`}
                   />
 
-                  <div className="relative aspect-square w-full">
-                    <PilotPhotoSlot
-                      pilot={selectedPilot}
-                      alt={selectedPilotShortName}
-                      isDark={isDarkMode}
-                    />
-
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/72 via-black/16 to-transparent" />
-
-                    <div className="absolute top-3 left-3 flex items-center gap-2">
+                  {/* Photo frame with metallic chrome ring */}
+                  <div
+                    className="relative overflow-hidden rounded-[28px] p-[2px] shadow-[0_20px_40px_rgba(0,0,0,0.35)]"
+                    style={{
+                      background: isDarkMode
+                        ? "linear-gradient(145deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.06) 35%, rgba(255,255,255,0.22) 65%, rgba(255,255,255,0.04) 100%)"
+                        : "linear-gradient(145deg, rgba(255,255,255,1) 0%, rgba(212,212,216,0.6) 35%, rgba(255,255,255,0.95) 65%, rgba(212,212,216,0.6) 100%)",
+                    }}
+                  >
+                    <div
+                      className={`relative overflow-hidden rounded-[26px] ${
+                        isDarkMode ? "bg-[#0f172a]" : "bg-zinc-50"
+                      }`}
+                    >
                       <div
-                        className={`inline-flex h-11 min-w-[54px] items-center justify-center rounded-[16px] border px-3 text-[20px] font-black shadow-lg ${
-                          isDarkMode
-                            ? `${theme.darkAccentBorder} bg-black/45 text-white backdrop-blur-md`
-                            : "border-white/70 bg-white/88 text-zinc-950 backdrop-blur-md"
-                        }`}
-                      >
-                        {safeSelectedPilot.pos}º
-                      </div>
+                        className={`pointer-events-none absolute inset-x-8 top-0 z-10 h-[2px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
+                      />
 
-                      <div
-                        className={`inline-flex rounded-full border px-3 py-1.5 text-[10px] font-bold tracking-[0.16em] uppercase shadow-sm ${
-                          isDarkMode
-                            ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                            : categoryColors[category] ||
-                              "border-black/10 bg-white/90 text-zinc-700"
-                        }`}
-                      >
-                        {category}
-                      </div>
-                    </div>
+                      <div className="relative aspect-square w-full">
+                        <PilotPhotoSlot
+                          pilot={selectedPilot}
+                          alt={selectedPilotShortName}
+                          isDark={isDarkMode}
+                        />
 
-                    <div className="absolute inset-x-0 bottom-0 p-3">
-                      <div
-                        className={`rounded-[20px] border px-3 py-3 backdrop-blur-md ${
-                          isDarkMode ? "border-white/10 bg-black/30" : "border-white/60 bg-white/72"
-                        }`}
-                      >
-                        <p
-                          className={`truncate text-[16px] leading-none font-bold tracking-tight ${
-                            isDarkMode ? "text-white" : "text-zinc-950"
-                          }`}
-                        >
-                          {selectedPilotShortName}
-                        </p>
+                        {/* Bottom gradient fade to pedestal */}
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/82 via-black/20 to-transparent" />
 
-                        {selectedPilotWarName ? (
-                          <p
-                            className={`mt-1 truncate text-[11px] font-semibold italic ${
-                              isDarkMode ? "text-zinc-300" : "text-zinc-600"
-                            }`}
-                          >
-                            {selectedPilotWarName}
-                          </p>
-                        ) : null}
-
-                        <div className="mt-2 flex items-center justify-between gap-2">
-                          <span
-                            className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold tracking-[0.14em] uppercase ${
+                        {/* Top-left: metallic podium badge for position (replaces plain text) */}
+                        <div className="absolute top-3 left-3 flex flex-col items-start gap-2">
+                          <PodiumBadge position={safeSelectedPilot.pos} size="lg" />
+                          <div
+                            className={`inline-flex rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.16em] uppercase shadow-sm backdrop-blur-md ${
                               isDarkMode
-                                ? "border-white/10 bg-white/5 text-zinc-300"
-                                : "border-black/5 bg-white/80 text-zinc-700"
+                                ? `${theme.darkAccentBorder} bg-black/45 ${theme.darkAccentText}`
+                                : categoryColors[category] ||
+                                  "border-black/10 bg-white/90 text-zinc-700"
                             }`}
                           >
-                            piloto oficial
-                          </span>
+                            {category}
+                          </div>
+                        </div>
 
-                          <span
-                            className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold tracking-[0.14em] uppercase ${
+                        {/* Bottom: name + war name pedestal */}
+                        <div className="absolute inset-x-0 bottom-0 p-3">
+                          <div
+                            className={`rounded-[20px] border px-3 py-3 backdrop-blur-xl ${
                               isDarkMode
-                                ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
-                                : theme.heroChip
+                                ? "border-white/10 bg-black/40"
+                                : "border-white/70 bg-white/75"
                             }`}
                           >
-                            {competitionLabels[competition] || competition}
-                          </span>
+                            <p
+                              className={`truncate text-[16px] leading-none font-bold tracking-tight ${
+                                isDarkMode ? "text-white" : "text-zinc-950"
+                              }`}
+                            >
+                              {selectedPilotShortName}
+                            </p>
+
+                            {selectedPilotWarName ? (
+                              <p
+                                className={`mt-1 truncate text-[11px] font-semibold italic ${
+                                  isDarkMode ? "text-zinc-300" : "text-zinc-600"
+                                }`}
+                              >
+                                {selectedPilotWarName}
+                              </p>
+                            ) : null}
+
+                            <div className="mt-2 flex items-center justify-between gap-2">
+                              <span
+                                className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold tracking-[0.14em] uppercase ${
+                                  isDarkMode
+                                    ? "border-white/10 bg-white/5 text-zinc-300"
+                                    : "border-black/5 bg-white/80 text-zinc-700"
+                                }`}
+                              >
+                                piloto oficial
+                              </span>
+
+                              <span
+                                className={`inline-flex rounded-full border px-2.5 py-1 text-[9px] font-bold tracking-[0.14em] uppercase ${
+                                  isDarkMode
+                                    ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText}`
+                                    : theme.heroChip
+                                }`}
+                              >
+                                {competitionLabels[competition] || competition}
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

@@ -182,7 +182,7 @@ export default function PilotosPageContent() {
     leader,
   });
 
-  const { generateImage, download } = useRankingShare({
+  const { generateImage, share } = useRankingShare({
     isDarkMode,
   });
 
@@ -277,15 +277,27 @@ export default function PilotosPageContent() {
         .replace(/[̀-ͯ]/g, "")
         .replace(/\s+/g, "-");
 
-      download(
+      const fileName = `piloto-${safePilotName}-${category.toLowerCase()}-${competition.toLowerCase()}.png`;
+      const result = await share({
         dataUrl,
-        `piloto-${safePilotName}-${category.toLowerCase()}-${competition.toLowerCase()}.png`
-      );
-      addToast({
-        type: "success",
-        title: "Imagem salva",
-        message: "Perfil do piloto exportado com sucesso.",
+        fileName,
+        title: `${selectedPilotShortName} — Caserna Kart Racing`,
+        text: `Perfil do piloto ${selectedPilotShortName} — ${category} · ${competitionLabels[competition] || competition}`,
       });
+
+      if (result === "shared") {
+        addToast({
+          type: "success",
+          title: "Compartilhado",
+          message: "Perfil do piloto enviado.",
+        });
+      } else if (result === "downloaded") {
+        addToast({
+          type: "success",
+          title: "Imagem salva",
+          message: "Perfil do piloto exportado com sucesso.",
+        });
+      }
     } catch (err) {
       console.error(err);
       addToast({

@@ -5,6 +5,7 @@ import { Menu } from "lucide-react";
 import { useChampionship } from "@/context/championship-context";
 import AppSidebar from "./app-sidebar";
 import RacingBackground from "@/components/ui/racing-background";
+import CommandPalette from "@/components/ui/command-palette";
 
 function AppMainLayoutContent({ children }: { children: React.ReactNode }) {
   const { themeMode, isDarkMode } = useChampionship();
@@ -88,6 +89,8 @@ function AppMainLayoutContent({ children }: { children: React.ReactNode }) {
       <main className="relative z-[1] min-h-screen w-full pt-16 lg:pt-0 lg:pl-[288px]">
         {children}
       </main>
+
+      <CommandPalette />
     </div>
   );
 }

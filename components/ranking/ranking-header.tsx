@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Moon, Sun } from "lucide-react";
 import { useChampionship } from "@/context/championship-context";
 import type { CategoryTheme } from "@/lib/ranking/theme-utils";
+import ThemeVariantToggle from "@/components/ui/theme-variant-toggle";
 
 type RankingHeaderProps = {
   isDarkMode?: boolean;
@@ -112,19 +113,22 @@ export default function RankingHeader({
                 })}
               </div>
 
-              <button
-                type="button"
-                onClick={handleToggleDarkMode}
-                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition-all duration-200 ${
-                  isDarkMode
-                    ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText} hover:opacity-90`
-                    : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50"
-                }`}
-                aria-label={isDarkMode ? "Ativar modo diurno" : "Ativar modo noturno"}
-                title={isDarkMode ? "Ativar modo diurno" : "Ativar modo noturno"}
-              >
-                {isDarkMode ? <Sun className="h-4.5 w-4.5" /> : <Moon className="h-4.5 w-4.5" />}
-              </button>
+              <div className="flex shrink-0 items-center gap-1.5">
+                <ThemeVariantToggle />
+                <button
+                  type="button"
+                  onClick={handleToggleDarkMode}
+                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition-all duration-200 ${
+                    isDarkMode
+                      ? `${theme.darkAccentBorder} ${theme.darkAccentBg} ${theme.darkAccentText} hover:opacity-90`
+                      : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50"
+                  }`}
+                  aria-label={isDarkMode ? "Ativar modo diurno" : "Ativar modo noturno"}
+                  title={isDarkMode ? "Ativar modo diurno" : "Ativar modo noturno"}
+                >
+                  {isDarkMode ? <Sun className="h-4.5 w-4.5" /> : <Moon className="h-4.5 w-4.5" />}
+                </button>
+              </div>
             </div>
           </div>
         </div>

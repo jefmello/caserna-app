@@ -26,6 +26,7 @@ import {
   HighlightCard,
   StatRankingCardConnected,
 } from "@/components/estatisticas/estatisticas-ui";
+import ConsistencyHeatmap, { type HeatmapPilotRow } from "@/components/ui/consistency-heatmap";
 
 export default function EstatisticasPageContent() {
   const { categoria, campeonato } = useChampionship();
@@ -182,6 +183,35 @@ export default function EstatisticasPageContent() {
     retry();
   };
 
+  /**
+   * Heatmap preview — stage-by-stage points are not in the current CSV, so we
+   * approximate using each pilot's totals: vitórias/poles/podios flags boost
+   * selected "high" stages, and the remaining points are spread across the
+   * remaining ones. Purely directional; flagged as "preview" in the UI.
+   */
+  const heatmapRows: HeatmapPilotRow[] = useMemo(() => {
+    const STAGE_COUNT = 8;
+    return filteredRanking.slice(0, 8).map((p) => {
+      const values: Array<number | null> = new Array(STAGE_COUNT).fill(null);
+      const stagesParticipated = Math.min(STAGE_COUNT, Math.max(p.participacoes || STAGE_COUNT, 1));
+      const highlightStages = Math.min(
+        stagesParticipated,
+        p.vitorias + Math.ceil((p.podios || 0) / 2)
+      );
+      const avgPerStage = stagesParticipated > 0 ? p.pontos / stagesParticipated : 0;
+      for (let i = 0; i < stagesParticipated; i++) {
+        const isHighlight = i < highlightStages;
+        const jitter = ((i * 37 + p.pos * 11) % 9) - 4; // deterministic [-4..4]
+        const base = isHighlight ? avgPerStage * 1.25 : avgPerStage * 0.85;
+        values[i] = Math.max(0, Math.round(base + jitter));
+      }
+      return {
+        name: getPilotFirstAndLastName(p.piloto),
+        values,
+      };
+    });
+  }, [filteredRanking]);
+
   if (loading) {
     return (
       <div className="mt-4 space-y-4">
@@ -290,6 +320,32 @@ export default function EstatisticasPageContent() {
                   />
                 </div>
               </div>
+            </RevealOnScroll>
+
+            <SectionDivider />
+
+            <RevealOnScroll delay={0.05}>
+              <section className="space-y-2.5">
+                <header className="flex items-end justify-between gap-3">
+                  <div>
+                    <h2
+                      className={`text-lg font-bold tracking-tight ${
+                        isDarkMode ? "text-white" : "text-zinc-900"
+                      }`}
+                    >
+                      Mapa de consistência
+                    </h2>
+                    <p
+                      className={`text-[11px] font-medium tracking-[0.04em] ${
+                        isDarkMode ? "text-white/55" : "text-zinc-500"
+                      }`}
+                    >
+                      Preview — pontos por etapa aproximados a partir dos totais.
+                    </p>
+                  </div>
+                </header>
+                <ConsistencyHeatmap pilots={heatmapRows} theme={theme} isDark={isDarkMode} />
+              </section>
             </RevealOnScroll>
 
             <SectionDivider />

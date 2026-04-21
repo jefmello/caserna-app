@@ -28,6 +28,7 @@ import { useChampionship } from "@/context/championship-context";
 import PageTransition from "@/components/ui/page-transition";
 import { ScrollToTopButton } from "@/components/ui/scroll-to-top";
 import Breadcrumb from "@/components/ui/breadcrumb";
+import ClassificacaoStickyPodium from "@/components/classificacao/classificacao-sticky-podium";
 import { LeaderHeroSkeleton, ClassificationSkeleton } from "@/components/ui/shape-skeleton";
 
 const RankingShareCanvas = dynamic(
@@ -236,7 +237,7 @@ export default function ClassificacaoPageContent() {
     bestEfficiencyPilot,
   });
 
-  const { generateImage, download } = useRankingShare({
+  const { generateImage, share } = useRankingShare({
     isDarkMode,
   });
 
@@ -257,7 +258,12 @@ export default function ClassificacaoPageContent() {
       const dataUrl = await generateImage(shareCardRef.current);
       if (!dataUrl) return;
 
-      download(dataUrl, `classificacao-${category.toLowerCase()}-${competition.toLowerCase()}.png`);
+      await share({
+        dataUrl,
+        fileName: `classificacao-${category.toLowerCase()}-${competition.toLowerCase()}.png`,
+        title: "Classificação — Caserna Kart Racing",
+        text: `Classificação ${category} · ${competitionLabels[competition] || competition}`,
+      });
     } catch (err) {
       console.error(err);
       window.alert("Não foi possível gerar a imagem da classificação.");
@@ -337,6 +343,13 @@ export default function ClassificacaoPageContent() {
             <Breadcrumb
               items={[{ label: "Classificação", href: "/classificacao" }]}
               isDark={isDarkMode}
+            />
+
+            <ClassificacaoStickyPodium
+              top3={filteredRanking.slice(0, 3)}
+              isDark={isDarkMode}
+              theme={theme}
+              category={category}
             />
 
             <RankingSearchCard
