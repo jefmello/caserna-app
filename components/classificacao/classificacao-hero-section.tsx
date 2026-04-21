@@ -16,6 +16,9 @@ import type {
 } from "@/types/ranking";
 import type { ChampionshipNarrative } from "@/lib/hooks/useChampionshipNarrative";
 import type { EditorialCardItem } from "@/lib/hooks/useEditorialCards";
+import PodiumBadge from "@/components/ui/podium-badge";
+import AnimatedNumber from "@/components/ui/animated-number";
+import ConfettiCelebration from "@/components/ui/confetti-celebration";
 
 type ClassificacaoHeroSectionProps = {
   isDarkMode: boolean;
@@ -82,6 +85,7 @@ export default function ClassificacaoHeroSection({
 
   return (
     <>
+      <ConfettiCelebration trigger={leader?.pilotoId || leader?.piloto || null} />
       {top6.length > 0 && (
         <div
           className={`mb-4 overflow-hidden rounded-3xl border p-5 shadow-[0_20px_40px_rgba(0,0,0,0.28)] ${
@@ -148,11 +152,11 @@ export default function ClassificacaoHeroSection({
                       {getPilotFirstAndLastName(leader.piloto)}
                     </p>
                     <p
-                      className={`mt-2 text-sm font-semibold ${
+                      className={`mt-2 text-sm font-semibold tabular-nums ${
                         isDarkMode ? "text-white/65" : "text-zinc-600"
                       }`}
                     >
-                      {leader.pontos} pts
+                      <AnimatedNumber value={leader.pontos} /> pts
                     </p>
                     <p
                       className={`mt-1 text-[12px] ${
@@ -276,19 +280,16 @@ export default function ClassificacaoHeroSection({
                           : "border-black/5 bg-white"
                   }`}
                 >
-                  <p
-                    className={`text-[10px] font-bold tracking-[0.14em] uppercase ${
-                      isDarkMode
-                        ? isLeader
-                          ? theme.darkAccentText
-                          : isCut
-                            ? "text-emerald-300"
-                            : "text-white/38"
-                        : "text-zinc-500"
-                    }`}
-                  >
-                    P{index + 1}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <PodiumBadge position={index + 1} size="sm" />
+                    <span
+                      className={`text-[10px] font-bold tracking-[0.14em] uppercase ${
+                        isDarkMode ? "text-white/45" : "text-zinc-500"
+                      }`}
+                    >
+                      Lugar
+                    </span>
+                  </div>
 
                   <p
                     className={`mt-2 line-clamp-2 text-[14px] leading-tight font-semibold ${
@@ -299,11 +300,11 @@ export default function ClassificacaoHeroSection({
                   </p>
 
                   <p
-                    className={`mt-1 text-[11px] font-medium ${
+                    className={`mt-1 text-[11px] font-medium tabular-nums ${
                       isDarkMode ? "text-white/60" : "text-zinc-500"
                     }`}
                   >
-                    {pilot.pontos} pts
+                    <AnimatedNumber value={pilot.pontos} /> pts
                   </p>
 
                   <p

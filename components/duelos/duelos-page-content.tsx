@@ -8,7 +8,6 @@ import {
   Gauge,
   Medal,
   Share2,
-  ShieldAlert,
   Swords,
   Timer,
   Trophy,
@@ -35,6 +34,9 @@ import Breadcrumb from "@/components/ui/breadcrumb";
 import { useToast } from "@/components/ui/toast";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
+import EmptyStateIllustration from "@/components/ui/empty-state-illustration";
+import AnimatedNumber from "@/components/ui/animated-number";
+import { LeaderHeroSkeleton, StatGridSkeleton } from "@/components/ui/shape-skeleton";
 
 const DuelRadarChart = dynamic(() => import("@/components/charts/duel-radar-chart"), {
   ssr: false,
@@ -311,17 +313,9 @@ export default function DuelosPageContent() {
 
   if (loading) {
     return (
-      <div
-        className={`mt-4 rounded-[28px] border px-6 py-10 text-center ${
-          isDarkMode
-            ? "border-white/10 bg-[#111827] text-white"
-            : "border-black/5 bg-white text-zinc-950"
-        }`}
-      >
-        <p className="text-xl font-semibold tracking-tight">Carregando duelos...</p>
-        <p className={`mt-2 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-          Preparando confronto premium entre pilotos
-        </p>
+      <div className="mt-4 space-y-4">
+        <LeaderHeroSkeleton isDark={isDarkMode} />
+        <StatGridSkeleton cells={4} isDark={isDarkMode} />
       </div>
     );
   }
@@ -438,40 +432,12 @@ export default function DuelosPageContent() {
 
         {!comparePilotA || !comparePilotB ? (
           <>
-            <Card
-              className={`rounded-[24px] shadow-sm ${
-                isDarkMode ? "border border-white/10 bg-[#111827]" : "border-black/5 bg-white"
-              }`}
-            >
-              <CardContent className="p-6 text-center">
-                <div
-                  className={`mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-3xl ${
-                    isDarkMode ? "bg-white/5" : "bg-zinc-100"
-                  }`}
-                >
-                  <ShieldAlert
-                    className={`h-6 w-6 ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}
-                  />
-                </div>
-
-                <p
-                  className={`text-[20px] font-bold tracking-tight ${
-                    isDarkMode ? "text-white" : "text-zinc-950"
-                  }`}
-                >
-                  Selecione dois pilotos
-                </p>
-
-                <p
-                  className={`mt-2 text-[14px] leading-snug ${
-                    isDarkMode ? "text-zinc-400" : "text-zinc-500"
-                  }`}
-                >
-                  O comparativo premium será montado automaticamente quando os dois lados do duelo
-                  estiverem definidos.
-                </p>
-              </CardContent>
-            </Card>
+            <EmptyStateIllustration
+              variant="duel"
+              title="Selecione dois pilotos"
+              description="Escolha pilotos para comparar no radar premium."
+              isDark={isDarkMode}
+            />
 
             {/* Suggested Duels */}
             {suggestedDuels.length > 0 && (
@@ -569,7 +535,14 @@ export default function DuelosPageContent() {
                       initial={{ opacity: 0 }}
                       transition={{ delay: 0.2 }}
                     >
-                      {duelSummary ? `${duelSummary.scoreA} x ${duelSummary.scoreB}` : "- x -"}
+                      {duelSummary ? (
+                        <>
+                          <AnimatedNumber value={duelSummary.scoreA} /> x{" "}
+                          <AnimatedNumber value={duelSummary.scoreB} />
+                        </>
+                      ) : (
+                        "- x -"
+                      )}
                     </motion.p>
                     <p
                       className={`mt-3 rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.12em] uppercase ${duelIntensity.tone}`}

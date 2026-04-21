@@ -28,6 +28,8 @@ import CustomScenarioBuilder from "@/components/simulacoes/custom-scenario-build
 import PageTransition, { StaggerContainer, StaggerItem } from "@/components/ui/page-transition";
 import { ScrollToTopButton } from "@/components/ui/scroll-to-top";
 import Breadcrumb from "@/components/ui/breadcrumb";
+import EmptyStateIllustration from "@/components/ui/empty-state-illustration";
+import { LeaderHeroSkeleton, StatGridSkeleton } from "@/components/ui/shape-skeleton";
 import {
   buildTitleProbabilityCandidates,
   type TitleProbabilityCandidate,
@@ -504,17 +506,9 @@ export default function SimulacoesPageContent() {
 
   if (loading) {
     return (
-      <div
-        className={`mt-4 rounded-[28px] border px-6 py-10 text-center ${
-          isDarkMode
-            ? "border-white/10 bg-[#111827] text-white"
-            : "border-black/5 bg-white text-zinc-950"
-        }`}
-      >
-        <p className="text-xl font-semibold tracking-tight">Carregando simulações...</p>
-        <p className={`mt-2 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-          Preparando projeções do campeonato
-        </p>
+      <div className="mt-4 space-y-4">
+        <LeaderHeroSkeleton isDark={isDarkMode} />
+        <StatGridSkeleton cells={4} isDark={isDarkMode} />
       </div>
     );
   }
@@ -561,6 +555,15 @@ export default function SimulacoesPageContent() {
         />
 
         <Breadcrumb items={[{ label: "Simulações", href: "/simulacoes" }]} isDark={isDarkMode} />
+
+        {filteredRanking.length === 0 ? (
+          <EmptyStateIllustration
+            variant="pilot"
+            title="Nenhum piloto disponível"
+            description="Não há pilotos no recorte atual para projetar cenários. Ajuste os filtros para liberar as simulações."
+            isDark={isDarkMode}
+          />
+        ) : null}
 
         <SectionTitle
           title="Leitura matemática do campeonato"

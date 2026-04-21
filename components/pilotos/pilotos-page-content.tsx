@@ -40,6 +40,9 @@ import PageTransition from "@/components/ui/page-transition";
 import { ScrollToTopButton } from "@/components/ui/scroll-to-top";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import { useToast } from "@/components/ui/toast";
+import TiltCard from "@/components/ui/tilt-card";
+import EmptyStateIllustration from "@/components/ui/empty-state-illustration";
+import { LeaderHeroSkeleton, ClassificationSkeleton } from "@/components/ui/shape-skeleton";
 
 function PilotPhotoSlot({
   pilot,
@@ -297,17 +300,9 @@ export default function PilotosPageContent() {
 
   if (loading) {
     return (
-      <div
-        className={`mt-4 rounded-[28px] border px-6 py-10 text-center ${
-          isDarkMode
-            ? "border-white/10 bg-[#111827] text-white"
-            : "border-black/5 bg-white text-zinc-950"
-        }`}
-      >
-        <p className="text-xl font-semibold tracking-tight">Carregando pilotos...</p>
-        <p className={`mt-2 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-          Preparando central de análise individual
-        </p>
+      <div className="mt-4 space-y-4">
+        <LeaderHeroSkeleton isDark={isDarkMode} />
+        <ClassificationSkeleton rows={8} isDark={isDarkMode} />
       </div>
     );
   }
@@ -444,15 +439,12 @@ export default function PilotosPageContent() {
                   ))}
 
                   {filteredRanking.length === 0 ? (
-                    <div
-                      className={`rounded-[18px] border border-dashed px-4 py-8 text-center text-sm ${
-                        isDarkMode
-                          ? "border-white/10 bg-[#0f172a] text-zinc-400"
-                          : "border-black/10 bg-zinc-50 text-zinc-500"
-                      }`}
-                    >
-                      Nenhum piloto com pontos encontrado.
-                    </div>
+                    <EmptyStateIllustration
+                      variant="pilot"
+                      title="Nenhum piloto encontrado"
+                      description="Ajuste a busca ou o recorte atual para ver os pilotos disponíveis."
+                      isDark={isDarkMode}
+                    />
                   ) : null}
                 </div>
               </CardContent>
@@ -460,29 +452,31 @@ export default function PilotosPageContent() {
           </>
         ) : (
           <div className="space-y-3">
-            <div ref={pilotShareCardRef}>
-              <RankingPilotHeroCard
-                isDarkMode={isDarkMode}
-                theme={theme}
-                category={category}
-                categoryColors={categoryColors}
-                competition={competition}
-                competitionLabels={competitionLabels}
-                handleBackToRanking={handleBackToList}
-                handleSharePilotCard={handleSharePilotCard}
-                isSharingPilotImage={isSharingPilotImage}
-                selectedPilot={selectedPilot}
-                selectedPilotShortName={selectedPilotShortName}
-                selectedPilotWarName={selectedPilotWarName}
-                safeSelectedPilot={resolvedSafePilot}
-                selectedPilotGap={selectedPilotGap}
-                selectedPilotAverage={selectedPilotAverage}
-                selectedPilotConsistency={selectedPilotConsistency}
-                selectedPilotMomentum={selectedPilotMomentum}
-                selectedPilotBestAttribute={selectedPilotBestAttribute}
-                PilotPhotoSlot={PilotPhotoSlot}
-              />
-            </div>
+            <TiltCard maxTiltDeg={8} scale={1.02}>
+              <div ref={pilotShareCardRef}>
+                <RankingPilotHeroCard
+                  isDarkMode={isDarkMode}
+                  theme={theme}
+                  category={category}
+                  categoryColors={categoryColors}
+                  competition={competition}
+                  competitionLabels={competitionLabels}
+                  handleBackToRanking={handleBackToList}
+                  handleSharePilotCard={handleSharePilotCard}
+                  isSharingPilotImage={isSharingPilotImage}
+                  selectedPilot={selectedPilot}
+                  selectedPilotShortName={selectedPilotShortName}
+                  selectedPilotWarName={selectedPilotWarName}
+                  safeSelectedPilot={resolvedSafePilot}
+                  selectedPilotGap={selectedPilotGap}
+                  selectedPilotAverage={selectedPilotAverage}
+                  selectedPilotConsistency={selectedPilotConsistency}
+                  selectedPilotMomentum={selectedPilotMomentum}
+                  selectedPilotBestAttribute={selectedPilotBestAttribute}
+                  PilotPhotoSlot={PilotPhotoSlot}
+                />
+              </div>
+            </TiltCard>
 
             <SectionDivider />
 

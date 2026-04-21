@@ -40,6 +40,9 @@ import type { RankingItem, RankingMetaPilot } from "@/types/ranking";
 import type { CategoryTheme } from "@/lib/ranking/theme-utils";
 import { useChampionship } from "@/context/championship-context";
 import PageTransition, { StaggerContainer, StaggerItem } from "@/components/ui/page-transition";
+import RevealOnScroll from "@/components/ui/reveal-on-scroll";
+import AnimatedNumber from "@/components/ui/animated-number";
+import { LeaderHeroSkeleton, StatGridSkeleton } from "@/components/ui/shape-skeleton";
 
 function PilotPhotoSlot({
   pilot,
@@ -191,7 +194,7 @@ function HomeSummaryCard({
             isDarkMode ? "text-white" : "text-zinc-950"
           }`}
         >
-          {value}
+          {typeof value === "number" ? <AnimatedNumber value={value} /> : value}
         </p>
 
         <p
@@ -549,17 +552,9 @@ export default function HomePageContent() {
 
   if (loading) {
     return (
-      <div
-        className={`mt-4 rounded-[28px] border px-6 py-10 text-center ${
-          isDarkMode
-            ? "border-white/10 bg-[#111827] text-white"
-            : "border-black/5 bg-white text-zinc-950"
-        }`}
-      >
-        <p className="text-xl font-semibold tracking-tight">Carregando painel principal...</p>
-        <p className={`mt-2 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-          Preparando central oficial do campeonato
-        </p>
+      <div className="mt-4 space-y-4">
+        <LeaderHeroSkeleton isDark={isDarkMode} />
+        <StatGridSkeleton cells={4} isDark={isDarkMode} />
       </div>
     );
   }
@@ -603,16 +598,18 @@ export default function HomePageContent() {
           competitionLabels={competitionLabels}
         />
 
-        <RankingSpotlight
-          isDarkMode={isDarkMode}
-          theme={theme}
-          spotlightStyles={spotlightStyles}
-          leader={leader}
-          leaderName={leaderName}
-          PilotPhotoSlot={PilotPhotoSlot}
-          getPilotHighlightName={getPilotHighlightName}
-          getPilotWarName={getSpotlightPilotWarName}
-        />
+        <RevealOnScroll>
+          <RankingSpotlight
+            isDarkMode={isDarkMode}
+            theme={theme}
+            spotlightStyles={spotlightStyles}
+            leader={leader}
+            leaderName={leaderName}
+            PilotPhotoSlot={PilotPhotoSlot}
+            getPilotHighlightName={getPilotHighlightName}
+            getPilotWarName={getSpotlightPilotWarName}
+          />
+        </RevealOnScroll>
 
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]">
           <HomePilotCtaCard
@@ -840,36 +837,40 @@ export default function HomePageContent() {
 
         <SectionDivider />
 
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-          <RankingChampionshipNarrativeCard
-            isDarkMode={isDarkMode}
-            theme={theme}
-            category={category}
-            competitionLabel={competitionLabels[competition] || competition}
-            narrative={championshipNarrative}
-          />
+        <RevealOnScroll delay={0.05}>
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+            <RankingChampionshipNarrativeCard
+              isDarkMode={isDarkMode}
+              theme={theme}
+              category={category}
+              competitionLabel={competitionLabels[competition] || competition}
+              narrative={championshipNarrative}
+            />
 
-          <RankingEditorialCards
-            isDarkMode={isDarkMode}
-            theme={theme}
-            cards={editorialCards.slice(0, 2)}
-          />
-        </div>
+            <RankingEditorialCards
+              isDarkMode={isDarkMode}
+              theme={theme}
+              cards={editorialCards.slice(0, 2)}
+            />
+          </div>
+        </RevealOnScroll>
 
         {/* Hall da Fama */}
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Trophy className={`h-5 w-5 ${isDarkMode ? "text-yellow-400" : "text-yellow-600"}`} />
-            <h2
-              className={`text-lg font-extrabold tracking-tight ${
-                isDarkMode ? "text-white" : "text-zinc-950"
-              }`}
-            >
-              Hall da Fama
-            </h2>
+        <RevealOnScroll delay={0.1}>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Trophy className={`h-5 w-5 ${isDarkMode ? "text-yellow-400" : "text-yellow-600"}`} />
+              <h2
+                className={`text-lg font-extrabold tracking-tight ${
+                  isDarkMode ? "text-white" : "text-zinc-950"
+                }`}
+              >
+                Hall da Fama
+              </h2>
+            </div>
+            <HallOfFame isDarkMode={isDarkMode} category={category} />
           </div>
-          <HallOfFame isDarkMode={isDarkMode} category={category} />
-        </div>
+        </RevealOnScroll>
       </div>
     </PageTransition>
   );

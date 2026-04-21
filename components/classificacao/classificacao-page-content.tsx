@@ -28,6 +28,7 @@ import { useChampionship } from "@/context/championship-context";
 import PageTransition from "@/components/ui/page-transition";
 import { ScrollToTopButton } from "@/components/ui/scroll-to-top";
 import Breadcrumb from "@/components/ui/breadcrumb";
+import { LeaderHeroSkeleton, ClassificationSkeleton } from "@/components/ui/shape-skeleton";
 
 const RankingShareCanvas = dynamic(
   () => import("@/components/ranking/sections/ranking-share-canvas"),
@@ -268,25 +269,9 @@ export default function ClassificacaoPageContent() {
   if (loading) {
     return (
       <div className={`min-h-screen ${isDarkMode ? "bg-[#05070a]" : ""}`}>
-        <div className="relative mx-auto mt-4 w-full max-w-[1600px]">
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-32 rounded-[32px] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05),transparent_60%)]" />
-          <div
-            className={`relative overflow-hidden rounded-[32px] border px-6 py-12 text-center shadow-[0_20px_50px_rgba(0,0,0,0.22)] ${
-              isDarkMode
-                ? "border-white/8 bg-[linear-gradient(180deg,#0b0f16_0%,#0f172a_100%)] text-white"
-                : "border-black/5 bg-white text-zinc-950"
-            }`}
-          >
-            <div
-              className={`mx-auto mb-4 h-14 w-14 animate-pulse rounded-2xl ${
-                isDarkMode ? "bg-white/8" : "bg-zinc-100"
-              }`}
-            />
-            <p className="text-xl font-semibold tracking-tight">Carregando campeonato...</p>
-            <p className={`mt-2 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-              Preparando classificação oficial
-            </p>
-          </div>
+        <div className="relative mx-auto mt-4 w-full max-w-[1600px] space-y-4 px-4 py-6">
+          <LeaderHeroSkeleton isDark={isDarkMode} />
+          <ClassificationSkeleton rows={10} isDark={isDarkMode} />
         </div>
       </div>
     );

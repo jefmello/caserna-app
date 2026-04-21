@@ -37,6 +37,8 @@ import PageTransition from "@/components/ui/page-transition";
 import { ScrollToTopButton } from "@/components/ui/scroll-to-top";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import { useToast } from "@/components/ui/toast";
+import EmptyStateIllustration from "@/components/ui/empty-state-illustration";
+import Link from "next/link";
 
 const RankingShareCanvas = dynamic(
   () => import("@/components/ranking/sections/ranking-share-canvas"),
@@ -1139,6 +1141,29 @@ Caserna Kart Racing`;
                       : "A comparação premium será liberada quando dois pilotos forem selecionados."}
                   </p>
                 </div>
+
+                {!comparePilotA || !comparePilotB ? (
+                  <div className="mt-4">
+                    <EmptyStateIllustration
+                      variant="photos"
+                      title="Monte um duelo para gerar a arte"
+                      description="Escolha dois pilotos acima ou vá para /duelos para explorar confrontos premium."
+                      isDark={isDarkMode}
+                      action={
+                        <Link
+                          href="/duelos"
+                          className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition ${
+                            isDarkMode
+                              ? `${theme.darkAccentBgSoft} ${theme.darkAccentText} hover:opacity-90`
+                              : `${theme.primaryIconWrap} ${theme.primaryIcon} hover:opacity-90`
+                          }`}
+                        >
+                          Abrir duelos
+                        </Link>
+                      }
+                    />
+                  </div>
+                ) : null}
               </CardContent>
             </Card>
           </div>

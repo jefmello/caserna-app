@@ -18,6 +18,9 @@ import type { RankingMetaPilot } from "@/types/ranking";
 import PageTransition from "@/components/ui/page-transition";
 import { ScrollToTopButton } from "@/components/ui/scroll-to-top";
 import Breadcrumb from "@/components/ui/breadcrumb";
+import RevealOnScroll from "@/components/ui/reveal-on-scroll";
+import EmptyStateIllustration from "@/components/ui/empty-state-illustration";
+import { LeaderHeroSkeleton, StatGridSkeleton } from "@/components/ui/shape-skeleton";
 import {
   CompactStatCard,
   HighlightCard,
@@ -181,17 +184,9 @@ export default function EstatisticasPageContent() {
 
   if (loading) {
     return (
-      <div
-        className={`mt-4 rounded-[28px] border px-6 py-10 text-center ${
-          isDarkMode
-            ? "border-white/10 bg-[#111827] text-white"
-            : "border-black/5 bg-white text-zinc-950"
-        }`}
-      >
-        <p className="text-xl font-semibold tracking-tight">Carregando estatísticas...</p>
-        <p className={`mt-2 text-sm ${isDarkMode ? "text-zinc-400" : "text-zinc-500"}`}>
-          Preparando leitura analítica do campeonato
-        </p>
+      <div className="mt-4 space-y-4">
+        <LeaderHeroSkeleton isDark={isDarkMode} />
+        <StatGridSkeleton cells={4} isDark={isDarkMode} />
       </div>
     );
   }
@@ -242,67 +237,82 @@ export default function EstatisticasPageContent() {
           isDark={isDarkMode}
         />
 
-        <div className="space-y-4 xl:grid xl:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] xl:items-start xl:gap-5 xl:space-y-0">
-          <div className="space-y-4">
-            <RankingStatsHeader
-              isDarkMode={isDarkMode}
-              theme={theme}
-              category={category}
-              competition={competition}
-              competitionLabels={competitionLabels}
-            />
-
-            <RankingStatsTopPointsChartCard
-              topPointsChartData={topPointsChartData}
-              theme={theme}
-              isDarkMode={isDarkMode}
-              BarChart3Icon={BarChart3}
-            />
-          </div>
-
-          <div className="space-y-4 xl:sticky xl:top-6">
-            <RankingStatsSummaryGrid
-              statsSummary={statsSummary}
-              theme={theme}
-              isDarkMode={isDarkMode}
-              CompactStatCard={CompactStatCard}
-              UsersIcon={Users}
-              CrownIcon={Crown}
-              GaugeIcon={Gauge}
-              MedalIcon={Medal}
-            />
-
-            <RankingStatsRadarCard
-              statsRadar={statsRadar}
-              statsSummary={statsSummary}
-              bestEfficiencyPilot={bestEfficiencyPilot}
-              theme={theme}
-              category={category}
-              isDarkMode={isDarkMode}
-              HighlightCard={HighlightCard}
-              StarIcon={Star}
-              getPilotFirstAndLastName={getPilotFirstAndLastName}
-            />
-          </div>
-        </div>
-
-        <SectionDivider />
-
-        <div className="xl:pt-1">
-          <RankingStatsMetricCardsGrid
-            StatRankingCardComponent={StatRankingCardConnected}
-            topVitorias={topVitorias}
-            topPoles={topPoles}
-            topMv={topMv}
-            topPodios={topPodios}
-            theme={theme}
-            isDarkMode={isDarkMode}
-            TrophyIcon={Trophy}
-            FlagIcon={Flag}
-            TimerIcon={Timer}
-            MedalIcon={Medal}
+        {filteredRanking.length === 0 ? (
+          <EmptyStateIllustration
+            variant="data"
+            title="Sem dados para analisar"
+            description="Não há pilotos suficientes no recorte atual para montar a leitura estatística."
+            isDark={isDarkMode}
           />
-        </div>
+        ) : (
+          <>
+            <RevealOnScroll>
+              <div className="space-y-4 xl:grid xl:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] xl:items-start xl:gap-5 xl:space-y-0">
+                <div className="space-y-4">
+                  <RankingStatsHeader
+                    isDarkMode={isDarkMode}
+                    theme={theme}
+                    category={category}
+                    competition={competition}
+                    competitionLabels={competitionLabels}
+                  />
+
+                  <RankingStatsTopPointsChartCard
+                    topPointsChartData={topPointsChartData}
+                    theme={theme}
+                    isDarkMode={isDarkMode}
+                    BarChart3Icon={BarChart3}
+                  />
+                </div>
+
+                <div className="space-y-4 xl:sticky xl:top-6">
+                  <RankingStatsSummaryGrid
+                    statsSummary={statsSummary}
+                    theme={theme}
+                    isDarkMode={isDarkMode}
+                    CompactStatCard={CompactStatCard}
+                    UsersIcon={Users}
+                    CrownIcon={Crown}
+                    GaugeIcon={Gauge}
+                    MedalIcon={Medal}
+                  />
+
+                  <RankingStatsRadarCard
+                    statsRadar={statsRadar}
+                    statsSummary={statsSummary}
+                    bestEfficiencyPilot={bestEfficiencyPilot}
+                    theme={theme}
+                    category={category}
+                    isDarkMode={isDarkMode}
+                    HighlightCard={HighlightCard}
+                    StarIcon={Star}
+                    getPilotFirstAndLastName={getPilotFirstAndLastName}
+                  />
+                </div>
+              </div>
+            </RevealOnScroll>
+
+            <SectionDivider />
+
+            <RevealOnScroll delay={0.1}>
+              <div className="xl:pt-1">
+                <RankingStatsMetricCardsGrid
+                  StatRankingCardComponent={StatRankingCardConnected}
+                  topVitorias={topVitorias}
+                  topPoles={topPoles}
+                  topMv={topMv}
+                  topPodios={topPodios}
+                  theme={theme}
+                  isDarkMode={isDarkMode}
+                  TrophyIcon={Trophy}
+                  FlagIcon={Flag}
+                  TimerIcon={Timer}
+                  MedalIcon={Medal}
+                />
+              </div>
+            </RevealOnScroll>
+          </>
+        )}
       </div>
       <ScrollToTopButton isDark={isDarkMode} />
     </PageTransition>
