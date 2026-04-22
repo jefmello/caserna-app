@@ -130,11 +130,11 @@ function SponsorMarqueeCard({
           {sponsor.name}
         </span>
       ) : (
-        <div className="relative z-10 flex h-full w-full items-center justify-center px-6 py-4">
+        <div className="relative z-10 flex h-full w-full items-center justify-center px-4 py-3 md:px-5 md:py-3">
           <img
             src={sponsor.src}
             alt={sponsor.name}
-            className="h-auto max-h-[52px] w-auto max-w-[78%] object-contain transition-transform duration-300 group-hover:scale-[1.04] md:max-h-[60px]"
+            className="h-auto max-h-[72px] w-auto max-w-[92%] object-contain transition-transform duration-300 group-hover:scale-[1.04] md:max-h-[82px]"
             onError={() => setHasError(true)}
           />
         </div>

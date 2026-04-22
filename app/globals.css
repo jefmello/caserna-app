@@ -154,25 +154,25 @@
     color-scheme: dark;
   }
 
+  /*
+   * Dark-mode base: keep html a neutral near-black as a safety floor, but make
+   * body + #__next TRANSPARENT so the theme-variant gradient rendered by
+   * <RacingBackground /> (Midnight / Gulf / Ferrari / Stealth) drives the
+   * actual page color. Previously these painted a hardcoded slate+amber
+   * gradient that masked every variant.
+   */
   .dark html {
     background: #05070a;
   }
 
   .dark body {
-    background:
-      radial-gradient(circle at top, rgba(255, 255, 255, 0.035), transparent 34%),
-      radial-gradient(circle at bottom, rgba(250, 204, 21, 0.045), transparent 26%),
-      linear-gradient(180deg, #05070a 0%, #070b11 42%, #05070a 100%);
+    background: transparent;
     color: #ffffff;
   }
 
   .dark #__next,
   .dark [data-nextjs-scroll-focus-boundary] {
-    background:
-      radial-gradient(circle at top, rgba(255, 255, 255, 0.03), transparent 34%),
-      radial-gradient(circle at top left, rgba(255, 255, 255, 0.035), transparent 28%),
-      radial-gradient(circle at bottom right, rgba(250, 204, 21, 0.04), transparent 24%),
-      linear-gradient(180deg, #05070a 0%, #070b11 42%, #05070a 100%);
+    background: transparent;
   }
 }
 
