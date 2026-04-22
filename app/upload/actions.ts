@@ -116,13 +116,31 @@ export async function uploadRevistaAction(formData: FormData): Promise<UploadRes
     revalidatePath(`/revistas/${id}`);
 
     const autoPush = String(formData.get("autoPush") ?? "") === "on";
+    let result: UploadResult;
     if (!autoPush) {
-      return { ok: true, id, published: false };
+      result = { ok: true, id, published: false };
+    } else {
+      const git = await publishToGit(entry);
+      result = git.ok
+        ? { ok: true, id, published: true, gitMessage: git.message }
+        : { ok: true, id, published: false, gitError: git.message };
     }
-    const git = await publishToGit(entry);
-    return git.ok
-      ? { ok: true, id, published: true, gitMessage: git.message }
-      : { ok: true, id, published: false, gitError: git.message };
+
+    // Signal file for the caserna-upload.bat wrapper on the user's desktop:
+    // the bat script polls for this sentinel and, once it appears, kills the
+    // dev server and exits. We only create it once everything succeeded
+    // (file saved + optional push) so a failed push keeps the server alive.
+    try {
+      await writeFile(
+        path.join(process.cwd(), ".upload-done"),
+        JSON.stringify({ id, at: new Date().toISOString(), published: result.published ?? false }),
+        "utf-8"
+      );
+    } catch {
+      // Not critical — just means the bat helper won't auto-close.
+    }
+
+    return result;
   } catch (err) {
     const message = err instanceof Error ? err.message : "Falha inesperada no upload.";
     return { ok: false, error: message };

@@ -48,3 +48,7 @@ node_modules
 /playwright-report/
 /playwright/.cache/
 /e2e/screenshots/
+
+# Sentinel file written by /upload server action; picked up by
+# scripts/caserna-upload.bat so the dev server auto-shuts down.
+.upload-done
