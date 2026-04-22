@@ -1,13 +1,3 @@
 {
-  "revistas": [
-    {
-      "id": "t1e01",
-      "titulo": "Revista Caserna Kart Racing - Ed. N.01 - Março 2026",
-      "turno": 1,
-      "etapa": 1,
-      "data": "2026-03-26",
-      "arquivo": "revista-caserna-t1e01-20260422.html",
-      "descricao": "Primeira edição de nossa nova revista, um resumo geral da nossa primeira etapa de 2026"
-    }
-  ]
+  "revistas": []
 }
