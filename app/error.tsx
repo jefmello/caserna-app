@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { AlertTriangle, Home, RefreshCw } from "lucide-react";
 import Link from "next/link";
+import { track } from "@/lib/analytics";
 
 export default function ErrorPage({
   error,
@@ -12,7 +13,12 @@ export default function ErrorPage({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log do erro para monitoramento
+    track("error_boundary_caught", {
+      boundary: "route-root",
+      message: error.message,
+      digest: error.digest ?? null,
+      stack: error.stack?.slice(0, 600),
+    });
     if (process.env.NODE_ENV === "development") {
       console.error("[Error Boundary]", error);
     }

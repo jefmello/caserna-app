@@ -16,7 +16,8 @@ export type AnalyticsEventName =
   | "pilot_shared"
   | "command_palette_opened"
   | "category_changed"
-  | "competition_changed";
+  | "competition_changed"
+  | "error_boundary_caught";
 
 export type AnalyticsEvent = {
   event: AnalyticsEventName;
@@ -40,7 +41,6 @@ export function track(event: AnalyticsEventName, properties?: Record<string, unk
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push(payload);
   if (process.env.NODE_ENV === "development") {
-     
     console.debug("[analytics]", event, properties ?? {});
   }
 }
