@@ -235,7 +235,7 @@ export default function AppSponsorsStrip({ isDarkMode }: { isDarkMode?: boolean 
       }`}
     >
       <CardContent className="p-0">
-        <div className="relative px-4 py-5 md:px-6 md:py-6">
+        <div className="relative px-4 py-6 md:px-6 md:py-8">
           <style jsx>{`
             @keyframes casernaSponsorsMarquee {
               0% {
@@ -313,7 +313,7 @@ export default function AppSponsorsStrip({ isDarkMode }: { isDarkMode?: boolean 
               }`}
             />
 
-            <div className="overflow-hidden py-1">
+            <div className="py-3 md:py-4">
               <div className="caserna-sponsors-marquee flex items-stretch gap-4 md:gap-5">
                 {marqueeItems.map((sponsor, index) => (
                   <SponsorMarqueeCard
