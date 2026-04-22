@@ -5,10 +5,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { sponsorLogos } from "@/lib/ranking/ranking-utils";
+import { track } from "@/lib/analytics";
 
 type SponsorLogoItem = {
   name: string;
   src: string;
+  href?: string;
   wrapper?: string;
   surfaceLight?: string;
   surfaceDark?: string;
@@ -99,11 +101,17 @@ function SponsorMarqueeCard({
     : "bg-[radial-gradient(circle_at_50%_25%,rgba(255,255,255,0.9),transparent_65%)]";
   const fallbackText = darkPanel ? "text-zinc-100" : "text-zinc-700";
 
-  return (
-    <div
-      title={sponsor.name}
-      className={`group relative flex h-[160px] min-w-[320px] items-center justify-center overflow-hidden rounded-[22px] border px-3 transition-all duration-300 md:h-[180px] md:min-w-[350px] xl:min-w-[380px] ${outerFrame}`}
-    >
+  const handleClick = () => {
+    track("sponsor_clicked", { name: sponsor.name, href: sponsor.href ?? null });
+  };
+
+  const hasLink = Boolean(sponsor.href);
+  const sharedClass = `group relative flex h-[160px] min-w-[320px] items-center justify-center overflow-hidden rounded-[22px] border px-3 transition-all duration-300 md:h-[180px] md:min-w-[350px] xl:min-w-[380px] ${outerFrame} ${
+    hasLink ? "cursor-pointer" : ""
+  }`;
+
+  const innerContent = (
+    <>
       {/* Outer top highlight — 1px bright line for glass/metal feel */}
       <div
         aria-hidden="true"
@@ -147,6 +155,27 @@ function SponsorMarqueeCard({
           />
         </div>
       )}
+    </>
+  );
+
+  if (hasLink) {
+    return (
+      <a
+        href={sponsor.href}
+        target="_blank"
+        rel="noopener noreferrer sponsored"
+        title={sponsor.name}
+        onClick={handleClick}
+        className={sharedClass}
+      >
+        {innerContent}
+      </a>
+    );
+  }
+
+  return (
+    <div title={sponsor.name} onClick={handleClick} className={sharedClass}>
+      {innerContent}
     </div>
   );
 }
