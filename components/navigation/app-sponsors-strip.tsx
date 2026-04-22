@@ -77,6 +77,14 @@ function SponsorMarqueeCard({
 
   const darkPanel = sponsorPrefersDarkPanel(sponsor);
 
+  // Wide horizontal wordmarks render much smaller than square marks because
+  // object-contain + max-w caps them on width, leaving vertical space unused.
+  // Apply a base scale so these fill the inner panel at comparable weight.
+  const WIDE_WORDMARKS = new Set(["Precision", "Skyflow", "Vits"]);
+  const logoScale = WIDE_WORDMARKS.has(sponsor.name)
+    ? "scale-[1.35] group-hover:scale-[1.4]"
+    : "group-hover:scale-[1.04]";
+
   const outerFrame = isDarkMode
     ? "border-white/10 bg-[linear-gradient(180deg,#131a2b_0%,#0b1121_62%,#060a14_100%)] shadow-[0_18px_42px_rgba(0,0,0,0.45)] hover:-translate-y-[2px] hover:border-white/20 hover:shadow-[0_26px_54px_rgba(0,0,0,0.55)]"
     : "border-zinc-200/80 bg-[linear-gradient(180deg,#ffffff_0%,#f5f7fb_100%)] shadow-[0_12px_28px_rgba(15,23,42,0.08)] hover:-translate-y-[2px] hover:border-zinc-300 hover:shadow-[0_20px_44px_rgba(15,23,42,0.14)]";
@@ -134,7 +142,7 @@ function SponsorMarqueeCard({
           <img
             src={sponsor.src}
             alt={sponsor.name}
-            className="h-auto max-h-[118px] w-auto max-w-[96%] object-contain transition-transform duration-300 group-hover:scale-[1.04] md:max-h-[134px]"
+            className={`h-auto max-h-[118px] w-auto max-w-[96%] object-contain transition-transform duration-300 md:max-h-[134px] ${logoScale}`}
             onError={() => setHasError(true)}
           />
         </div>
