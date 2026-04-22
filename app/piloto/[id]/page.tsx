@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Flag, Medal, Star, Target, Timer, Trophy } from "lucide-react";
@@ -5,6 +6,24 @@ import PodiumBadge from "@/components/ui/podium-badge";
 import { fetchPilotById } from "./fetch-pilot";
 
 type PageProps = { params: Promise<{ id: string }> };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const pilot = await fetchPilotById(id);
+  if (!pilot) {
+    return {
+      title: "Piloto não encontrado — Caserna Kart Racing",
+    };
+  }
+  const title = `${pilot.piloto} — ${pilot.categoria} · Caserna Kart Racing`;
+  const description = `#${pilot.pos} na ${pilot.categoria} (${pilot.competicao}) · ${pilot.pontos} pontos · ${pilot.vitorias} vitórias · ${pilot.podios} pódios.`;
+  return {
+    title,
+    description,
+    openGraph: { title, description, type: "profile" },
+    twitter: { card: "summary_large_image", title, description },
+  };
+}
 
 function Stat({
   icon: Icon,

@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import * as htmlToImage from "html-to-image";
 import { getPilotFirstAndLastName } from "@/lib/ranking/ranking-utils";
+import { track } from "@/lib/analytics";
 import type { RankingItem } from "@/types/ranking";
 
 type UseShareProps = {
@@ -53,6 +54,11 @@ export default function useShare({
 
     try {
       setIsSharingPilotImage(true);
+      track("pilot_shared", {
+        pilot: safeSelectedPilot.piloto,
+        category,
+        competition,
+      });
       const dataUrl = await htmlToImage.toPng(pilotShareCardRef.current, {
         cacheBust: true,
         pixelRatio: 2,

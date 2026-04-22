@@ -20,6 +20,7 @@ import { useChampionship } from "@/context/championship-context";
 import useRankingData from "@/lib/hooks/useRankingData";
 import useThemeVariant from "@/lib/hooks/useThemeVariant";
 import { THEME_VARIANTS, type ThemeVariant } from "@/lib/theme-variants";
+import { track } from "@/lib/analytics";
 import type { RankingItem } from "@/types/ranking";
 
 type Route = {
@@ -60,6 +61,7 @@ export default function CommandPalette() {
           // Clearing the search text is part of closing the palette, so it
           // belongs in the state transition — not in a separate effect.
           if (o) setSearch("");
+          if (!o) track("command_palette_opened", { source: "keyboard" });
           return !o;
         });
       }

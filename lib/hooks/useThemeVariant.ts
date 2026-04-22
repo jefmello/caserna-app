@@ -9,6 +9,7 @@ import {
   type ThemeVariant,
   isThemeVariant,
 } from "@/lib/theme-variants";
+import { track } from "@/lib/analytics";
 
 function readStoredVariant(): ThemeVariant {
   if (typeof window === "undefined") return DEFAULT_THEME_VARIANT;
@@ -67,6 +68,7 @@ export default function useThemeVariant(): UseThemeVariantReturn {
       // Ignore; SSR or locked-down environments.
     }
     window.dispatchEvent(new CustomEvent(THEME_VARIANT_EVENT));
+    track("theme_variant_changed", { variant: next });
   }, []);
 
   return { variant, setVariant };
