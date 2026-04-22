@@ -40,13 +40,22 @@ export default function RankingHeader({
 
   return (
     <header
-      className={`sticky top-0 z-20 mb-1.5 overflow-hidden rounded-[20px] shadow-[0_10px_25px_rgba(15,23,42,0.06)] ${
+      style={{ isolation: "isolate" }}
+      className={`sticky top-0 z-40 mb-1.5 rounded-[20px] shadow-[0_10px_25px_rgba(15,23,42,0.06)] ${
         isDarkMode ? "border border-white/10 bg-[#111827]" : "border border-black/5 bg-white"
       }`}
     >
+      {/* Top accent strip — clipped to rounded corners via its own wrapper so
+          the outer header can stay overflow-visible (required for the theme
+          variant dropdown to render outside header bounds). */}
       <div
-        className={`absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
-      />
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[3px] overflow-hidden rounded-t-[20px]"
+      >
+        <div
+          className={`absolute inset-0 bg-gradient-to-r from-transparent ${theme.primaryRing} to-transparent`}
+        />
+      </div>
 
       <div className="space-y-1 px-2.5 pt-2 pb-1.5">
         <div
