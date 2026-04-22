@@ -25,7 +25,7 @@ function AppMainLayoutContent({ children }: { children: React.ReactNode }) {
   return (
     <div
       data-theme={themeMode}
-      className={`relative min-h-screen w-full overflow-x-clip transition-colors duration-300 ${
+      className={`relative min-h-screen w-full transition-colors duration-300 ${
         isDarkMode ? "text-white" : "text-zinc-900"
       }`}
     >
@@ -86,7 +86,7 @@ function AppMainLayoutContent({ children }: { children: React.ReactNode }) {
         onCloseMobile={() => setIsMobileSidebarOpen(false)}
       />
 
-      <main className="relative z-[1] min-h-screen w-full pt-16 lg:pt-0 lg:pl-[288px]">
+      <main className="relative z-[1] min-h-screen w-full overflow-x-clip pt-16 lg:pt-0 lg:pl-[288px]">
         {children}
       </main>
 
