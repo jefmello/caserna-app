@@ -1,22 +1,52 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import Link from "next/link";
-import { Upload, CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
+import { Upload, CheckCircle2, AlertTriangle, Loader2, Flag, Newspaper, Eye } from "lucide-react";
 import { uploadRevistaAction, type UploadResult } from "./actions";
+
+type Tipo = "etapa" | "informativa";
 
 export default function RevistaUploadForm() {
   const [pending, startTransition] = useTransition();
   const [result, setResult] = useState<UploadResult | null>(null);
+  const [tipo, setTipo] = useState<Tipo>("etapa");
+  const isEtapa = tipo === "etapa";
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewName, setPreviewName] = useState<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    if (!file) {
+      setPreviewUrl(null);
+      setPreviewName(null);
+      return;
+    }
+    setPreviewUrl(URL.createObjectURL(file));
+    setPreviewName(file.name);
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const fd = new FormData(form);
+    fd.set("tipo", tipo);
     startTransition(async () => {
       const res = await uploadRevistaAction(fd);
       setResult(res);
-      if (res.ok) form.reset();
+      if (res.ok) {
+        form.reset();
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+        setPreviewUrl(null);
+        setPreviewName(null);
+      }
     });
   };
 
@@ -25,6 +55,27 @@ export default function RevistaUploadForm() {
       onSubmit={handleSubmit}
       className="flex flex-col gap-4 rounded-[22px] border border-white/10 bg-white/[0.03] p-5 text-white md:p-6"
     >
+      <fieldset className="flex flex-col gap-2">
+        <legend className="text-[10px] font-bold tracking-[0.2em] text-white/55 uppercase">
+          Tipo de edição *
+        </legend>
+        <div className="grid grid-cols-2 gap-2">
+          <TipoOption
+            label="Etapa de corrida"
+            description="Cobertura de uma etapa. Exige turno, etapa e data."
+            icon={<Flag className="h-3.5 w-3.5" />}
+            active={isEtapa}
+            onClick={() => setTipo("etapa")}
+          />
+          <TipoOption
+            label="Informativa"
+            description="Conteúdo livre, sem vínculo a etapa. Sem turno/etapa/data."
+            icon={<Newspaper className="h-3.5 w-3.5" />}
+            active={!isEtapa}
+            onClick={() => setTipo("informativa")}
+          />
+        </div>
+      </fieldset>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <Field label="Arquivo HTML *" id="file">
           <input
@@ -33,6 +84,7 @@ export default function RevistaUploadForm() {
             type="file"
             accept="text/html,.html"
             required
+            onChange={handleFileChange}
             className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-[13px] text-white file:mr-3 file:rounded-md file:border-0 file:bg-amber-400/15 file:px-3 file:py-1 file:text-[11px] file:font-bold file:tracking-[0.1em] file:text-amber-300 file:uppercase"
           />
         </Field>
@@ -68,39 +120,62 @@ export default function RevistaUploadForm() {
         />
       </Field>
 
-      <div className="grid grid-cols-3 gap-3">
-        <Field label="Turno *" id="turno">
-          <input
-            id="turno"
-            name="turno"
-            type="number"
-            min={1}
-            required
-            defaultValue={1}
-            className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-[13px] text-white tabular-nums"
+      {isEtapa ? (
+        <div className="grid grid-cols-3 gap-3">
+          <Field label="Turno *" id="turno">
+            <input
+              id="turno"
+              name="turno"
+              type="number"
+              min={1}
+              required
+              defaultValue={1}
+              className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-[13px] text-white tabular-nums"
+            />
+          </Field>
+          <Field label="Etapa *" id="etapa">
+            <input
+              id="etapa"
+              name="etapa"
+              type="number"
+              min={1}
+              required
+              defaultValue={1}
+              className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-[13px] text-white tabular-nums"
+            />
+          </Field>
+          <Field label="Data *" id="data">
+            <input
+              id="data"
+              name="data"
+              type="date"
+              required
+              className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-[13px] text-white"
+            />
+          </Field>
+        </div>
+      ) : (
+        <p className="rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2 text-[11px] text-white/55">
+          Edição informativa — turno, etapa e data não se aplicam.
+        </p>
+      )}
+
+      {previewUrl ? (
+        <div className="flex flex-col gap-2 rounded-xl border border-white/10 bg-black/30 p-3">
+          <div className="flex items-center justify-between gap-2 text-[11px] text-white/60">
+            <span className="inline-flex items-center gap-1.5 font-bold tracking-[0.14em] uppercase">
+              <Eye className="h-3 w-3" /> Pré-visualização
+            </span>
+            <code className="truncate text-amber-300">{previewName}</code>
+          </div>
+          <iframe
+            src={previewUrl}
+            title="Pré-visualização da edição"
+            sandbox="allow-same-origin"
+            className="h-[420px] w-full rounded-lg border border-white/10 bg-white"
           />
-        </Field>
-        <Field label="Etapa *" id="etapa">
-          <input
-            id="etapa"
-            name="etapa"
-            type="number"
-            min={1}
-            required
-            defaultValue={1}
-            className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-[13px] text-white tabular-nums"
-          />
-        </Field>
-        <Field label="Data *" id="data">
-          <input
-            id="data"
-            name="data"
-            type="date"
-            required
-            className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-[13px] text-white"
-          />
-        </Field>
-      </div>
+        </div>
+      ) : null}
 
       <label className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
         <input
@@ -122,11 +197,21 @@ export default function RevistaUploadForm() {
 
       <div className="flex items-center justify-between gap-3 pt-1">
         <p className="text-[11px] text-white/45">
-          O ID é gerado como{" "}
-          <code className="text-amber-300">
-            t{"{"}turno{"}"}e{"{"}etapa{"}"}
-          </code>
-          . Re-upload com o mesmo ID substitui a edição existente.
+          {isEtapa ? (
+            <>
+              ID gerado como{" "}
+              <code className="text-amber-300">
+                t{"{"}turno{"}"}e{"{"}etapa{"}"}
+              </code>
+              . Re-upload com o mesmo ID substitui a edição.
+            </>
+          ) : (
+            <>
+              ID gerado a partir do título (
+              <code className="text-amber-300">info-&lt;slug&gt;</code>
+              ). Re-upload com o mesmo título substitui a edição.
+            </>
+          )}
         </p>
         <button
           type="submit"
@@ -207,5 +292,38 @@ function Field({ label, id, children }: { label: string; id: string; children: R
       </span>
       {children}
     </label>
+  );
+}
+
+function TipoOption({
+  label,
+  description,
+  icon,
+  active,
+  onClick,
+}: {
+  label: string;
+  description: string;
+  icon: React.ReactNode;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={`flex flex-col items-start gap-1 rounded-xl border px-3 py-2.5 text-left transition ${
+        active
+          ? "border-amber-400/60 bg-amber-400/10 text-amber-200"
+          : "border-white/10 bg-white/[0.03] text-white/70 hover:border-white/25 hover:text-white"
+      }`}
+    >
+      <span className="inline-flex items-center gap-1.5 text-[12px] font-bold tracking-tight">
+        {icon}
+        {label}
+      </span>
+      <span className="text-[11px] leading-snug text-white/55">{description}</span>
+    </button>
   );
 }

@@ -28,6 +28,15 @@ cd /d "%PROJECT_DIR%" || (
 
 if exist "%SENTINEL%" del /q "%SENTINEL%"
 
+echo [Caserna] Rodando typecheck rapido...
+call npx --no-install tsc --noEmit
+if errorlevel 1 (
+  echo.
+  echo [Caserna] Erros de TypeScript antes de subir. Corrija e rode o bat de novo.
+  pause
+  exit /b 1
+)
+
 echo [Caserna] Iniciando servidor de dev...
 start "%WINDOW_TITLE%" /min cmd /c "npm run dev"
 

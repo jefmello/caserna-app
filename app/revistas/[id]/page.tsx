@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { findRevistaById } from "@/lib/revistas";
+import { findRevistaById, isInformativa } from "@/lib/revistas";
 import RevistaShareActions from "@/components/revistas/revista-share-actions";
 
 export const dynamic = "force-dynamic";
@@ -16,9 +16,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: "Edição não encontrada — Caserna Kart Racing" };
   }
   const title = `${revista.titulo} — Caserna Kart Racing`;
-  const description =
-    revista.descricao ??
-    `Edição Nº${String(revista.etapa).padStart(2, "0")} · Turno ${revista.turno} · ${revista.data}`;
+  const fallbackDescription = isInformativa(revista)
+    ? `Edição informativa${revista.data ? ` · ${revista.data}` : ""}`
+    : `Edição Nº${String(revista.etapa ?? 0).padStart(2, "0")}${
+        revista.turno !== undefined ? ` · Turno ${revista.turno}` : ""
+      }${revista.data ? ` · ${revista.data}` : ""}`;
+  const description = revista.descricao ?? fallbackDescription;
   return {
     title,
     description,
@@ -70,8 +73,16 @@ export default async function RevistaReaderPage({ params }: PageProps) {
         </Link>
 
         <div className="hidden min-w-0 flex-1 flex-col items-center px-3 text-center md:flex">
-          <p className="truncate text-[10px] font-bold tracking-[0.2em] text-amber-400 uppercase">
-            T{revista.turno} · Etapa {revista.etapa} · {formatDate(revista.data)}
+          <p
+            className={`truncate text-[10px] font-bold tracking-[0.2em] uppercase ${
+              isInformativa(revista) ? "text-sky-300" : "text-amber-400"
+            }`}
+          >
+            {isInformativa(revista)
+              ? `Informativa${revista.data ? ` · ${formatDate(revista.data)}` : ""}`
+              : `T${revista.turno ?? "—"} · Etapa ${revista.etapa ?? "—"}${
+                  revista.data ? ` · ${formatDate(revista.data)}` : ""
+                }`}
           </p>
           <p className="truncate text-[14px] font-black tracking-tight text-white">
             {revista.titulo}
@@ -84,6 +95,7 @@ export default async function RevistaReaderPage({ params }: PageProps) {
       <iframe
         src={fileUrl}
         title={revista.titulo}
+        loading="lazy"
         sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
         className="w-full flex-1 border-0"
         style={{ height: "calc(100vh - 56px)" }}

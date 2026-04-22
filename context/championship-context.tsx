@@ -71,22 +71,30 @@ function applyThemeToDom(mode: ThemeMode) {
 }
 
 export function ChampionshipProvider({ children }: { children: React.ReactNode }) {
-  // Inicialização lazy — lê do localStorage na primeira renderização
-  const [categoria, setCategoriaState] = useState(() => {
-    if (typeof window !== "undefined") {
-      return window.localStorage.getItem(STORAGE_CATEGORIA_KEY) || DEFAULT_CATEGORIA;
-    }
-    return DEFAULT_CATEGORIA;
-  });
-  const [campeonato, setCampeonatoState] = useState(() => {
-    if (typeof window !== "undefined") {
-      return window.localStorage.getItem(STORAGE_CAMPEONATO_KEY) || DEFAULT_CAMPEONATO;
-    }
-    return DEFAULT_CAMPEONATO;
-  });
-  const [themeModeState, setThemeModeState] = useState<ThemeMode>(() => {
-    return readThemeFromEnvironment();
-  });
+  // Sempre inicia com defaults para o primeiro render bater entre server e
+  // client. Os valores persistidos são lidos do localStorage no useEffect
+  // abaixo, evitando hydration mismatch.
+  const [categoria, setCategoriaState] = useState(DEFAULT_CATEGORIA);
+  const [campeonato, setCampeonatoState] = useState(DEFAULT_CAMPEONATO);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const storedCategoria = window.localStorage.getItem(STORAGE_CATEGORIA_KEY);
+    if (storedCategoria) setCategoriaState(storedCategoria);
+    const storedCampeonato = window.localStorage.getItem(STORAGE_CAMPEONATO_KEY);
+    if (storedCampeonato) setCampeonatoState(storedCampeonato);
+  }, []);
+  // Inicializa com o default em ambos os lados (server + primeiro render do
+  // client) para evitar hydration mismatch. O tema real do usuário é lido
+  // do localStorage logo após o mount, no useEffect abaixo.
+  const [themeModeState, setThemeModeState] = useState<ThemeMode>(DEFAULT_THEME_MODE);
+
+  useEffect(() => {
+    const fromEnv = readThemeFromEnvironment();
+    if (fromEnv !== themeModeState) setThemeModeState(fromEnv);
+    // Roda só uma vez no mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Aplica tema ao DOM sempre que mudar
   useEffect(() => {

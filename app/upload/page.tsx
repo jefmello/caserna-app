@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import AppMainLayout from "@/components/navigation/app-main-layout";
+import { readRevistaManifest, sortRevistas } from "@/lib/revistas";
 import RevistaUploadForm from "./upload-form";
+import RevistaList from "./revista-list";
 
 export const dynamic = "force-dynamic";
 
@@ -12,14 +14,25 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function UploadPage() {
-  if (process.env.NODE_ENV === "production") {
+function uploadEnabled(): boolean {
+  // Flag explícita ganha de tudo. Útil em preview deploys onde NODE_ENV é
+  // "production" mas você quer testar o fluxo mesmo assim.
+  const flag = process.env.CASERNA_UPLOAD_ENABLED;
+  if (flag === "1" || flag === "true") return true;
+  if (flag === "0" || flag === "false") return false;
+  return process.env.NODE_ENV !== "production";
+}
+
+export default async function UploadPage() {
+  if (!uploadEnabled()) {
     notFound();
   }
 
+  const revistas = sortRevistas(await readRevistaManifest());
+
   return (
     <AppMainLayout>
-      <div className="mx-auto w-full max-w-3xl px-4 py-8 md:px-6">
+      <div className="mx-auto my-6 w-full max-w-3xl rounded-[28px] bg-[#0a0f1c] px-4 py-8 text-white shadow-[0_20px_60px_rgba(0,0,0,0.45)] ring-1 ring-white/10 md:my-10 md:px-6">
         <header className="mb-5 flex flex-col gap-2">
           <p className="text-[11px] font-bold tracking-[0.24em] text-amber-400 uppercase">
             Apenas desenvolvimento
@@ -35,6 +48,7 @@ export default function UploadPage() {
         </header>
 
         <RevistaUploadForm />
+        <RevistaList revistas={revistas} />
       </div>
     </AppMainLayout>
   );

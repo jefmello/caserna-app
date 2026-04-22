@@ -1,0 +1,72 @@
+# Dependências e cache
+node_modules/
+.pnpm-store/
+.npm/
+
+# Build / runtime do Next
+.next/
+.turbo/
+.vercel/
+out/
+dist/
+build/
+next-env.d.ts
+tsconfig.tsbuildinfo
+
+# Lockfiles (grandes, ruído)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+
+# Testes
+coverage/
+playwright-report/
+test-results/
+.nyc_output/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Variáveis de ambiente (segredo)
+.env
+.env.*
+!.env.example
+
+# Sentinelas / arquivos efêmeros
+.upload-done
+
+# Git / SO
+.git/
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Conteúdo grande / binário (revistas em HTML costumam ser pesadas)
+public/revistas/*.html
+public/revistas/covers/
+public/**/*.png
+public/**/*.jpg
+public/**/*.jpeg
+public/**/*.webp
+public/**/*.avif
+public/**/*.gif
+public/**/*.ico
+public/**/*.svg
+public/**/*.pdf
+public/**/*.zip
+public/**/*.mp4
+public/**/*.webm
+
+# Pastas de outras CLIs / agentes
+.claude/
+.openclaude/
+.qwen/
