@@ -13,6 +13,7 @@ import {
   LineChart,
   Swords,
   ArrowLeftRight,
+  BookOpen,
   Image as ImageIcon,
   ChevronLeft,
   X,
@@ -46,6 +47,7 @@ const secondaryNav: NavItem[] = [
   { label: "Simulações", href: "/simulacoes", icon: LineChart },
   { label: "Duelos", href: "/duelos", icon: Swords },
   { label: "Comparar", href: "/comparar", icon: ArrowLeftRight },
+  { label: "Revistas", href: "/revistas", icon: BookOpen },
   { label: "Replay", href: "/replay", icon: LineChart },
   { label: "Mídia", href: "/midia", icon: ImageIcon },
 ];
