@@ -37,14 +37,29 @@ function readThemeFromEnvironment(explicitIsDarkMode?: boolean) {
 }
 
 /**
+ * Per-sponsor surface classification.
+ *
+ * Some logos are designed for light backgrounds (dark ink), others for dark
+ * backgrounds (light ink). `sponsor-logos.ts` already encodes this via
+ * `surfaceLight` (a dark gradient means the logo needs a dark panel). We infer
+ * the polarity from the gradient color rather than trusting per-sponsor
+ * ad-hoc styling — this gives uniform rendering.
+ */
+function sponsorPrefersDarkPanel(sponsor: SponsorLogoItem): boolean {
+  const surface = sponsor.surfaceLight ?? "";
+  return /rgba\((?:1[0-9]|[0-9]),/.test(surface) || surface.includes("zinc-950");
+}
+
+/**
  * Sponsor marquee card — premium F1-style panel.
  *
  * Design principles:
- * - Inner surface is always a light panel regardless of theme (logos are designed
- *   for white backgrounds; this guarantees legibility everywhere).
- * - Outer frame adapts to theme: dark cards in dark mode, neutral cards in light.
- * - Single logo size (h-16 / md:h-20) — all sponsors get equal visual weight.
- * - Subtle 3D depth via top highlight + bottom inner shadow, no distracting tints.
+ * - Inner panel adapts to THE LOGO, not to the page theme. Dark-ink logos get
+ *   a bright panel, light-ink logos get a dark panel — guarantees contrast in
+ *   both day and night mode.
+ * - Outer frame adapts to the page theme so the card blends with the page.
+ * - All logos use a single sizing box (max-h 52→60px, max-w 78%) so every
+ *   sponsor reads at the same visual weight, regardless of logo aspect ratio.
  */
 function SponsorMarqueeCard({
   sponsor,
@@ -60,52 +75,66 @@ function SponsorMarqueeCard({
     setHasError(false);
   }
 
+  const darkPanel = sponsorPrefersDarkPanel(sponsor);
+
+  const outerFrame = isDarkMode
+    ? "border-white/10 bg-[linear-gradient(180deg,#131a2b_0%,#0b1121_62%,#060a14_100%)] shadow-[0_18px_42px_rgba(0,0,0,0.45)] hover:-translate-y-[2px] hover:border-white/20 hover:shadow-[0_26px_54px_rgba(0,0,0,0.55)]"
+    : "border-zinc-200/80 bg-[linear-gradient(180deg,#ffffff_0%,#f5f7fb_100%)] shadow-[0_12px_28px_rgba(15,23,42,0.08)] hover:-translate-y-[2px] hover:border-zinc-300 hover:shadow-[0_20px_44px_rgba(15,23,42,0.14)]";
+
+  const innerPanel = darkPanel
+    ? "border-white/10 bg-[linear-gradient(180deg,#1a2236_0%,#10172a_55%,#080d1c_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-8px_16px_rgba(0,0,0,0.35)]"
+    : "border-black/5 bg-[linear-gradient(180deg,#ffffff_0%,#fafafa_55%,#eef1f6_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,1),inset_0_-8px_16px_rgba(15,23,42,0.05)]";
+
+  const innerTopHighlight = darkPanel ? "bg-white/15" : "bg-white";
+  const hoverSpotlight = darkPanel
+    ? "bg-[radial-gradient(circle_at_50%_25%,rgba(255,255,255,0.12),transparent_65%)]"
+    : "bg-[radial-gradient(circle_at_50%_25%,rgba(255,255,255,0.9),transparent_65%)]";
+  const fallbackText = darkPanel ? "text-zinc-100" : "text-zinc-700";
+
   return (
     <div
       title={sponsor.name}
-      className={`group relative flex h-[112px] min-w-[240px] items-center justify-center overflow-hidden rounded-[22px] border px-3 transition-all duration-300 md:h-[120px] md:min-w-[260px] xl:min-w-[280px] ${
-        isDarkMode
-          ? "border-white/10 bg-[linear-gradient(180deg,#0f172a_0%,#0b1120_60%,#070b14_100%)] shadow-[0_16px_38px_rgba(0,0,0,0.4)] hover:-translate-y-[2px] hover:border-white/20 hover:shadow-[0_24px_50px_rgba(0,0,0,0.5)]"
-          : "border-black/5 bg-white shadow-[0_12px_28px_rgba(15,23,42,0.08)] hover:-translate-y-[2px] hover:border-black/10 hover:shadow-[0_18px_38px_rgba(15,23,42,0.12)]"
-      }`}
+      className={`group relative flex h-[112px] min-w-[240px] items-center justify-center overflow-hidden rounded-[22px] border px-3 transition-all duration-300 md:h-[120px] md:min-w-[260px] xl:min-w-[280px] ${outerFrame}`}
     >
       {/* Outer top highlight — 1px bright line for glass/metal feel */}
       <div
         aria-hidden="true"
         className={`pointer-events-none absolute inset-x-[10%] top-0 h-px ${
-          isDarkMode ? "bg-white/20" : "bg-white"
+          isDarkMode ? "bg-white/25" : "bg-white"
         }`}
       />
 
-      {/* Inner light panel — ALWAYS light so logos (designed for white) render native */}
+      {/* Inner panel — color picked to CONTRAST the logo ink */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-[6px] rounded-[16px] border border-black/5 bg-[linear-gradient(180deg,#ffffff_0%,#fafafa_55%,#f3f4f6_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,1),inset_0_-6px_14px_rgba(15,23,42,0.04)]"
+        className={`pointer-events-none absolute inset-[6px] rounded-[16px] border ${innerPanel}`}
       />
 
       {/* Inner top highlight on the panel */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-[14%] top-[7px] h-px bg-white"
+        className={`pointer-events-none absolute inset-x-[14%] top-[7px] h-px ${innerTopHighlight}`}
       />
 
       {/* Soft spotlight on hover */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-[6px] rounded-[16px] bg-[radial-gradient(circle_at_50%_30%,rgba(255,255,255,0.9),transparent_65%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        className={`pointer-events-none absolute inset-[6px] rounded-[16px] opacity-0 transition-opacity duration-300 group-hover:opacity-100 ${hoverSpotlight}`}
       />
 
-      {/* Content — logo or name fallback */}
+      {/* Content — logo or name fallback. Uniform size box for every sponsor. */}
       {hasError ? (
-        <span className="relative z-10 px-3 text-center text-[14px] font-bold tracking-[0.14em] text-zinc-700 uppercase">
+        <span
+          className={`relative z-10 px-3 text-center text-[14px] font-bold tracking-[0.14em] uppercase ${fallbackText}`}
+        >
           {sponsor.name}
         </span>
       ) : (
-        <div className="relative z-10 flex h-full w-full items-center justify-center px-5 py-3 md:px-6 md:py-4">
+        <div className="relative z-10 flex h-full w-full items-center justify-center px-6 py-4">
           <img
             src={sponsor.src}
             alt={sponsor.name}
-            className="h-auto max-h-[64px] w-auto max-w-[88%] object-contain transition-transform duration-300 group-hover:scale-[1.04] md:max-h-[72px]"
+            className="h-auto max-h-[52px] w-auto max-w-[78%] object-contain transition-transform duration-300 group-hover:scale-[1.04] md:max-h-[60px]"
             onError={() => setHasError(true)}
           />
         </div>
