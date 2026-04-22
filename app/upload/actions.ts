@@ -2,8 +2,12 @@
 
 import { writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
+import { exec } from "node:child_process";
+import { promisify } from "node:util";
 import { revalidatePath } from "next/cache";
 import { readRevistaManifest, writeRevistaManifest, type RevistaEntry } from "@/lib/revistas";
+
+const execAsync = promisify(exec);
 
 /**
  * Dev-only server action: accepts the HTML file + metadata, writes it to
@@ -15,7 +19,31 @@ import { readRevistaManifest, writeRevistaManifest, type RevistaEntry } from "@/
 const REVISTAS_DIR = path.join(process.cwd(), "public", "revistas");
 const COVERS_DIR = path.join(REVISTAS_DIR, "covers");
 
-export type UploadResult = { ok: true; id: string } | { ok: false; error: string };
+export type UploadResult =
+  | { ok: true; id: string; published: boolean; gitMessage?: string; gitError?: string }
+  | { ok: false; error: string };
+
+async function publishToGit(entry: RevistaEntry): Promise<{ ok: boolean; message: string }> {
+  const cwd = process.cwd();
+  const commitMessage = `revista(${entry.id}): ${entry.titulo}`;
+  try {
+    await execAsync("git add public/revistas data/revistas.json", { cwd });
+    // `git commit` exits 1 when there's nothing staged — treat that as benign.
+    try {
+      await execAsync(`git commit -m ${JSON.stringify(commitMessage)}`, { cwd });
+    } catch (commitErr) {
+      const stderr = (commitErr as { stderr?: string }).stderr ?? "";
+      if (!/nothing to commit/i.test(stderr)) throw commitErr;
+    }
+    const pushResult = await execAsync("git push origin HEAD", { cwd });
+    const combined = [pushResult.stdout, pushResult.stderr].filter(Boolean).join("\n").trim();
+    return { ok: true, message: combined || "Push concluído." };
+  } catch (err) {
+    const stderr = (err as { stderr?: string }).stderr;
+    const message = stderr || (err instanceof Error ? err.message : "Erro git desconhecido.");
+    return { ok: false, message };
+  }
+}
 
 function slugifyId(turno: number, etapa: number): string {
   return `t${turno}e${String(etapa).padStart(2, "0")}`;
@@ -87,7 +115,14 @@ export async function uploadRevistaAction(formData: FormData): Promise<UploadRes
     revalidatePath("/revistas");
     revalidatePath(`/revistas/${id}`);
 
-    return { ok: true, id };
+    const autoPush = String(formData.get("autoPush") ?? "") === "on";
+    if (!autoPush) {
+      return { ok: true, id, published: false };
+    }
+    const git = await publishToGit(entry);
+    return git.ok
+      ? { ok: true, id, published: true, gitMessage: git.message }
+      : { ok: true, id, published: false, gitError: git.message };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Falha inesperada no upload.";
     return { ok: false, error: message };

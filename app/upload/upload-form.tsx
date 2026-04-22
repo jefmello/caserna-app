@@ -102,6 +102,24 @@ export default function RevistaUploadForm() {
         </Field>
       </div>
 
+      <label className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
+        <input
+          type="checkbox"
+          name="autoPush"
+          defaultChecked
+          className="h-4 w-4 accent-amber-400"
+        />
+        <span className="flex flex-col">
+          <span className="text-[12px] font-semibold text-white">
+            Publicar no deploy automaticamente
+          </span>
+          <span className="text-[10px] text-white/50">
+            Roda <code>git add</code> + <code>commit</code> + <code>push</code> após salvar.
+            Desmarque se quiser revisar o diff antes.
+          </span>
+        </span>
+      </label>
+
       <div className="flex items-center justify-between gap-3 pt-1">
         <p className="text-[11px] text-white/45">
           O ID é gerado como{" "}
@@ -139,13 +157,35 @@ export default function RevistaUploadForm() {
           {result.ok ? (
             <>
               <CheckCircle2 className="h-4 w-4 shrink-0" />
-              <p>
-                Edição publicada como <code>{result.id}</code>.{" "}
-                <Link href={`/revistas/${result.id}`} className="underline hover:text-white">
-                  Abrir leitor
-                </Link>
-                . Lembre de commit + push para subir ao deploy.
-              </p>
+              <div className="flex flex-col gap-1">
+                <p>
+                  Edição publicada como <code>{result.id}</code>.{" "}
+                  <Link href={`/revistas/${result.id}`} className="underline hover:text-white">
+                    Abrir leitor
+                  </Link>
+                  .
+                </p>
+                {result.published ? (
+                  <p className="text-emerald-300/85">
+                    Deploy em andamento — push enviado ao repositório.
+                  </p>
+                ) : null}
+                {result.gitMessage ? (
+                  <pre className="mt-1 max-h-32 overflow-auto rounded-md bg-black/30 p-2 text-[10px] leading-snug whitespace-pre-wrap text-white/65">
+                    {result.gitMessage}
+                  </pre>
+                ) : null}
+                {result.gitError ? (
+                  <div className="text-red-300/90">
+                    <p className="font-semibold">
+                      Arquivo salvo, mas o push automático falhou. Rode manualmente.
+                    </p>
+                    <pre className="mt-1 max-h-32 overflow-auto rounded-md bg-black/30 p-2 text-[10px] leading-snug whitespace-pre-wrap">
+                      {result.gitError}
+                    </pre>
+                  </div>
+                ) : null}
+              </div>
             </>
           ) : (
             <>
