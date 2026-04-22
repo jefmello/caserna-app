@@ -112,10 +112,10 @@ export default function RankingSpotlight({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2.5">
-        <div className="flex min-h-[288px] flex-col gap-2.5">
+      <div className="grid grid-cols-[1.7fr_1fr] gap-2.5 md:grid-cols-[1.85fr_1fr]">
+        <div className="flex min-h-[360px] flex-col gap-2.5">
           <Card
-            className={`h-[162px] overflow-hidden rounded-[24px] shadow-none ${
+            className={`h-[260px] overflow-hidden rounded-[24px] shadow-none ${
               isDarkMode
                 ? "border border-white/8 bg-[linear-gradient(180deg,#111827_0%,#0f172a_100%)]"
                 : spotlightStyles.leftCard
@@ -151,71 +151,57 @@ export default function RankingSpotlight({
           </Card>
 
           <Card
-            className={`h-[123px] overflow-hidden rounded-[24px] shadow-none ${
+            className={`h-[90px] overflow-hidden rounded-[24px] shadow-none ${
               isDarkMode
                 ? "border border-white/8 bg-[linear-gradient(180deg,#111827_0%,#0f172a_100%)]"
                 : spotlightStyles.leftSubcard
             }`}
           >
-            <CardContent className="flex h-full items-center justify-center px-3 py-2.5">
-              <div className="flex h-full w-full flex-col items-center justify-center text-center">
-                <div className="mb-2 flex items-center justify-center gap-2">
-                  <p
-                    className={`text-[8px] font-bold tracking-[0.22em] uppercase ${
-                      isDarkMode ? "text-zinc-400" : spotlightStyles.label
-                    }`}
-                  >
-                    Líder
-                  </p>
-                  <div
-                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-[12px] ${
-                      isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
-                    }`}
-                  >
-                    <Crown
-                      className={`h-3.5 w-3.5 ${
-                        isDarkMode ? theme.darkAccentText : theme.primaryIcon
-                      }`}
-                    />
-                  </div>
-                </div>
+            <CardContent className="flex h-full items-center justify-between gap-3 px-3 py-2">
+              <div
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] ${
+                  isDarkMode ? theme.darkAccentIconWrap : theme.primaryIconWrap
+                }`}
+              >
+                <Crown
+                  className={`h-5 w-5 ${isDarkMode ? theme.darkAccentText : theme.primaryIcon}`}
+                />
+              </div>
 
-                <div className="flex flex-col items-center justify-center leading-none">
-                  <p
-                    className={`text-[18px] font-black tracking-tight ${
-                      isDarkMode ? "text-white" : "text-zinc-950"
-                    }`}
-                  >
-                    {leaderName.firstName.toUpperCase()}
-                  </p>
-                  <p
-                    className={`mt-1 text-[10.5px] font-semibold tracking-[0.08em] ${
-                      isDarkMode ? "text-zinc-300" : "text-zinc-800"
-                    }`}
-                  >
-                    {leaderName.lastName ? leaderName.lastName.toUpperCase() : ""}
-                  </p>
-                </div>
+              <div className="min-w-0 flex-1 text-left leading-none">
+                <p
+                  className={`text-[8px] font-bold tracking-[0.22em] uppercase ${
+                    isDarkMode ? "text-zinc-400" : spotlightStyles.label
+                  }`}
+                >
+                  Líder
+                </p>
+                <p
+                  className={`mt-1.5 truncate text-[16px] font-black tracking-tight ${
+                    isDarkMode ? "text-white" : "text-zinc-950"
+                  }`}
+                >
+                  {leaderName.firstName.toUpperCase()}
+                  {leaderName.lastName ? ` ${leaderName.lastName.toUpperCase()}` : ""}
+                </p>
+              </div>
 
-                <div className="mt-3 flex justify-center">
-                  <div
-                    className={`inline-flex items-center rounded-full border px-4 py-1.5 ${
-                      isDarkMode
-                        ? `${theme.darkAccentBorder} bg-[#111827] ${theme.darkAccentText}`
-                        : spotlightStyles.badge
-                    }`}
-                  >
-                    <p className="text-[10.5px] leading-none font-black">
-                      {leader?.pontos || 0} pontos
-                    </p>
-                  </div>
-                </div>
+              <div
+                className={`inline-flex shrink-0 items-center rounded-full border px-3 py-1.5 ${
+                  isDarkMode
+                    ? `${theme.darkAccentBorder} bg-[#111827] ${theme.darkAccentText}`
+                    : spotlightStyles.badge
+                }`}
+              >
+                <p className="text-[10.5px] leading-none font-black whitespace-nowrap">
+                  {leader?.pontos || 0} pts
+                </p>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        <div className="flex min-h-[288px] flex-col gap-2">
+        <div className="flex min-h-[360px] flex-col gap-2">
           {[
             {
               title: "Vitórias",
@@ -241,7 +227,7 @@ export default function RankingSpotlight({
             return (
               <Card
                 key={item.title}
-                className={`h-[92px] overflow-hidden rounded-[22px] shadow-none ${
+                className={`h-[114px] overflow-hidden rounded-[22px] shadow-none ${
                   isDarkMode
                     ? "border border-white/8 bg-[linear-gradient(180deg,#111827_0%,#0f172a_100%)]"
                     : spotlightStyles.statCard
