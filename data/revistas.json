@@ -1,3 +1,12 @@
 {
-  "revistas": []
+  "revistas": [
+    {
+      "id": "info-caserna-equaliza-o-equilbrio-perfeito-na-pista",
+      "titulo": "Caserna Equaliza - O equilbrio perfeito na pista",
+      "tipo": "informativa",
+      "arquivo": "faq-caserna-20260422.html",
+      "descricao": "Conheça o Caserna Equaliza, nosso sistema que nos auxilia a enxergar metricas além da pista, mostrando informações para uma melhor analise e decidirmos a equalização do campenato.",
+      "cover": "/revistas/covers/info-caserna-equaliza-o-equilbrio-perfeito-na-pista.jpg"
+    }
+  ]
 }
