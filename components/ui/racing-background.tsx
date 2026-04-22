@@ -39,7 +39,23 @@ export default function RacingBackground({ streakCount = 140, speed = 1, opacity
   const { variant } = useThemeVariant();
   const { enabled: racingBgEnabled } = useRacingBgEnabled();
   const variantTokens = THEME_VARIANTS[variant];
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window === "undefined") return true;
+    // Match the dark-mode decision already made by the inline boot script
+    // in app/layout.tsx: if storage says "light", initialize isDark=false so
+    // the component never paints a dark gradient on light users for one
+    // render before the MutationObserver corrects it.
+    try {
+      const stored = window.localStorage.getItem("caserna-theme");
+      if (stored === "light") return false;
+    } catch {
+      // Fall through to the DOM check below.
+    }
+    if (typeof document !== "undefined") {
+      return document.documentElement.classList.contains("dark");
+    }
+    return true;
+  });
   const [reducedMotion, setReducedMotion] = useState(() => {
     if (typeof window === "undefined") return false;
     // Disable the animated canvas on small viewports (battery + bandwidth),
