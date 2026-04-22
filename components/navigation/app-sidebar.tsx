@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useChampionship } from "@/context/championship-context";
 import { getLeader } from "@/lib/ranking/get-leader";
@@ -77,6 +77,48 @@ export default function AppSidebar({ mobileOpen = false, onCloseMobile }: AppSid
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Focus trap for the mobile sidebar. When open: focus first interactive
+  // element, cycle Tab inside the dialog, and close on Escape.
+  const mobileAsideRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const dialog = mobileAsideRef.current;
+    if (!dialog) return;
+
+    const getFocusables = () =>
+      Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"]), input:not([disabled])'
+        )
+      );
+
+    const focusables = getFocusables();
+    focusables[0]?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onCloseMobile?.();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const list = getFocusables();
+      if (list.length === 0) return;
+      const first = list[0];
+      const last = list[list.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [mobileOpen, onCloseMobile]);
   const [leader, setLeader] = useState<{
     nome: string;
     pontos: number;
@@ -654,6 +696,10 @@ export default function AppSidebar({ mobileOpen = false, onCloseMobile }: AppSid
         />
 
         <aside
+          ref={mobileAsideRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu principal"
           className={clsx(
             "absolute top-0 left-0 h-full w-[88vw] max-w-[340px] border-r shadow-[0_24px_60px_rgba(0,0,0,0.34)] transition-transform duration-300",
             mobileOpen ? "translate-x-0" : "-translate-x-full",

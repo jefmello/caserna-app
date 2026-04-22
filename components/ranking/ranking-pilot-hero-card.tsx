@@ -132,7 +132,7 @@ export default function RankingPilotHeroCard({
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(255px,39%)_1fr] md:gap-5 lg:grid-cols-[minmax(420px,45%)_1fr] lg:gap-7 xl:grid-cols-[minmax(510px,48%)_1fr] xl:gap-8">
                 {/* Premium photo frame: blurred backdrop + metallic ring + motion streaks */}
-                <div className="relative">
+                <div className="relative mx-auto w-full max-w-[340px] md:mx-0 md:max-w-none">
                   {/* Blurred backdrop of same photo — fills column edges with motion blur feel */}
                   <div className="pointer-events-none absolute -inset-4 overflow-hidden rounded-[36px] opacity-70 lg:-inset-6 lg:rounded-[48px]">
                     <div className="absolute inset-0 scale-[1.6] blur-3xl saturate-[1.2]">

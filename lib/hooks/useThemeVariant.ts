@@ -5,6 +5,7 @@ import {
   DEFAULT_THEME_VARIANT,
   THEME_VARIANT_EVENT,
   THEME_VARIANT_STORAGE_KEY,
+  THEME_VARIANTS,
   type ThemeVariant,
   isThemeVariant,
 } from "@/lib/theme-variants";
@@ -54,6 +55,16 @@ export default function useThemeVariant(): UseThemeVariantReturn {
       window.localStorage.setItem(THEME_VARIANT_STORAGE_KEY, next);
     } catch {
       // Non-fatal: dispatching the event still triggers subscribers.
+    }
+    // Update the CSS custom property so the <html> background repaints
+    // instantly without waiting for RacingBackground to re-render.
+    try {
+      document.documentElement.style.setProperty(
+        "--caserna-bg-gradient",
+        THEME_VARIANTS[next].bgGradient
+      );
+    } catch {
+      // Ignore; SSR or locked-down environments.
     }
     window.dispatchEvent(new CustomEvent(THEME_VARIANT_EVENT));
   }, []);

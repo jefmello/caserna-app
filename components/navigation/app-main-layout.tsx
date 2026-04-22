@@ -86,7 +86,10 @@ function AppMainLayoutContent({ children }: { children: React.ReactNode }) {
         onCloseMobile={() => setIsMobileSidebarOpen(false)}
       />
 
-      <main className="relative z-[1] min-h-screen w-full overflow-x-clip pt-16 lg:pt-0 lg:pl-[288px]">
+      <main
+        id="main-content"
+        className="relative z-[1] min-h-screen w-full overflow-x-clip pt-16 lg:pt-0 lg:pl-[288px]"
+      >
         {children}
       </main>
 

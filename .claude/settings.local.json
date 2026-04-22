@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__plugin_context-mode_context-mode__ctx_batch_execute",
+      "mcp__plugin_context-mode_context-mode__ctx_search",
+      "mcp__plugin_context-mode_context-mode__ctx_execute",
+      "mcp__plugin_context-mode_context-mode__ctx_execute_file",
+      "Bash(npx tsc *)",
+      "Bash(awk 'NR<1199 || NR>1619' components/ranking/sections/ranking-share-canvas.tsx)",
+      "Bash(mv /tmp/canvas.tsx components/ranking/sections/ranking-share-canvas.tsx)",
+      "Bash(awk 'NR<930 || NR>1198' components/ranking/sections/ranking-share-canvas.tsx)",
+      "Bash(awk 'NR<665 || NR>929' components/ranking/sections/ranking-share-canvas.tsx)",
+      "Bash(awk 'NR<459 || NR>664' components/ranking/sections/ranking-share-canvas.tsx)",
+      "Bash(awk 'NR<356 || NR>458' components/ranking/sections/ranking-share-canvas.tsx)",
+      "Bash(awk 'NR<136 || NR>355' components/ranking/sections/ranking-share-canvas.tsx)",
+      "Bash(npx next *)",
+      "Bash(npm run *)",
+      "Bash(npm i *)",
+      "Bash(npx husky *)",
+      "Bash(npx prettier *)",
+      "Bash(npx vitest *)",
+      "Bash(grep -E \"^C:\\\\\\\\\\\\\\\\|jsx-a11y\")",
+      "Bash(awk '/^C:/ {file=$0} /jsx-a11y/ {print file\": \"$1}')",
+      "Bash(awk -F'warning' '{print $2}')",
+      "Bash(awk '{print $\\(NF\\)}')",
+      "Bash(awk -F\"'\" '{print $2}')",
+      "Bash(awk '/^C:/{f=$0} /no-unused-vars/{print f\" | \"$0}' /tmp/lint.txt)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
+    ]
+  }
+}

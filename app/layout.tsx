@@ -48,10 +48,41 @@ export const metadata: Metadata = {
   },
 };
 
+// Inline script runs before hydration. Reads the persisted theme variant
+// from localStorage and sets a CSS custom property on <html> so the correct
+// background gradient paints on the first frame — no flash from midnight
+// default → user's chosen variant (Gulf/Ferrari/Stealth) after hydration.
+const THEME_VARIANT_BOOT_SCRIPT = `
+(function() {
+  try {
+    var v = localStorage.getItem('caserna-theme-variant');
+    var g = {
+      midnight: 'linear-gradient(180deg,#04060b 0%,#0a0f1c 55%,#05070a 100%)',
+      gulf: 'linear-gradient(180deg,#001a3a 0%,#003876 55%,#001428 100%)',
+      ferrari: 'linear-gradient(180deg,#180000 0%,#2d0000 55%,#0e0000 100%)',
+      stealth: 'linear-gradient(180deg,#030303 0%,#080808 55%,#000000 100%)'
+    };
+    var chosen = g[v] || g.midnight;
+    document.documentElement.style.setProperty('--caserna-bg-gradient', chosen);
+    var theme = localStorage.getItem('caserna-theme');
+    if (theme === 'dark') document.documentElement.classList.add('dark');
+  } catch (e) {}
+})();
+`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_VARIANT_BOOT_SCRIPT }} />
+      </head>
       <body>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[200] focus:rounded-lg focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:font-semibold focus:text-zinc-900 focus:shadow-lg focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+        >
+          Pular para o conteúdo
+        </a>
         <QueryProvider>
           <ChampionshipProvider>
             <ToastProvider>{children}</ToastProvider>

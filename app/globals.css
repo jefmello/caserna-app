@@ -162,7 +162,10 @@
    * gradient that masked every variant.
    */
   .dark html {
-    background: #05070a;
+    background: var(
+      --caserna-bg-gradient,
+      linear-gradient(180deg, #04060b 0%, #0a0f1c 55%, #05070a 100%)
+    );
   }
 
   .dark body {

@@ -40,7 +40,14 @@ export default function RacingBackground({ streakCount = 140, speed = 1, opacity
   const [isDark, setIsDark] = useState(true);
   const [reducedMotion, setReducedMotion] = useState(() => {
     if (typeof window === "undefined") return false;
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Disable the animated canvas on small viewports (battery + bandwidth),
+    // when the user opted into reduced motion, or when Save-Data is enabled.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return true;
+    if (window.innerWidth < 640) return true;
+    type ConnectionLike = { saveData?: boolean };
+    const nav = navigator as Navigator & { connection?: ConnectionLike };
+    if (nav.connection?.saveData) return true;
+    return false;
   });
 
   // Sync theme from <html class="dark">
@@ -78,12 +85,23 @@ export default function RacingBackground({ streakCount = 140, speed = 1, opacity
     };
   }, []);
 
-  // Reduced motion preference — listen for runtime changes
+  // Reduced motion preference + viewport guard — listen for runtime changes
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
+    const motionMq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const recompute = () => {
+      if (motionMq.matches) return setReducedMotion(true);
+      if (window.innerWidth < 640) return setReducedMotion(true);
+      type ConnectionLike = { saveData?: boolean };
+      const nav = navigator as Navigator & { connection?: ConnectionLike };
+      if (nav.connection?.saveData) return setReducedMotion(true);
+      setReducedMotion(false);
+    };
+    motionMq.addEventListener("change", recompute);
+    window.addEventListener("resize", recompute);
+    return () => {
+      motionMq.removeEventListener("change", recompute);
+      window.removeEventListener("resize", recompute);
+    };
   }, []);
 
   // Initialize streaks
