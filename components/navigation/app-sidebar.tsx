@@ -186,6 +186,28 @@ export default function AppSidebar({ mobileOpen = false, onCloseMobile }: AppSid
     localStorage.setItem("sidebar-collapsed", String(newState));
   };
 
+  // Keyboard shortcut: `[` toggles the collapsed state (desktop only).
+  // Skipped while typing in inputs, textareas, or contenteditable elements.
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "[") return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)
+      ) {
+        return;
+      }
+      e.preventDefault();
+      toggleSidebar();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+    // toggleSidebar closes over `collapsed`; re-bind when it changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collapsed]);
+
   const categoryOptions = [
     {
       key: "Base",

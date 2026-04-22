@@ -9,7 +9,7 @@ import CommandPalette from "@/components/ui/command-palette";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 function AppMainLayoutContent({ children }: { children: React.ReactNode }) {
-  const { themeMode, isDarkMode } = useChampionship();
+  const { themeMode, isDarkMode, toggleTheme } = useChampionship();
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -22,6 +22,26 @@ function AppMainLayoutContent({ children }: { children: React.ReactNode }) {
       document.body.style.overflow = previousOverflow;
     };
   }, [isMobileSidebarOpen]);
+
+  // Keyboard shortcut: `T` toggles between dark and light modes.
+  // Skipped while typing in inputs, textareas, or contenteditable elements.
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "t" && e.key !== "T") return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)
+      ) {
+        return;
+      }
+      e.preventDefault();
+      toggleTheme();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [toggleTheme]);
 
   return (
     <div
