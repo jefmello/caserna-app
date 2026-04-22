@@ -12,6 +12,7 @@ import {
   BarChart3,
   LineChart,
   Swords,
+  ArrowLeftRight,
   Image as ImageIcon,
   ChevronLeft,
   X,
@@ -44,6 +45,7 @@ const primaryNav: NavItem[] = [
 const secondaryNav: NavItem[] = [
   { label: "Simulações", href: "/simulacoes", icon: LineChart },
   { label: "Duelos", href: "/duelos", icon: Swords },
+  { label: "Comparar", href: "/comparar", icon: ArrowLeftRight },
   { label: "Replay", href: "/replay", icon: LineChart },
   { label: "Mídia", href: "/midia", icon: ImageIcon },
 ];
