@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { track } from "@/lib/analytics";
 
 type ThemeMode = "dark" | "light";
 
@@ -97,6 +98,7 @@ export function ChampionshipProvider({ children }: { children: React.ReactNode }
     if (typeof window !== "undefined") {
       window.localStorage.setItem(STORAGE_CATEGORIA_KEY, c);
     }
+    track("category_changed", { category: c });
   }, []);
 
   const setCampeonato = useCallback((c: string) => {
@@ -104,6 +106,7 @@ export function ChampionshipProvider({ children }: { children: React.ReactNode }
     if (typeof window !== "undefined") {
       window.localStorage.setItem(STORAGE_CAMPEONATO_KEY, c);
     }
+    track("competition_changed", { competition: c });
   }, []);
 
   const setThemeMode = useCallback((mode: ThemeMode) => {
@@ -111,6 +114,7 @@ export function ChampionshipProvider({ children }: { children: React.ReactNode }
     if (typeof window !== "undefined") {
       window.localStorage.setItem(STORAGE_THEME_KEY, mode);
     }
+    track("theme_mode_toggled", { mode });
   }, []);
 
   const toggleTheme = useCallback(() => {
@@ -119,6 +123,7 @@ export function ChampionshipProvider({ children }: { children: React.ReactNode }
       if (typeof window !== "undefined") {
         window.localStorage.setItem(STORAGE_THEME_KEY, next);
       }
+      track("theme_mode_toggled", { mode: next });
       return next;
     });
   }, []);
