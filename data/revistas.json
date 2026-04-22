@@ -7,6 +7,17 @@
       "arquivo": "faq-caserna-20260422.html",
       "descricao": "Conheça o Caserna Equaliza, nosso sistema que nos auxilia a enxergar metricas além da pista, mostrando informações para uma melhor analise e decidirmos a equalização do campenato.",
       "cover": "/revistas/covers/info-caserna-equaliza-o-equilbrio-perfeito-na-pista.jpg"
+    },
+    {
+      "id": "t1e01",
+      "titulo": "Corrida de Abertura do Campeonato T01 - E01",
+      "tipo": "etapa",
+      "arquivo": "revista-caserna-t1e01-20260422.html",
+      "descricao": "Primeira edição de nossa revista com um resumão do que houve em nossas etapas.",
+      "cover": "/revistas/covers/t1e01.jpg",
+      "turno": 1,
+      "etapa": 1,
+      "data": "2026-03-26"
     }
   ]
 }
