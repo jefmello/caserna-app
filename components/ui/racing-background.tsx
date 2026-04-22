@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import useThemeVariant from "@/lib/hooks/useThemeVariant";
+import useRacingBgEnabled from "@/lib/hooks/useRacingBgEnabled";
 import { THEME_VARIANTS } from "@/lib/theme-variants";
 
 type Props = {
@@ -36,6 +37,7 @@ export default function RacingBackground({ streakCount = 140, speed = 1, opacity
   const rafRef = useRef<number | null>(null);
   const streaksRef = useRef<Streak[]>([]);
   const { variant } = useThemeVariant();
+  const { enabled: racingBgEnabled } = useRacingBgEnabled();
   const variantTokens = THEME_VARIANTS[variant];
   const [isDark, setIsDark] = useState(true);
   const [reducedMotion, setReducedMotion] = useState(() => {
@@ -241,6 +243,10 @@ export default function RacingBackground({ streakCount = 140, speed = 1, opacity
   const staticBg = isDark
     ? variantTokens.bgGradient
     : "linear-gradient(180deg,#f5f7fb 0%,#eef2f8 60%,#e5e9f0 100%)";
+
+  // User opted out — render nothing so zero CPU/battery impact. The page
+  // still shows the theme-variant gradient via <html> css var.
+  if (!racingBgEnabled) return null;
 
   return (
     <div

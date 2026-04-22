@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Palette, Check } from "lucide-react";
+import { Palette, Check, Zap, ZapOff } from "lucide-react";
 import clsx from "clsx";
 import useThemeVariant from "@/lib/hooks/useThemeVariant";
+import useRacingBgEnabled from "@/lib/hooks/useRacingBgEnabled";
 import { THEME_VARIANTS, type ThemeVariant } from "@/lib/theme-variants";
 import { useChampionship } from "@/context/championship-context";
 
@@ -16,6 +17,7 @@ const ORDER: ThemeVariant[] = ["midnight", "gulf", "ferrari", "stealth"];
 export default function ThemeVariantToggle({ className = "" }: { className?: string }) {
   const { isDarkMode } = useChampionship();
   const { variant, setVariant } = useThemeVariant();
+  const { enabled: racingBgEnabled, toggle: toggleRacingBg } = useRacingBgEnabled();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
@@ -120,6 +122,51 @@ export default function ThemeVariantToggle({ className = "" }: { className?: str
               </button>
             );
           })}
+
+          {/* Racing background on/off toggle — separated so it reads as a
+              distinct preference, not another variant pick. */}
+          <div
+            className={clsx("my-1 h-px", isDarkMode ? "bg-white/10" : "bg-zinc-200")}
+            aria-hidden="true"
+          />
+          <button
+            type="button"
+            role="menuitemcheckbox"
+            aria-checked={racingBgEnabled}
+            onClick={toggleRacingBg}
+            className={clsx(
+              "flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-left transition",
+              isDarkMode ? "hover:bg-white/[0.05]" : "hover:bg-zinc-50"
+            )}
+          >
+            <span
+              className={clsx(
+                "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border",
+                racingBgEnabled
+                  ? "border-amber-400/50 bg-amber-400/15 text-amber-400"
+                  : isDarkMode
+                    ? "border-white/15 bg-white/[0.04] text-white/50"
+                    : "border-zinc-200 bg-zinc-50 text-zinc-400"
+              )}
+            >
+              {racingBgEnabled ? (
+                <Zap className="h-3.5 w-3.5" />
+              ) : (
+                <ZapOff className="h-3.5 w-3.5" />
+              )}
+            </span>
+            <span className="flex-1">
+              <span className="block text-[12px] font-semibold">Racing background</span>
+              <span
+                className={clsx(
+                  "block text-[10px] leading-tight",
+                  isDarkMode ? "text-white/55" : "text-zinc-500"
+                )}
+              >
+                {racingBgEnabled ? "Ativo — animação em tela" : "Desligado — economiza bateria"}
+              </span>
+            </span>
+          </button>
         </div>
       )}
     </div>
