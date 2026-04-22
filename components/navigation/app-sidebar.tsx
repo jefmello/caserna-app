@@ -19,6 +19,7 @@ import {
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useChampionship } from "@/context/championship-context";
 import { getLeader } from "@/lib/ranking/get-leader";
 
@@ -69,6 +70,13 @@ export default function AppSidebar({ mobileOpen = false, onCloseMobile }: AppSid
   const [collapsed, setCollapsed] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  // Portal-mount flag: we render the sidebar into document.body to guarantee
+  // viewport-anchored fixed positioning, regardless of any transform /
+  // will-change / contain:paint ancestor further up the tree.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const [leader, setLeader] = useState<{
     nome: string;
     pontos: number;
@@ -628,7 +636,9 @@ export default function AppSidebar({ mobileOpen = false, onCloseMobile }: AppSid
     </div>
   );
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <>
       <div
         className={clsx(
@@ -1038,6 +1048,7 @@ export default function AppSidebar({ mobileOpen = false, onCloseMobile }: AppSid
           )}
         </div>
       </motion.aside>
-    </>
+    </>,
+    document.body
   );
 }
