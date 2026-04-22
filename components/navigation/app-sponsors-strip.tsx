@@ -94,7 +94,7 @@ function SponsorMarqueeCard({
   return (
     <div
       title={sponsor.name}
-      className={`group relative flex h-[136px] min-w-[280px] items-center justify-center overflow-hidden rounded-[22px] border px-3 transition-all duration-300 md:h-[148px] md:min-w-[300px] xl:min-w-[320px] ${outerFrame}`}
+      className={`group relative flex h-[160px] min-w-[320px] items-center justify-center overflow-hidden rounded-[22px] border px-3 transition-all duration-300 md:h-[180px] md:min-w-[350px] xl:min-w-[380px] ${outerFrame}`}
     >
       {/* Outer top highlight — 1px bright line for glass/metal feel */}
       <div
@@ -134,7 +134,7 @@ function SponsorMarqueeCard({
           <img
             src={sponsor.src}
             alt={sponsor.name}
-            className="h-auto max-h-[96px] w-auto max-w-[96%] object-contain transition-transform duration-300 group-hover:scale-[1.04] md:max-h-[108px]"
+            className="h-auto max-h-[118px] w-auto max-w-[96%] object-contain transition-transform duration-300 group-hover:scale-[1.04] md:max-h-[134px]"
             onError={() => setHasError(true)}
           />
         </div>
